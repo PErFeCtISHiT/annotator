@@ -1,5 +1,9 @@
-package somnus.config;
+package cn.joker66.config;
 
+import cn.joker66.entity.SysPermission;
+import cn.joker66.entity.SysRole;
+import cn.joker66.entity.UserInfo;
+import cn.joker66.sevice.UserInfoService;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -9,10 +13,6 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
-import somnus.entity.SysPermission;
-import somnus.entity.SysRole;
-import somnus.entity.UserInfo;
-import somnus.sevice.UserInfoService;
 
 import javax.annotation.Resource;
 

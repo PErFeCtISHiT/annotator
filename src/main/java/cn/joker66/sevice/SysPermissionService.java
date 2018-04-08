@@ -1,6 +1,6 @@
-package somnus.sevice;
+package cn.joker66.sevice;
 
-import somnus.entity.SysPermission;
+import cn.joker66.entity.SysPermission;
 
 /**
  * @author: pis

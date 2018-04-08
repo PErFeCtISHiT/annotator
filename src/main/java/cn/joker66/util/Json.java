@@ -1,10 +1,11 @@
-package somnus.util;
+package cn.joker66.util;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 
 
 /**
@@ -14,16 +15,17 @@ import java.io.FileReader;
  */
 public class Json {
     public static JsonObject openJson(String fileName){
-
-        String path = System.getProperty("user.dir") + "/src/main/resources/static/json/" + fileName;
-
+        String path = System.getProperty("user.dir") + "/src/main/resources/static/json" + fileName;
         JsonParser jsonParser = new JsonParser();
         JsonObject jsonObject = null;
         try {
-            jsonObject = (JsonObject) jsonParser.parse(new FileReader(path));
-        } catch (FileNotFoundException e) {
+            FileReader fileReader = new FileReader(path);
+            jsonObject = (JsonObject) jsonParser.parse(fileReader);
+            fileReader.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
 
         return jsonObject;
     }

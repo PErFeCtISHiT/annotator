@@ -1,14 +1,14 @@
-package somnus.dao;
+package cn.joker66.dao;
 
+import cn.joker66.entity.SysRole;
+import cn.joker66.entity.UserInfo;
+import cn.joker66.serviceImpl.SysRoleServiceImpl;
+import cn.joker66.sevice.SysRoleService;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import somnus.entity.SysRole;
-import somnus.entity.UserInfo;
-import somnus.serviceImpl.SysRoleServiceImpl;
-import somnus.sevice.SysRoleService;
-import somnus.util.Json;
+import cn.joker66.util.Json;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -51,18 +51,18 @@ public class UserInfoDao {
         return null;
     }
 
-    public boolean add(UserInfo userInfo) {
+    public boolean add(UserInfo userInfo, List<Integer> list) {
         JsonObject json = Json.openJson("/user.json");
         assert json != null;
         JsonArray userArray = json.getAsJsonArray("users");
-        JSONObject newObj = new JSONObject();
-        JSONArray newArray = new JSONArray();
+        StringBuilder newJson = new StringBuilder("{\"users\":[");
         for(Object o : userArray) {
             JsonObject object = (JsonObject) o;
             if (Json.format(object.get("username").toString()).equals(userInfo.getUsername())) {
                 return false;
             }
-            newArray.put(o);
+            newJson.append(object.toString());
+            newJson.append(",");
 
         }
         JSONObject jsonObject = new JSONObject();
@@ -72,20 +72,20 @@ public class UserInfoDao {
         jsonObject.put("name",userInfo.getName());
         jsonObject.put("salt",userInfo.getSalt());
         jsonObject.put("points",userInfo.getPoints());
-        jsonObject.put("stats",userInfo.getState());
-        List<SysRole> list = userInfo.getRoleList();
+        jsonObject.put("state",userInfo.getState());
         JSONArray roleList = new JSONArray();
-        for(SysRole sysRole : list){
-            roleList.put(sysRole.getSrid());
+        for(Integer i : list){
+            roleList.put(i);
         }
         jsonObject.put("roleList",roleList);
-        newArray.put(jsonObject);
-        newObj.put("users",newArray);
+        newJson.append(jsonObject.toString());
+        newJson.append("]}");
         String path = System.getProperty("user.dir") + "/src/main/resources/static/json/user.json";
         File file = new File(path);
         try (FileWriter fileWriter = new FileWriter(file,false)){
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(newObj.toString());
+            bufferedWriter.write(newJson.toString());
+            bufferedWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
             return false;

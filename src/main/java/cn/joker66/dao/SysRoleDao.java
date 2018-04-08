@@ -1,12 +1,12 @@
-package somnus.dao;
+package cn.joker66.dao;
 
+import cn.joker66.entity.SysPermission;
+import cn.joker66.entity.SysRole;
+import cn.joker66.serviceImpl.SysPermissionServiceImpl;
+import cn.joker66.sevice.SysPermissionService;
+import cn.joker66.util.Json;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import somnus.entity.SysPermission;
-import somnus.entity.SysRole;
-import somnus.serviceImpl.SysPermissionServiceImpl;
-import somnus.sevice.SysPermissionService;
-import somnus.util.Json;
 
 import java.util.ArrayList;
 

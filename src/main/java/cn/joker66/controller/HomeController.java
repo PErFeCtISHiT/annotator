@@ -1,6 +1,6 @@
-package somnus.controller;
+package cn.joker66.controller;
 
-import com.google.gson.JsonArray;
+import cn.joker66.util.PasswordHelper;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -11,30 +11,27 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import somnus.dao.SysRoleDao;
-import somnus.dao.UserInfoDao;
-import somnus.entity.SysRole;
-import somnus.entity.UserInfo;
+import cn.joker66.dao.SysRoleDao;
+import cn.joker66.dao.UserInfoDao;
+import cn.joker66.entity.SysRole;
+import cn.joker66.entity.UserInfo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Controller
 public class HomeController {
-    @Resource
-    private UserInfoDao userInfoDao ;
-    @Resource
-    private SysRoleDao sysRoleDao;
+    private UserInfoDao userInfoDao = new UserInfoDao();
     @RequestMapping({"/","/index"})
     public String index(HttpServletResponse response){
         response.setContentType("application/json; charset=utf-8");
 
         String userName = SecurityUtils.getSubject().getPrincipal().toString();
-        System.out.println(userName.length());
         UserInfo userInfo = userInfoDao.findByUsername(userName);
 
         try (PrintWriter writer = response.getWriter()){
@@ -105,24 +102,22 @@ public class HomeController {
         }catch (Exception e){
             e.printStackTrace();
         }
-
         JSONObject jsonObject = new JSONObject(jsonStr.toString());
         UserInfo userInfo = new UserInfo();
         userInfo.setUid(1);
         userInfo.setPoints(0);
         userInfo.setUsername((String) jsonObject.get("username"));
-        ArrayList<SysRole> roleList = new ArrayList();
+
         JSONArray jsonArray = jsonObject.getJSONArray("roleList");
+        List<Integer> list = new ArrayList<>();
         for(Object obj : jsonArray){
-            String srid = String.valueOf( obj);
-            roleList.add(sysRoleDao.findBySysRoleId(srid));
+            list.add((Integer) obj);
         }
-        userInfo.setRoleList(roleList);
-        String password = new SimpleHash("MD5",jsonObject.get("password").toString(),jsonObject.get("username").toString(),2).toHex();
-        userInfo.setPassword(password);
-        userInfo.setSalt("123");
+        userInfo.setPassword((String) jsonObject.get("password"));
+        PasswordHelper.encryptPassword(userInfo);
         userInfo.setName((String) jsonObject.get("username"));
-        return userInfoDao.add(userInfo);
+        userInfo.setState(1);
+        return userInfoDao.add(userInfo,list);
     }
 
 }

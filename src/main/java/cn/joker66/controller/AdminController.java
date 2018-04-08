@@ -1,4 +1,4 @@
-package somnus.controller;
+package cn.joker66.controller;
 
 import org.springframework.stereotype.Controller;
 

@@ -1,9 +1,9 @@
-package somnus.dao;
+package cn.joker66.dao;
 
+import cn.joker66.entity.SysPermission;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import somnus.entity.SysPermission;
-import somnus.util.Json;
+import cn.joker66.util.Json;
 
 /**
  * @author: pis

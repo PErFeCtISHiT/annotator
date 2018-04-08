@@ -1,4 +1,4 @@
-package somnus.entity;
+package cn.joker66.entity;
 
 import java.util.List;
 

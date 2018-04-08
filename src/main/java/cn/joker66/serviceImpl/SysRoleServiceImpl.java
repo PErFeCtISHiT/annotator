@@ -1,9 +1,9 @@
-package somnus.serviceImpl;
+package cn.joker66.serviceImpl;
 
 import org.springframework.stereotype.Service;
-import somnus.dao.SysRoleDao;
-import somnus.entity.SysRole;
-import somnus.sevice.SysRoleService;
+import cn.joker66.dao.SysRoleDao;
+import cn.joker66.entity.SysRole;
+import cn.joker66.sevice.SysRoleService;
 
 import javax.annotation.Resource;
 
@@ -14,7 +14,6 @@ import javax.annotation.Resource;
  */
 @Service
 public class SysRoleServiceImpl implements SysRoleService{
-    @Resource
     private SysRoleDao sysRoleDao = new SysRoleDao();
     @Override
     public SysRole findBySysRoleId(String srid) {

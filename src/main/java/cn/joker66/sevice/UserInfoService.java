@@ -1,6 +1,6 @@
-package somnus.sevice;
+package cn.joker66.sevice;
 
-import somnus.entity.UserInfo;
+import cn.joker66.entity.UserInfo;
 
 public interface UserInfoService {
     /**通过username查找用户信息;*/

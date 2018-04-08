@@ -1,16 +1,15 @@
-package somnus.serviceImpl;
+package cn.joker66.serviceImpl;
 
 import org.springframework.stereotype.Service;
-import somnus.dao.UserInfoDao;
-import somnus.entity.UserInfo;
-import somnus.sevice.UserInfoService;
+import cn.joker66.dao.UserInfoDao;
+import cn.joker66.entity.UserInfo;
+import cn.joker66.sevice.UserInfoService;
 
 import javax.annotation.Resource;
 
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
-    @Resource
-    private UserInfoDao userInfoDao;
+    private UserInfoDao userInfoDao = new UserInfoDao();
     @Override
     public UserInfo findByUsername(String username) {
         System.out.println("UserInfoServiceImpl.findByUsername():" + username);

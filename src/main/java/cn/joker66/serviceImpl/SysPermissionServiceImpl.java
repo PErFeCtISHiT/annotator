@@ -1,9 +1,9 @@
-package somnus.serviceImpl;
+package cn.joker66.serviceImpl;
 
 import org.springframework.stereotype.Service;
-import somnus.dao.SysPermissionDao;
-import somnus.entity.SysPermission;
-import somnus.sevice.SysPermissionService;
+import cn.joker66.dao.SysPermissionDao;
+import cn.joker66.entity.SysPermission;
+import cn.joker66.sevice.SysPermissionService;
 
 import javax.annotation.Resource;
 
@@ -14,7 +14,6 @@ import javax.annotation.Resource;
  */
 @Service
 public class SysPermissionServiceImpl implements SysPermissionService{
-    @Resource
     private SysPermissionDao sysPermissionDao = new SysPermissionDao();
     @Override
     public SysPermission findBySysPermissionId(String spid) {
