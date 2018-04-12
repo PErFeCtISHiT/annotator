@@ -20,6 +20,7 @@ public class Task {
     private Date startDate;//开始时间
     private Date endDate;//结束时间
 
+    //可能不需要该属性
     private String imgName;//图片包名字
 
     private ArrayList<String> userName;//标注用户的用户名
