@@ -1,11 +1,11 @@
-package somnus.controller;
+package cn.joker66.controller;
 
+import cn.joker66.entity.ReportMessage;
+import cn.joker66.entity.Task;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import somnus.entity.ReportMessage;
-import somnus.entity.Task;
 
 import javax.servlet.http.HttpServletRequest;
 

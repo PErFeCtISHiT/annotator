@@ -8,6 +8,7 @@ import cn.joker66.util.Json;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 
 /**
@@ -16,6 +17,8 @@ import java.util.ArrayList;
  * @date: create in 20:29 2018/3/28
  */
 public class SysRoleDao {
+    @Resource
+    private SysPermissionService sysPermissionService;
     public SysRole findBySysRoleId(String srid){
         JsonObject jsonObject = Json.openJson("/role.json");
 
@@ -23,7 +26,6 @@ public class SysRoleDao {
         JsonArray jsonArray = jsonObject.getAsJsonArray("roles");
         SysRole sysRole = new SysRole();
 
-        SysPermissionService sysPermissionService = new SysPermissionServiceImpl();
         for(Object o : jsonArray){
             JsonObject roleJson = (JsonObject) o;
             if(roleJson.get("srid").toString().equals(srid)){

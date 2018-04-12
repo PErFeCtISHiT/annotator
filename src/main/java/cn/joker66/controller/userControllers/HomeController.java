@@ -1,43 +1,37 @@
-package cn.joker66.controller;
+package cn.joker66.controller.userControllers;
 
-import cn.joker66.util.PasswordHelper;
+import cn.joker66.entity.UserInfo;
+import cn.joker66.sevice.UserInfoService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.crypto.hash.SimpleHash;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import cn.joker66.dao.SysRoleDao;
-import cn.joker66.dao.UserInfoDao;
-import cn.joker66.entity.SysRole;
-import cn.joker66.entity.UserInfo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 @Controller
+@RequestMapping("/user")
 public class HomeController {
-    private UserInfoDao userInfoDao = new UserInfoDao();
+    @Resource
+    private UserInfoService userInfoService;
     @RequestMapping({"/","/index"})
-    public String index(HttpServletResponse response){
+    public void index(HttpServletResponse response){
         response.setContentType("application/json; charset=utf-8");
 
         String userName = SecurityUtils.getSubject().getPrincipal().toString();
-        UserInfo userInfo = userInfoDao.findByUsername(userName);
+        UserInfo userInfo = userInfoService.findByUsername(userName);
+        System.out.println(userName);
 
         try (PrintWriter writer = response.getWriter()){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("username",userInfo.getUsername());
-            jsonObject.put("password",userInfo.getPassword());
+            jsonObject.put("level",userInfo.getLevel());
             jsonObject.put("name",userInfo.getName());
             jsonObject.put("points",userInfo.getPoints());
             writer.append(jsonObject.toString());
@@ -45,17 +39,16 @@ public class HomeController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return"/html/index.html";
     }
 
     @RequestMapping("/login")
-    public String login(HttpServletRequest request, Map<String, Object> map) throws Exception{
+    public String login(HttpServletRequest request,HttpServletResponse response) {
         System.out.println("HomeController.login()");
         // 登录失败从request中获取shiro处理的异常信息。
         // shiroLoginFailure:就是shiro异常类的全类名.
         String exception = (String) request.getAttribute("shiroLoginFailure");
         System.out.println("exception=" + exception);
-        String msg = "";
+        String msg ;
         if (exception != null) {
             if (UnknownAccountException.class.getName().equals(exception)) {
                 System.out.println("UnknownAccountException -- > 账号不存在：");
@@ -70,8 +63,15 @@ public class HomeController {
                 msg = "else >> "+exception;
                 System.out.println("else -- >" + exception);
             }
+            response.setContentType("application/plain; charset=utf-8");
+            try(PrintWriter writer = response.getWriter()){
+                writer.append(msg);
+                writer.close();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
-        map.put("msg", msg);
+
         // 此方法不处理登录成功,由shiro进行处理
         return "/html/login.html";
     }
@@ -80,44 +80,6 @@ public class HomeController {
     public String unauthorizedRole(){
         System.out.println("------没有权限-------");
         return "403";
-    }
-
-
-    /**
-    *@author:pis
-    *@description: signUp,point=0,id is not used in parse two
-    *@date: 14:10 2018/4/8
-    */
-    @RequestMapping(value = "/signUp",method = RequestMethod.POST)
-    @RequiresPermissions("signUp")
-    public boolean signUp(HttpServletRequest request, HttpServletResponse response){
-        StringBuilder jsonStr = new StringBuilder();
-        try(InputStream inputStream = request.getInputStream()) {
-            BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-            String inputStr;
-            while ((inputStr = streamReader.readLine()) != null) {
-                jsonStr.append(inputStr);
-            }
-            streamReader.close();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        JSONObject jsonObject = new JSONObject(jsonStr.toString());
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUid(1);
-        userInfo.setPoints(0);
-        userInfo.setUsername((String) jsonObject.get("username"));
-
-        JSONArray jsonArray = jsonObject.getJSONArray("roleList");
-        List<Integer> list = new ArrayList<>();
-        for(Object obj : jsonArray){
-            list.add((Integer) obj);
-        }
-        userInfo.setPassword((String) jsonObject.get("password"));
-        PasswordHelper.encryptPassword(userInfo);
-        userInfo.setName((String) jsonObject.get("username"));
-        userInfo.setState(1);
-        return userInfoDao.add(userInfo,list);
     }
 
 }

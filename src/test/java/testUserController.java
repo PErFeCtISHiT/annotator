@@ -10,20 +10,20 @@ import org.springframework.web.client.RestTemplate;
  */
 
 
-public class testPost {
+public class testUserController {
     /**
     *@author:pis
     *@description: 测试注册
     *@date: 18:16 2018/3/22
     */
     @Test
-    public void testAdd(){
-        String url = "http://localhost:8080/signUp";
+    public void testAddUser(){
+        String url = "http://localhost:8080/user/signUp";
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.set("Accept", "text/plain");
         requestHeaders.set("Content-Type", "application/json");
 
-        String jsonStr = "{\"username\":\"whisky\",\"password\":\"123\",\"name\":\"whisky\",\"roleList\":[3]}";
+        String jsonStr = "{\"username\":\"whisky\",\"password\":\"123\",\"name\":\"whisky\",\"roleList\":[4]}";
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> httpEntity = new HttpEntity<String>(jsonStr, requestHeaders);
         String jsonData = restTemplate.postForObject(url, httpEntity, String.class);

@@ -13,8 +13,17 @@ public class UserInfo implements Serializable {
     private String password; //密码;
     private String salt;//加密密码的盐
 
+    private Integer level;//等级
     public Integer getPoints() {
         return points;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 
     public void setPoints(Integer points) {
