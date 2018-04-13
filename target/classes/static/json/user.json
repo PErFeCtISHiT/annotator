@@ -1,0 +1,11 @@
+{"users":[{
+  "uid":1,"username":"somnus","name":"somnus","password":"233","salt":"123","state":0,"roleList":[1],"points":100
+},{
+  "uid":2,"username":"kiki","name":"kiki","password":"233","salt":"123","state":0,"roleList":[2],"points":100
+},{
+  "uid":3,"username":"keith","name":"keith","password":"233","salt":"123","state":0,"roleList":[3],"points":100
+},{
+  "uid":4,"username":"whisky","name":"whisky","password":"233","salt":"123","state":0,"roleList":[4],"points":100
+},{
+  "uid":5,"username":"admin","name":"admin","password":"123456","salt":"123","state":0,"roleList":[1],"points":100
+}]}
