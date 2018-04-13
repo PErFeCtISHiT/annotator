@@ -181,6 +181,7 @@ public class TaskController {
      * @param request
      * @param response
      */
+    @RequestMapping(method = RequestMethod.POST, value = "/dealReport")
     public void dealReport(HttpServletRequest request, HttpServletRequest response){
         //todo
     }
