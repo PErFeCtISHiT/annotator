@@ -104,7 +104,7 @@ public class UserInfoDao {
                 newUser.put("username",userInfo.getUsername());
                 newUser.put("password",userInfo.getPassword());
                 newUser.put("salt",userInfo.getSalt());
-                newUser.put("uid",Integer.valueOf(String.valueOf(object.get("uid"))));
+                newUser.put("uid",userInfo.getUid());
                 newUser.put("name",userInfo.getName());
                 JSONArray roleList = new JSONArray();
                 List<SysRole> list = userInfo.getRoleList();
@@ -112,9 +112,9 @@ public class UserInfoDao {
                     roleList.put(i.getSrid());
                 }
                 newUser.put("roleList",roleList);
-                newUser.put("points",Integer.valueOf(String.valueOf(object.get("points"))));
-                newUser.put("level",Integer.valueOf(String.valueOf(object.get("level"))));
-                newUser.put("state",Integer.valueOf(String.valueOf(object.get("state"))));
+                newUser.put("points",userInfo.getPoints());
+                newUser.put("level",userInfo.getLevel());
+                newUser.put("state",userInfo.getState());
                 newJson.append(newUser.toString());
                 newJson.append(",");
             }

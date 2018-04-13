@@ -33,6 +33,6 @@ public class BonusHistoryDao {
     }
 
     private boolean updateJson(StringBuilder newJson) {
-        return Json.modifyJson(newJson,"user.json");
+        return Json.modifyJson(newJson,"bonusHistory.json");
     }
 }

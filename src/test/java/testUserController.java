@@ -64,16 +64,16 @@ public class testUserController {
         requestHeaders.set("Accept", "text/plain");
         requestHeaders.set("Content-Type", "application/json");
 
-        String jsonStr = "{\"username\":\"somnus\",\"password\":\"123\"";
+        String jsonStr = "{\"username\":\"somnus\",\"password\":\"123\"}";
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> httpEntity = new HttpEntity<String>(jsonStr, requestHeaders);
         String jsonData = restTemplate.postForObject(url, httpEntity, String.class);
         System.out.println(jsonData);
-        jsonStr = "{\"username\":\"somnus\",\"password\":\"1234\"";
+        jsonStr = "{\"username\":\"somnus\",\"password\":\"1234\"}";
         httpEntity = new HttpEntity<String>(jsonStr, requestHeaders);
         jsonData = restTemplate.postForObject(url, httpEntity, String.class);
         System.out.println(jsonData);
-        jsonStr = "{\"username\":\"somnu\",\"password\":\"123\"";
+        jsonStr = "{\"username\":\"somnu\",\"password\":\"123\"}";
         httpEntity = new HttpEntity<String>(jsonStr, requestHeaders);
         jsonData = restTemplate.postForObject(url, httpEntity, String.class);
         System.out.println(jsonData);
@@ -92,13 +92,13 @@ public class testUserController {
         requestHeaders.set("Accept", "text/plain");
         requestHeaders.set("Content-Type", "application/json");
 
-        String jsonStr = "{\"username\":\"test\",\"points\":1234";
+        String jsonStr = "{\"username\":\"test\",\"points\":1234}";
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> httpEntity = new HttpEntity<String>(jsonStr, requestHeaders);
         String jsonData = restTemplate.postForObject(url, httpEntity, String.class);
 
         System.out.println(jsonData);
-        jsonStr = "{\"username\":\"test\",\"points\":-1233";
+        jsonStr = "{\"username\":\"test\",\"points\":-1233}";
         restTemplate = new RestTemplate();
         httpEntity = new HttpEntity<String>(jsonStr, requestHeaders);
         jsonData = restTemplate.postForObject(url, httpEntity, String.class);
@@ -119,16 +119,10 @@ public class testUserController {
         requestHeaders.set("Accept", "text/plain");
         requestHeaders.set("Content-Type", "application/json");
 
-        String jsonStr = "{\"username\":\"test\",\"points\":123";
+        String jsonStr = "{\"username\":\"test\",\"points\":123}";
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> httpEntity = new HttpEntity<String>(jsonStr, requestHeaders);
         String jsonData = restTemplate.postForObject(url, httpEntity, String.class);
-
-        System.out.println(jsonData);
-        jsonStr = "{\"username\":\"test\",\"points\":1234";
-        restTemplate = new RestTemplate();
-        httpEntity = new HttpEntity<String>(jsonStr, requestHeaders);
-        jsonData = restTemplate.postForObject(url, httpEntity, String.class);
 
         System.out.println(jsonData);
     }
@@ -138,20 +132,63 @@ public class testUserController {
     *@date: 14:52 2018/4/13
     */
     @Test
-    public void Bonus(){
+    public void testBonus(){
         String url = "http://localhost:8080/user/Bonus";
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.set("Accept", "text/plain");
         requestHeaders.set("Content-Type", "application/json");
 
-        String jsonStr = "{\"taskID\":123,\"workerName\":\"test\",\"points\":123";
+        String jsonStr = "{\"taskID\":123,\"workerName\":\"test\",\"points\":123}";
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> httpEntity = new HttpEntity<String>(jsonStr, requestHeaders);
         String jsonData = restTemplate.postForObject(url, httpEntity, String.class);
-
         System.out.println(jsonData);
 
     }
 
+    /**
+    *@author:pis
+    *@description: 测试得到所有用户
+    *@date: 18:43 2018/4/13
+    */
+    @Test
+    public void testcheckUser(){
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url = "http://localhost:8080/user/checkUser";
+        String jsonData = restTemplate.getForObject(url,String.class);
+        System.out.println(jsonData);
+    }
+
+    /**
+     *@author:pis
+     *@description: 测试删除用户
+     *@date: 18:43 2018/4/13
+     */
+    @Test
+    public void testFeleteUser(){
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url = "http://localhost:8080/user/deleteUser?username=test";
+        String jsonData = restTemplate.getForObject(url,String.class);
+        System.out.println(jsonData);
+    }
+
+    /**
+     *@author:pis
+     *@description: 测试查找用户
+     *@date: 18:43 2018/4/13
+     */
+    @Test
+    public void testFindUser(){
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url = "http://localhost:8080/user/findUser?username=test";
+        String jsonData = restTemplate.getForObject(url,String.class);
+        System.out.println(jsonData);
+        url = "http://localhost:8080/user/findUser?username=somnus";
+        jsonData = restTemplate.getForObject(url,String.class);
+        System.out.println(jsonData);
+    }
 
 }

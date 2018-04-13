@@ -1,11 +1,5 @@
 package cn.joker66.config;
 
-import cn.joker66.serviceImpl.SysPermissionServiceImpl;
-import cn.joker66.serviceImpl.SysRoleServiceImpl;
-import cn.joker66.serviceImpl.UserInfoServiceImpl;
-import cn.joker66.sevice.SysPermissionService;
-import cn.joker66.sevice.SysRoleService;
-import cn.joker66.sevice.UserInfoService;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -27,20 +21,22 @@ public class ShiroConfig {
 		//拦截器.
 		Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
 		// 配置不会被拦截的链接 顺序判断
-//		filterChainDefinitionMap.put("/guest/**", "anon");
-//		filterChainDefinitionMap.put("/user/signUp", "anon");
-//		filterChainDefinitionMap.put("/html/guestHtml/**","anon");
-//        filterChainDefinitionMap.put("/html/index.html","anon");
-//        filterChainDefinitionMap.put("/html/login.html","anon");
-//        filterChainDefinitionMap.put("/html/signUp.html","anon");
-//		//配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
-//		filterChainDefinitionMap.put("/user/logout", "logout");
-//		//<!-- 过滤链定义，从上向下顺序执行，一般将/**放在最为下边 -->;
-//		//<!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
-//		filterChainDefinitionMap.put("/**", "authc");
-        filterChainDefinitionMap.put("/**","anon");
-		// 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
-		shiroFilterFactoryBean.setLoginUrl("/user/login");
+		filterChainDefinitionMap.put("/guest/**", "anon");
+		filterChainDefinitionMap.put("/user/signUp", "anon");
+		filterChainDefinitionMap.put("/html/guestHtml/**","anon");
+        filterChainDefinitionMap.put("/html/index.html","anon");
+        filterChainDefinitionMap.put("/html/login.html","anon");
+        filterChainDefinitionMap.put("/html/signUp.html","anon");
+        filterChainDefinitionMap.put("/user/login","anon");
+		//配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
+		filterChainDefinitionMap.put("/user/logout", "logout");
+		//<!-- 过滤链定义，从上向下顺序执行，一般将/**放在最为下边 -->:这是一个坑呢，一不小心代码就不好使了;
+		//<!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
+		filterChainDefinitionMap.put("/**", "anon");
+//		// 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
+//		shiroFilterFactoryBean.setLoginUrl("/user/login");
+//		// 登录成功后要跳转的链接
+//		shiroFilterFactoryBean.setSuccessUrl("/user/getCurrentUser");
 
 		//未授权界面;
 		shiroFilterFactoryBean.setUnauthorizedUrl("/403");

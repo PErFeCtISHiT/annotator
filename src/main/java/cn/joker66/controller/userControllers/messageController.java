@@ -81,8 +81,7 @@ public class messageController {
     @RequiresPermissions("submitAssignment")
     public void modifyMessage(HttpServletRequest request, HttpServletResponse response){
         JSONObject newUser = Json.requestToJson(request);
-        UserInfo newUserInfo = new UserInfo();
-        newUserInfo.setUsername((String) newUser.get("username"));
+        UserInfo newUserInfo = userInfoService.findByUsername((String) newUser.get("username"));
         newUserInfo.setPassword((String) newUser.get("password"));
         newUserInfo.setName((String) newUser.get("name"));
         JSONArray jsonArray = newUser.getJSONArray("roleList");
@@ -215,9 +214,13 @@ public class messageController {
         bonusHistory.setPoints((Integer) jsonObject.get("points"));
         bonusHistory.setTaskID((Integer) jsonObject.get("taskID"));
         bonusHistory.setWorkerName((String) jsonObject.get("workerName"));
+
+        UserInfo userInfo = userInfoService.findByUsername(bonusHistory.getWorkerName());
+        userInfo.setPoints(userInfo.getPoints() + bonusHistory.getPoints());
+
         JSONObject ret = new JSONObject();
 
-        ret.put("mes",bonusHistoryService.addBonusHistory(bonusHistory));
+        ret.put("mes",bonusHistoryService.addBonusHistory(bonusHistory) && userInfoService.modifyUser(userInfo));
         Json.JsonToResponse(response,ret);
 
     }
