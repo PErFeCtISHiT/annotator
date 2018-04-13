@@ -3,7 +3,10 @@ package cn.joker66.serviceImpl;
 import cn.joker66.dao.UserInfoDao;
 import cn.joker66.entity.UserInfo;
 import cn.joker66.sevice.UserInfoService;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
@@ -14,13 +17,23 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public String addUser(UserInfo userInfo) {
-        return userInfoDao.add(userInfo);
+    public boolean addUser(UserInfo userInfo) {
+        return userInfoDao.addUser(userInfo);
     }
 
     @Override
-    public String modifyUser(UserInfo userInfo) {
+    public boolean modifyUser(UserInfo userInfo) {
         return userInfoDao.modifyUser(userInfo);
+    }
+
+    @Override
+    public List<UserInfo> findAllUser() {
+        return userInfoDao.findAllUser();
+    }
+
+    @Override
+    public boolean deleteUser(String username) {
+        return userInfoDao.deleteUser(username);
     }
 
 }

@@ -7,6 +7,9 @@ import cn.joker66.sevice.SysPermissionService;
 import cn.joker66.util.Json;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -16,9 +19,9 @@ import java.util.ArrayList;
  * @description: good good study
  * @date: create in 20:29 2018/3/28
  */
+@Repository
 public class SysRoleDao {
-    @Resource
-    private SysPermissionService sysPermissionService;
+    private SysPermissionDao sysPermissionDao = new SysPermissionDao();
     public SysRole findBySysRoleId(String srid){
         JsonObject jsonObject = Json.openJson("/role.json");
 
@@ -39,7 +42,7 @@ public class SysRoleDao {
                 JsonArray Array = roleJson.getAsJsonArray("permissionList");
                 for(Object obj : Array){
                     String spid = String.valueOf( obj);
-                    sysPermissionArrayList.add(sysPermissionService.findBySysPermissionId(spid));
+                    sysPermissionArrayList.add(sysPermissionDao.findBySysPermissionId(spid));
                 }
                 sysRole.setPermissions(sysPermissionArrayList);
                 return sysRole;

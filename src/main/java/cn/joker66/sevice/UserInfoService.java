@@ -2,9 +2,16 @@ package cn.joker66.sevice;
 
 import cn.joker66.entity.UserInfo;
 
+import java.util.List;
+
 public interface UserInfoService {
-    /**通过username查找用户信息;*/
     UserInfo findByUsername(String username);
-    String addUser(UserInfo userInfo);
-    String modifyUser(UserInfo userInfo);
+
+    boolean addUser(UserInfo userInfo);
+
+    boolean modifyUser(UserInfo userInfo);
+
+    List<UserInfo> findAllUser();
+
+    boolean deleteUser(String username);
 }

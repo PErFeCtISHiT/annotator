@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @description: good good study
  * @date: create in 14:21 2018/4/10
  */
-public class Bonus implements Serializable{
+public class BonusHistory implements Serializable{
     private Integer taskID;
     private String workerName;
     private Integer points;

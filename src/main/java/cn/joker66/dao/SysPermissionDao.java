@@ -4,12 +4,15 @@ import cn.joker66.entity.SysPermission;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import cn.joker66.util.Json;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 /**
  * @author: pis
  * @description: good good study
  * @date: create in 20:29 2018/3/28
  */
+@Repository
 public class SysPermissionDao {
     public SysPermission findBySysPermissionId(String spid){
 
