@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,13 +24,14 @@ import java.util.List;
 public class markController {
     @Resource
     private ImgMarkService imgMarkService;
+
     /**
-    *@author:pis
-    *@description: 上传图片标注
-    *@date: 9:06 2018/4/14
-    */
-    @RequestMapping(value = "/postMark",method = RequestMethod.POST)
-    public void postMark(HttpServletRequest request, HttpServletResponse response){
+     * @author:pis
+     * @description: 上传图片标注
+     * @date: 9:06 2018/4/14
+     */
+    @RequestMapping(value = "/postMark", method = RequestMethod.POST)
+    public void postMark(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = Json.requestToJson(request);
         ImgMark imgMark = new ImgMark();
         imgMark.setImgURL((String) jsonObject.get("imgURL"));
@@ -40,36 +40,36 @@ public class markController {
         imgMark.setWorkerName((String) jsonObject.get("workerName"));
         imgMark.setTaskID((Integer) jsonObject.get("taskID"));
         JSONObject ret = new JSONObject();
-        ret.put("mes",imgMarkService.refreshMark(imgMark,jsonObject));
-        Json.JsonToResponse(response,ret);
+        ret.put("mes", imgMarkService.refreshMark(imgMark, jsonObject));
+        Json.JsonToResponse(response, ret);
     }
 
     /**
-    *@author:pis
-    *@description: 查看图片标注
-    *@date: 10:33 2018/4/14
-    */
-    @RequestMapping(value = "checkImage",method = RequestMethod.POST)
-    public void checkMark(HttpServletRequest request,HttpServletResponse response){
+     * @author:pis
+     * @description: 查看图片标注
+     * @date: 10:33 2018/4/14
+     */
+    @RequestMapping(value = "checkImage", method = RequestMethod.POST)
+    public void checkMark(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = Json.requestToJson(request);
         JSONObject ret = new JSONObject();
         JSONArray imgMarkArray = new JSONArray();
         List<ImgMark> imgMarks = imgMarkService.findAllMarks(jsonObject);
-        for(ImgMark imgMark : imgMarks){
+        for (ImgMark imgMark : imgMarks) {
             JSONObject imgMarkJson = new JSONObject();
-            imgMarkJson.put("imgURL",imgMark.getImgURL());
-            imgMarkJson.put("workerName",imgMark.getWorkerName());
-            imgMarkJson.put("sponsorName",imgMark.getSponsorName());
+            imgMarkJson.put("imgURL", imgMark.getImgURL());
+            imgMarkJson.put("workerName", imgMark.getWorkerName());
+            imgMarkJson.put("sponsorName", imgMark.getSponsorName());
             JSONArray jsonArray = new JSONArray(imgMark.getNotePolygon());
-            imgMarkJson.put("notePolygon",jsonArray);
+            imgMarkJson.put("notePolygon", jsonArray);
             jsonArray = new JSONArray(imgMark.getNoteRectangle());
-            imgMarkJson.put("noteRectangle",jsonArray);
+            imgMarkJson.put("noteRectangle", jsonArray);
             jsonArray = new JSONArray(imgMark.getNoteTotal());
-            imgMarkJson.put("noteTotal",jsonArray);
-            imgMarkJson.put("taskID",imgMark.getTaskID());
+            imgMarkJson.put("noteTotal", jsonArray);
+            imgMarkJson.put("taskID", imgMark.getTaskID());
             imgMarkArray.put(imgMarkJson);
         }
-        ret.put("marks",imgMarkArray);
-        Json.JsonToResponse(response,ret);
+        ret.put("marks", imgMarkArray);
+        Json.JsonToResponse(response, ret);
     }
 }
