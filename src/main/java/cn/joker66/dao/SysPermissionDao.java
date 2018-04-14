@@ -1,11 +1,10 @@
 package cn.joker66.dao;
 
 import cn.joker66.entity.SysPermission;
+import cn.joker66.util.Json;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import cn.joker66.util.Json;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 /**
  * @author: pis
@@ -14,14 +13,15 @@ import org.springframework.stereotype.Service;
  */
 @Repository
 public class SysPermissionDao {
-    public SysPermission findBySysPermissionId(String spid){
+    public SysPermission findBySysPermissionId(String spid) {
 
-        JsonObject jsonObject = Json.openJson("/permission.json");
+        JsonObject jsonObject = Json.openJson("json/permission.json");
 
 
         JsonArray jsonArray = jsonObject.getAsJsonArray("permissions");
         SysPermission sysPermission = new SysPermission();
-        for(Object o : jsonArray) {
+        for (Object o : jsonArray) {
+
             JsonObject permissionJson = (JsonObject) o;
 
             if (permissionJson.get("spid").toString().equals(spid)) {

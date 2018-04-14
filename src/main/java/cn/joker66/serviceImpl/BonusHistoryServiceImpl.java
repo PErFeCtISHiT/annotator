@@ -5,6 +5,8 @@ import cn.joker66.entity.BonusHistory;
 import cn.joker66.sevice.BonusHistoryService;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 /**
  * @author: pis
  * @description: good good study
@@ -12,7 +14,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class BonusHistoryServiceImpl implements BonusHistoryService {
-    private BonusHistoryDao bonusHistoryDao = new BonusHistoryDao();
+    @Resource
+    private BonusHistoryDao bonusHistoryDao ;
+
     @Override
     public boolean addBonusHistory(BonusHistory bonusHistory) {
         return bonusHistoryDao.addBonusHistory(bonusHistory);

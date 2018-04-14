@@ -2,7 +2,6 @@ package cn.joker66.util;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,11 +21,12 @@ public class Json {
      * @date: 15:05 2018/4/13
      */
     public static JsonObject openJson(String fileName) {
-        String path = System.getProperty("user.dir") + "/src/main/resources/static/json" + fileName;
+        String path = System.getProperty("user.dir") + "/src/main/resources/static/" + fileName;
         JsonParser jsonParser = new JsonParser();
         JsonObject jsonObject = null;
         try (FileReader fileReader = new FileReader(path)) {
             jsonObject = (JsonObject) jsonParser.parse(fileReader);
+            System.out.println(jsonObject.toString());
             fileReader.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -38,7 +38,7 @@ public class Json {
 
     /**
      * @author:pis
-     * @description: 格式化json
+     * @description: 格式化json,仅用于使用了jsonParser工具打开的json对象
      * @date: 15:05 2018/4/13
      */
     @org.jetbrains.annotations.NotNull
@@ -58,8 +58,7 @@ public class Json {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        JSONObject jsonObject = new JSONObject(jsonStr.toString());
-        return jsonObject;
+        return new JSONObject(jsonStr.toString());
     }
 
     /**
@@ -68,7 +67,7 @@ public class Json {
      * @date: 15:05 2018/4/13
      */
     public static boolean modifyJson(StringBuilder newJson, String name) {
-        String path = System.getProperty("user.dir") + "/src/main/resources/static/json/" + name;
+        String path = System.getProperty("user.dir") + "/src/main/resources/static/" + name;
         File file = new File(path);
         try (FileWriter fileWriter = new FileWriter(file, false)) {
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);

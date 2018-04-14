@@ -24,14 +24,13 @@ public class HomeController {
     private UserInfoService userInfoService;
 
 
-
     /**
-    *@author:pis
-    *@description: 登陆
-    *@date: 13:35 2018/4/13
-    */
-    @RequestMapping(value = "/login",method = RequestMethod.POST)
-    public void login(HttpServletRequest request,HttpServletResponse response) {
+     * @author:pis
+     * @description: 登陆
+     * @date: 13:35 2018/4/13
+     */
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public void login(HttpServletRequest request, HttpServletResponse response) {
 
         JSONObject msg = new JSONObject();
         System.out.println("HomeController.login()");
@@ -40,15 +39,15 @@ public class HomeController {
         JSONObject jsonObject = Json.requestToJson(request);
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(jsonObject.get("username").toString(), jsonObject.get("password").toString());
-        try{
+        try {
             subject.login(token);
-        }catch (UnknownAccountException e){
-            msg.put("mes","UnknownAccount");
-            Json.JsonToResponse(response,msg);
+        } catch (UnknownAccountException e) {
+            msg.put("mes", "UnknownAccount");
+            Json.JsonToResponse(response, msg);
             return;
-        }catch (IncorrectCredentialsException e) {
-            msg.put("mes","IncorrectCredentials");
-            Json.JsonToResponse(response,msg);
+        } catch (IncorrectCredentialsException e) {
+            msg.put("mes", "IncorrectCredentials");
+            Json.JsonToResponse(response, msg);
             return;
         }
 //        String exception = (String) request.getAttribute("shiroLoginFailure");
@@ -72,16 +71,16 @@ public class HomeController {
 //            msg.put("mes","success");
 //            System.out.println("success");
 //        }
-        msg.put("mes","success");
-        Json.JsonToResponse(response,msg);
+        msg.put("mes", "success");
+        Json.JsonToResponse(response, msg);
     }
 
     /**
-    *@author:pis
-    *@description: 得到当前用户，无法通过junit单元测试，手动测
-    *@date: 18:49 2018/4/13
-    */
-    @RequestMapping(value = "/getCurrentUser",method = RequestMethod.GET)
+     * @author:pis
+     * @description: 得到当前用户，无法通过junit单元测试，手动测
+     * @date: 18:49 2018/4/13
+     */
+    @RequestMapping(value = "/getCurrentUser", method = RequestMethod.GET)
     public void getCurrentUser(HttpServletResponse response) {
         String userName = SecurityUtils.getSubject().getPrincipal().toString();
         UserInfo userInfo = userInfoService.findByUsername(userName);
@@ -96,7 +95,7 @@ public class HomeController {
     }
 
     @RequestMapping("/403")
-    public String unauthorizedRole(){
+    public String unauthorizedRole() {
         System.out.println("------没有权限-------");
         return "403";
     }

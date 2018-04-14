@@ -3,14 +3,16 @@ package cn.joker66.serviceImpl;
 import cn.joker66.dao.UserInfoDao;
 import cn.joker66.entity.UserInfo;
 import cn.joker66.sevice.UserInfoService;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
-    private UserInfoDao userInfoDao = new UserInfoDao();
+    @Resource
+    private UserInfoDao userInfoDao ;
+
     @Override
     public UserInfo findByUsername(String username) {
         return userInfoDao.findByUsername(username);
