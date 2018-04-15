@@ -6,6 +6,7 @@ import cn.joker.sevice.BonusHistoryService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author: pis
@@ -20,5 +21,10 @@ public class BonusHistoryServiceImpl implements BonusHistoryService {
     @Override
     public boolean addBonusHistory(BonusHistory bonusHistory) {
         return bonusHistoryDao.addBonusHistory(bonusHistory);
+    }
+
+    @Override
+    public List<BonusHistory> findByName(String username) {
+        return bonusHistoryDao.findByName(username);
     }
 }

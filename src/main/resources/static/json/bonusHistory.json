@@ -2,8 +2,13 @@
   "bonusHistories": [
     {
       "workerName": "test",
-      "taskID": 123,
+      "taskID": 1234,
       "points": 123
+    },
+    {
+      "workerName": "test",
+      "taskID": 123,
+      "points": 1234
     }
   ]
 }

@@ -2,6 +2,8 @@ package cn.joker.sevice;
 
 import cn.joker.entity.BonusHistory;
 
+import java.util.List;
+
 /**
  * @author: pis
  * @description: good good study
@@ -9,4 +11,6 @@ import cn.joker.entity.BonusHistory;
  */
 public interface BonusHistoryService {
     boolean addBonusHistory(BonusHistory bonusHistory);
+
+    List<BonusHistory> findByName(String username);
 }

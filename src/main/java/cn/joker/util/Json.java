@@ -3,6 +3,8 @@ package cn.joker.util;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +17,8 @@ import java.io.*;
  * @date: create in 20:47 2018/3/28
  */
 public class Json {
+    static Logger logger = LoggerFactory.getLogger(Json.class);
+
     private Json() {
         throw new IllegalStateException("Utility class");
     }
@@ -30,7 +34,8 @@ public class Json {
         JsonObject jsonObject = null;
         try (FileReader fileReader = new FileReader(path)) {
             jsonObject = (JsonObject) jsonParser.parse(fileReader);
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            logger.error("IOException");
         }
 
 
@@ -56,7 +61,8 @@ public class Json {
                 jsonStr.append(inputStr);
             }
             streamReader.close();
-        } catch (Exception ignored) {
+        } catch (IOException e) {
+            logger.error("IOException");
         }
         return new JSONObject(jsonStr.toString());
     }
@@ -85,7 +91,8 @@ public class Json {
         response.setContentType("application/json; charset=utf-8");
         try (PrintWriter writer = response.getWriter()) {
             writer.append(jsonObject.toString());
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            logger.error("IOException");
         }
     }
 }

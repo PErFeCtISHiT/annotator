@@ -7,6 +7,9 @@ import com.google.gson.JsonObject;
 import org.json.JSONObject;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author: pis
  * @description: good good study
@@ -17,9 +20,9 @@ public class BonusHistoryDao {
     public boolean addBonusHistory(BonusHistory bonusHistory) {
         JsonObject json = Json.openJson("json/bonusHistory.json");
         assert json != null;
-        JsonArray userArray = json.getAsJsonArray("bonusHistories");
+        JsonArray bonusArray = json.getAsJsonArray("bonusHistories");
         StringBuilder newJson = new StringBuilder("{\"bonusHistories\":[");
-        for (Object o : userArray) {
+        for (Object o : bonusArray) {
             JsonObject object = (JsonObject) o;
             newJson.append(object.toString());
             newJson.append(",");
@@ -36,5 +39,24 @@ public class BonusHistoryDao {
 
     private boolean updateJson(StringBuilder newJson) {
         return Json.modifyJson(newJson, "json/bonusHistory.json");
+    }
+
+    public List<BonusHistory> findByName(String username) {
+        JsonObject json = Json.openJson("json/bonusHistory.json");
+        assert json != null;
+        List<BonusHistory> bonusHistories = new ArrayList<>();
+        JsonArray userArray = json.getAsJsonArray("bonusHistories");
+        for (Object o : userArray) {
+            JsonObject object = (JsonObject) o;
+            if (Json.format(String.valueOf(object.get("workerName"))).equals(username)) {
+                BonusHistory bonusHistory = new BonusHistory();
+                bonusHistory.setWorkerName(username);
+                bonusHistory.setPoints(Integer.valueOf(String.valueOf(object.get("points"))));
+                bonusHistory.setTaskID(Integer.valueOf(String.valueOf(object.get("taskID"))));
+                bonusHistories.add(bonusHistory);
+            }
+        }
+        return bonusHistories;
+
     }
 }
