@@ -23,7 +23,7 @@ public class testUserController {
         requestHeaders.set("Accept", "text/plain");
         requestHeaders.set("Content-Type", "application/json");
 
-        String jsonStr = "{\"username\":\"test\",\"password\":\"123\",\"name\":\"test\",\"roleList\":[4]}";
+        String jsonStr = "{\"username\":\"worker3\",\"password\":\"123\",\"name\":\"worker3\",\"roleList\":[3]}";
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> httpEntity = new HttpEntity<String>(jsonStr, requestHeaders);
         String jsonData = restTemplate.postForObject(url, httpEntity, String.class);
@@ -119,7 +119,7 @@ public class testUserController {
         requestHeaders.set("Accept", "text/plain");
         requestHeaders.set("Content-Type", "application/json");
 
-        String jsonStr = "{\"username\":\"test\",\"points\":123}";
+        String jsonStr = "{\"username\":\"test\",\"points\":12345}";
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> httpEntity = new HttpEntity<String>(jsonStr, requestHeaders);
         String jsonData = restTemplate.postForObject(url, httpEntity, String.class);
@@ -138,7 +138,7 @@ public class testUserController {
         requestHeaders.set("Accept", "text/plain");
         requestHeaders.set("Content-Type", "application/json");
 
-        String jsonStr = "{\"taskID\":123,\"workerName\":\"test\",\"points\":123}";
+        String jsonStr = "{\"taskID\":123,\"workerName\":\"worker3\",\"points\":9999}";
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> httpEntity = new HttpEntity<String>(jsonStr, requestHeaders);
         String jsonData = restTemplate.postForObject(url, httpEntity, String.class);
