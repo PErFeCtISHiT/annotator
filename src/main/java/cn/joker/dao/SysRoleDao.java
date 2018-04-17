@@ -2,7 +2,7 @@ package cn.joker.dao;
 
 import cn.joker.entity.SysPermission;
 import cn.joker.entity.SysRole;
-import cn.joker.util.Json;
+import cn.joker.util.JsonHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Repository;
@@ -19,7 +19,7 @@ public class SysRoleDao {
     private SysPermissionDao sysPermissionDao = new SysPermissionDao();
 
     public SysRole findBySysRoleId(String srid) {
-        JsonObject jsonObject = Json.openJson("json/role.json");
+        JsonObject jsonObject = JsonHelper.openJson("json/role.json");
 
 
         JsonArray jsonArray = jsonObject.getAsJsonArray("roles");
@@ -31,9 +31,9 @@ public class SysRoleDao {
 
                 sysRole.setSrid(Integer.valueOf(srid));
 
-                sysRole.setDescription(String.valueOf(Json.format(roleJson.get("description").toString())));
+                sysRole.setDescription(String.valueOf(JsonHelper.format(roleJson.get("description").toString())));
 
-                sysRole.setRole(String.valueOf(Json.format(roleJson.get("role").toString())));
+                sysRole.setRole(String.valueOf(JsonHelper.format(roleJson.get("role").toString())));
                 ArrayList<SysPermission> sysPermissionArrayList = new ArrayList<>();
                 JsonArray array = roleJson.getAsJsonArray("permissionList");
                 for (Object obj : array) {

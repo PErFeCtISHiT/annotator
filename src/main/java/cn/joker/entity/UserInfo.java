@@ -12,6 +12,15 @@ public class UserInfo implements Serializable {
     private String name;//名称（昵称或者真实姓名，不同系统不同定义）
     private String password; //密码
     private String salt;//加密密码的盐
+    private Integer bonus;//奖励积分
+
+    public Integer getBonus() {
+        return bonus;
+    }
+
+    public void setBonus(Integer bonus) {
+        this.bonus = bonus;
+    }
 
     private Integer level;//等级
 

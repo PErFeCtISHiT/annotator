@@ -2,7 +2,7 @@ package cn.joker.controller.markcontrollers;
 
 import cn.joker.entity.ImgMark;
 import cn.joker.sevice.ImgMarkService;
-import cn.joker.util.Json;
+import cn.joker.util.JsonHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
@@ -32,7 +32,7 @@ public class MarkController {
      */
     @RequestMapping(value = "/postMark", method = RequestMethod.POST)
     public void postMark(HttpServletRequest request, HttpServletResponse response) {
-        JSONObject jsonObject = Json.requestToJson(request);
+        JSONObject jsonObject = JsonHelper.requestToJson(request);
         ImgMark imgMark = new ImgMark();
         imgMark.setImgURL((String) jsonObject.get("imgURL"));
         imgMark.setImgName(imgMark.getImgURL().substring(imgMark.getImgURL().lastIndexOf('/') + 1));
@@ -41,7 +41,7 @@ public class MarkController {
         imgMark.setTaskID((Integer) jsonObject.get("taskID"));
         JSONObject ret = new JSONObject();
         ret.put("mes", imgMarkService.refreshMark(imgMark, jsonObject));
-        Json.jsonToResponse(response, ret);
+        JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
@@ -49,9 +49,9 @@ public class MarkController {
      * @description: 查看图片标注
      * @date: 10:33 2018/4/14
      */
-    @RequestMapping(value = "checkImage", method = RequestMethod.POST)
+    @RequestMapping(value = "/checkImage", method = RequestMethod.POST)
     public void checkMark(HttpServletRequest request, HttpServletResponse response) {
-        JSONObject jsonObject = Json.requestToJson(request);
+        JSONObject jsonObject = JsonHelper.requestToJson(request);
         JSONObject ret = new JSONObject();
         JSONArray imgMarkArray = new JSONArray();
         List<ImgMark> imgMarks = imgMarkService.findAllMarks(jsonObject);
@@ -70,6 +70,6 @@ public class MarkController {
             imgMarkArray.put(imgMarkJson);
         }
         ret.put("marks", imgMarkArray);
-        Json.jsonToResponse(response, ret);
+        JsonHelper.jsonToResponse(response, ret);
     }
 }

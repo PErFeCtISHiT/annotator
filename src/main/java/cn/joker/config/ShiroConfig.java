@@ -4,10 +4,12 @@ import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
+import javax.servlet.MultipartConfigElement;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -100,5 +102,15 @@ public class ShiroConfig {
         r.setExceptionAttribute("ex");     // Default is "exception"
         //r.setWarnLogCategory("example.MvcLogger");     // No default
         return r;
+    }
+
+    @Bean
+    public MultipartConfigElement multipartConfigElement() {
+        MultipartConfigFactory factory = new MultipartConfigFactory();
+        //单个文件最大
+        factory.setMaxFileSize("50MB"); //KB,MB
+        /// 设置总上传数据总大小
+        factory.setMaxRequestSize("50MB");
+        return factory.createMultipartConfig();
     }
 }

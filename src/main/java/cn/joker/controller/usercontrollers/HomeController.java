@@ -2,7 +2,7 @@ package cn.joker.controller.usercontrollers;
 
 import cn.joker.entity.UserInfo;
 import cn.joker.sevice.UserInfoService;
-import cn.joker.util.Json;
+import cn.joker.util.JsonHelper;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -35,22 +35,22 @@ public class HomeController {
         JSONObject msg = new JSONObject();
         // 登录失败从request中获取shiro处理的异常信息。
         // shiroLoginFailure:就是shiro异常类的全类名.
-        JSONObject jsonObject = Json.requestToJson(request);
+        JSONObject jsonObject = JsonHelper.requestToJson(request);
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(jsonObject.get("username").toString(), jsonObject.get("password").toString());
         try {
             subject.login(token);
         } catch (UnknownAccountException e) {
             msg.put("mes", "UnknownAccount");
-            Json.jsonToResponse(response, msg);
+            JsonHelper.jsonToResponse(response, msg);
             return;
         } catch (IncorrectCredentialsException e) {
             msg.put("mes", "IncorrectCredentials");
-            Json.jsonToResponse(response, msg);
+            JsonHelper.jsonToResponse(response, msg);
             return;
         }
         msg.put("mes", "success");
-        Json.jsonToResponse(response, msg);
+        JsonHelper.jsonToResponse(response, msg);
     }
 
     /**
@@ -68,7 +68,7 @@ public class HomeController {
         jsonObject.put("name", userInfo.getName());
         jsonObject.put("points", userInfo.getPoints());
 
-        Json.jsonToResponse(response, jsonObject);
+        JsonHelper.jsonToResponse(response, jsonObject);
 
     }
 

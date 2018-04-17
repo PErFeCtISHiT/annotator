@@ -6,7 +6,7 @@ import cn.joker.entity.UserInfo;
 import cn.joker.sevice.BonusHistoryService;
 import cn.joker.sevice.SysRoleService;
 import cn.joker.sevice.UserInfoService;
-import cn.joker.util.Json;
+import cn.joker.util.JsonHelper;
 import cn.joker.util.PasswordHelper;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.json.JSONArray;
@@ -51,7 +51,7 @@ public class MessageController {
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
     @RequiresPermissions("signUp")
     public void signUp(HttpServletRequest request, HttpServletResponse response) {
-        JSONObject jsonObject = Json.requestToJson(request);
+        JSONObject jsonObject = JsonHelper.requestToJson(request);
         UserInfo userInfo = new UserInfo();
         userInfo.setUid(1);
         userInfo.setPoints(0);
@@ -69,10 +69,11 @@ public class MessageController {
         userInfo.setLevel(1);
         userInfo.setName((String) jsonObject.get(globalUsername));
         userInfo.setState(1);
+        userInfo.setBonus(0);
         JSONObject ret = new JSONObject();
 
         ret.put(globalMes, userInfoService.addUser(userInfo));
-        Json.jsonToResponse(response, ret);
+        JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
@@ -83,7 +84,7 @@ public class MessageController {
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     @RequiresPermissions("submitAssignment")
     public void modifyMessage(HttpServletRequest request, HttpServletResponse response) {
-        JSONObject newUser = Json.requestToJson(request);
+        JSONObject newUser = JsonHelper.requestToJson(request);
         UserInfo newUserInfo = userInfoService.findByUsername((String) newUser.get(globalUsername));
         newUserInfo.setPassword((String) newUser.get(globalPasswr));
         newUserInfo.setName((String) newUser.get(globalName));
@@ -99,7 +100,7 @@ public class MessageController {
         JSONObject ret = new JSONObject();
 
         ret.put(globalMes, userInfoService.modifyUser(newUserInfo));
-        Json.jsonToResponse(response, ret);
+        JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
@@ -119,7 +120,7 @@ public class MessageController {
         } else {
             ret.put("existed", false);
         }
-        Json.jsonToResponse(response, ret);
+        JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
@@ -146,7 +147,7 @@ public class MessageController {
             userInfoArray.put(jsonObject);
         }
         ret.put("users", userInfoArray);
-        Json.jsonToResponse(response, ret);
+        JsonHelper.jsonToResponse(response, ret);
 
     }
 
@@ -164,7 +165,7 @@ public class MessageController {
         JSONObject ret = new JSONObject();
 
         ret.put(globalMes, userInfoService.deleteUser(username));
-        Json.jsonToResponse(response, ret);
+        JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
@@ -175,14 +176,14 @@ public class MessageController {
 
     @RequestMapping(value = "/changePoints", method = RequestMethod.POST)
     public void changePoints(HttpServletRequest request, HttpServletResponse response) {
-        JSONObject jsonObject = Json.requestToJson(request);
+        JSONObject jsonObject = JsonHelper.requestToJson(request);
         String username = (String) jsonObject.get(globalUsername);
         Integer points = (Integer) jsonObject.get(globalPoints);
         UserInfo userInfo = userInfoService.findByUsername(username);
         userInfo.setPoints(userInfo.getPoints() + points);
         JSONObject ret = new JSONObject();
         ret.put(globalMes, userInfoService.modifyUser(userInfo));
-        Json.jsonToResponse(response, ret);
+        JsonHelper.jsonToResponse(response, ret);
 
     }
 
@@ -194,14 +195,14 @@ public class MessageController {
 
     @RequestMapping(value = "/managePoints", method = RequestMethod.POST)
     public void managePoints(HttpServletRequest request, HttpServletResponse response) {
-        JSONObject jsonObject = Json.requestToJson(request);
+        JSONObject jsonObject = JsonHelper.requestToJson(request);
         String username = (String) jsonObject.get(globalUsername);
         Integer points = (Integer) jsonObject.get(globalPoints);
         UserInfo userInfo = userInfoService.findByUsername(username);
         userInfo.setPoints(points);
         JSONObject ret = new JSONObject();
         ret.put(globalMes, userInfoService.modifyUser(userInfo));
-        Json.jsonToResponse(response, ret);
+        JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
@@ -212,7 +213,7 @@ public class MessageController {
 
     @RequestMapping(value = "/Bonus", method = RequestMethod.POST)
     public void bonus(HttpServletRequest request, HttpServletResponse response) {
-        JSONObject jsonObject = Json.requestToJson(request);
+        JSONObject jsonObject = JsonHelper.requestToJson(request);
         BonusHistory bonusHistory = new BonusHistory();
         bonusHistory.setPoints((Integer) jsonObject.get(globalPoints));
         bonusHistory.setTaskID((Integer) jsonObject.get("taskID"));
@@ -220,11 +221,12 @@ public class MessageController {
 
         UserInfo userInfo = userInfoService.findByUsername(bonusHistory.getWorkerName());
         userInfo.setPoints(userInfo.getPoints() + bonusHistory.getPoints());
+        userInfo.setBonus(userInfo.getBonus() + bonusHistory.getPoints());
 
         JSONObject ret = new JSONObject();
 
         ret.put(globalMes, bonusHistoryService.addBonusHistory(bonusHistory) && userInfoService.modifyUser(userInfo));
-        Json.jsonToResponse(response, ret);
+        JsonHelper.jsonToResponse(response, ret);
 
     }
 }

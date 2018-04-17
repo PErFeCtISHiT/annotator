@@ -16,10 +16,13 @@ import java.io.*;
  * @description: good good study
  * @date: create in 20:47 2018/3/28
  */
-public class Json {
-    static Logger logger = LoggerFactory.getLogger(Json.class);
+public class JsonHelper {
+    private static String globalIOException = "IOException";
+    private static Logger logger = LoggerFactory.getLogger(JsonHelper.class);
+    private static String dir = System.getProperty("user.dir") + "/src/main/resources/static/";
 
-    private Json() {
+
+    private JsonHelper() {
         throw new IllegalStateException("Utility class");
     }
 
@@ -29,13 +32,13 @@ public class Json {
      * @date: 15:05 2018/4/13
      */
     public static JsonObject openJson(String fileName) {
-        String path = System.getProperty("user.dir") + "/src/main/resources/static/" + fileName;
+        String path = dir + fileName;
         JsonParser jsonParser = new JsonParser();
         JsonObject jsonObject = null;
         try (FileReader fileReader = new FileReader(path)) {
             jsonObject = (JsonObject) jsonParser.parse(fileReader);
         } catch (IOException e) {
-            logger.error("IOException");
+            logger.error(globalIOException);
         }
 
 
@@ -62,7 +65,7 @@ public class Json {
             }
             streamReader.close();
         } catch (IOException e) {
-            logger.error("IOException");
+            logger.error(globalIOException);
         }
         return new JSONObject(jsonStr.toString());
     }
@@ -73,7 +76,7 @@ public class Json {
      * @date: 15:05 2018/4/13
      */
     public static boolean modifyJson(StringBuilder newJson, String name) {
-        String path = System.getProperty("user.dir") + "/src/main/resources/static/" + name;
+        String path = dir + name;
         File file = new File(path);
         try (FileWriter fileWriter = new FileWriter(file, false)) {
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -92,7 +95,7 @@ public class Json {
         try (PrintWriter writer = response.getWriter()) {
             writer.append(jsonObject.toString());
         } catch (IOException e) {
-            logger.error("IOException");
+            logger.error(globalIOException);
         }
     }
 }

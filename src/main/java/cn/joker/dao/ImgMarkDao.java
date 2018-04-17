@@ -1,7 +1,7 @@
 package cn.joker.dao;
 
 import cn.joker.entity.ImgMark;
-import cn.joker.util.Json;
+import cn.joker.util.JsonHelper;
 import com.google.gson.JsonObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,7 +26,7 @@ public class ImgMarkDao {
     public boolean refreshMark(ImgMark imgMark, JSONObject jsonObject) {
         StringBuilder newJson = new StringBuilder(jsonObject.toString());
         String name = "task/" + imgMark.getTaskID() + "/" + imgMark.getImgName() + "/" + imgMark.getWorkerName() + ".json";
-        return Json.modifyJson(newJson, name);
+        return JsonHelper.modifyJson(newJson, name);
     }
 
     /**
@@ -44,12 +44,12 @@ public class ImgMarkDao {
             JSONObject jsonObject1 = (JSONObject) o;
             String username = jsonObject1.getString("username");
             name += username + ".json";
-            JsonObject markJson = Json.openJson(name);
+            JsonObject markJson = JsonHelper.openJson(name);
             ImgMark imgMark = new ImgMark();
             imgMark.setTaskID(Integer.valueOf(String.valueOf(markJson.get("taskID"))));
-            imgMark.setWorkerName(Json.format(markJson.get("workerName").toString()));
-            imgMark.setSponsorName(Json.format(markJson.get("sponsorName").toString()));
-            imgMark.setImgURL(Json.format(markJson.get("imgURL").toString()));
+            imgMark.setWorkerName(JsonHelper.format(markJson.get("workerName").toString()));
+            imgMark.setSponsorName(JsonHelper.format(markJson.get("sponsorName").toString()));
+            imgMark.setImgURL(JsonHelper.format(markJson.get("imgURL").toString()));
             imgMark.setNotePolygon(markJson.get("notePolygon").toString());
             imgMark.setNoteRectangle(markJson.get("noteRectangle").toString());
             imgMark.setNoteTotal(markJson.get("noteTotal").toString());

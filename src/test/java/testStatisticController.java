@@ -22,4 +22,31 @@ public class testStatisticController {
 
         System.out.println(jsonData);
     }
+    /**
+    *@author:pis
+    *@description: 测试查看排名
+    *@date: 21:37 2018/4/17
+    */
+    @Test
+    public void testCheckRank(){
+        String url = "http://localhost:8080/statistic/checkRanking";
+        RestTemplate restTemplate = new RestTemplate();
+        String jsonData = restTemplate.getForObject(url,String.class);
+
+        System.out.println(jsonData);
+    }
+
+    /**
+    *@author:pis
+    *@description: 测试查看用户
+    *@date: 21:54 2018/4/17
+    */
+    @Test
+    public void testCheckUserNum(){
+        String url = "http://localhost:8080/statistic/checkUserNum";
+        RestTemplate restTemplate = new RestTemplate();
+        String jsonData = restTemplate.getForObject(url,String.class);
+
+        System.out.println(jsonData);
+    }
 }

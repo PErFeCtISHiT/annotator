@@ -1,7 +1,7 @@
 package cn.joker.dao;
 
 import cn.joker.entity.SysPermission;
-import cn.joker.util.Json;
+import cn.joker.util.JsonHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Repository;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 public class SysPermissionDao {
     public SysPermission findBySysPermissionId(String spid) {
 
-        JsonObject jsonObject = Json.openJson("json/permission.json");
+        JsonObject jsonObject = JsonHelper.openJson("json/permission.json");
 
 
         JsonArray jsonArray = jsonObject.getAsJsonArray("permissions");
@@ -27,7 +27,7 @@ public class SysPermissionDao {
             if (permissionJson.get("spid").toString().equals(spid)) {
 
                 sysPermission.setSpid(Integer.valueOf(permissionJson.get("spid").toString()));
-                sysPermission.setPermission(Json.format(permissionJson.get("permission").toString()));
+                sysPermission.setPermission(JsonHelper.format(permissionJson.get("permission").toString()));
                 return sysPermission;
             }
         }

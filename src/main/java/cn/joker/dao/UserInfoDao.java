@@ -2,7 +2,7 @@ package cn.joker.dao;
 
 import cn.joker.entity.SysRole;
 import cn.joker.entity.UserInfo;
-import cn.joker.util.Json;
+import cn.joker.util.JsonHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.json.JSONArray;
@@ -27,18 +27,19 @@ public class UserInfoDao {
     private String globalName = "name";
     private String globalUid = "uid";
     private String globalJsonUsers = "{\"users\":[";
+    private String globalBonus = "bonus";
     @Resource
     private SysRoleDao sysRoleDao;
 
     public UserInfo findByUsername(String username) {
 
-        JsonObject jsonObject = Json.openJson(globalUserJson);
+        JsonObject jsonObject = JsonHelper.openJson(globalUserJson);
         assert jsonObject != null;
         JsonArray userArray = jsonObject.getAsJsonArray(globalUsers);
 
         for (Object o : userArray) {
             JsonObject object = (JsonObject) o;
-            if (Json.format(object.get(globalUsername).toString()).equals(username)) {
+            if (JsonHelper.format(object.get(globalUsername).toString()).equals(username)) {
 
                 return this.warpUserInfo(object);
             }
@@ -48,13 +49,13 @@ public class UserInfoDao {
     }
 
     public boolean addUser(UserInfo userInfo) {
-        JsonObject json = Json.openJson(globalUserJson);
+        JsonObject json = JsonHelper.openJson(globalUserJson);
         assert json != null;
         JsonArray userArray = json.getAsJsonArray(globalUsers);
         StringBuilder newJson = new StringBuilder(globalJsonUsers);
         for (Object o : userArray) {
             JsonObject object = (JsonObject) o;
-            if (Json.format(object.get(globalUsername).toString()).equals(userInfo.getUsername())) {
+            if (JsonHelper.format(object.get(globalUsername).toString()).equals(userInfo.getUsername())) {
                 return false;
             }
             newJson.append(object.toString());
@@ -70,6 +71,7 @@ public class UserInfoDao {
         jsonObject.put(globalPoints, userInfo.getPoints());
         jsonObject.put(globalState, userInfo.getState());
         jsonObject.put(globalLevel, userInfo.getLevel());
+        jsonObject.put(globalBonus, userInfo.getBonus());
         JSONArray roleList = new JSONArray();
         List<SysRole> list = userInfo.getRoleList();
         for (SysRole i : list) {
@@ -82,13 +84,13 @@ public class UserInfoDao {
     }
 
     public boolean modifyUser(UserInfo userInfo) {
-        JsonObject json = Json.openJson(globalUserJson);
+        JsonObject json = JsonHelper.openJson(globalUserJson);
         assert json != null;
         JsonArray userArray = json.getAsJsonArray(globalUsers);
         StringBuilder newJson = new StringBuilder(globalJsonUsers);
         for (Object o : userArray) {
             JsonObject object = (JsonObject) o;
-            if (Json.format(object.get(globalUsername).toString()).equals(userInfo.getUsername())) {
+            if (JsonHelper.format(object.get(globalUsername).toString()).equals(userInfo.getUsername())) {
                 JSONObject newUser = new JSONObject();
                 newUser.put(globalUsername, userInfo.getUsername());
                 newUser.put(globalPasswr, userInfo.getPassword());
@@ -104,6 +106,7 @@ public class UserInfoDao {
                 newUser.put(globalPoints, userInfo.getPoints());
                 newUser.put(globalLevel, userInfo.getLevel());
                 newUser.put(globalState, userInfo.getState());
+                newUser.put(globalBonus, userInfo.getBonus());
                 newJson.append(newUser.toString());
                 newJson.append(",");
             } else {
@@ -124,13 +127,13 @@ public class UserInfoDao {
      * @date: 15:04 2018/4/13
      */
     private boolean updateJson(StringBuilder newJson) {
-        return Json.modifyJson(newJson, globalUserJson);
+        return JsonHelper.modifyJson(newJson, globalUserJson);
     }
 
     public List<UserInfo> findAllUser() {
 
         List<UserInfo> ret = new ArrayList<>();
-        JsonObject jsonObject = Json.openJson(globalUserJson);
+        JsonObject jsonObject = JsonHelper.openJson(globalUserJson);
         assert jsonObject != null;
         JsonArray userArray = jsonObject.getAsJsonArray(globalUsers);
         for (Object o : userArray) {
@@ -141,13 +144,13 @@ public class UserInfoDao {
     }
 
     public boolean deleteUser(String username) {
-        JsonObject json = Json.openJson(globalUserJson);
+        JsonObject json = JsonHelper.openJson(globalUserJson);
         assert json != null;
         JsonArray userArray = json.getAsJsonArray(globalUsers);
         StringBuilder newJson = new StringBuilder(globalJsonUsers);
         for (Object o : userArray) {
             JsonObject object = (JsonObject) o;
-            if (!Json.format(object.get(globalUsername).toString()).equals(username)) {
+            if (!JsonHelper.format(object.get(globalUsername).toString()).equals(username)) {
                 newJson.append(object.toString());
                 newJson.append(",");
             }
@@ -160,9 +163,9 @@ public class UserInfoDao {
 
     private UserInfo warpUserInfo(JsonObject object) {
         UserInfo userInfo = new UserInfo();
-        userInfo.setPassword(Json.format(object.get(globalPasswr).toString()));
-        userInfo.setSalt(Json.format(object.get(globalSalt).toString()));
-        userInfo.setName(Json.format(object.get(globalName).toString()));
+        userInfo.setPassword(JsonHelper.format(object.get(globalPasswr).toString()));
+        userInfo.setSalt(JsonHelper.format(object.get(globalSalt).toString()));
+        userInfo.setName(JsonHelper.format(object.get(globalName).toString()));
         ArrayList<SysRole> roleList = new ArrayList();
         JsonArray jsonArray = object.getAsJsonArray(globalRoleList);
         for (Object obj : jsonArray) {
@@ -172,9 +175,10 @@ public class UserInfoDao {
         userInfo.setRoleList(roleList);
         userInfo.setPoints(Integer.valueOf(String.valueOf(object.get(globalPoints))));
         userInfo.setUid(Integer.valueOf(String.valueOf(object.get(globalUid))));
-        userInfo.setUsername(Json.format(object.get(globalUsername).toString()));
+        userInfo.setUsername(JsonHelper.format(object.get(globalUsername).toString()));
         userInfo.setLevel(Integer.valueOf(String.valueOf(object.get(globalLevel))));
         userInfo.setState(Integer.valueOf(String.valueOf(object.get(globalState))));
+        userInfo.setBonus(Integer.valueOf(String.valueOf(object.get(globalBonus))));
         return userInfo;
     }
 }

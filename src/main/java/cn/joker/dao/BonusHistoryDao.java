@@ -1,7 +1,7 @@
 package cn.joker.dao;
 
 import cn.joker.entity.BonusHistory;
-import cn.joker.util.Json;
+import cn.joker.util.JsonHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.json.JSONObject;
@@ -17,8 +17,9 @@ import java.util.List;
  */
 @Repository
 public class BonusHistoryDao {
+    private String globalJson = "json/bonusHistory.json";
     public boolean addBonusHistory(BonusHistory bonusHistory) {
-        JsonObject json = Json.openJson("json/bonusHistory.json");
+        JsonObject json = JsonHelper.openJson(globalJson);
         assert json != null;
         JsonArray bonusArray = json.getAsJsonArray("bonusHistories");
         StringBuilder newJson = new StringBuilder("{\"bonusHistories\":[");
@@ -38,17 +39,17 @@ public class BonusHistoryDao {
     }
 
     private boolean updateJson(StringBuilder newJson) {
-        return Json.modifyJson(newJson, "json/bonusHistory.json");
+        return JsonHelper.modifyJson(newJson, globalJson);
     }
 
     public List<BonusHistory> findByName(String username) {
-        JsonObject json = Json.openJson("json/bonusHistory.json");
+        JsonObject json = JsonHelper.openJson(globalJson);
         assert json != null;
         List<BonusHistory> bonusHistories = new ArrayList<>();
         JsonArray userArray = json.getAsJsonArray("bonusHistories");
         for (Object o : userArray) {
             JsonObject object = (JsonObject) o;
-            if (Json.format(String.valueOf(object.get("workerName"))).equals(username)) {
+            if (JsonHelper.format(String.valueOf(object.get("workerName"))).equals(username)) {
                 BonusHistory bonusHistory = new BonusHistory();
                 bonusHistory.setWorkerName(username);
                 bonusHistory.setPoints(Integer.valueOf(String.valueOf(object.get("points"))));
