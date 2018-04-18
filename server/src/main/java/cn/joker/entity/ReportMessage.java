@@ -2,10 +2,7 @@ package cn.joker.entity;
 
 import java.io.Serializable;
 
-<<<<<<< HEAD:src/main/java/cn/joker/entity/ReportMessage.java
-=======
 
->>>>>>> dev:server/src/main/java/cn/joker/entity/ReportMessage.java
 /**
  * 举报信息的实体类
  */

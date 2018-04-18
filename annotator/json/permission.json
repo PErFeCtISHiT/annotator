@@ -1,0 +1,48 @@
+{
+  "permissions": [
+    {
+      "spid": 1,
+      "permission": "signUp"
+    },
+    {
+      "spid": 2,
+      "permission": "removeUser"
+    },
+    {
+      "spid": 3,
+      "permission": "modifyUser"
+    },
+    {
+      "spid": 4,
+      "permission": "checkUser"
+    },
+    {
+      "spid": 5,
+      "permission": "checkAssignment"
+    },
+    {
+      "spid": 6,
+      "permission": "checkMessage"
+    },
+    {
+      "spid": 7,
+      "permission": "acceptAssignment"
+    },
+    {
+      "spid": 8,
+      "permission": "submitAssignment"
+    },
+    {
+      "spid": 9,
+      "permission": "checkPoints"
+    },
+    {
+      "spid": 10,
+      "permission": "cancelAssignment"
+    },
+    {
+      "spid": 11,
+      "permission": "releaseAssignment"
+    }
+  ]
+}
