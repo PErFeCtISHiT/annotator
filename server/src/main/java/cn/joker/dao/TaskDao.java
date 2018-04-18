@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TaskDao {
@@ -47,6 +48,8 @@ public class TaskDao {
 
         //接收该任务的用户列表初始化为空
         task.setUserName(new ArrayList<String>());
+        //目前完成量为0
+        task.setCompletedNumber(0);
 
         JSONObject jsonObject = convertObjectToJsonObject(task);
 
@@ -56,15 +59,50 @@ public class TaskDao {
         return this.updateJson(newJson);
     }
 
-    public boolean modifyTask(Task task){
-        ArrayList<Task> allTasks = (ArrayList)search(1, null, 0);
+    public boolean modifyTask(Task task) {
+        JsonObject json = JsonHelper.openJson(globalJson);
+        assert json != null;
+        JsonArray taskArray = json.getAsJsonArray(globalTasks);
 
-        Task t = getTask(task.getTaskID(), allTasks);
+        boolean existTask = false;
 
-        return false;
+        //把已经保存的先拉取出来
+        StringBuilder newJson = new StringBuilder(globalJsonTasks);
+        for (Object o : taskArray) {
+            JSONObject jsonObject = (JSONObject) o;
+
+            if (jsonObject.get("taskID").toString().equals(task.getTaskID().toString())) {
+                existTask = true;
+
+                jsonObject.put(globalTaskName, task.getTaskName());
+                jsonObject.put(globalDescription, task.getDescription());
+                jsonObject.put(globalTag, task.getTag());
+                jsonObject.put(globalWorkerLevel, task.getWorkerLevel());
+                jsonObject.put(globalPoints, task.getPoints());
+                jsonObject.put(globalExpectedNumber, task.getExpectedNumber());
+
+                //时间格式要修改
+                jsonObject.put(globalEndDate, DateHelper.convertDateToString(task.getEndDate()));
+            }
+
+            newJson.append(jsonObject.toString());
+            newJson.append(",");
+        }
+
+        newJson.append("]}");
+
+        return existTask && this.updateJson(newJson);
     }
 
+    /**
+     *
+     * @param userName
+     * @param status status 任务状态（Integer）0 所有 1 正在进行 2 已结束
+     * @param userRole 用户权限（Integer）1 管理员 2 发起者 3 工人
+     * @return
+     */
     public List<Task> checkMyTask(String userName, Integer status, Integer userRole){
+        //TODO
         return null;
     }
 
@@ -98,23 +136,99 @@ public class TaskDao {
         return tasks;
     }
 
-    //要搜索客户那边的任务，全部删除
+    //要搜索客户那边的任务，全部结束
+    //TODO 客户那边的任务还没显示结束
     public boolean endTask(Integer taskID){
+        JsonObject json = JsonHelper.openJson(globalJson);
+        assert json != null;
+        JsonArray taskArray = json.getAsJsonArray(globalTasks);
+
+        //把已经保存的先拉取出来
+        StringBuilder newJson = new StringBuilder(globalJsonTasks);
+        for (Object o : taskArray) {
+            JSONObject jsonObject = (JSONObject) o;
+
+            if (!jsonObject.get("taskID").toString().equals(taskID.toString())) {
+                jsonObject.put(globalEndDate, DateHelper.convertDateToString(new Date()));
+            }
+
+            newJson.append(jsonObject.toString());
+            newJson.append(",");
+        }
         return false;
     }
 
+    //要搜索客户那边的任务，全部删除
+    //TODO 客户那边的任务还没删除
     public boolean deleteTask(Integer  taskID){
-        return false;
+        JsonObject json = JsonHelper.openJson(globalJson);
+        assert json != null;
+        JsonArray taskArray = json.getAsJsonArray(globalTasks);
+
+        //把已经保存的先拉取出来
+        StringBuilder newJson = new StringBuilder(globalJsonTasks);
+        for (Object o : taskArray) {
+            JSONObject jsonObject = (JSONObject) o;
+
+            if (!jsonObject.get("taskID").toString().equals(taskID.toString())) {
+                newJson.append(jsonObject.toString());
+                newJson.append(",");
+            }
+        }
+
+        newJson.append("]}");
+
+        return this.updateJson(newJson);
     }
 
+    //要搜索客户那边的任务，一起完成
+    //TODO 客户那边的任务还没完成
     public boolean completeTask(Integer taskID, String workerName){
-        return false;
+        JsonObject json = JsonHelper.openJson(globalJson);
+        assert json != null;
+        JsonArray taskArray = json.getAsJsonArray(globalTasks);
+
+        //把已经保存的先拉取出来
+        StringBuilder newJson = new StringBuilder(globalJsonTasks);
+        for (Object o : taskArray) {
+            JSONObject jsonObject = (JSONObject) o;
+
+            if (jsonObject.get("taskID").toString().equals(taskID.toString())) {
+                //完成数量加1
+                jsonObject.put(globalCompletedNumebr, Integer.valueOf(jsonObject.get(globalCompletedNumebr).toString())+1);
+
+                //判断是否结束任务
+                if(jsonObject.get(globalCompletedNumebr).toString().equals(jsonObject.get(globalExpectedNumber).toString())){
+                    //时间格式要修改
+                    jsonObject.put(globalEndDate, DateHelper.convertDateToString(new Date()));
+                }
+            }
+
+            newJson.append(jsonObject.toString());
+            newJson.append(",");
+        }
+
+        newJson.append("]}");
+
+        return this.updateJson(newJson);
     }
 
+    /**
+     * 主要是用户那边和任务属性要修改
+     * @param taskID
+     * @param workerName
+     * @return
+     */
     public boolean abortTask(Integer taskID, String workerName){
         return false;
     }
 
+    /**
+     * 主要是用户那边和任务属性要修改
+     * @param taskID
+     * @param workerName
+     * @return
+     */
     public boolean acceptTask(Integer taskID, String workerName){
         return false;
     }
@@ -135,12 +249,13 @@ public class TaskDao {
 
         for (Object o : taskArray) {
             Task task = new Task();
-            JsonObject object = (JsonObject) o;
+            JSONObject object = (JSONObject) o;
             task.setTaskID(Integer.valueOf(JsonHelper.format(object.get(globalTaskID).toString())));
             task.setSponsorName(JsonHelper.format(object.get(globalSponsorName).toString()));
             task.setTaskName(JsonHelper.format(object.get(globalTaskName).toString()));
             task.setDescription(JsonHelper.format(object.get(globalDescription).toString()));
-            //数组转换 todo
+
+            //todo 数组转换
             //task.setTag(JsonHelper.format(object.get(globalTag).toString()));
             //task.setUserName();
 
@@ -171,7 +286,7 @@ public class TaskDao {
         jsonObject.put(globalPoints, task.getPoints());
         jsonObject.put(globalExpectedNumber, task.getExpectedNumber());
 
-        jsonObject.put(globalCompletedNumebr, 0);
+        jsonObject.put(globalCompletedNumebr, task.getCompletedNumber());
 
         //时间格式要修改
         jsonObject.put(globalStartDate, DateHelper.convertDateToString(task.getStartDate()));
@@ -191,4 +306,6 @@ public class TaskDao {
         }
         return null;
     }
+
+
 }
