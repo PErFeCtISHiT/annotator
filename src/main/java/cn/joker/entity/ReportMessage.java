@@ -1,11 +1,9 @@
 package cn.joker.entity;
 
-<<<<<<< HEAD:src/main/java/cn/joker66/entity/ReportMessage.java
-=======
 import java.io.Serializable;
 import java.util.Date;
 
->>>>>>> dev:src/main/java/cn/joker/entity/ReportMessage.java
+
 /**
  * 举报信息的实体类
  */
