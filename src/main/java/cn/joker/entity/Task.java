@@ -15,14 +15,14 @@ public class Task implements Serializable{
 
     private Integer workerLevel;//用户等级要求，可选项
     private Integer points;//用户完成任务的积分奖励
-    private Integer exceptedNumber;//预计完成数量要求，满足该要求自动关闭任务
+    private Integer expectedNumber;//预计完成数量要求，满足该要求自动关闭任务
     private Integer completedNumber;//目前已完成数量
 
     private Date startDate;//开始时间
     private Date endDate;//结束时间
 
     //可能不需要该属性
-    private String imgName;//图片包名字
+    //private String imgName;//图片包名字
 
     private ArrayList<String> userName;//标注用户的用户名
 
@@ -45,12 +45,12 @@ public class Task implements Serializable{
         this.endDate = endDate;
     }
 
-    public Integer getExceptedNumber() {
-        return exceptedNumber;
+    public Integer getExpectedNumber() {
+        return expectedNumber;
     }
 
-    public void setExceptedNumber(Integer exceptedNumber) {
-        this.exceptedNumber = exceptedNumber;
+    public void setExpectedNumber(Integer exceptedNumber) {
+        this.expectedNumber = expectedNumber;
     }
 
     public void setUserName(ArrayList<String> userName) {
@@ -95,5 +95,29 @@ public class Task implements Serializable{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getSponsorName() {
+        return sponsorName;
+    }
+
+    public void setSponsorName(String sponsorName) {
+        this.sponsorName = sponsorName;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Integer getTaskID() {
+        return taskID;
+    }
+
+    public void setTaskID(Integer taskID) {
+        this.taskID = taskID;
     }
 }
