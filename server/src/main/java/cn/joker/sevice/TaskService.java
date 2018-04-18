@@ -15,7 +15,7 @@ public interface TaskService {
 
     public boolean endTask(Integer taskID);
 
-    public boolean deleteTask(Integer  taskID);
+    public boolean deleteTask(Integer taskID);
 
     public boolean completeTask(Integer taskID, String workerName);
 

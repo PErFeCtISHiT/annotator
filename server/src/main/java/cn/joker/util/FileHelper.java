@@ -33,7 +33,7 @@ public class FileHelper {
         return path.replace("/", FILE_SEPARATOR).replace("\\", FILE_SEPARATOR);
     }
 
-    private static final String DIR = System.getProperty("user.dir") + "/src/main/resources/static/";
+    private static final String DIR = System.getProperty("user.dir") + "/server/src/main/resources/static/";
 
     public static boolean saveZip(String taskID, MultipartFile file) {
         if (file.isEmpty()) {

@@ -19,7 +19,7 @@ import java.io.*;
 public class JsonHelper {
     private static String globalIOException = "IOException";
     private static Logger logger = LoggerFactory.getLogger(JsonHelper.class);
-    private static String dir = System.getProperty("user.dir") + "/src/main/resources/static/";
+    private static String dir = System.getProperty("user.dir") + "/server/src/main/resources/static/";
 
 
     private JsonHelper() {
