@@ -1,7 +1,7 @@
-package cn.joker66.dao;
+package cn.joker.dao;
 
-import cn.joker66.entity.ReportMessage;
-import cn.joker66.util.Json;
+import cn.joker.entity.ReportMessage;
+import cn.joker.util.JsonHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -24,7 +24,7 @@ public class ReportDao {
      * @return
      */
     public List<ReportMessage> checkWorkerReport() {
-        JsonObject jsonObject = Json.openJson("/workerReported.json");
+        JsonObject jsonObject = JsonHelper.openJson("/workerReported.json");
         assert jsonObject != null;
         JsonArray reportMessageArray = jsonObject.getAsJsonArray("workerReportedMessages");
 
@@ -36,7 +36,7 @@ public class ReportDao {
      * @return
      */
     public List<ReportMessage> checkTaskReport() {
-        JsonObject jsonObject = Json.openJson("/taskReported.json");
+        JsonObject jsonObject = JsonHelper.openJson("/taskReported.json");
         assert jsonObject != null;
         JsonArray reportMessageArray = jsonObject.getAsJsonArray("taskReportedMessages");
 
@@ -60,14 +60,14 @@ public class ReportDao {
         for(Object o : reportMessageArray){
             JsonObject object = (JsonObject) o;
             //对尚未处理过的信息进行处理
-            if(Json.format(object.get("isDealt").toString()).equals(false)){
+            if(JsonHelper.format(object.get("isDealt").toString()).equals(false)){
                 ReportMessage reportMessage = new ReportMessage();
-                reportMessage.setDescription(Json.format(object.get("description").toString()));
-                reportMessage.setTaskName(Json.format(object.get("taskName").toString()));
-                reportMessage.setReporter(Json.format(object.get("reporter").toString()));
-                reportMessage.setRespondent(Json.format(object.get("respondent").toString()));
-                reportMessage.setTaskID(Integer.valueOf(Json.format(object.get("taskID").toString())));
-                reportMessage.setReportTime(Json.format(object.get("reportTime").toString()));
+                reportMessage.setDescription(JsonHelper.format(object.get("description").toString()));
+                reportMessage.setTaskName(JsonHelper.format(object.get("taskName").toString()));
+                reportMessage.setReporter(JsonHelper.format(object.get("reporter").toString()));
+                reportMessage.setRespondent(JsonHelper.format(object.get("respondent").toString()));
+                reportMessage.setTaskID(Integer.valueOf(JsonHelper.format(object.get("taskID").toString())));
+                reportMessage.setReportTime(JsonHelper.format(object.get("reportTime").toString()));
                 reportMessage.setType(i);
 
                 workerReport.add(reportMessage);

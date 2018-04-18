@@ -1,6 +1,6 @@
-package cn.joker66.sevice;
+package cn.joker.sevice;
 
-import cn.joker66.entity.ReportMessage;
+import cn.joker.entity.ReportMessage;
 
 import java.util.Date;
 import java.util.List;

@@ -1,10 +1,9 @@
-package cn.joker66.serviceImpl;
+package cn.joker.serviceimpl;
 
-import cn.joker66.dao.ReportDao;
-import cn.joker66.entity.ReportMessage;
-import cn.joker66.sevice.ReportService;
+import cn.joker.dao.ReportDao;
+import cn.joker.entity.ReportMessage;
+import cn.joker.sevice.ReportService;
 
-import java.util.Date;
 import java.util.List;
 
 public class ReportServiceImpl implements ReportService{
