@@ -25,4 +25,11 @@ public interface TaskService {
 
     //目前还不确定，好像这个返回值有点多
     public Task checkTaskDetail(Integer taskID, Integer userRole);
+
+    //查看某个工人的进度
+    public Double checkTaskProgress(Integer taskID,String workerName);
+
+
+    //得到一个新ID
+    public Integer generateID();
 }

@@ -1,4 +1,4 @@
-package cn.joker.controller;
+package cn.joker.controller.taskcontrollers;
 
 import cn.joker.util.FileHelper;
 import cn.joker.util.JsonHelper;

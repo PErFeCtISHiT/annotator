@@ -3,6 +3,10 @@ package cn.joker.serviceimpl;
 import cn.joker.dao.TaskDao;
 import cn.joker.entity.Task;
 import cn.joker.sevice.TaskService;
+import cn.joker.util.JsonHelper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -57,5 +61,17 @@ public class TaskServiceImpl implements TaskService{
     @Override
     public Task checkTaskDetail(Integer taskID, Integer userRole) {
         return taskDao.checkTaskDetail(taskID, userRole);
+    }
+
+    @Override
+    public Double checkTaskProgress(Integer taskID, String workerName) {
+        return taskDao.checkTaskProgress(taskID,workerName);
+    }
+
+    @Override
+    public Integer generateID() {
+        JsonObject jsonObject = JsonHelper.openJson("json/task.json");
+        JsonArray taskArray = jsonObject.getAsJsonArray("tasks");
+        return taskArray.size() + 1;
     }
 }
