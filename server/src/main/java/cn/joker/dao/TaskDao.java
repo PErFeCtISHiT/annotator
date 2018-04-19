@@ -308,4 +308,11 @@ public class TaskDao {
     }
 
 
+    public Double checkTaskProgress(Integer taskID, String workerName) {
+
+        /**
+        *todo: 查看某个任务的进度，，进度在与任务分开存的另一个json里面
+        */
+        return null;
+    }
 }

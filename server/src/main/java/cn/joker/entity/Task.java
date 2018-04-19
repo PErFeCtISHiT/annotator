@@ -20,6 +20,9 @@ public class Task implements Serializable{
 
     private Date startDate;//开始时间
     private Date endDate;//结束时间
+    private Integer status;//任务状态
+
+
 
     //可能不需要该属性
     //private String imgName;//图片包名字
@@ -27,6 +30,18 @@ public class Task implements Serializable{
     private ArrayList<String> userName;//标注用户的用户名
 
     public Task() {
+    }
+
+    public ArrayList<String> getUserName() {
+        return userName;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Integer getCompletedNumber() {
