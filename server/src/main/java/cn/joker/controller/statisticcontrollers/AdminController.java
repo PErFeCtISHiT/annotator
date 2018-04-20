@@ -1,7 +1,9 @@
 package cn.joker.controller.statisticcontrollers;
 
 import cn.joker.entity.SysRole;
+import cn.joker.entity.Task;
 import cn.joker.entity.UserInfo;
+import cn.joker.sevice.TaskService;
 import cn.joker.sevice.UserInfoService;
 import cn.joker.util.JsonHelper;
 import org.json.JSONObject;
@@ -23,7 +25,8 @@ import java.util.List;
 public class AdminController {
     @Resource
     private UserInfoService userInfoService;
-
+    @Resource
+    private TaskService taskService;
     @RequestMapping(value = "/checkUserNum", method = RequestMethod.GET)
     public void checkUserNum(HttpServletResponse response) {
         JSONObject ret = new JSONObject();
@@ -47,5 +50,18 @@ public class AdminController {
         ret.put("adminNum", adminNum);
         JsonHelper.jsonToResponse(response, ret);
 
+    }
+
+    @RequestMapping(value = "/checkTaskNum",method = RequestMethod.GET)
+    public void checkTaskNum(HttpServletResponse response){
+        JSONObject ret = new JSONObject();
+        int taskNum = 0;
+        int producing = 0;
+        int finished = 0;
+        List<Task> tasks = taskService.search(1,null,0);
+        taskNum = tasks.size();
+        for(Task task : tasks){
+
+        }
     }
 }

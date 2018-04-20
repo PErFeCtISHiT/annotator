@@ -70,8 +70,7 @@ public class TaskServiceImpl implements TaskService{
 
     @Override
     public Integer generateID() {
-        JsonObject jsonObject = JsonHelper.openJson("json/task.json");
-        JsonArray taskArray = jsonObject.getAsJsonArray("tasks");
-        return taskArray.size() + 1;
+        List<Task> tasks = taskDao.search(1,null,0);
+        return tasks.size() + 1;
     }
 }
