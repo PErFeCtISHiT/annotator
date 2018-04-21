@@ -297,13 +297,8 @@ public class TaskController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "/checkTaskDetail")
     public void checkTaskDetail(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, String[]> map = request.getParameterMap();
-        Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
-        Integer userRole = Integer.valueOf(map.get(globalUserRole)[0]);
-        Task task = taskService.checkTaskDetail(taskID,userRole);
-        TaskDao taskDao = new TaskDao();
-        JSONObject ret = taskDao.convertObjectToJsonObject(task);
-        JsonHelper.jsonToResponse(response, ret);
+        //TODO
+        return;
     }
 
     /**
