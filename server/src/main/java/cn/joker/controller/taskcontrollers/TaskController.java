@@ -1,8 +1,11 @@
 package cn.joker.controller.taskcontrollers;
 
+import cn.joker.dao.TaskDao;
 import cn.joker.entity.ReportMessage;
 import cn.joker.entity.Task;
+import cn.joker.entity.UserInfo;
 import cn.joker.sevice.TaskService;
+import cn.joker.sevice.UserInfoService;
 import cn.joker.util.DateHelper;
 import cn.joker.util.JsonHelper;
 import org.json.JSONArray;
@@ -16,6 +19,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -23,6 +27,8 @@ import java.util.List;
 public class TaskController {
     @Resource
     private TaskService taskService;
+    @Resource
+    private UserInfoService userInfoService;
     private String globalTaskID = "taskID";
     private String globalSponsorName = "sponsorName";
     private String globalTaskName = "taskName";
@@ -36,12 +42,16 @@ public class TaskController {
     private String globalEndDate = "endDate";
     private String globalMes = "mes";
     private String globalUsername = "username";
+    private String globalUserRole = "userRole";
     private String globalStatus = "status";
+    private String globalTasks = "tasks";
 
 
     /**
      * 发起任务
-     * @param request http
+     *
+     * @param request  http
+     * @param response http
      * @return 任务是否发布成功
      */
     @ResponseBody
@@ -59,11 +69,10 @@ public class TaskController {
         task.setStartDate(DateHelper.convertStringtoDate(jsonObject.getString(globalStartDate)));
         String[] tags = new String[]{};
         JSONArray tagArray = jsonObject.getJSONArray(globalTag);
-        for(int i = 0;i < tagArray.length();i++){
+        for (int i = 0; i < tagArray.length(); i++) {
             tags[i] = (String) tagArray.get(i);
         }
         task.setTag(tags);
-        task.setStatus(1);
         task.setTaskName(jsonObject.getString(globalTaskName));
         task.setUserName(null);
         task.setWorkerLevel(jsonObject.getInt(globalWorkerLevel));
@@ -75,8 +84,9 @@ public class TaskController {
 
     /**
      * 修改任务
+     *
      * @param task
-     * @return 任务是否发布成功
+     * @return 任务是否修改
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/modifyTask")
@@ -87,150 +97,192 @@ public class TaskController {
 
     /**
      * 查看某个用户的所有任务
-     * @param request
-     * @param response
+     *
+     * @param request  http
+     * @param response http
      */
     @RequestMapping(method = RequestMethod.POST, value = "/myTask")
     public void checkMyTask(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
         String username = jsonObject.getString(globalUsername);
 
-        Integer status = jsonObject.getInt(globalStatus);
-        Integer userRole = jsonObject.getInt("userRole");
+        Integer userRole = jsonObject.getInt(globalUserRole);
         JSONObject ret = new JSONObject();
 
-        List<Task> tasks = taskService.checkMyTask(username,status,userRole);
+        List<Task> tasks = taskService.checkMyTask(username, 0, userRole);
         JSONArray taskArray = new JSONArray();
-        for(Task task : tasks){
+        for (Task task : tasks) {
             JSONObject taskObject = new JSONObject();
-            taskObject.put(globalTaskID,task.getTaskID());
-            taskObject.put(globalTaskName,task.getTaskName());
-            taskObject.put(globalDescription,task.getDescription());
-            taskObject.put(globalSponsorName,task.getSponsorName());
-            if(userRole.equals(3))
-            taskObject.put("progress",taskService.checkTaskProgress(task.getTaskID(),username));
+            taskObject.put(globalTaskID, task.getTaskID());
+            taskObject.put(globalTaskName, task.getTaskName());
+            taskObject.put(globalDescription, task.getDescription());
+            taskObject.put(globalSponsorName, task.getSponsorName());
+            if (userRole.equals(3))
+                taskObject.put("progress", taskService.checkTaskProgress(task.getTaskID(), username));
             taskObject.put("totalProgress", new Double(task.getCompletedNumber() / task.getExpectedNumber()));
-            taskObject.put(globalStartDate,DateHelper.convertDateToString(task.getStartDate()));
-            taskObject.put(globalEndDate,DateHelper.convertDateToString(task.getEndDate()));
+            taskObject.put(globalStartDate, DateHelper.convertDateToString(task.getStartDate()));
+            taskObject.put(globalEndDate, DateHelper.convertDateToString(task.getEndDate()));
             taskArray.put(taskObject);
         }
-        ret.put("tasks",taskArray);
+        ret.put(globalTasks, taskArray);
         JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
      * 查看当前所有任务以及搜索任务
-     * @param request
-     * @param response
+     *
+     * @param request  http
+     * @param response http
      */
     @RequestMapping(method = RequestMethod.POST, value = "/allTasks")
-    public void search(HttpServletRequest request, HttpServletRequest response){
-        //TODO
+    public void search(HttpServletRequest request, HttpServletResponse response) {
+        JSONObject jsonObject = JsonHelper.requestToJson(request);
+        Integer userRole = jsonObject.getInt(globalUserRole);
+        String tag = jsonObject.getString(globalTag);
+        Integer status = jsonObject.getInt(globalStatus);
+        List<Task> tasks = taskService.search(userRole, tag, status);
+        TaskDao taskDao = new TaskDao();
+        JSONArray taskArray = new JSONArray();
+        for (Task task : tasks) {
+            JSONObject taskObj = taskDao.convertObjectToJsonObject(task);
+            taskArray.put(taskObj);
+        }
+        JSONObject ret = new JSONObject();
+        ret.put(globalTasks, taskArray);
+        JsonHelper.jsonToResponse(response, ret);
+
     }
 
     /**
      * 结束任务
-     * @param taskID
+     *
+     * @param request 编号
      * @return 是否成功结束该任务
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/endTask")
-    public void endTask(String taskID, HttpServletRequest response){
-        //TODO
-        return;
+    public void endTask(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String[]> map = request.getParameterMap();
+        Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
+        JSONObject ret = new JSONObject();
+        ret.put(globalMes, taskService.endTask(taskID));
+        JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
      * 删除任务
-     * @param taskID
+     *
+     * @param request id
      * @return 是否成功删除该任务
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/deleteTask")
-    public void deleteTask(String taskID, HttpServletRequest response){
-        //TODO
-        return;
+    public void deleteTask(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String[]> map = request.getParameterMap();
+        Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
+        JSONObject ret = new JSONObject();
+        ret.put(globalMes, taskService.deleteTask(taskID));
+        JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
-     * 完成任务
-     * @param taskID 任务ID
-     * @param workerName 工人用户名
-     * @return
+     * 完成任务,增加对应积分
+     *
+     * @param request 任务ID 工人用户名
+     * @return 是否成功
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/completeTask")
-    public void completeTask(Integer taskID, String workerName, HttpServletRequest response){
-        //TODO
-        return;
+    public void completeTask(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String[]> map = request.getParameterMap();
+        Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
+        Task task = taskService.checkTaskDetail(taskID, 3);
+        String username = map.get(globalUsername)[0];
+        UserInfo userInfo = userInfoService.findByUsername(username);
+        userInfo.setPoints(userInfo.getPoints() + task.getPoints());
+        JSONObject ret = new JSONObject();
+        ret.put(globalMes, taskService.completeTask(taskID, username) && userInfoService.modifyUser(userInfo));
+        JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
      * 放弃任务
-     * @param taskID 任务ID
-     * @param workerName 工人用户名
-     * @return
+     *
+     * @param request 任务ID 工人用户名
+     * @return 是否成功
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/abortTask")
-    public void abortTask(Integer taskID, String workerName, HttpServletRequest response){
-        //TODO
-        return;
+    public void abortTask(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String[]> map = request.getParameterMap();
+        Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
+        String username = map.get(globalUsername)[0];
+        JSONObject ret = new JSONObject();
+        ret.put(globalMes, taskService.abortTask(taskID, username));
+        JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
      * 接受任务
-     * @param taskID 任务ID
-     * @param workerName 工人用户名
-     * @return
+     *
+     * @param request 任务ID 工人用户名
+     * @return 是否接受成功
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/acceptTask")
-    public void acceptTask(Integer taskID, String workerName, HttpServletRequest response){
-        //TODO
-        return;
+    public void acceptTask(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String[]> map = request.getParameterMap();
+        Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
+        String username = map.get(globalUsername)[0];
+        JSONObject ret = new JSONObject();
+        ret.put(globalMes, taskService.acceptTask(taskID, username));
+        JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
      * 举报任务
+     *
      * @param reportMessage 举报信息
      * @return
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/reportTask")
-    public void reportTask(ReportMessage reportMessage, HttpServletRequest response){
+    public void reportTask(ReportMessage reportMessage, HttpServletRequest response) {
         //TODO
         return;
     }
 
     /**
      * 举报工人
+     *
      * @param reportMessage 举报信息
      * @return
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/reportWorker")
-    public void reportWorker(ReportMessage reportMessage, HttpServletRequest response){
+    public void reportWorker(ReportMessage reportMessage, HttpServletRequest response) {
         //TODO
         return;
     }
 
     /**
      * 管理员查看用户被举报的所有信息
+     *
      * @param response
      */
     @RequestMapping(method = RequestMethod.GET, value = "/checkWorkerReport")
-    public void checkWorkerReport(HttpServletRequest response){
+    public void checkWorkerReport(HttpServletRequest response) {
         //TODO
         return;
     }
 
     /**
      * 管理员查看任务被举报的所有信息
+     *
      * @param response
      */
     @RequestMapping(method = RequestMethod.GET, value = "/checkTaskReport")
-    public void checkTaskReport(HttpServletRequest response){
+    public void checkTaskReport(HttpServletRequest response) {
         //TODO
         return;
     }
@@ -238,21 +290,23 @@ public class TaskController {
     /**
      * 所有人员查看任务细节
      * 参数是taskID和人员角色
+     *
      * @param response
      */
     @RequestMapping(method = RequestMethod.POST, value = "/checkTaskDetail")
-    public void checkTaskDetail(HttpServletRequest request, HttpServletRequest response){
+    public void checkTaskDetail(HttpServletRequest request, HttpServletRequest response) {
         //TODO
         return;
     }
 
     /**
      * 管理员处理举报信息
+     *
      * @param request
      * @param response
      */
     @RequestMapping(method = RequestMethod.POST, value = "/dealReport")
-    public void dealReport(HttpServletRequest request, HttpServletRequest response){
+    public void dealReport(HttpServletRequest request, HttpServletRequest response) {
         //todo
     }
 

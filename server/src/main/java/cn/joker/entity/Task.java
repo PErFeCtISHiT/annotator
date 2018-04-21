@@ -20,7 +20,6 @@ public class Task implements Serializable{
 
     private Date startDate;//开始时间
     private Date endDate;//结束时间
-    private Integer status;//任务状态
 
 
 
@@ -34,14 +33,6 @@ public class Task implements Serializable{
 
     public ArrayList<String> getUserName() {
         return userName;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
     }
 
     public Integer getCompletedNumber() {

@@ -7,9 +7,10 @@ import cn.joker.util.JsonHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class TaskServiceImpl implements TaskService{
     private TaskDao taskDao = new TaskDao();
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -61,7 +62,17 @@ public class AdminController {
         List<Task> tasks = taskService.search(1,null,0);
         taskNum = tasks.size();
         for(Task task : tasks){
-
+            Date now = new Date();
+            Date taskDate = task.getEndDate();
+            if(now.compareTo(taskDate) > 0){
+                finished++;
+            }
+            else
+                producing++;
         }
+        ret.put("sponsorNum", taskNum);
+        ret.put("workerNum", producing);
+        ret.put("adminNum", finished);
+        JsonHelper.jsonToResponse(response, ret);
     }
 }

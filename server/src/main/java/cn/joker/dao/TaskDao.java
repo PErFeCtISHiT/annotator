@@ -273,7 +273,7 @@ public class TaskDao {
         return tasks;
     }
 
-    private JSONObject convertObjectToJsonObject(Task task){
+    public JSONObject convertObjectToJsonObject(Task task){
         JSONObject jsonObject = new JSONObject();
 
         jsonObject.put(globalTaskID, task.getTaskID());

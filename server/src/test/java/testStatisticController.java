@@ -49,4 +49,18 @@ public class testStatisticController {
 
         System.out.println(jsonData);
     }
+
+    /**
+     *@author:pis
+     *@description: 测试查看任务
+     *@date: 21:54 2018/4/17
+     */
+    @Test
+    public void testCheckTaskNum(){
+        String url = "http://localhost:8080/statistic/checkTaskNum";
+        RestTemplate restTemplate = new RestTemplate();
+        String jsonData = restTemplate.getForObject(url,String.class);
+
+        System.out.println(jsonData);
+    }
 }
