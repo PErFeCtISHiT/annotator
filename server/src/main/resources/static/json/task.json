@@ -5,16 +5,20 @@
       "sponsorName": "kiki",
       "taskName": "123",
       "description": "标出图片中的人",
-      "tag": "人物",
+      "tag":[
+        "人物",
+        "旅游"
+      ],
       "workerLevel": 2,
       "points": 123,
       "expectedNumber": 10,
       "completedNumber": 0,
       "startDate": "2018#03#24#12#00#00",
       "endDate": "2018#05#24#23#59#59",
+      "imgNum": 12,
       "userName": [
-        "worker1",
-        "worker2"
+        "worker1-11",
+        "worker2-0"
       ]
     }
   ]
