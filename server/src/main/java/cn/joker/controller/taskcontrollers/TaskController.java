@@ -45,6 +45,7 @@ public class TaskController {
     private String globalUserRole = "userRole";
     private String globalStatus = "status";
     private String globalTasks = "tasks";
+    private String globalImgNum = "imgNum";
 
 
     /**
@@ -66,6 +67,7 @@ public class TaskController {
         task.setExpectedNumber(jsonObject.getInt(globalExpectedNumber));
         task.setPoints(jsonObject.getInt(globalPoints));
         task.setSponsorName(jsonObject.getString(globalSponsorName));
+        task.setImageNum(jsonObject.getInt(globalImgNum));
         task.setStartDate(DateHelper.convertStringtoDate(jsonObject.getString(globalStartDate)));
         String[] tags = new String[]{};
         JSONArray tagArray = jsonObject.getJSONArray(globalTag);
@@ -294,9 +296,14 @@ public class TaskController {
      * @param response
      */
     @RequestMapping(method = RequestMethod.POST, value = "/checkTaskDetail")
-    public void checkTaskDetail(HttpServletRequest request, HttpServletRequest response) {
-        //TODO
-        return;
+    public void checkTaskDetail(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String[]> map = request.getParameterMap();
+        Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
+        Integer userRole = Integer.valueOf(map.get(globalUserRole)[0]);
+        Task task = taskService.checkTaskDetail(taskID,userRole);
+        TaskDao taskDao = new TaskDao();
+        JSONObject ret = taskDao.convertObjectToJsonObject(task);
+        JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
