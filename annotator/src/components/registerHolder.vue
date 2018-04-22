@@ -1,16 +1,18 @@
 <template>
   <div id="registerHolder">
-    <el-form :model="registerForm" status-icon :rules="rules2" ref="registerForm" label-width="100px"
-             class="demo-ruleForm">
-      <el-form-item label="密码" prop="pass">
-        <el-input type="password" v-model="registerForm.pass" auto-complete="off"></el-input>
+    <el-form :model="registerForm" status-icon :rules="rules2" ref="registerForm" class="demo-ruleForm">
+      <el-form-item prop="age">
+        <el-input prefix-icon="el-icon-goods" v-model.number="registerForm.userName" placeholder="请输入用户名"></el-input>
       </el-form-item>
-      <el-form-item label="确认密码" prop="checkPass">
-        <el-input type="password" v-model="registerForm.checkPass" auto-complete="off"></el-input>
+
+      <el-form-item prop="pass">
+        <el-input prefix-icon="el-icon-goods" type="password" placeholder="请输入密码" v-model="registerForm.pass"></el-input>
       </el-form-item>
-      <el-form-item label="年龄" prop="age">
-        <el-input v-model.number="registerForm.age"></el-input>
+
+      <el-form-item prop="checkPass">
+        <el-input prefix-icon="el-icon-view" type="password" v-model="registerForm.checkPass" placeholder="请再次输入密码"></el-input>
       </el-form-item>
+
       <el-form-item>
         <el-col :span="8">
           <el-button type="primary" @click="submitForm('registerForm')">注册</el-button>
@@ -31,7 +33,7 @@
     data() {
 
 
-      var checkAge = (rule, value, callback) => {
+      var checkUserName = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('年龄不能为空'));
         }
@@ -76,7 +78,7 @@
         registerForm: {
           pass: '',
           checkPass: '',
-          age: ''
+          userName: ''
         },
         rules2: {
           pass: [
@@ -85,8 +87,8 @@
           checkPass: [
             {validator: validatePass2, trigger: 'blur'}
           ],
-          age: [
-            {validator: checkAge, trigger: 'blur'}
+          userName: [
+            {validator: checkUserName, trigger: 'blur'}
           ]
         }
       };
@@ -114,7 +116,7 @@
 
 <style scoped>
   #registerHolder {
-    width: 300px;
+    width: 450px;
     margin: 0 auto;
   }
 </style>

@@ -15,7 +15,7 @@
       <el-form-item prop="verification">
         <el-row :gutter="20">
           <el-col :span="16">
-            <el-input prefix-icon="el-icon-edit-outline" placeholder="请输入验证码"
+            <el-input prefix-icon="el-icon-edit-outline" placeholder="请输入验证码（大小写敏感）"
                       v-model="loginForm.verification"></el-input>
           </el-col>
           <el-col :span="8">
@@ -60,8 +60,28 @@
       var validateUsername = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('用户名不能为空'));
-        } else {
+        }
+        else if(value === 'admin'){              //这里以后要注释掉
           callback();
+        }
+        else {
+
+          this.$http.get('user/findUser', {
+            params: {
+              username: value
+            }
+          })
+            .then(function (response) {
+              if(!response.data.existed){
+                // console.log(response.data.existed);
+                callback(new Error('该用户不存在'));
+              }
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+
+          setTimeout(()=>callback(new Error('网路连接不畅')),1000);  //setTimeOut传递的是函数
         }
       };
 
@@ -120,11 +140,32 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if (this.loginForm.username === "admin") {
-              this.logIn({name: "admin"});
+              this.logIn({name: "admin",password:"",});
+            }else{
+              this.$http.post('/user/login', {
+                username: this.loginForm.username,
+                password: this.loginForm.password
+              })
+                .then(function (response) {
+                  this.logIn(response.data)
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
             }
           } else {
-            alert('您未按要求填写!');
-            return false;
+            this.sendAlert('您填写的内容不符合要求','登录错误提示');
+          }
+        });
+      },
+      sendAlert(title,sub){
+        this.$alert(title, sub, {
+          confirmButtonText: '确定',
+          callback: () => {
+            this.$message({
+              type: 'info',
+              message: '已回到登录页面'
+            });
           }
         });
       },
