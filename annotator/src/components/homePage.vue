@@ -10,7 +10,7 @@
 
   export default {
     data() {
-      return {msg: "请修改这一页 相关内容加到div里"}
+      return {msg: "请修改这一页"}
     },
     methods: {
       ...mapActions(['logOut']),
