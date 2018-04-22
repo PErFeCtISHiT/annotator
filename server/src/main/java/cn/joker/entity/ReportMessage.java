@@ -61,4 +61,24 @@ public class ReportMessage implements Serializable{
     public String getDescription() {
         return description;
     }
+
+    public String getRespondent() {
+        return respondent;
+    }
+
+    public String getReporter() {
+        return reporter;
+    }
+
+    public Integer getTaskID() {
+        return taskID;
+    }
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public String getReportTime() {
+        return reportTime;
+    }
 }

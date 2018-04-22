@@ -21,12 +21,15 @@ public class Task implements Serializable{
     private Date startDate;//开始时间
     private Date endDate;//结束时间
 
-    //可能不需要该属性
-    //private String imgName;//图片包名字
+    private Integer imageNum; //图片总数
 
-    private ArrayList<String> userName;//标注用户的用户名
+    private ArrayList<String> userName;//标注用户的用户名，这边还会有目前该用户标注的图片数量
 
     public Task() {
+    }
+
+    public ArrayList<String> getUserName() {
+        return userName;
     }
 
     public Integer getCompletedNumber() {
@@ -119,5 +122,13 @@ public class Task implements Serializable{
 
     public void setTaskID(Integer taskID) {
         this.taskID = taskID;
+    }
+
+    public Integer getImageNum() {
+        return imageNum;
+    }
+
+    public void setImageNum(Integer imageNum) {
+        this.imageNum = imageNum;
     }
 }

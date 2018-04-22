@@ -41,7 +41,7 @@ public class testImgMarkController {
         requestHeaders.set("Accept", "text/plain");
         requestHeaders.set("Content-Type", "application/json");
 
-        String jsonStr = "{\"imgURL\":\"/tt/c.png\",\"workerName\":\"a\",\"sponsorName\":\"sponsorName\",\"noteRectangle\":[{\"top\":286,\"left\":161,\"width\":52,\"height\":37,\"mark\":\"people\",\"id\":\"2018#03#20#12#24#35\"}],\"notePolygon\":[{\"points\":[{\"x\":\"\",\"y\":\"\"}],\"mark\":\"people\",\"id\":\"2018#03#20#12#24#35\"}],\"noteTotal\":[{\"mark\":\"fghgfh\",\"id\":\"2018#03#20#12#24#35\"}],\"taskID\":123}";
+        String jsonStr = "{\"imgURL\":\"/tt/a.png\",\"workerName\":\"a\",\"sponsorName\":\"sponsorName\",\"noteRectangle\":[{\"top\":287,\"left\":161,\"width\":52,\"height\":37,\"mark\":\"people\",\"id\":\"2018#03#20#12#24#35\"}],\"notePolygon\":[{\"points\":[{\"x\":\"\",\"y\":\"\"}],\"mark\":\"people\",\"id\":\"2018#03#20#12#24#35\"}],\"noteTotal\":[{\"mark\":\"fghgfh\",\"id\":\"2018#03#20#12#24#35\"}],\"taskID\":123}";
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> httpEntity = new HttpEntity<String>(jsonStr, requestHeaders);
         String jsonData = restTemplate.postForObject(url, httpEntity, String.class);

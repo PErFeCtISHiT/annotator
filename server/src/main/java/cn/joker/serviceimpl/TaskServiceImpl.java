@@ -3,9 +3,14 @@ package cn.joker.serviceimpl;
 import cn.joker.dao.TaskDao;
 import cn.joker.entity.Task;
 import cn.joker.sevice.TaskService;
+import cn.joker.util.JsonHelper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import org.json.JSONObject;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class TaskServiceImpl implements TaskService{
     private TaskDao taskDao = new TaskDao();
 
@@ -57,5 +62,16 @@ public class TaskServiceImpl implements TaskService{
     @Override
     public Task checkTaskDetail(Integer taskID, Integer userRole) {
         return taskDao.checkTaskDetail(taskID, userRole);
+    }
+
+    @Override
+    public Double checkTaskProgress(Integer taskID, String workerName) {
+        return taskDao.checkTaskProgress(taskID,workerName);
+    }
+
+    @Override
+    public Integer generateID() {
+        List<Task> tasks = taskDao.search(1,null,0);
+        return tasks.size() + 1;
     }
 }
