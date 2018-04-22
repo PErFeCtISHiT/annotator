@@ -4,24 +4,49 @@ import cn.joker.entity.ReportMessage;
 import cn.joker.util.JsonHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReportDao {
+    private String globalRespondent = "respondent";
+    private String globalReporter = "reporter";
+    private String globalTaskID = "taskID";
+    private String globalTaskName = "taskName";
+    private String globalDescription = "description";
+    private String globalReportTime = "reportTime";
+    private String globalIsDealt = "isDealt";
+
     public boolean reportWorker(ReportMessage reportMessage) {
-        //todo
-        return false;
+        JsonObject jsonObject = JsonHelper.openJson("json/workerReported.json");
+        assert jsonObject != null;
+        JsonArray reportMessageArray = jsonObject.getAsJsonArray("workerReportedMessages");
+
+        //把已经保存的先拉取出来
+        StringBuilder newJson = new StringBuilder("{\"workerReportedMessages\":[");
+
+        newJson = addOneMessage(newJson, reportMessage, reportMessageArray);
+
+        return JsonHelper.modifyJson(newJson, "\"json/workerReported.json\"");
     }
 
     public boolean reportTask(ReportMessage reportMessage) {
-        //todo
-        return false;
+        JsonObject jsonObject = JsonHelper.openJson("/taskReported.json");
+        assert jsonObject != null;
+        JsonArray reportMessageArray = jsonObject.getAsJsonArray("taskReportedMessages");
+
+        //把已经保存的先拉取出来
+        StringBuilder newJson = new StringBuilder("{\"taskReportedMessages\":[");
+
+        newJson = addOneMessage(newJson, reportMessage, reportMessageArray);
+
+        return JsonHelper.modifyJson(newJson, "\"json/taskReported.json\"");
     }
 
     /**
      * 查看举报工人的记录，工人被举报
-     * @return
+     * @return 举报信息列表
      */
     public List<ReportMessage> checkWorkerReport() {
         JsonObject jsonObject = JsonHelper.openJson("/workerReported.json");
@@ -33,7 +58,7 @@ public class ReportDao {
 
     /**
      * 查看举报任务的记录，任务被举报
-     * @return
+     * @return 举报信息列表
      */
     public List<ReportMessage> checkTaskReport() {
         JsonObject jsonObject = JsonHelper.openJson("/taskReported.json");
@@ -43,9 +68,46 @@ public class ReportDao {
         return convertJsonArrayToArrayList(reportMessageArray, 2);
     }
 
+    /**
+     * 处理举报信息
+     * @param reportTime 举报时间，key
+     * @param type 举报类型 1为查看用户被举报，2为查看任务被举报
+     * @param description 对举报信息的处理描述信息
+     * @return 是否成功修改信息
+     */
     public boolean dealReport(String reportTime, Integer type, String description) {
-        //todo
-        return false;
+        JsonObject jsonObject = JsonHelper.openJson("json/workerReported.json");
+        assert jsonObject != null;
+        JsonArray reportMessageArray = jsonObject.getAsJsonArray("workerReportedMessages");
+
+        StringBuilder newJson = new StringBuilder();
+        if(type == 1){
+            newJson.append("{\"workerReportedMessages\":[");
+        }
+        else{
+            newJson.append("{\"taskReportedMessages\":[");
+            jsonObject = JsonHelper.openJson("json/taskReported.json");
+            reportMessageArray = jsonObject.getAsJsonArray("taskReportedMessages");
+        }
+
+        for (Object o : reportMessageArray) {
+            JSONObject object = (JSONObject) o;
+
+            if (object.get(globalReportTime).toString().equals(reportTime)) {
+                object.put(globalIsDealt, true);
+                object.put(globalDescription, description);
+            }
+
+            newJson.append(jsonObject.toString());
+            newJson.append(",");
+        }
+
+        newJson.append("]}");
+
+        if(type == 1)
+            return JsonHelper.modifyJson(newJson, "json/workerReported.json");
+        else
+            return JsonHelper.modifyJson(newJson, "json/taskReported.json");
     }
 
     /**
@@ -60,14 +122,14 @@ public class ReportDao {
         for(Object o : reportMessageArray){
             JsonObject object = (JsonObject) o;
             //对尚未处理过的信息进行处理
-            if(JsonHelper.format(object.get("isDealt").toString()).equals(false)){
+            if(JsonHelper.format(object.get(globalIsDealt).toString()).equals(false)){
                 ReportMessage reportMessage = new ReportMessage();
-                reportMessage.setDescription(JsonHelper.format(object.get("description").toString()));
-                reportMessage.setTaskName(JsonHelper.format(object.get("taskName").toString()));
-                reportMessage.setReporter(JsonHelper.format(object.get("reporter").toString()));
-                reportMessage.setRespondent(JsonHelper.format(object.get("respondent").toString()));
-                reportMessage.setTaskID(Integer.valueOf(JsonHelper.format(object.get("taskID").toString())));
-                reportMessage.setReportTime(JsonHelper.format(object.get("reportTime").toString()));
+                reportMessage.setDescription(JsonHelper.format(object.get(globalDescription).toString()));
+                reportMessage.setTaskName(JsonHelper.format(object.get(globalTaskName).toString()));
+                reportMessage.setReporter(JsonHelper.format(object.get(globalReporter).toString()));
+                reportMessage.setRespondent(JsonHelper.format(object.get(globalRespondent).toString()));
+                reportMessage.setTaskID(Integer.valueOf(object.get(globalTaskID).toString()));
+                reportMessage.setReportTime(JsonHelper.format(object.get(globalReportTime).toString()));
                 reportMessage.setType(i);
 
                 workerReport.add(reportMessage);
@@ -76,4 +138,28 @@ public class ReportDao {
 
         return workerReport;
     }
+
+    private StringBuilder addOneMessage(StringBuilder newJson, ReportMessage reportMessage, JsonArray jsonArray){
+        for (Object o : jsonArray) {
+            JsonObject object = (JsonObject) o;
+            newJson.append(object.toString());
+            newJson.append(",");
+        }
+
+        JSONObject pre = new JSONObject();
+        pre.put(globalRespondent, reportMessage.getRespondent());
+        pre.put(globalReporter, reportMessage.getReporter());
+        pre.put(globalDescription, reportMessage.getDescription());
+        pre.put(globalTaskID, reportMessage.getTaskID());
+        pre.put(globalTaskName, reportMessage.getTaskName());
+        pre.put(globalReportTime, reportMessage.getReportTime());
+        pre.put(globalIsDealt, reportMessage.isDealt());
+
+        newJson.append(pre.toString());
+        newJson.append("]}");
+
+        return newJson;
+    }
+
+
 }

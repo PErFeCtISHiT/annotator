@@ -1,5 +1,14 @@
 {
   "workerReportedMessages":[
+    {
+      "respondent": "张三",
+      "reporter": "worker1",
+      "taskID": 1,
+      "taskName" : "图片标注1",
+      "description": "图片内容不健康",
+      "reportTime": "2018-09-03 23:34:21",
+      "isDealt": false
+    }
 
   ]
 }

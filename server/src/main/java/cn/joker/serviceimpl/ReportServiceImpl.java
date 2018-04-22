@@ -3,9 +3,11 @@ package cn.joker.serviceimpl;
 import cn.joker.dao.ReportDao;
 import cn.joker.entity.ReportMessage;
 import cn.joker.sevice.ReportService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ReportServiceImpl implements ReportService{
     private ReportDao reportDao = new ReportDao();
 

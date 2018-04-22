@@ -20,7 +20,6 @@
       <!--<input type="password" placeholder="Password" :class="'log-input' + (password==''?' log-input-empty':'')"-->
       <!--v-model="password">-->
       <!--<a class="log-btn" @click="login">Login</a>-->
-
       <login-holder v-if = "inLoginNotRegister" v-on:changePart="changeLoginAndRegister"></login-holder>
       <register-holder v-if = "!inLoginNotRegister" v-on:changePart="changeLoginAndRegister"></register-holder>
 
