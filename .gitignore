@@ -3,5 +3,5 @@
 /annotator/dist/
 /.idea/
 
-/server/target
+/server/target/
 /server/src/main/resources/application.properties
