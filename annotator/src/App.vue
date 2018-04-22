@@ -6,7 +6,6 @@
 </template>
 
 <script>
-  import registerHolder from './components/registerHolder.vue';
   import incomingMain from './components/incomingMain.vue';
   import homePage from './components/homePage.vue';
 
@@ -19,7 +18,6 @@
     },
 
     components: {
-      registerHolder,
       incomingMain,
       homePage
     },
