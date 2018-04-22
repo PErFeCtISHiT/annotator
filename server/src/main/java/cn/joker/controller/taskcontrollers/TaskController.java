@@ -4,6 +4,8 @@ import cn.joker.dao.TaskDao;
 import cn.joker.entity.ReportMessage;
 import cn.joker.entity.Task;
 import cn.joker.entity.UserInfo;
+import cn.joker.serviceimpl.ReportServiceImpl;
+import cn.joker.sevice.ReportService;
 import cn.joker.sevice.TaskService;
 import cn.joker.sevice.UserInfoService;
 import cn.joker.util.DateHelper;
@@ -28,6 +30,8 @@ public class TaskController {
     @Resource
     private TaskService taskService;
     @Resource
+    private ReportService reportService;
+    @Resource
     private UserInfoService userInfoService;
     private String globalTaskID = "taskID";
     private String globalSponsorName = "sponsorName";
@@ -46,7 +50,7 @@ public class TaskController {
     private String globalStatus = "status";
     private String globalTasks = "tasks";
     private String globalImgNum = "imgNum";
-
+    private String globalReportList = "reportList";
 
     /**
      * 发起任务
@@ -87,14 +91,15 @@ public class TaskController {
     /**
      * 修改任务
      *
-     * @param task
+     * @param task http
      * @return 任务是否修改
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/modifyTask")
-    public void modifyTask(Task task, HttpServletRequest response) {
-        //TODO
-        return;
+    public void modifyTask(Task task, HttpServletResponse response) {
+        JSONObject ret = new JSONObject();
+        ret.put(globalMes, taskService.releaseTask(task));
+        JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
@@ -245,55 +250,58 @@ public class TaskController {
      * 举报任务
      *
      * @param reportMessage 举报信息
-     * @return
+     * @return boolean 成功与否
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/reportTask")
-    public void reportTask(ReportMessage reportMessage, HttpServletRequest response) {
-        //TODO
-        return;
+    public void reportTask(ReportMessage reportMessage, HttpServletResponse response) {
+        JSONObject ret = new JSONObject();
+        ret.put(globalMes, reportService.reportTask(reportMessage));
+        JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
      * 举报工人
      *
      * @param reportMessage 举报信息
-     * @return
+     * @return boolean 成功与否
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/reportWorker")
-    public void reportWorker(ReportMessage reportMessage, HttpServletRequest response) {
-        //TODO
-        return;
+    public void reportWorker(ReportMessage reportMessage, HttpServletResponse response) {
+        JSONObject ret = new JSONObject();
+        ret.put(globalMes, reportService.reportWorker(reportMessage));
+        JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
      * 管理员查看用户被举报的所有信息
      *
-     * @param response
      */
     @RequestMapping(method = RequestMethod.GET, value = "/checkWorkerReport")
-    public void checkWorkerReport(HttpServletRequest response) {
-        //TODO
-        return;
+    public void checkWorkerReport(HttpServletResponse response) {
+        JSONObject ret = new JSONObject();
+        ret.put(globalReportList, reportService.checkWorkerReport());
+        JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
      * 管理员查看任务被举报的所有信息
      *
-     * @param response
+     * @param response http
      */
     @RequestMapping(method = RequestMethod.GET, value = "/checkTaskReport")
-    public void checkTaskReport(HttpServletRequest response) {
-        //TODO
-        return;
+    public void checkTaskReport(HttpServletResponse response) {
+        JSONObject ret = new JSONObject();
+        ret.put(globalReportList, reportService.checkTaskReport());
+        JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
      * 所有人员查看任务细节
      * 参数是taskID和人员角色
      *
-     * @param response
+     * @param response http
      */
     @RequestMapping(method = RequestMethod.POST, value = "/checkTaskDetail")
     public void checkTaskDetail(HttpServletRequest request, HttpServletResponse response) {
@@ -309,12 +317,19 @@ public class TaskController {
     /**
      * 管理员处理举报信息
      *
-     * @param request
-     * @param response
+     * @param request http
+     * @param response http
      */
     @RequestMapping(method = RequestMethod.POST, value = "/dealReport")
-    public void dealReport(HttpServletRequest request, HttpServletRequest response) {
-        //todo
+    public void dealReport(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String[]> map = request.getParameterMap();
+        String reportTime = map.get("reportTime")[0];
+        String description = map.get("description")[0];
+        Integer type = Integer.valueOf(map.get("type")[0]);
+
+        JSONObject ret = new JSONObject();
+        ret.put(globalMes, reportService.dealReport(reportTime, type, description));
+        JsonHelper.jsonToResponse(response, ret);
     }
 
 }

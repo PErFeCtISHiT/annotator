@@ -101,7 +101,7 @@ public class TaskDao {
      * @param userName 用户名
      * @param status status 任务状态（Integer）0 所有 1 正在进行 2 已结束
      * @param userRole 用户权限（Integer）1 管理员 2 发起者 3 工人
-     * @return
+     * @return 任务列表
      */
     public List<Task> checkMyTask(String userName, Integer status, Integer userRole){
         ArrayList<Task> tasks = getAllTasks();
@@ -210,7 +210,6 @@ public class TaskDao {
     }
 
     //要搜索客户那边的任务，一起完成
-    //TODO 客户积分增加
     public boolean completeTask(Integer taskID, String workerName){
         JsonObject json = JsonHelper.openJson(globalJson);
         assert json != null;
