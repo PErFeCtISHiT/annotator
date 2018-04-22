@@ -33,6 +33,9 @@
 </template>
 
 <script>
+
+  import { mapActions } from 'vuex'
+
   export default {
     data() {
 
@@ -58,18 +61,9 @@
       var validateVerification = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('验证码不能为空'));
+        }else{
+          callback();
         }
-        setTimeout(() => {
-          if (!Number.isInteger(value)) {
-            callback(new Error('请输入数字值'));
-          } else {
-            if (value < 18) {
-              callback(new Error('必须年满18岁'));
-            } else {
-              callback();
-            }
-          }
-        }, 1000);
       };
 
       return {
@@ -94,10 +88,15 @@
 
 
     methods: {
+
+      ...mapActions(['logIn']),
+
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('登录成功!');
+            if(this.loginForm.username === "admin"){
+              this.logIn({name:"admin"});
+            }
           } else {
             alert('您未按要求填写!');
             return false;

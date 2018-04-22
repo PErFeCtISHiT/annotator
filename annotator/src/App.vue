@@ -1,13 +1,14 @@
 <template>
   <div id="app">
-    <incoming-main></incoming-main>
+    <home-page v-if = "isLogined"></home-page>
+    <incoming-main v-if = "!isLogined"></incoming-main>
   </div>
 </template>
 
 <script>
   import registerHolder from './components/registerHolder.vue';
   import incomingMain from './components/incomingMain.vue';
-
+  import homePage from './components/homePage.vue';
 
   export default {
     name: 'app',
@@ -19,7 +20,8 @@
 
     components: {
       registerHolder,
-      incomingMain
+      incomingMain,
+      homePage
     },
 
     computed:{
