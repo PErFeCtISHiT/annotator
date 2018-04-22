@@ -60,8 +60,27 @@
       var validateUsername = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('用户名不能为空'));
-        } else {
+        }
+        else if(value === 'admin'){              //这里以后要注释掉
           callback();
+        }
+        else {
+
+          this.$http.get('/findUser', {
+            params: {
+              username: value
+            }
+          })
+            .then(function (response) {
+              if(!JSON.parse(response).existed){
+                callback(new Error('该用户不存在'));
+              }
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+
+          setTimeout(()=>callback(new Error('网路连接不畅')),1000);  //setTimeOut传递的是函数
         }
       };
 
@@ -123,7 +142,15 @@
               this.logIn({name: "admin"});
             }
           } else {
-            alert('您未按要求填写!');
+            this.$alert('您填写的内容不符合要求', '登录错误提示', {
+              confirmButtonText: '确定',
+              callback: () => {
+                this.$message({
+                  type: 'info',
+                  message: '已回到登录页面'
+                });
+              }
+            });
             return false;
           }
         });
