@@ -3,15 +3,21 @@
     <el-container>
       <!-- navigation bar  -->
       <el-header>
-        <el-row :gutter="0">
-          <el-col :span="4">
-            <div class="grid-content bg-purple">
-              <span>ImgAnnotator</span>
+        <el-row class="navigation-background">
+          <el-col :span="4" >
+            <div id="navigation-div1" class="grid-content bg-purple">
+              <span id="navigation-name">ImgAnnotator</span>
             </div>
           </el-col>
+
           <el-col :span="20">
-            <div class="grid-content bg-purple">
-              <navigation></navigation>
+            <div>
+
+              <!-- 这里放一个靠右边的栅格 -->
+              <el-row type="flex" id="navigation-div2" justify="end">
+                <el-col :span="18"><div id="navigation-div2-1"><navigation></navigation></div></el-col>
+              </el-row>
+
             </div>
           </el-col>
         </el-row>
@@ -54,8 +60,7 @@
 
 <style scoped>
   el-header, el-footer {
-    background-color: #B3C0D1;
-    color: #333;
+
     text-align: center;
     line-height: 60px;
   }
@@ -65,5 +70,30 @@
     color: #333;
     text-align: center;
     line-height: 160px;
+  }
+
+
+  <!-- 用来修改ImgAnnotator几个字 -->
+  #navigation-name {
+
+  }
+
+  /*上面的span在这个div里面*/
+  #navigation-div1 {
+    color: azure;
+    margin-top: 18px;
+    margin-left: 15px;
+  }
+
+  #navigation-div2 {
+
+  }
+
+  #navigation-div2-1 {
+    float: right;
+  }
+
+  .navigation-background {
+    background-color: rgba(34, 44, 98, 1);
   }
 </style>
