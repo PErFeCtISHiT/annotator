@@ -36,8 +36,6 @@
 </template>
 
 <script>
-  import first from './firstcomponent'
-  import second from './secondcomponent'
   import {mapActions} from 'vuex'
 
   export default {
@@ -47,10 +45,6 @@
       return {
         amount: 800
       }
-    },
-    components: {
-      first,
-      second
     },
     methods: {
       ...mapActions(['logOut'])

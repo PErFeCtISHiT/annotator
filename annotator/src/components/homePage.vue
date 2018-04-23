@@ -40,8 +40,7 @@
 <script>
   import {mapActions} from 'vuex'
   import navigation from './navigation'
-  import first from './firstcomponent'
-  import second from './secondcomponent'
+
 
   export default {
       data() {
@@ -51,8 +50,6 @@
       },
       components: {
           navigation,
-          first,
-          second
       }
 
   }
