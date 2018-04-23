@@ -20,7 +20,6 @@ import router from './router/index_router'
 Vue.use(ElementUI);
 //挂载axios到vue的原型上，方便使用
 Vue.prototype.$http = axios;
-
 // 设置 Vue.config.productionTip = false 来关闭生产模式下给出的提示
 Vue.config.productionTip = false;
 
