@@ -15,8 +15,7 @@
     },
     methods:{
       getResult: function () {
-        var result = this.checkList.map(this.mapNum);
-        return result;
+        return this.checkList.map(this.mapNum);
       },
       mapNum: function (str) {
         if(str==='发起者'){
