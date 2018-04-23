@@ -67,7 +67,7 @@ public class MessageController {
         userInfo.setPassword((String) jsonObject.get(globalPasswr));
         PasswordHelper.encryptPassword(userInfo);
         userInfo.setLevel(1);
-        userInfo.setName((String) jsonObject.get(globalUsername));
+        userInfo.setName((String) jsonObject.get(globalName));
         userInfo.setState(1);
         userInfo.setBonus(0);
         JSONObject ret = new JSONObject();
@@ -85,12 +85,16 @@ public class MessageController {
     @RequiresPermissions("submitAssignment")
     public void modifyMessage(HttpServletRequest request, HttpServletResponse response) {
         JSONObject newUser = JsonHelper.requestToJson(request);
+        System.out.println(newUser);
         UserInfo newUserInfo = userInfoService.findByUsername((String) newUser.get(globalUsername));
+
+
         newUserInfo.setPassword((String) newUser.get(globalPasswr));
         newUserInfo.setName((String) newUser.get(globalName));
         JSONArray jsonArray = newUser.getJSONArray(globalRoleList);
         List<SysRole> roleList = new ArrayList<>();
         for (Object obj : jsonArray) {
+            System.out.println(obj);
             String srid = String.valueOf(obj);
             roleList.add(sysRoleService.findBySysRoleId(srid));
         }
