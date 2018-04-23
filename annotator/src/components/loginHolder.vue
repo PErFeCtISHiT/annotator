@@ -15,7 +15,7 @@
       <el-form-item prop="verification">
         <el-row :gutter="20">
           <el-col :span="16">
-            <el-input prefix-icon="el-icon-edit-outline" placeholder="请输入验证码"
+            <el-input prefix-icon="el-icon-edit-outline" placeholder="请输入验证码（大小写敏感）"
                       v-model="loginForm.verification"></el-input>
           </el-col>
           <el-col :span="8">
@@ -66,13 +66,14 @@
         }
         else {
 
-          this.$http.get('/findUser', {
+          this.$http.get('user/findUser', {
             params: {
               username: value
             }
           })
             .then(function (response) {
-              if(!JSON.parse(response).existed){
+              if(!response.data.existed){
+                // console.log(response.data.existed);
                 callback(new Error('该用户不存在'));
               }
             })
@@ -142,16 +143,18 @@
               this.logIn({name: "admin"});
             }
           } else {
-            this.$alert('您填写的内容不符合要求', '登录错误提示', {
-              confirmButtonText: '确定',
-              callback: () => {
-                this.$message({
-                  type: 'info',
-                  message: '已回到登录页面'
-                });
-              }
+            this.sendAlert();
+          }
+        });
+      },
+      sendAlert(){
+        this.$alert('您填写的内容不符合要求', '登录错误提示', {
+          confirmButtonText: '确定',
+          callback: () => {
+            this.$message({
+              type: 'info',
+              message: '已回到登录页面'
             });
-            return false;
           }
         });
       },
