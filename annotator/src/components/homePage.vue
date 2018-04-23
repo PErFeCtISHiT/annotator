@@ -25,6 +25,9 @@
       <el-footer>Footer</el-footer>
     </el-container>
 
+
+    <router-link :to="'/testDraw'">我是测试画图页面</router-link>
+
   </div>
 </template>
 

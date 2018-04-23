@@ -5,6 +5,7 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter);
 import first from '../components/firstcomponent'
 import second from '../components/secondcomponent'
+import testDraw from '../components/testDraw'
 
 export default new VueRouter({
   routes: [
@@ -15,6 +16,10 @@ export default new VueRouter({
     {
       path: "/4",
       component: second
+    },
+    {
+      path: '/testDraw',
+      component: testDraw
     }
   ]
 });
