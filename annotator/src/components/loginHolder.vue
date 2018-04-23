@@ -45,6 +45,7 @@
 
   import {mapActions} from 'vuex'
 
+  //登录用组件
   export default {
 
     mounted() {

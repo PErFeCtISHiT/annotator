@@ -6,6 +6,7 @@
 </template>
 
 <script>
+  //这是一个多选组件
   export default {
     data () {
       return {
