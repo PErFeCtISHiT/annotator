@@ -61,7 +61,7 @@
         if (value === '') {
           callback(new Error('用户名不能为空'));
         }
-        else if (value === 'admin') {              //这里以后要注释掉
+        else if(value === 'admin'){              //这里以后要注释掉
           callback();
         }
         else {
@@ -72,17 +72,16 @@
             }
           })
             .then(function (response) {
-              if (!response.data.existed) {
+              if(!response.data.existed){
                 // console.log(response.data.existed);
                 callback(new Error('该用户不存在'));
-              }else{
-                callback();
               }
             })
             .catch(function (error) {
               console.log(error);
-              setTimeout(() => callback(new Error('网路连接不畅')), 1000);  //setTimeOut传递的是函数
             });
+
+          setTimeout(()=>callback(new Error('网路连接不畅')),1000);  //setTimeOut传递的是函数
         }
       };
 
@@ -138,69 +137,29 @@
       ...mapActions(['logIn']),
 
       submitForm(formName) {
-        var that = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if (this.loginForm.username === "admin") {
-              this.logIn({level:1,name:"",username:"admin",points:0,role:[]});
-              that.$message({
-                message: '登录成功',
-                type: 'success'
-              });
-            }
-            else {
-              // console.log({
-              //   username: that.loginForm.username,
-              //   password: that.loginForm.password
-              // });
-
-              that.$http.post('/user/login', {
-                username: that.loginForm.username,
-                password: that.loginForm.password
+              this.logIn({name: "admin",password:"",});
+            }else{
+              this.$http.post('/user/login', {
+                username: this.loginForm.username,
+                password: this.loginForm.password
               })
                 .then(function (response) {
-                  // console.log('有回传信息');
-                  // console.log(response.data.mes);
-                  if (response.data.mes === "UnknownAccount") {
-                    that.sendAlert('此用户不存在', '登录错误提示');
-                  } else if (response.data.mes === "IncorrectCredentials") {
-                    that.sendAlert('此用户不存在', '密码错误');
-                  } else if (response.data.mes === "success") {        //为何success就是开头小写
-                    // console.log('准备拿取登入用户的信息');
-                    that.actualLogin();
-                  }
-
+                  this.logIn(response.data)
                 })
                 .catch(function (error) {
-                  that.sendAlert('请检查您的网络连接', '网络错误');
                   console.log(error);
                 });
             }
           } else {
-            this.sendAlert('您填写的内容不符合要求', '登录错误提示');
-            return false;
+            this.sendAlert('您填写的内容不符合要求','登录错误提示');
           }
         });
       },
-      actualLogin() {
-        // console.log("拿取当前登录的用户信息");
-        var that = this;
-        this.$http.get('/user/getCurrentUser')
-          .then(function (response) {
-            // console.log(response.data);
-            that.logIn(response.data);
-            that.$message({
-              message: '登录成功',
-              type: 'success'
-            });
-          })
-          .catch(function (error) {
-            that.sendAlert('请检查您的网络连接', '网络错误');
-            console.log(error);
-          });
-      },
-      sendAlert(msg, title) {
-        this.$alert(msg, title, {
+      sendAlert(title,sub){
+        this.$alert(title, sub, {
           confirmButtonText: '确定',
           callback: () => {
             this.$message({
@@ -227,12 +186,12 @@
         return result;
       },
       getRandomChar() {
-        var va = this.getRandomIntInclusive(65, 90);
-        var vb = this.getRandomIntInclusive(97, 122);
-        var vc = this.getRandomIntInclusive(48, 57);
+        var va = this.getRandomIntInclusive(65,90);
+        var vb = this.getRandomIntInclusive(97,122);
+        var vc = this.getRandomIntInclusive(48,57);
 
         var temp = [va, vb, vc];
-        return String.fromCharCode(temp[this.getRandomIntInclusive(0, 2)]);
+        return String.fromCharCode(temp[this.getRandomIntInclusive(0,2)]);
       },
       getRandomIntInclusive(min, max) {
         min = Math.ceil(min);
