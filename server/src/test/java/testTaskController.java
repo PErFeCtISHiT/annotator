@@ -3,7 +3,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.RestTemplate;
 
-public class testTask {
+public class testTaskController {
     @Test
     public void testReleaseTask(){
         String url = "http://localhost:8080/task/releaseTask";
