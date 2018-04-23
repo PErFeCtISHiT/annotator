@@ -22,7 +22,7 @@
           <el-menu-item index="2-4-3">选项3</el-menu-item>
         </el-submenu>
       </el-submenu>
-      <el-button></el-button>
+      <el-button @click="logOut">登出</el-button>
 
 
     </el-menu>
@@ -31,12 +31,19 @@
 </template>
 
 <script>
+  import first from './firstcomponent'
+  import second from './secondcomponent'
+  import {mapActions} from 'vuex'
     export default {
         name: "navigation",
         components: {
           first,
           second
+       },
+       methods:{
+         ...mapActions(['logOut'])
        }
+
     }
 </script>
 
