@@ -140,15 +140,26 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if (this.loginForm.username === "admin") {
-              this.logIn({name: "admin"});
+              this.logIn({name: "admin",password:"",});
+            }else{
+              this.$http.post('/user/login', {
+                username: this.loginForm.username,
+                password: this.loginForm.password
+              })
+                .then(function (response) {
+                  this.logIn(response.data)
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
             }
           } else {
-            this.sendAlert();
+            this.sendAlert('您填写的内容不符合要求','登录错误提示');
           }
         });
       },
-      sendAlert(){
-        this.$alert('您填写的内容不符合要求', '登录错误提示', {
+      sendAlert(title,sub){
+        this.$alert(title, sub, {
           confirmButtonText: '确定',
           callback: () => {
             this.$message({
