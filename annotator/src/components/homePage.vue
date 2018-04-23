@@ -1,8 +1,29 @@
 <template>
   <div>
-    <p>{{msg}}</p>
-    <el-button type="text" @click="logOut">登出</el-button>
-    <navigation></navigation>
+    <el-container>
+      <!-- navigation bar  -->
+      <el-header>
+        <el-row :gutter="0">
+          <el-col :span="4">
+            <div class="grid-content bg-purple">
+              <span>ImgAnnotator</span>
+            </div>
+          </el-col>
+          <el-col :span="20">
+            <div class="grid-content bg-purple">
+              <navigation></navigation>
+            </div>
+          </el-col>
+        </el-row>
+      </el-header>
+
+      <!-- Main page -->
+      <el-main>
+        <router-view></router-view>
+      </el-main>
+
+      <el-footer>Footer</el-footer>
+    </el-container>
     <router-view></router-view>
   </div>
 </template>
@@ -14,21 +35,32 @@
   import second from './secondcomponent'
 
   export default {
-    data() {
-      return {msg: "请修改这一页"}
-    },
-    methods: {
-      ...mapActions(['logOut']),
-    },
-    components: {
-      navigation,
-      first,
-      second
-    }
+      data() {
+          return {
+
+          }
+      },
+      components: {
+          navigation,
+          first,
+          second
+      }
 
   }
 </script>
 
 <style scoped>
+  el-header, el-footer {
+    background-color: #B3C0D1;
+    color: #333;
+    text-align: center;
+    line-height: 60px;
+  }
 
+  el-main {
+    background-color: #E9EEF3;
+    color: #333;
+    text-align: center;
+    line-height: 160px;
+  }
 </style>
