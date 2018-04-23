@@ -11,13 +11,13 @@ export default {
 
   mutations: {
     logIn: function (state, user) {
-      localStorage.setItem('user', JSON.stringify(user))
-      state.loginState = true
+      localStorage.setItem('user', JSON.stringify(user));
+      state.loginState = true;
       Object.assign(state.userInfo, user)
     },
     logOut: function (state) {
-      localStorage.removeItem('user')
-      state.loginState = false
+      localStorage.removeItem('user');
+      state.loginState = false;
       Object.keys(state.userInfo).forEach(k => Vue.delete(state.userInfo, k))
     }
   },
