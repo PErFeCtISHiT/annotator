@@ -48,7 +48,7 @@
 
 <script>
   import registerCheckBox from './registerCheckBox';
-  //注册用组件
+  //注册用组件？？
   export default {
     data() {
 
