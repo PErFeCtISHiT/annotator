@@ -63,8 +63,11 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.POST, value = "/releaseTask")
     public void releaseTask(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
+        System.out.println(jsonObject.toString());
+        System.out.println("here");
         Task task = new Task();
         task.setTaskID(taskService.generateID());
+        System.out.println(task.getTaskID());
         task.setCompletedNumber(0);
         task.setDescription(jsonObject.getString(globalDescription));
         task.setEndDate(DateHelper.convertStringtoDate(jsonObject.getString(globalEndDate)));
