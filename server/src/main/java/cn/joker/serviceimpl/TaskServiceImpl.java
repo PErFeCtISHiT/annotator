@@ -60,8 +60,8 @@ public class TaskServiceImpl implements TaskService{
     }
 
     @Override
-    public Task checkTaskDetail(Integer taskID, Integer userRole) {
-        return taskDao.checkTaskDetail(taskID, userRole);
+    public Task checkTaskDetail(Integer taskID) {
+        return taskDao.checkTaskDetail(taskID);
     }
 
     @Override
@@ -69,9 +69,5 @@ public class TaskServiceImpl implements TaskService{
         return taskDao.checkTaskProgress(taskID,workerName);
     }
 
-    @Override
-    public Integer generateID() {
-        List<Task> tasks = taskDao.search(1,null,0);
-        return tasks.size() + 1;
-    }
+
 }

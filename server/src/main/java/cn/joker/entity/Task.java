@@ -52,7 +52,7 @@ public class Task implements Serializable{
         return expectedNumber;
     }
 
-    public void setExpectedNumber(Integer exceptedNumber) {
+    public void setExpectedNumber(Integer expectedNumber) {
         this.expectedNumber = expectedNumber;
     }
 

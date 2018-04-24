@@ -6,13 +6,13 @@ import java.util.Date;
 import java.util.List;
 
 public interface ReportService {
-    public boolean reportWorker(ReportMessage reportMessage);
+    boolean reportWorker(ReportMessage reportMessage);
 
-    public boolean reportTask(ReportMessage reportMessage);
+    boolean reportTask(ReportMessage reportMessage);
 
-    public List<ReportMessage> checkWorkerReport();
+    List<ReportMessage> checkWorkerReport();
 
-    public List<ReportMessage> checkTaskReport();
+    List<ReportMessage> checkTaskReport();
 
-    public boolean dealReport(String reportTime, Integer type, String description);
+    boolean dealReport(String reportTime, Integer type, String description);
 }

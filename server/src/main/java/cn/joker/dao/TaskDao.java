@@ -8,7 +8,6 @@ import com.google.gson.JsonObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,14 +46,17 @@ public class TaskDao {
         }
 
         //先得到taskID 这边要生成
-        Integer maxID = Integer.parseInt(taskArray.get(taskArray.size() - 1).getAsJsonObject().get(globalTaskID).toString());
-        task.setTaskID(maxID+1);
+        if(taskArray.size() != 0) {
+            task.setTaskID(Integer.parseInt(taskArray.get(taskArray.size() - 1).getAsJsonObject().get(globalTaskID).toString()) + 1);
+        }
+        else
+            task.setTaskID(1);
 
         //接收该任务的用户列表初始化为空
         task.setUserName(new ArrayList<String>());
         //目前完成量为0
         task.setCompletedNumber(0);
-
+        task.setStartDate(new Date());
         JSONObject jsonObject = convertObjectToJsonObject(task);
 
         newJson.append(jsonObject.toString());
@@ -73,7 +75,8 @@ public class TaskDao {
         //把已经保存的先拉取出来
         StringBuilder newJson = new StringBuilder(globalJsonTasks);
         for (Object o : taskArray) {
-            JSONObject jsonObject = (JSONObject) o;
+            Object o1 = (JsonObject)o;
+            JSONObject jsonObject = new JSONObject(o1.toString());
 
             if (jsonObject.get("taskID").toString().equals(task.getTaskID().toString())) {
                 existTask = true;
@@ -149,13 +152,12 @@ public class TaskDao {
         ArrayList<Task> tasks = getAllTasks();
 
         tasks = searchByStatus(tasks, status);
-
-        if(tag != null){
+        if(tag != null && tag.length() > 0){
             for(int i = 0; i < tasks.size(); i++){
                 String[] tags = tasks.get(i).getTag();
                 boolean flag = false;
-                for(int j = 0; i < tags.length; j++){
-                    if(tags[j].equals(tag))
+                for (String tag1 : tags) {
+                    if (tag1.equals(tag))
                         flag = true;
                 }
                 if(!flag)
@@ -175,16 +177,20 @@ public class TaskDao {
         //把已经保存的先拉取出来
         StringBuilder newJson = new StringBuilder(globalJsonTasks);
         for (Object o : taskArray) {
-            JSONObject jsonObject = (JSONObject) o;
+            Object o1 = (JsonObject)o;
+            JSONObject jsonObject = new JSONObject(o1.toString());
 
-            if (!jsonObject.get("taskID").toString().equals(taskID.toString())) {
+            if (jsonObject.getInt(globalTaskID) == taskID) {
                 jsonObject.put(globalEndDate, DateHelper.convertDateToString(new Date()));
             }
 
             newJson.append(jsonObject.toString());
             newJson.append(",");
         }
-        return false;
+
+        newJson.append("]}");
+
+        return this.updateJson(newJson);
     }
 
     //删除任务
@@ -197,9 +203,10 @@ public class TaskDao {
         //把已经保存的先拉取出来
         StringBuilder newJson = new StringBuilder(globalJsonTasks);
         for (Object o : taskArray) {
-            JSONObject jsonObject = (JSONObject) o;
+            Object o1 = (JsonObject)o;
+            JSONObject jsonObject = new JSONObject(o1.toString());
 
-            if (!jsonObject.get("taskID").toString().equals(taskID.toString())) {
+            if (jsonObject.getInt(globalTaskID) != taskID) {
                 newJson.append(jsonObject.toString());
                 newJson.append(",");
             }
@@ -219,27 +226,29 @@ public class TaskDao {
         //把已经保存的先拉取出来
         StringBuilder newJson = new StringBuilder(globalJsonTasks);
         for (Object o : taskArray) {
-            JSONObject jsonObject = (JSONObject) o;
+            Object o1 = (JsonObject)o;
+            JSONObject jsonObject = new JSONObject(o1.toString());
 
-            if (jsonObject.get("taskID").toString().equals(taskID.toString())) {
-                //完成数量加1
-                jsonObject.put(globalCompletedNumber, Integer.valueOf(jsonObject.get(globalCompletedNumber).toString())+1);
+            if (jsonObject.getInt(globalTaskID) == taskID) {
+                //工人标注数量修改
+                ArrayList<String> userArray = (ArrayList) jsonObject.getJSONArray(globalUserName).toList();
+                for(int i = 0; i < userArray.size(); i++){
+                    if(workerName.equals((userArray.get(i).split("-")[0]))){
+                        //如果工人之前已经完成了，那完成数量就不能加了
+                        if(!userArray.get(i).split("-")[1].equals(jsonObject.get(globalImgNum).toString()))
+                            //完成数量加1
+                            jsonObject.put(globalCompletedNumber, Integer.valueOf(jsonObject.get(globalCompletedNumber).toString())+1);
+
+                        userArray.set(i, userArray.get(i).split("-")[0] + "-" + jsonObject.get(globalImgNum).toString());
+                        jsonObject.put(globalUserName, userArray);
+                    }
+                }
 
                 //判断是否结束任务
                 if(jsonObject.get(globalCompletedNumber).toString().equals(jsonObject.get(globalExpectedNumber).toString())){
                     //时间格式要修改
                     jsonObject.put(globalEndDate, DateHelper.convertDateToString(new Date()));
                 }
-
-                //工人标注数量修改
-                ArrayList<String> userArray = (ArrayList) jsonObject.getJSONArray(globalUserName).toList();
-                for(int i = 0; i < userArray.size(); i++){
-                    if(workerName.equals((userArray.get(i).split("-")[0]))){
-                        userArray.set(i, userArray.get(i).split("-")[0] + "-" + jsonObject.get(globalImgNum).toString());
-                        jsonObject.put(globalUserName, userArray);
-                    }
-                }
-
             }
 
             newJson.append(jsonObject.toString());
@@ -265,13 +274,15 @@ public class TaskDao {
         //把已经保存的先拉取出来
         StringBuilder newJson = new StringBuilder(globalJsonTasks);
         for (Object o : taskArray) {
-            JSONObject jsonObject = (JSONObject) o;
+            Object o1 = (JsonObject)o;
+            JSONObject jsonObject = new JSONObject(o1.toString());
 
-            if (jsonObject.get("taskID").toString().equals(taskID.toString())) {
+            if (jsonObject.getInt(globalTaskID) == taskID) {
                 //工人标注
                 ArrayList<String> userArray = (ArrayList) jsonObject.getJSONArray(globalUserName).toList();
                 for(int i = 0; i < userArray.size(); i++){
                     if(workerName.equals((userArray.get(i).split("-")[0]))){
+                        //如果该工人已经完成该任务，数据库不删除
                         userArray.remove(i);
                         jsonObject.put(globalUserName, userArray);
                     }
@@ -301,11 +312,13 @@ public class TaskDao {
         //把已经保存的先拉取出来
         StringBuilder newJson = new StringBuilder(globalJsonTasks);
         for (Object o : taskArray) {
-            JSONObject jsonObject = (JSONObject) o;
+            Object o1 = o;
+            JSONObject jsonObject = new JSONObject(o1.toString());
 
-            if (jsonObject.get("taskID").toString().equals(taskID.toString())) {
+            if (jsonObject.getInt(globalTaskID) == taskID) {
                 //工人标注数量修改
                 ArrayList<String> userArray = (ArrayList) jsonObject.getJSONArray(globalUserName).toList();
+                System.out.println(userArray.size());
                 userArray.add(workerName + "-0");
                 jsonObject.put(globalUserName, userArray);
             }
@@ -322,7 +335,7 @@ public class TaskDao {
     //目前还不确定，好像这个返回值有点多
     //算了，直接把整个task返回给前端吧
     //加些东西，再说再说
-    public Task checkTaskDetail(Integer taskID, Integer userRole){
+    public Task checkTaskDetail(Integer taskID){
         ArrayList<Task> tasks = getAllTasks();
 
         return getTask(taskID, tasks);
@@ -340,27 +353,28 @@ public class TaskDao {
         JsonArray taskArray = json.getAsJsonArray(globalTasks);
 
         ArrayList<Task> tasks = new ArrayList<>();
+
         for (Object o : taskArray) {
+            Object o1 = (JsonObject)o;
+            JSONObject object = new JSONObject(o1.toString());
             Task task = new Task();
-            JsonObject object1 = (JsonObject) o;
-            JSONObject object = new JSONObject(object1.toString());
-            task.setTaskID(Integer.valueOf(object.get(globalTaskID).toString()));
+            task.setTaskID(object.getInt(globalTaskID));
             task.setSponsorName(object.get(globalSponsorName).toString());
             task.setTaskName(object.get(globalTaskName).toString());
             task.setDescription(object.get(globalDescription).toString());
 
             JSONArray tagArray = object.getJSONArray(globalTag);
-            List list = tagArray.toList();
-            String[] tag = new String[list.size()];
-            for(int i = 0;i < list.size();i++){
-                tag[i] = (String) list.toArray()[i];
+            List tags = tagArray.toList();
+            String[] tag = new String[tags.size()];
+
+            for(int i = 0; i < tags.size(); i++){
+                tag[i] = (String)tags.get(i);
             }
+
             task.setTag(tag);
 
             JSONArray userArray = object.getJSONArray(globalUserName);
-
             task.setUserName((ArrayList)userArray.toList());
-
             //task.setUserName();
 
             task.setWorkerLevel(object.getInt(globalWorkerLevel));
@@ -368,8 +382,8 @@ public class TaskDao {
             task.setCompletedNumber(object.getInt(globalCompletedNumber));
             task.setPoints(object.getInt(globalPoints));
 
-            task.setStartDate(DateHelper.convertStringtoDate(object.get(globalStartDate).toString()));
-            task.setEndDate(DateHelper.convertStringtoDate(object.get(globalEndDate).toString()));
+            task.setStartDate(DateHelper.convertStringToDate(object.get(globalStartDate).toString()));
+            task.setEndDate(DateHelper.convertStringToDate(object.get(globalEndDate).toString()));
 
             tasks.add(task);
         }
@@ -397,7 +411,9 @@ public class TaskDao {
         jsonObject.put(globalEndDate, DateHelper.convertDateToString(task.getEndDate()));
 
         //接收该任务的用户列表 ArrayList转换
-        jsonObject.append(globalUserName, task.getUserName());
+
+        jsonObject.put(globalUserName, task.getUserName().toArray());
+        jsonObject.put(globalImgNum,task.getImageNum());
 
         return jsonObject;
     }
@@ -418,7 +434,9 @@ public class TaskDao {
 
         //把已经保存的先拉取出来
         for (Object o : taskArray) {
-            JSONObject jsonObject = (JSONObject) o;
+            Object o1 = o;
+            JSONObject jsonObject = new JSONObject(o1.toString());
+
             Double totalNum = Double.parseDouble(jsonObject.get(globalImgNum).toString());
             if (jsonObject.get("taskID").toString().equals(taskID.toString())) {
 
