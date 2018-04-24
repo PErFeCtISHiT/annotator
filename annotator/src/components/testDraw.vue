@@ -1,7 +1,7 @@
 <template>
   <div>
     <p>{{title}}</p>
-    <canvas id="canvas" width= 640 height=427 style="border: 1px solid #000;"></canvas>
+    <canvas id="canvas" width= 600 height=400 style="border: 1px solid #000;"></canvas>
     <button @click="handleCanvas">再次测试</button>
   </div>
 </template>
@@ -20,11 +20,16 @@
     // },
     methods:{
       handleCanvas(){
+        var temp1 = 600 * Math.random();
+        var temp2 = 400 * Math.random();
+        var id = new Date().getTime();
         $("#canvas").drawPolygon({
           draggable: true,
-          fillStyle: "#6c3",
-          x: 100, y: 100,
-          radius: 50, sides: 5
+          strokeStyle: "#6c3",
+          x: temp1, y: temp2,
+          radius: 50, sides: 5,
+          layer:true,
+          name: id,
         });
       }
     }
