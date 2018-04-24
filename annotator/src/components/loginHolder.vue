@@ -143,7 +143,7 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if (this.loginForm.username === "admin") {
-              this.logIn({level:1,name:"",username:"admin",points:0,role:[]});
+              this.logIn({level:1,name:"",username:"admin",points:1000,role:[]});
               that.$message({
                 message: '登录成功',
                 type: 'success'
