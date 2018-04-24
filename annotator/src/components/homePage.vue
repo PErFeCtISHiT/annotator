@@ -26,11 +26,7 @@
       <!-- Main page -->
       <el-main>
 
-        <el-row type="flex" class="row-bg" justify="center">
-          <el-col :span="18"><div id="main-div1">
-            <router-view></router-view>
-          </div></el-col>
-        </el-row>
+        <router-view></router-view>
 
       </el-main>
 

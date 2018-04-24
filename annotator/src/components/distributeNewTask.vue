@@ -48,6 +48,10 @@
         <el-input type="text" v-model.number="newTask.points" auto-complete="false" clearable style="width: 500px"></el-input>
       </el-form-item>
 
+      <el-form-item>
+        <el-button type="primary" @click="submitForm('newTask')">提交</el-button>
+        <el-button @click="resetForm('newTask')">重置</el-button>
+      </el-form-item>
     </el-form>
 
 
@@ -55,7 +59,6 @@
 </template>
 
 <script>
-  import ElFormItem from "element-ui/packages/form/src/form-item";
 
   const myTags = ['A', 'B', 'C', 'D', 'E'];
 
@@ -78,7 +81,13 @@
         } else {
           callback();
         }
+      };
 
+      let checkPoints = (rule, value, callback) => {
+        if(value > this.$store.state.user.userInfo.points)
+          return callback(new Error("超出现有金额"));
+        else
+          callback();
       };
 
       return {
@@ -133,7 +142,9 @@
             { type: 'number', message: '预期参与人数必须为数字值'}
           ],
           points: [
-
+            { required: true, message: '奖励积分不能为空'},
+            { type: 'number', message: '奖励积分必须为数字值'},
+            { validator: checkPoints, trigger: 'blur' }
           ]
         }
       };
