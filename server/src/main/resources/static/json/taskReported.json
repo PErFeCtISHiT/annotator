@@ -1,15 +1,31 @@
 {
-  "taskReportedMessages":[
+  "taskReportedMessages": [
     {
       "respondent": "张三",
       "reporter": "worker1",
-      "taskID": 1,
-      "taskName" : "图片标注1",
+      "taskID": 2,
+      "taskName": "图片标注1",
       "description": "图片内容不健康",
       "reportTime": "2018-09-03 23:34:21",
       "isDealt": false
+    },
+    {
+      "isDealt": false,
+      "description": "任务量太大",
+      "respondent": "amy",
+      "reporter": "worker1",
+      "taskID": 0,
+      "taskName": "任务一",
+      "reportTime": "2018-02-03 23:03:12"
+    },
+    {
+      "isDealt": false,
+      "description": "任务量太大",
+      "respondent": "amy",
+      "reporter": "worker1",
+      "taskName": "任务二",
+      "taskID": 0,
+      "reportTime": "2018-02-03 23:03:12"
     }
-
-
   ]
 }
