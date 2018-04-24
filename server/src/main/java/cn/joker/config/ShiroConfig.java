@@ -11,14 +11,12 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
 import javax.servlet.MultipartConfigElement;
 import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 @Configuration
 public class ShiroConfig extends WebMvcConfigurerAdapter {
@@ -95,26 +93,10 @@ public class ShiroConfig extends WebMvcConfigurerAdapter {
         return authorizationAttributeSourceAdvisor;
     }
 
-
-//    @Bean(name = "simpleMappingExceptionResolver")
-//    public SimpleMappingExceptionResolver
-//    createSimpleMappingExceptionResolver() {
-//        SimpleMappingExceptionResolver r = new SimpleMappingExceptionResolver();
-//        Properties mappings = new Properties();
-//        //mappings.setProperty("DatabaseException", "databaseError");//数据库异常处理
-//        mappings.setProperty("UnauthorizedException", "403");
-//        r.setExceptionMappings(mappings);  // None by default
-//        r.setDefaultErrorView("error");    // No default
-//        r.setExceptionAttribute("ex");     // Default is "exception"
-//        //r.setWarnLogCategory("example.MvcLogger");     // No default
-//        return r;
-//    }
-
     @Bean
     public HttpMessageConverter<String> responseBodyConverter() {
-        StringHttpMessageConverter converter = new StringHttpMessageConverter(
+        return new StringHttpMessageConverter(
                 Charset.forName("UTF-8"));
-        return converter;
     }
 
     @Override

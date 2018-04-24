@@ -1,6 +1,8 @@
 package cn.joker.sevice;
 
 import cn.joker.entity.Task;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -24,10 +26,12 @@ public interface TaskService {
     boolean acceptTask(Integer taskID, String workerName);
 
     //目前还不确定，好像这个返回值有点多
-    Task checkTaskDetail(Integer taskID);
+    JSONObject checkTaskDetail(Integer taskID);
 
     //查看某个工人的进度
     Double checkTaskProgress(Integer taskID, String workerName);
 
+    List findImgURLByID(String taskID);
 
+    Integer findMarkNumByImgNameAndUserAndID(Integer taskID, String imgName, JSONArray users);
 }

@@ -5,9 +5,9 @@ import cn.joker.sevice.ImgMarkService;
 import cn.joker.util.JsonHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +19,7 @@ import java.util.List;
  * @description: good good study
  * @date: create in 20:26 2018/4/13
  */
-@Controller
+@RestController
 @RequestMapping("/mark")
 public class MarkController {
     @Resource

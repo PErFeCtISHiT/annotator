@@ -5,7 +5,6 @@ import cn.joker.util.JsonHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.json.JSONObject;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +46,7 @@ public class ReportDao {
 
     /**
      * 查看举报工人的记录，工人被举报
+     *
      * @return 举报信息列表
      */
     public List<ReportMessage> checkWorkerReport() {
@@ -59,6 +59,7 @@ public class ReportDao {
 
     /**
      * 查看举报任务的记录，任务被举报
+     *
      * @return 举报信息列表
      */
     public List<ReportMessage> checkTaskReport() {
@@ -71,8 +72,9 @@ public class ReportDao {
 
     /**
      * 处理举报信息
-     * @param reportTime 举报时间，key
-     * @param type 举报类型 1为查看用户被举报，2为查看任务被举报
+     *
+     * @param reportTime  举报时间，key
+     * @param type        举报类型 1为查看用户被举报，2为查看任务被举报
      * @param description 对举报信息的处理描述信息
      * @return 是否成功修改信息
      */
@@ -82,10 +84,9 @@ public class ReportDao {
         JsonArray reportMessageArray = jsonObject.getAsJsonArray("workerReportedMessages");
 
         StringBuilder newJson = new StringBuilder();
-        if(type == 1){
+        if (type == 1) {
             newJson.append("{\"workerReportedMessages\":[");
-        }
-        else{
+        } else {
             newJson.append("{\"taskReportedMessages\":[");
             jsonObject = JsonHelper.openJson("json/taskReported.json");
             reportMessageArray = jsonObject.getAsJsonArray("taskReportedMessages");
@@ -102,24 +103,23 @@ public class ReportDao {
         }
 
         newJson.append("]}");
-        if(type == 1)
+        if (type == 1)
             return JsonHelper.modifyJson(newJson, "json/workerReported.json");
         else
             return JsonHelper.modifyJson(newJson, "json/taskReported.json");
     }
 
     /**
-     *
      * @param reportMessageArray json中的数组
-     * @param i 表示查看类型，1为查看用户被举报，2为查看任务被举报，与reportMessage中type属性相同
+     * @param i                  表示查看类型，1为查看用户被举报，2为查看任务被举报，与reportMessage中type属性相同
      * @return
      */
-    private List<ReportMessage> convertJsonArrayToArrayList(JsonArray reportMessageArray, int i){
+    private List<ReportMessage> convertJsonArrayToArrayList(JsonArray reportMessageArray, int i) {
         List<ReportMessage> workerReport = new ArrayList<>();
-        for(Object o : reportMessageArray){
+        for (Object o : reportMessageArray) {
             JSONObject object = new JSONObject(o.toString());
             //对尚未处理过的信息进行处理
-            if(!object.getBoolean(globalIsDealt)){
+            if (!object.getBoolean(globalIsDealt)) {
                 ReportMessage reportMessage = new ReportMessage();
                 reportMessage.setDescription(object.get(globalDescription).toString());
                 reportMessage.setTaskName(object.get(globalTaskName).toString());
@@ -136,7 +136,7 @@ public class ReportDao {
         return workerReport;
     }
 
-    private StringBuilder addOneMessage(StringBuilder newJson, ReportMessage reportMessage, JsonArray jsonArray){
+    private StringBuilder addOneMessage(StringBuilder newJson, ReportMessage reportMessage, JsonArray jsonArray) {
         for (Object o : jsonArray) {
             JsonObject object = (JsonObject) o;
             newJson.append(object.toString());

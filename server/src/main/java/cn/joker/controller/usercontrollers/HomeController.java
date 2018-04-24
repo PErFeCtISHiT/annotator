@@ -66,7 +66,7 @@ public class HomeController {
         String userName = SecurityUtils.getSubject().getPrincipal().toString();
         UserInfo userInfo = userInfoService.findByUsername(userName);
         JSONObject jsonObject = new JSONObject();
-        if(userInfo != null) {
+        if (userInfo != null) {
             jsonObject.put("username", userInfo.getUsername());
             jsonObject.put("level", userInfo.getLevel());
             jsonObject.put("name", userInfo.getName());
@@ -77,9 +77,8 @@ public class HomeController {
                 list1.put(sysRole.getSrid());
             }
             jsonObject.put("role", list1);
-        }
-        else{
-            jsonObject.put("ret","null");
+        } else {
+            jsonObject.put("ret", "null");
         }
         JsonHelper.jsonToResponse(response, jsonObject);
 

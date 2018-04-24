@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @description: good good study
  * @date: create in 21:19 2018/4/13
  */
-public class ImgMark implements Serializable{
+public class ImgMark implements Serializable {
     private String imgName;
     private String workerName;
     private String sponsorName;

@@ -20,6 +20,24 @@
       "taskID": 1,
       "startDate": "2018-04-24 15:36:54",
       "imgNum": 12
+    },
+    {
+      "endDate": "2018-05-24 23:59:59",
+      "sponsorName": "kiii",
+      "description": "标出图片中的人",
+      "expectedNumber": 10,
+      "userName": [],
+      "points": 123,
+      "completedNumber": 0,
+      "taskName": "人物标注",
+      "tag": [
+        "人物",
+        "旅游"
+      ],
+      "workerLevel": 2,
+      "taskID": 2,
+      "startDate": "2018-04-24 18:37:11",
+      "imgNum": 12
     }
   ]
 }

@@ -4,7 +4,6 @@ import cn.joker.entity.ImgMark;
 import cn.joker.entity.Task;
 import cn.joker.util.JsonHelper;
 import com.google.gson.JsonObject;
-import org.apache.tools.ant.taskdefs.Taskdef;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Repository;
@@ -31,20 +30,20 @@ public class ImgMarkDao {
         String name = "task/" + imgMark.getTaskID() + "/" + imgMark.getImgName() + "/" + imgMark.getWorkerName() + ".json";
         String dir = System.getProperty("user.dir") + "/annotator/";
         File file = new File(dir + name);
-        if(!file.getParentFile().exists()){
-            if(!file.getParentFile().mkdir()){
+        if (!file.getParentFile().exists()) {
+            if (!file.getParentFile().mkdir()) {
                 return false;
             }
         }
-        if(!file.exists()){
+        if (!file.exists()) {
             TaskDao taskDao = new TaskDao();
-            List<Task> tasks = taskDao.checkMyTask(imgMark.getWorkerName(),1,3);
-            for(Task task : tasks){
-                if(task.getTaskID().equals(imgMark.getTaskID())){
+            List<Task> tasks = taskDao.checkMyTask(imgMark.getWorkerName(), 1, 3);
+            for (Task task : tasks) {
+                if (task.getTaskID().equals(imgMark.getTaskID())) {
                     List<String> usernames = task.getUserName();
-                    for(String str : usernames){
+                    for (String str : usernames) {
                         String s = str.split("-")[0];
-                        if(s.equals(imgMark.getWorkerName())){
+                        if (s.equals(imgMark.getWorkerName())) {
                             Integer integer = Integer.valueOf(str.split("-")[1]) + 1;
                             s += "-" + String.valueOf(integer);
                             usernames.remove(str);
@@ -67,24 +66,34 @@ public class ImgMarkDao {
     public List<ImgMark> findAllMarks(JSONObject jsonObject) {
         Integer taskID = jsonObject.getInt("taskID");
         JSONArray users = jsonObject.getJSONArray("users");
+        JSONArray newArray = new JSONArray();
+        for (Object o : users) {
+            JSONObject jsonObject1 = (JSONObject) o;
+            String username = jsonObject1.getString("username");
+            newArray.put(username);
+        }
         String imgName = jsonObject.getString("imgName");
+        return findAllMarks(taskID, newArray, imgName);
+    }
+
+    public List<ImgMark> findAllMarks(Integer taskID, JSONArray users, String imgName) {
         List<ImgMark> list = new ArrayList<>();
         for (Object o : users) {
             String name = "task/" + taskID.toString() + "/" + imgName + "/";
-            JSONObject jsonObject1 = (JSONObject) o;
-            String username = jsonObject1.getString("username");
+            String username = (String) o;
             name += username + ".json";
             JsonObject markJson = JsonHelper.openJson(name);
-            ImgMark imgMark = new ImgMark();
-            imgMark.setTaskID(Integer.valueOf(String.valueOf(markJson.get("taskID"))));
-            imgMark.setWorkerName(JsonHelper.format(markJson.get("workerName").toString()));
-            imgMark.setSponsorName(JsonHelper.format(markJson.get("sponsorName").toString()));
-            imgMark.setImgURL(JsonHelper.format(markJson.get("imgURL").toString()));
-            imgMark.setNotePolygon(markJson.get("notePolygon").toString());
-            imgMark.setNoteRectangle(markJson.get("noteRectangle").toString());
-            imgMark.setNoteTotal(markJson.get("noteTotal").toString());
-            list.add(imgMark);
-
+            if (markJson != null) {
+                ImgMark imgMark = new ImgMark();
+                imgMark.setTaskID(Integer.valueOf(String.valueOf(markJson.get("taskID"))));
+                imgMark.setWorkerName(JsonHelper.format(markJson.get("workerName").toString()));
+                imgMark.setSponsorName(JsonHelper.format(markJson.get("sponsorName").toString()));
+                imgMark.setImgURL(JsonHelper.format(markJson.get("imgURL").toString()));
+                imgMark.setNotePolygon(markJson.get("notePolygon").toString());
+                imgMark.setNoteRectangle(markJson.get("noteRectangle").toString());
+                imgMark.setNoteTotal(markJson.get("noteTotal").toString());
+                list.add(imgMark);
+            }
         }
         return list;
     }

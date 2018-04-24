@@ -10,13 +10,14 @@ public class DateHelper {
     private DateHelper() {
         throw new IllegalStateException("Utility class");
     }
+
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
-     *  日期的表示形式是"2018-03-23 23:36:23"
+     * 日期的表示形式是"2018-03-23 23:36:23"
      */
-    public static String convertDateToString(Date date){
-        if(date == null)
+    public static String convertDateToString(Date date) {
+        if (date == null)
             return null;
         return dateFormat.format(date);
     }
@@ -24,8 +25,8 @@ public class DateHelper {
     /**
      * 默认String保存的json格式是"2018-03-23 23:36:23"
      */
-    public static Date convertStringToDate(String dateInString){
-        if(dateInString == null)
+    public static Date convertStringToDate(String dateInString) {
+        if (dateInString == null)
             return null;
         try {
             return dateFormat.parse(dateInString);

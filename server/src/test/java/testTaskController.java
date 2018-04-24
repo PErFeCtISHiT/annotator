@@ -168,4 +168,27 @@ public class testTaskController {
         System.out.println(jsonData);
     }
 
+    @Test
+    public void testTaskDetail(){
+        String url = "http://localhost:8080/task/checkTaskDetail?taskID=1";
+        RestTemplate restTemplate = new RestTemplate();
+        String jsonData = restTemplate.getForObject(url,String.class);
+        System.out.println(jsonData);
+    }
+
+    @Test
+    public void testCheckTaskDetail(){
+        String url = "http://localhost:8080/task/checkTaskDetail?taskID=1";
+        RestTemplate restTemplate = new RestTemplate();
+        String jsonData = restTemplate.getForObject(url,String.class);
+        System.out.println(jsonData);
+    }
+
+    @Test
+    public void testCheckImages(){
+        String url = "http://localhost:8080/task/checkImages?taskID=1";
+        RestTemplate restTemplate = new RestTemplate();
+        String jsonData = restTemplate.getForObject(url,String.class);
+        System.out.println(jsonData);
+    }
 }
