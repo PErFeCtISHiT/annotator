@@ -11,32 +11,32 @@
 
     <el-form :model="newTask" status-icon :rules="myRule" ref="newTask">
 
-      <el-form-item label="任务名称" prop="proName">
+      <el-form-item label="任务名称" prop="taskName">
         <el-input type="text" v-model="newTask.taskName" clearable style="width: 500px"></el-input>
       </el-form-item>
 
-      <el-form-item label="任务描述" prop="proDescription">
+      <el-form-item label="任务描述" prop="taskDescription">
         <el-input type="text" v-model="newTask.taskDescription" auto-complete="false" clearable style="width: 500px"
                   maxlength=100></el-input>
       </el-form-item>
 
-      <el-form-item label="任务类型标签" prop="proTag">
+      <el-form-item label="任务类型标签" prop="checkedTags">
         <el-checkbox-group v-model="newTask.checkedTags">
           <el-checkbox v-for="tag in tags" :label="tag" :key="tag">{{ tag }}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
 
-      <el-form-item label="开始时间" prop="proStartTime">
+      <el-form-item label="开始时间" prop="taskStartDate">
         <el-date-picker v-model="newTask.taskStartDate" placeholder="请选择开始时间" style="width: 500px" ref="startTimePicker"
                         :picker-options="option1"></el-date-picker>
       </el-form-item>
 
-      <el-form-item label="结束时间" prop="proEndTime">
-        <el-date-picker v-model="newTask.taskEndDate" placeholder="请选择结束时间" style="width: 500px"
+      <el-form-item label="结束时间" prop="taskEndDate">
+        <el-date-picker v-model="newTask.taskEndDate" placeholder="请选择结束时间" style="width: 500px" ref="endTimePicker"
                         :picker-options="option2"></el-date-picker>
       </el-form-item>
 
-      <el-form-item label="参与人数" prop="proNumber">
+      <el-form-item label="参与人数" prop="expectedNumber">
         <el-input type="text" v-model.number="newTask.expectedNumber" auto-complete="false" clearable style="width: 500px"></el-input>
       </el-form-item>
 
@@ -44,7 +44,7 @@
         <el-rate v-model="newTask.workerLevel" style="margin-top: 10px"></el-rate>
       </el-form-item>
 
-      <el-form-item label="奖励积分" prop="proPoints">
+      <el-form-item label="奖励积分" prop="points">
         <el-input type="text" v-model.number="newTask.points" auto-complete="false" clearable style="width: 500px"></el-input>
       </el-form-item>
 
@@ -61,7 +61,6 @@
 
   export default {
     components: {
-      ElFormItem
 
     },
     name: "distribute-new-task",
@@ -71,8 +70,11 @@
       let that = this;
 
       let checkDate = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('年龄不能为空'));
+        let sd = this.$refs.endTimePicker.value;
+        if (!sd) {
+          callback();
+        }else if (value >= sd) {
+          return callback(new Error('不能晚于结束日期'));
         } else {
           callback();
         }
@@ -103,15 +105,35 @@
           checkedTags: [],
           taskStartDate: "",
           taskEndDate: "",
-          workerLevel: 0,
           expectedNumber: 0,
+          workerLevel: 0,
           points: 0
         },
 
         //表单的验证规则
         myRule: {
-          startDate: [
-            {validator: checkDate, trigger: 'blur'}
+          taskName: [
+            { required: true, message: '请输入名称', trigger: 'blur'}
+          ],
+          taskDescription: [
+            { required: true, message: '请输入描述', trigger: 'blur' }
+          ],
+          checkedTags: [
+            { type: 'array', required: true, message: '请至少选择一个类别', trigger: 'change' }
+          ],
+          taskStartDate: [
+            { validator: checkDate, trigger: 'change' },
+            { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+          ],
+          taskEndDate: [
+            { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+          ],
+          expectedNumber: [
+            { required: true, message: '预期参与人数不能为空'},
+            { type: 'number', message: '预期参与人数必须为数字值'}
+          ],
+          points: [
+
           ]
         }
       };

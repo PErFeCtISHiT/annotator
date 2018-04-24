@@ -43,11 +43,16 @@
 
     data () {
       return {
-        amount: 800
+
       }
     },
     methods: {
       ...mapActions(['logOut'])
+    },
+    computed: {
+      amount: function () {
+        return this.$store.state.user.userInfo.points;
+      }
     }
 
   }
