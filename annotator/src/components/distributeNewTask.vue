@@ -1,5 +1,14 @@
 <template>
   <div id="distributeNewTask">
+
+    <el-row type="flex" class="row-bg" justify="center">
+      <el-col :span="6"><div class="grid-content bg-purple-light">
+        <span id="title">新任务</span>
+      </div></el-col>
+      <el-col :span="4"><div class="grid-content bg-purple-light"></div></el-col>
+    </el-row>
+    <br>
+
     <el-form :model="newTask" status-icon :rules="myRule" ref="newTask">
 
       <el-form-item label="任务名称" prop="proName">
@@ -117,7 +126,12 @@
 </script>
 
 <style scoped>
-  el-input {
-    width: 500px;
+  #title {
+    font-family: Arial;
+    font-size: xx-large;
+  }
+
+  #distributeNewTask {
+
   }
 </style>
