@@ -96,8 +96,13 @@
     float: right;
   }
 
-  #main-div1 {
+  #main-div1 {;
     padding-left: 20%;
+  }
+
+  .row-bg {
+    padding: 10px 0;
+    background-color: #f9fafc;
   }
 
   .navigation-background {
