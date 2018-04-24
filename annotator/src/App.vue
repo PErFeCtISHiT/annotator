@@ -10,6 +10,10 @@
   import homePage from './components/homePage.vue';
 
   export default {
+    created(){
+      window.myVueStore = this.$store;
+    },
+
     name: 'app',
     data() {
       return {

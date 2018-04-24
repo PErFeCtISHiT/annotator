@@ -1,0 +1,78 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>局部标注</title>
+    <link href="../../src/temp/myCSS/bootstrap.css" rel="stylesheet">
+    <!--<script src="myJS/jquery-3.3.1.js"></script>-->
+    <script src="../../src/temp/myJS/bootstrap.js"></script>
+    <!--<script src="myJS/jcanvas.js"></script>-->
+</head>
+<body>
+<!--外部调用不能重复导入css和js文件，否则下拉框不能显示-->
+<div id="nav"></div>
+<!--<script>-->
+    <!--$("#nav").load("../util/navigation.html");-->
+<!--</script>-->
+
+<div class="row clearfix">
+    <div class="col-md-8 column">
+        <!--对图片的相关操作都放在这边-->
+        <!--对于整体标注而言只需要把图片加载到这个地方就可以了-->
+        <!--一开始加载页面的时候需要有参数-->
+        <!--长方形框的大小可以规定一下，防止图片过大或过小-->
+        <!--这边可以添加一些操作，对于画框而言-->
+
+        <!--<div style="border: 1px solid #bebebe; height:100%; width:95%; padding: 5px 5px 5px 5px; margin-left: 4%">-->
+            <!--<center><img src="../../images/Marked/Total/000000000209.jpg"></center>-->
+        <!--</div>-->
+<div style="width: 800px; height: 800px;">
+        <div id = "canvasSaver" class="background" style="width: 640px; height: 427px; margin: 0 auto; background-size:100% 100%;">
+            <canvas id="canvas" width= 640 height=427 style="border: 1px solid #000;"></canvas>
+        </div>
+</div>
+    </div>
+    <div class="col-md-4 column">
+        <div class="row clearfix">
+            <div class="col-md-10 column">
+                <div class="form-group">
+                    <label for="markInput" class="col-sm-3 control-label" id="tag">标签</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="markInput" placeholder="请输入标签"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 column">
+                <center><button class="btn btn-color" id="updateMark">更新</button></center>
+            </div>
+        </div>
+
+        <!--长方形框-->
+        <div id = "labelSaver" style="border: 1px solid #bebebe; height:100px; width:91%; padding: 5px 5px 5px 5px;">
+            <!--<span class="label label-default">人</span>-->
+            <!--<span class="label label-default">水果</span>-->
+        </div>
+
+        <br>
+
+        <div role="form">
+            <button class="btn btn-color-t" id="switchEdit">开始添加</button>
+            <button class="btn btn-color-t" id="deleteNote">删除</button>
+            <button class="btn btn-color-t" id="showAll">显示所有</button>
+            <button class="btn btn-color-t" id="hideAll">隐藏所有</button>
+        </div>
+
+
+        <br>
+
+        <div role="form">
+            <button class="btn btn-color" id="commit">提交</button>
+        </div>
+
+        <script src="../../src/temp/myJS/MyGlobal.js"></script>
+        <script src="../../src/temp/myJS/rectangleDrawer.js"></script>
+        <script src="../../src/temp/myJS/polygonDrawer.js"></script>
+        <script src="../../src/temp/myJS/AnnotateStarter.js"></script>
+    </div>
+</div>
+</body>
+</html>

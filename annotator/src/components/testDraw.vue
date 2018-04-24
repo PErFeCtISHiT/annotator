@@ -1,8 +1,10 @@
 <template>
   <div>
     <p>{{title}}</p>
-    <canvas id="canvas" width= 600 height=400 style="border: 1px solid #000;"></canvas>
+    <!--<canvas id="canvas" width= 600 height=400 style="border: 1px solid #000;"></canvas>-->
+    <div id = "test"></div>
     <button @click="handleCanvas">再次测试</button>
+    <button @click="handleChange">区块替换</button>
   </div>
 </template>
 
@@ -31,6 +33,9 @@
           layer:true,
           name: id,
         });
+      },
+      handleChange(){
+        $("#test").load('../../src/temp/markLocality.html');
       }
     }
   }
