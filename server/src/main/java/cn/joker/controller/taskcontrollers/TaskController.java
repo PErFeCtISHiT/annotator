@@ -70,12 +70,12 @@ public class TaskController {
         System.out.println(task.getTaskID());
         task.setCompletedNumber(0);
         task.setDescription(jsonObject.getString(globalDescription));
-        task.setEndDate(DateHelper.convertStringtoDate(jsonObject.getString(globalEndDate)));
+        task.setEndDate(DateHelper.convertStringToDate(jsonObject.getString(globalEndDate)));
         task.setExpectedNumber(jsonObject.getInt(globalExpectedNumber));
         task.setPoints(jsonObject.getInt(globalPoints));
         task.setSponsorName(jsonObject.getString(globalSponsorName));
         task.setImageNum(jsonObject.getInt(globalImgNum));
-        task.setStartDate(DateHelper.convertStringtoDate(jsonObject.getString(globalStartDate)));
+        task.setStartDate(DateHelper.convertStringToDate(jsonObject.getString(globalStartDate)));
         String[] tags = new String[]{};
         JSONArray tagArray = jsonObject.getJSONArray(globalTag);
         for (int i = 0; i < tagArray.length(); i++) {
