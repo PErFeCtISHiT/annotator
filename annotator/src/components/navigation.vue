@@ -2,10 +2,10 @@
   <div id="navigation-bar">
 
     <el-menu
-      :default-active="$route.path" class="el-menu-demo" mode="horizontal" router
-      background-color="#222C62"
-      text-color="#fff"
-      active-text-color="#ffd04b">
+      :default-active="$route.path" class="el-menu-demo" mode="horizontal"
+      router text-color="#fff" background-color="#222C62" active-text-color="#ffd04b"
+    >
+
       <el-submenu index="1">
         <template slot="title">发布者</template>
         <el-menu-item index="1-1">我发布的任务</el-menu-item>
@@ -57,8 +57,9 @@
   #navigation-bar {
     alignment: right;
   }
+
   .navigation-button {
-    background-color: #22326c;;
+    background-color: #22326c;
     color: aliceblue;
     vertical-align: center;
     padding-top: 10px;
@@ -68,5 +69,9 @@
 
   .el-menu-demo {
     padding-right: 20px;
+    /*background-color: #222C62;*/
+    /*text-color: #fff;*/
+    /*active-text-color: #ffd04b;*/
+    border-bottom-width: 0px;
   }
 </style>
