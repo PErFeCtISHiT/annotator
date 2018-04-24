@@ -16,6 +16,8 @@ import axios from './axios/index_axios'
 // 引入router配置文件
 import router from './router/index_router'
 
+window.myVue = Vue;
+
 //使用element-ui组件
 Vue.use(ElementUI);
 //挂载axios到vue的原型上，方便使用
