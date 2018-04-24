@@ -5,6 +5,8 @@ export default {
 
   // JSON.parse方法将一个字符串解析成一个JSON对象
   state: {
+    //userInfo的属性：level":1,"name":"somnus","username":"somnus","points":0
+
     userInfo: JSON.parse(localStorage.getItem('user')) || {},
     loginState: Boolean(JSON.parse(localStorage.getItem('user')))        // 有就是真的，没有就是假的
   },
