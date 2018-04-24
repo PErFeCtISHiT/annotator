@@ -28,11 +28,11 @@ public class ReportDao {
 
         newJson = addOneMessage(newJson, reportMessage, reportMessageArray);
 
-        return JsonHelper.modifyJson(newJson, "\"json/workerReported.json\"");
+        return JsonHelper.modifyJson(newJson, "json/workerReported.json");
     }
 
     public boolean reportTask(ReportMessage reportMessage) {
-        JsonObject jsonObject = JsonHelper.openJson("/taskReported.json");
+        JsonObject jsonObject = JsonHelper.openJson("json/taskReported.json");
         assert jsonObject != null;
         JsonArray reportMessageArray = jsonObject.getAsJsonArray("taskReportedMessages");
 
@@ -40,8 +40,9 @@ public class ReportDao {
         StringBuilder newJson = new StringBuilder("{\"taskReportedMessages\":[");
 
         newJson = addOneMessage(newJson, reportMessage, reportMessageArray);
+        System.out.println(newJson);
 
-        return JsonHelper.modifyJson(newJson, "\"json/taskReported.json\"");
+        return JsonHelper.modifyJson(newJson, "json/taskReported.json");
     }
 
     /**
@@ -49,7 +50,7 @@ public class ReportDao {
      * @return 举报信息列表
      */
     public List<ReportMessage> checkWorkerReport() {
-        JsonObject jsonObject = JsonHelper.openJson("/workerReported.json");
+        JsonObject jsonObject = JsonHelper.openJson("json/workerReported.json");
         assert jsonObject != null;
         JsonArray reportMessageArray = jsonObject.getAsJsonArray("workerReportedMessages");
 
@@ -61,7 +62,7 @@ public class ReportDao {
      * @return 举报信息列表
      */
     public List<ReportMessage> checkTaskReport() {
-        JsonObject jsonObject = JsonHelper.openJson("/taskReported.json");
+        JsonObject jsonObject = JsonHelper.openJson("json/taskReported.json");
         assert jsonObject != null;
         JsonArray reportMessageArray = jsonObject.getAsJsonArray("taskReportedMessages");
 
@@ -91,7 +92,7 @@ public class ReportDao {
         }
 
         for (Object o : reportMessageArray) {
-            JSONObject object = (JSONObject) o;
+            JSONObject object = new JSONObject(o.toString());
 
             if (object.get(globalReportTime).toString().equals(reportTime)) {
                 object.put(globalIsDealt, true);
@@ -118,18 +119,17 @@ public class ReportDao {
      */
     private List<ReportMessage> convertJsonArrayToArrayList(JsonArray reportMessageArray, int i){
         List<ReportMessage> workerReport = new ArrayList<>();
-
         for(Object o : reportMessageArray){
-            JsonObject object = (JsonObject) o;
+            JSONObject object = new JSONObject(o.toString());
             //对尚未处理过的信息进行处理
-            if(JsonHelper.format(object.get(globalIsDealt).toString()).equals(false)){
+            if(object.getBoolean(globalIsDealt) == false){
                 ReportMessage reportMessage = new ReportMessage();
-                reportMessage.setDescription(JsonHelper.format(object.get(globalDescription).toString()));
-                reportMessage.setTaskName(JsonHelper.format(object.get(globalTaskName).toString()));
-                reportMessage.setReporter(JsonHelper.format(object.get(globalReporter).toString()));
-                reportMessage.setRespondent(JsonHelper.format(object.get(globalRespondent).toString()));
-                reportMessage.setTaskID(Integer.valueOf(object.get(globalTaskID).toString()));
-                reportMessage.setReportTime(JsonHelper.format(object.get(globalReportTime).toString()));
+                reportMessage.setDescription(object.get(globalDescription).toString());
+                reportMessage.setTaskName(object.get(globalTaskName).toString());
+                reportMessage.setReporter(object.get(globalReporter).toString());
+                reportMessage.setRespondent(object.get(globalRespondent).toString());
+                reportMessage.setTaskID(object.getInt(globalTaskID));
+                reportMessage.setReportTime(object.get(globalReportTime).toString());
                 reportMessage.setType(i);
 
                 workerReport.add(reportMessage);
