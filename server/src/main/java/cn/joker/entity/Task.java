@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Task implements Serializable{
+public class Task implements Serializable {
     //任务有ID
     private Integer taskID;//任务ID，任务识别标识
 
@@ -52,7 +52,7 @@ public class Task implements Serializable{
         return expectedNumber;
     }
 
-    public void setExpectedNumber(Integer exceptedNumber) {
+    public void setExpectedNumber(Integer expectedNumber) {
         this.expectedNumber = expectedNumber;
     }
 

@@ -28,6 +28,7 @@ public class AdminController {
     private UserInfoService userInfoService;
     @Resource
     private TaskService taskService;
+
     @RequestMapping(value = "/checkUserNum", method = RequestMethod.GET)
     public void checkUserNum(HttpServletResponse response) {
         JSONObject ret = new JSONObject();
@@ -53,21 +54,20 @@ public class AdminController {
 
     }
 
-    @RequestMapping(value = "/checkTaskNum",method = RequestMethod.GET)
-    public void checkTaskNum(HttpServletResponse response){
+    @RequestMapping(value = "/checkTaskNum", method = RequestMethod.GET)
+    public void checkTaskNum(HttpServletResponse response) {
         JSONObject ret = new JSONObject();
         int taskNum = 0;
         int producing = 0;
         int finished = 0;
-        List<Task> tasks = taskService.search(1,null,0);
+        List<Task> tasks = taskService.search(1, null, 0);
         taskNum = tasks.size();
-        for(Task task : tasks){
+        for (Task task : tasks) {
             Date now = new Date();
             Date taskDate = task.getEndDate();
-            if(now.compareTo(taskDate) > 0){
+            if (now.compareTo(taskDate) > 0) {
                 finished++;
-            }
-            else
+            } else
                 producing++;
         }
         ret.put("sponsorNum", taskNum);

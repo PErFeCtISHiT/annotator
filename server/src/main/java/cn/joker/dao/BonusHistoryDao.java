@@ -18,6 +18,7 @@ import java.util.List;
 @Repository
 public class BonusHistoryDao {
     private String globalJson = "json/bonusHistory.json";
+
     public boolean addBonusHistory(BonusHistory bonusHistory) {
         JsonObject json = JsonHelper.openJson(globalJson);
         assert json != null;

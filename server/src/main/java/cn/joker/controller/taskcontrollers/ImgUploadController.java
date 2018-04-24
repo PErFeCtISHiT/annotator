@@ -22,29 +22,30 @@ import java.util.List;
 @RequestMapping("/task")
 public class ImgUploadController {
     /**
-    *@author:pis
-    *@description: 上传文件（zip)
-    *@date: 10:38 2018/4/17
-    */
-    @RequestMapping(value = "/zipFileUpload",method = RequestMethod.POST)
-    public void zipFileUpload(HttpServletRequest request,HttpServletResponse response){
-        MultipartFile file = ((MultipartHttpServletRequest)request).getFile("fileName");
+     * @author:pis
+     * @description: 上传文件（zip)
+     * @date: 10:38 2018/4/17
+     */
+    @RequestMapping(value = "/zipFileUpload", method = RequestMethod.POST)
+    public void zipFileUpload(HttpServletRequest request, HttpServletResponse response) {
+        MultipartFile file = ((MultipartHttpServletRequest) request).getFile("fileName");
         String taskID = request.getParameter("taskID");
         JSONObject ret = new JSONObject();
-        ret.put("mes", FileHelper.saveZip(taskID,file));
-        JsonHelper.jsonToResponse(response,ret);
+        ret.put("mes", FileHelper.saveZip(taskID, file));
+        JsonHelper.jsonToResponse(response, ret);
     }
+
     /**
-    *@author:pis
-    *@description: 上传多个图片
-    *@date: 15:57 2018/4/17
-    */
-    @RequestMapping(value = "/imagesUpload",method = RequestMethod.POST)
-    public void imagesUpload(HttpServletRequest request,HttpServletResponse response){
-        List<MultipartFile> files = ((MultipartHttpServletRequest)request).getFiles("fileName");
+     * @author:pis
+     * @description: 上传多个图片
+     * @date: 15:57 2018/4/17
+     */
+    @RequestMapping(value = "/imagesUpload", method = RequestMethod.POST)
+    public void imagesUpload(HttpServletRequest request, HttpServletResponse response) {
+        List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("fileName");
         String taskID = request.getParameter("taskID");
         JSONObject ret = new JSONObject();
-        ret.put("mes",FileHelper.saveFiles(taskID,files));
-        JsonHelper.jsonToResponse(response,ret);
+        ret.put("mes", FileHelper.saveFiles(taskID, files));
+        JsonHelper.jsonToResponse(response, ret);
     }
 }

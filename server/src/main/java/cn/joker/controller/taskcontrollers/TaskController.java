@@ -4,7 +4,7 @@ import cn.joker.dao.TaskDao;
 import cn.joker.entity.ReportMessage;
 import cn.joker.entity.Task;
 import cn.joker.entity.UserInfo;
-import cn.joker.serviceimpl.ReportServiceImpl;
+import cn.joker.sevice.ImgMarkService;
 import cn.joker.sevice.ReportService;
 import cn.joker.sevice.TaskService;
 import cn.joker.sevice.UserInfoService;
@@ -12,19 +12,17 @@ import cn.joker.util.DateHelper;
 import cn.joker.util.JsonHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 
-@Controller
+@RestController
 @RequestMapping("/task")
 public class TaskController {
     @Resource
@@ -33,6 +31,8 @@ public class TaskController {
     private ReportService reportService;
     @Resource
     private UserInfoService userInfoService;
+    @Resource
+    private ImgMarkService imgMarkService;
     private String globalTaskID = "taskID";
     private String globalSponsorName = "sponsorName";
     private String globalTaskName = "taskName";
@@ -63,27 +63,25 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.POST, value = "/releaseTask")
     public void releaseTask(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        System.out.println(jsonObject.toString());
-        System.out.println("here");
         Task task = new Task();
-        task.setTaskID(taskService.generateID());
-        System.out.println(task.getTaskID());
-        task.setCompletedNumber(0);
+
         task.setDescription(jsonObject.getString(globalDescription));
         task.setEndDate(DateHelper.convertStringToDate(jsonObject.getString(globalEndDate)));
         task.setExpectedNumber(jsonObject.getInt(globalExpectedNumber));
         task.setPoints(jsonObject.getInt(globalPoints));
         task.setSponsorName(jsonObject.getString(globalSponsorName));
         task.setImageNum(jsonObject.getInt(globalImgNum));
-        task.setStartDate(DateHelper.convertStringToDate(jsonObject.getString(globalStartDate)));
-        String[] tags = new String[]{};
+
+
         JSONArray tagArray = jsonObject.getJSONArray(globalTag);
-        for (int i = 0; i < tagArray.length(); i++) {
-            tags[i] = (String) tagArray.get(i);
+        List list = tagArray.toList();
+        String[] tags = new String[list.size()];
+
+        for (int i = 0; i < list.size(); i++) {
+            tags[i] = (String) list.toArray()[i];
         }
         task.setTag(tags);
         task.setTaskName(jsonObject.getString(globalTaskName));
-        task.setUserName(null);
         task.setWorkerLevel(jsonObject.getInt(globalWorkerLevel));
         JSONObject ret = new JSONObject();
 
@@ -94,14 +92,30 @@ public class TaskController {
     /**
      * 修改任务
      *
-     * @param task http
+     * @param request http
      * @return 任务是否修改
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/modifyTask")
-    public void modifyTask(Task task, HttpServletResponse response) {
+    public void modifyTask(HttpServletRequest request, HttpServletResponse response) {
+        JSONObject jsonObject = JsonHelper.requestToJson(request);
+        Task task = new Task();
+        task.setDescription(jsonObject.getString(globalDescription));
+        task.setEndDate(DateHelper.convertStringToDate(jsonObject.getString(globalEndDate)));
+        JSONArray tagArray = jsonObject.getJSONArray(globalTag);
+        List list = tagArray.toList();
+        String[] tags = new String[list.size()];
+
+        for (int i = 0; i < list.size(); i++) {
+            tags[i] = (String) list.toArray()[i];
+        }
+        task.setTag(tags);
+        task.setExpectedNumber(jsonObject.getInt(globalExpectedNumber));
+        task.setTaskName(jsonObject.getString(globalTaskName));
+        task.setPoints(jsonObject.getInt(globalPoints));
+        task.setTaskID(jsonObject.getInt(globalTaskID));
         JSONObject ret = new JSONObject();
-        ret.put(globalMes, taskService.releaseTask(task));
+        ret.put(globalMes, taskService.modifyTask(task));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -111,7 +125,7 @@ public class TaskController {
      * @param request  http
      * @param response http
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/myTask")
+    @RequestMapping(method = RequestMethod.POST, value = "/myTasks")
     public void checkMyTask(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
         String username = jsonObject.getString(globalUsername);
@@ -206,10 +220,10 @@ public class TaskController {
     public void completeTask(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
         Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
-        Task task = taskService.checkTaskDetail(taskID, 3);
+        JSONObject task = taskService.checkTaskDetail(taskID);
         String username = map.get(globalUsername)[0];
         UserInfo userInfo = userInfoService.findByUsername(username);
-        userInfo.setPoints(userInfo.getPoints() + task.getPoints());
+        userInfo.setPoints(userInfo.getPoints() + task.getInt(globalPoints));
         JSONObject ret = new JSONObject();
         ret.put(globalMes, taskService.completeTask(taskID, username) && userInfoService.modifyUser(userInfo));
         JsonHelper.jsonToResponse(response, ret);
@@ -257,8 +271,9 @@ public class TaskController {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/reportTask")
-    public void reportTask(ReportMessage reportMessage, HttpServletResponse response) {
+    public void reportTask(@RequestBody ReportMessage reportMessage, HttpServletResponse response) {
         JSONObject ret = new JSONObject();
+        reportMessage.setReportTime(DateHelper.convertDateToString(new Date()));
         ret.put(globalMes, reportService.reportTask(reportMessage));
         JsonHelper.jsonToResponse(response, ret);
     }
@@ -271,15 +286,15 @@ public class TaskController {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/reportWorker")
-    public void reportWorker(ReportMessage reportMessage, HttpServletResponse response) {
+    public void reportWorker(@RequestBody ReportMessage reportMessage, HttpServletResponse response) {
         JSONObject ret = new JSONObject();
+        reportMessage.setReportTime(DateHelper.convertDateToString(new Date()));
         ret.put(globalMes, reportService.reportWorker(reportMessage));
         JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
      * 管理员查看用户被举报的所有信息
-     *
      */
     @RequestMapping(method = RequestMethod.GET, value = "/checkWorkerReport")
     public void checkWorkerReport(HttpServletResponse response) {
@@ -306,28 +321,73 @@ public class TaskController {
      *
      * @param response http
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/checkTaskDetail")
+    @RequestMapping(method = RequestMethod.GET, value = "/checkTaskDetail")
     public void checkTaskDetail(HttpServletRequest request, HttpServletResponse response) {
-        //TODO
-        return;
+        Map<String, String[]> map = request.getParameterMap();
+        Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
+        JSONObject ret = taskService.checkTaskDetail(taskID);
+        System.out.println(ret.toString());
+        ret.put("acceptNum", ret.getJSONArray("userName").length());
+        ret.put("totalProgress", (double) ret.getInt("completedNumber") / (double) ret.getInt("expectedNumber"));
+        JSONArray users = ret.getJSONArray("userName");
+        JSONArray newUsers = new JSONArray();
+        for (Object o : users) {
+            String string = (String) o;
+            newUsers.put(string.split("-")[0]);
+        }
+        List imgURLs = taskService.findImgURLByID(String.valueOf(taskID));
+        Integer totalTagNum = 0;
+        JSONArray jsonArray = new JSONArray();
+        for (Object o1 : imgURLs) {
+            JSONObject object = new JSONObject();
+            String imgURL = (String) o1;
+            String imgName = imgURL.substring(imgURL.lastIndexOf('/') + 1, imgURL.lastIndexOf('.'));
+            object.put(imgName, taskService.findMarkNumByImgNameAndUserAndID(taskID, imgName, newUsers));
+            totalTagNum += taskService.findMarkNumByImgNameAndUserAndID(taskID, imgName, newUsers);
+            jsonArray.put(object);
+        }
+        ret.put("totalTagNum", totalTagNum);
+        ret.put("averageTagNum", totalTagNum / imgURLs.size());
+        ret.put("totalImgTagNum", jsonArray);
+        JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
      * 管理员处理举报信息
      *
-     * @param request http
+     * @param request  http
      * @param response http
      */
     @RequestMapping(method = RequestMethod.POST, value = "/dealReport")
     public void dealReport(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
-        String reportTime = map.get("reportTime")[0];
-        String description = map.get("description")[0];
-        Integer type = Integer.valueOf(map.get("type")[0]);
+        JSONObject jsonObject = JsonHelper.requestToJson(request);
+        String reportTime = jsonObject.getString("reportTime");
+        String description = jsonObject.getString("description");
+        Integer type = jsonObject.getInt("Type");
 
         JSONObject ret = new JSONObject();
         ret.put(globalMes, reportService.dealReport(reportTime, type, description));
         JsonHelper.jsonToResponse(response, ret);
     }
 
+    /**
+     * @author:pis
+     * @description: 查看某用户某次任务的所有图片的url
+     * @date: 22:58 2018/4/24
+     */
+    @RequestMapping(value = "/checkImages", method = RequestMethod.GET)
+    public void checkImages(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String[]> map = request.getParameterMap();
+        Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
+        JSONObject ret = new JSONObject();
+        JSONArray array = new JSONArray();
+        List list = taskService.findImgURLByID(String.valueOf(taskID));
+        for (Object o : list) {
+            String imgURL = (String) o;
+            array.put(imgURL);
+        }
+        ret.put("imgURLs", array);
+        JsonHelper.jsonToResponse(response, ret);
+    }
 }

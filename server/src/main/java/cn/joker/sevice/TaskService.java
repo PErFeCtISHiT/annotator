@@ -1,35 +1,37 @@
 package cn.joker.sevice;
 
 import cn.joker.entity.Task;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.List;
 
 public interface TaskService {
-    public boolean releaseTask(Task task);
+    boolean releaseTask(Task task);
 
-    public boolean modifyTask(Task task);
+    boolean modifyTask(Task task);
 
-    public List<Task> checkMyTask(String userName, Integer status, Integer userRole);
+    List<Task> checkMyTask(String userName, Integer status, Integer userRole);
 
-    public List<Task> search(int userRole, String tag, Integer status);
+    List<Task> search(int userRole, String tag, Integer status);
 
-    public boolean endTask(Integer taskID);
+    boolean endTask(Integer taskID);
 
-    public boolean deleteTask(Integer taskID);
+    boolean deleteTask(Integer taskID);
 
-    public boolean completeTask(Integer taskID, String workerName);
+    boolean completeTask(Integer taskID, String workerName);
 
-    public boolean abortTask(Integer taskID, String workerName);
+    boolean abortTask(Integer taskID, String workerName);
 
-    public boolean acceptTask(Integer taskID, String workerName);
+    boolean acceptTask(Integer taskID, String workerName);
 
     //目前还不确定，好像这个返回值有点多
-    public Task checkTaskDetail(Integer taskID, Integer userRole);
+    JSONObject checkTaskDetail(Integer taskID);
 
     //查看某个工人的进度
-    public Double checkTaskProgress(Integer taskID,String workerName);
+    Double checkTaskProgress(Integer taskID, String workerName);
 
+    List findImgURLByID(String taskID);
 
-    //得到一个新ID
-    public Integer generateID();
+    Integer findMarkNumByImgNameAndUserAndID(Integer taskID, String imgName, JSONArray users);
 }
