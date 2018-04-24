@@ -25,7 +25,13 @@
 
       <!-- Main page -->
       <el-main>
-        <router-view></router-view>
+
+        <el-row type="flex" class="row-bg" justify="center">
+          <el-col :span="18"><div id="main-div1">
+            <router-view></router-view>
+          </div></el-col>
+        </el-row>
+
       </el-main>
 
       <el-footer>Footer</el-footer>
@@ -72,7 +78,7 @@
 
   <!-- 用来修改ImgAnnotator几个字 -->
   #navigation-name {
-
+    ;
   }
 
   /*上面的span在这个div里面*/
@@ -88,6 +94,10 @@
 
   #navigation-div2-1 {
     float: right;
+  }
+
+  #main-div1 {
+    padding-left: 20%;
   }
 
   .navigation-background {
