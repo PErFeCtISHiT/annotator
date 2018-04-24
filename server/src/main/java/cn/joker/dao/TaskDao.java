@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -339,30 +340,36 @@ public class TaskDao {
         JsonArray taskArray = json.getAsJsonArray(globalTasks);
 
         ArrayList<Task> tasks = new ArrayList<>();
-
         for (Object o : taskArray) {
             Task task = new Task();
-            JSONObject object = (JSONObject) o;
-            task.setTaskID(Integer.valueOf(JsonHelper.format(object.get(globalTaskID).toString())));
-            task.setSponsorName(JsonHelper.format(object.get(globalSponsorName).toString()));
-            task.setTaskName(JsonHelper.format(object.get(globalTaskName).toString()));
-            task.setDescription(JsonHelper.format(object.get(globalDescription).toString()));
+            JsonObject object1 = (JsonObject) o;
+            JSONObject object = new JSONObject(object1.toString());
+            task.setTaskID(Integer.valueOf(object.get(globalTaskID).toString()));
+            task.setSponsorName(object.get(globalSponsorName).toString());
+            task.setTaskName(object.get(globalTaskName).toString());
+            task.setDescription(object.get(globalDescription).toString());
 
             JSONArray tagArray = object.getJSONArray(globalTag);
-            String[] tag = (String[]) tagArray.toList().toArray();
+            List list = tagArray.toList();
+            String[] tag = new String[list.size()];
+            for(int i = 0;i < list.size();i++){
+                tag[i] = (String) list.toArray()[i];
+            }
             task.setTag(tag);
 
             JSONArray userArray = object.getJSONArray(globalUserName);
+
             task.setUserName((ArrayList)userArray.toList());
+
             //task.setUserName();
 
-            task.setWorkerLevel(Integer.valueOf(JsonHelper.format(object.get(globalWorkerLevel).toString())));
-            task.setExpectedNumber(Integer.valueOf(JsonHelper.format(object.get(globalExpectedNumber).toString())));
-            task.setCompletedNumber(Integer.valueOf(JsonHelper.format(object.get(globalCompletedNumber).toString())));
-            task.setPoints(Integer.valueOf(JsonHelper.format(object.get(globalPoints).toString())));
+            task.setWorkerLevel(object.getInt(globalWorkerLevel));
+            task.setExpectedNumber(object.getInt(globalExpectedNumber));
+            task.setCompletedNumber(object.getInt(globalCompletedNumber));
+            task.setPoints(object.getInt(globalPoints));
 
-            task.setStartDate(DateHelper.convertStringtoDate(JsonHelper.format(object.get(globalStartDate).toString())));
-            task.setEndDate(DateHelper.convertStringtoDate(JsonHelper.format(object.get(globalEndDate).toString())));
+            task.setStartDate(DateHelper.convertStringtoDate(object.get(globalStartDate).toString()));
+            task.setEndDate(DateHelper.convertStringtoDate(object.get(globalEndDate).toString()));
 
             tasks.add(task);
         }

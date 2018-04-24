@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -63,23 +64,28 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.POST, value = "/releaseTask")
     public void releaseTask(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        System.out.println(jsonObject.toString());
-        System.out.println("here");
+
         Task task = new Task();
         task.setTaskID(taskService.generateID());
-        System.out.println(task.getTaskID());
+
         task.setCompletedNumber(0);
+
         task.setDescription(jsonObject.getString(globalDescription));
+
         task.setEndDate(DateHelper.convertStringtoDate(jsonObject.getString(globalEndDate)));
         task.setExpectedNumber(jsonObject.getInt(globalExpectedNumber));
         task.setPoints(jsonObject.getInt(globalPoints));
         task.setSponsorName(jsonObject.getString(globalSponsorName));
         task.setImageNum(jsonObject.getInt(globalImgNum));
-        task.setStartDate(DateHelper.convertStringtoDate(jsonObject.getString(globalStartDate)));
-        String[] tags = new String[]{};
+
+        task.setStartDate(new Date());
+
         JSONArray tagArray = jsonObject.getJSONArray(globalTag);
-        for (int i = 0; i < tagArray.length(); i++) {
-            tags[i] = (String) tagArray.get(i);
+        List list = tagArray.toList();
+        String[] tags = new String[list.size()];
+
+        for (int i = 0; i < list.size(); i++) {
+            tags[i] = (String) list.toArray()[i];
         }
         task.setTag(tags);
         task.setTaskName(jsonObject.getString(globalTaskName));

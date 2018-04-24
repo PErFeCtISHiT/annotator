@@ -85,25 +85,26 @@ public class MessageController {
     @RequiresPermissions("submitAssignment")
     public void modifyMessage(HttpServletRequest request, HttpServletResponse response) {
         JSONObject newUser = JsonHelper.requestToJson(request);
-        System.out.println(newUser);
         UserInfo newUserInfo = userInfoService.findByUsername((String) newUser.get(globalUsername));
-
-
-        newUserInfo.setPassword((String) newUser.get(globalPasswr));
-        newUserInfo.setName((String) newUser.get(globalName));
-        JSONArray jsonArray = newUser.getJSONArray(globalRoleList);
-        List<SysRole> roleList = new ArrayList<>();
-        for (Object obj : jsonArray) {
-            System.out.println(obj);
-            String srid = String.valueOf(obj);
-            roleList.add(sysRoleService.findBySysRoleId(srid));
-        }
-        newUserInfo.setRoleList(roleList);
-        PasswordHelper.encryptPassword(newUserInfo);
-
         JSONObject ret = new JSONObject();
+        if (newUserInfo != null) {
 
-        ret.put(globalMes, userInfoService.modifyUser(newUserInfo));
+
+            newUserInfo.setPassword((String) newUser.get(globalPasswr));
+            newUserInfo.setName((String) newUser.get(globalName));
+            JSONArray jsonArray = newUser.getJSONArray(globalRoleList);
+            List<SysRole> roleList = new ArrayList<>();
+            for (Object obj : jsonArray) {
+                String srid = String.valueOf(obj);
+                roleList.add(sysRoleService.findBySysRoleId(srid));
+            }
+            newUserInfo.setRoleList(roleList);
+            PasswordHelper.encryptPassword(newUserInfo);
+
+
+            ret.put(globalMes, userInfoService.modifyUser(newUserInfo));
+        } else
+            ret.put("ret", "null");
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -184,9 +185,12 @@ public class MessageController {
         String username = (String) jsonObject.get(globalUsername);
         Integer points = (Integer) jsonObject.get(globalPoints);
         UserInfo userInfo = userInfoService.findByUsername(username);
-        userInfo.setPoints(userInfo.getPoints() + points);
         JSONObject ret = new JSONObject();
-        ret.put(globalMes, userInfoService.modifyUser(userInfo));
+        if (userInfo != null) {
+            userInfo.setPoints(userInfo.getPoints() + points);
+            ret.put(globalMes, userInfoService.modifyUser(userInfo));
+        } else
+            ret.put("ret", "null");
         JsonHelper.jsonToResponse(response, ret);
 
     }
@@ -203,9 +207,12 @@ public class MessageController {
         String username = (String) jsonObject.get(globalUsername);
         Integer points = (Integer) jsonObject.get(globalPoints);
         UserInfo userInfo = userInfoService.findByUsername(username);
-        userInfo.setPoints(points);
         JSONObject ret = new JSONObject();
-        ret.put(globalMes, userInfoService.modifyUser(userInfo));
+        if (userInfo != null) {
+            userInfo.setPoints(points);
+            ret.put(globalMes, userInfoService.modifyUser(userInfo));
+        } else
+            ret.put("ret", "null");
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -222,14 +229,16 @@ public class MessageController {
         bonusHistory.setPoints((Integer) jsonObject.get(globalPoints));
         bonusHistory.setTaskID((Integer) jsonObject.get("taskID"));
         bonusHistory.setWorkerName((String) jsonObject.get("workerName"));
-
-        UserInfo userInfo = userInfoService.findByUsername(bonusHistory.getWorkerName());
-        userInfo.setPoints(userInfo.getPoints() + bonusHistory.getPoints());
-        userInfo.setBonus(userInfo.getBonus() + bonusHistory.getPoints());
-
         JSONObject ret = new JSONObject();
+        UserInfo userInfo = userInfoService.findByUsername(bonusHistory.getWorkerName());
+        if (userInfo != null) {
+            userInfo.setPoints(userInfo.getPoints() + bonusHistory.getPoints());
+            userInfo.setBonus(userInfo.getBonus() + bonusHistory.getPoints());
 
-        ret.put(globalMes, bonusHistoryService.addBonusHistory(bonusHistory) && userInfoService.modifyUser(userInfo));
+
+            ret.put(globalMes, bonusHistoryService.addBonusHistory(bonusHistory) && userInfoService.modifyUser(userInfo));
+        } else
+            ret.put("ret", "null");
         JsonHelper.jsonToResponse(response, ret);
 
     }

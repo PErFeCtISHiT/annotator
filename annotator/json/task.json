@@ -1,11 +1,11 @@
 {
-  "tasks":[
+  "tasks": [
     {
       "taskID": 0,
       "sponsorName": "kiki",
       "taskName": "123",
       "description": "标出图片中的人",
-      "tag":[
+      "tag": [
         "人物",
         "旅游"
       ],
@@ -20,6 +20,24 @@
         "worker1-11",
         "worker2-0"
       ]
+    },
+    {
+      "completedNumber": 0,
+      "endDate": "2018-05-24 23:59:59",
+      "sponsorName": "ki",
+      "description": "???????",
+      "taskName": "????",
+      "tag": [
+        "??",
+        "??"
+      ],
+      "workerLevel": 2,
+      "userName": [
+        []
+      ],
+      "taskID": 1,
+      "startDate": "2018-04-23 20:59:10",
+      "points": 123
     }
   ]
 }

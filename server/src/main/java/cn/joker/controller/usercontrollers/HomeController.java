@@ -66,16 +66,21 @@ public class HomeController {
         String userName = SecurityUtils.getSubject().getPrincipal().toString();
         UserInfo userInfo = userInfoService.findByUsername(userName);
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("username", userInfo.getUsername());
-        jsonObject.put("level", userInfo.getLevel());
-        jsonObject.put("name", userInfo.getName());
-        jsonObject.put("points", userInfo.getPoints());
-        JSONArray list1 = new JSONArray();
-        List<SysRole> list = userInfo.getRoleList();
-        for (SysRole sysRole : list) {
-            list1.put(sysRole.getSrid());
+        if(userInfo != null) {
+            jsonObject.put("username", userInfo.getUsername());
+            jsonObject.put("level", userInfo.getLevel());
+            jsonObject.put("name", userInfo.getName());
+            jsonObject.put("points", userInfo.getPoints());
+            JSONArray list1 = new JSONArray();
+            List<SysRole> list = userInfo.getRoleList();
+            for (SysRole sysRole : list) {
+                list1.put(sysRole.getSrid());
+            }
+            jsonObject.put("role", list1);
         }
-        jsonObject.put("role", list1);
+        else{
+            jsonObject.put("ret","null");
+        }
         JsonHelper.jsonToResponse(response, jsonObject);
 
     }
