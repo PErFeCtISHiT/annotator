@@ -29,7 +29,7 @@
       </el-submenu>
       <el-menu-item index="4">个人信息</el-menu-item>
       &nbsp;
-      <el-button class="navigation-button" @click="logOut">登出</el-button>
+      <el-button class="navigation-button" @click="handleLogOut">登出</el-button>
     </el-menu>
 
   </div>
@@ -47,7 +47,30 @@
       }
     },
     methods: {
-      ...mapActions(['logOut'])
+      ...mapActions(['logOut']),
+      handleLogOut(){
+        if(this.$store.state.user.userInfo.userName==='admin'){
+          this.logOut();
+        }else{
+          let that = this;
+          this.$http.get('/user/logout')
+            .then(function (response) {
+              console.log(response);
+              that.$message({       //回调函数要用that
+                message: '登出成功',
+                type: 'success'
+              });
+              that.logOut();
+            })
+            .catch(function (error) {
+              console.log(error);
+              that.$message({
+                message: '登出失败，请检查网络连接',
+                type: 'error'
+              });
+            });
+        }
+      }
     },
     computed: {
       amount: function () {
