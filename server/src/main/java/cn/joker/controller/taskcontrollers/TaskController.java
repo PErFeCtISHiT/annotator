@@ -64,7 +64,9 @@ public class TaskController {
         Task task = new Task();
 
         task.setDescription(jsonObject.getString(globalDescription));
-        task.setEndDate(DateHelper.convertStringToDate(jsonObject.getString(globalEndDate)));
+        String endDate = jsonObject.getString(globalEndDate);
+        endDate += " 00:00:00";
+        task.setEndDate(DateHelper.convertStringToDate(endDate));
         task.setExpectedNumber(jsonObject.getInt(globalExpectedNumber));
         task.setPoints(jsonObject.getInt(globalPoints));
         task.setSponsorName(jsonObject.getString(globalSponsorName));
@@ -78,6 +80,7 @@ public class TaskController {
             tags[i] = (String) list.toArray()[i];
         }
         task.setTag(tags);
+        task.setImageNum(0);
         task.setTaskName(jsonObject.getString(globalTaskName));
         task.setWorkerLevel(jsonObject.getInt(globalWorkerLevel));
         JSONObject ret = new JSONObject();

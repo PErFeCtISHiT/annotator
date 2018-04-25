@@ -48,7 +48,7 @@
     name: "task-item",
     props: ['taskMsg'],
     data() {
-
+      return {}
     }
   }
 </script>

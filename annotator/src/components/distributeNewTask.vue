@@ -210,13 +210,15 @@
               .then(function (response) {
                 //检查返回信息
 
+                console.log('看看id是几',response.data.taskID);
                 if(response.data.mes === true){
-                  taskID = response.data.id;   //设定任务的id属性值
-                  this.$refs.upload.submit();  //发送ajax请求
+                  taskID = response.data.taskID;   //设定任务的id属性值
+                  that.$refs.upload.submit();  //发送ajax请求
                 }
 
                 else {
                   that.$message.warning('上传失败');
+                  console.log('2')
                 }
               })
               .catch(function (error) {
@@ -224,6 +226,7 @@
                   message: '上传失败' + error,
                   type: 'warning'
                 });
+                console.log('1');
               })
 
             /*console.log(this.newTask.taskName + " " + this.newTask.taskDescription);
@@ -259,24 +262,28 @@
         let that = this;
 
         let formData = new FormData();
-        formData.append('id', taskID + "");
         formData.append('file', item.file);
+        formData.append('taskID',1);
 
         console.log('上传图片的接口参数', item.file);
         this.$http.request({
           method: 'post',
           data: formData,
-          url: 'task/imagesUpload'
+          url: 'task/imagesUpload',
+          headers: {'content-type': 'multipart/form-data'}
         })
           .then(function (response) {
-            if(response.data.mes !== true)
+            if(response.data.mes !== true) {
               that.$message.warning('上传失败');
+              console.log('3');
+            }
           })
           .catch(function (error) {
             that.$message({
               message: '上传失败' + error,
               type: 'warning'
             });
+            console.log('4');
           });
       }
 

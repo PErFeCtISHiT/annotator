@@ -8,11 +8,16 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 /**
@@ -43,9 +48,7 @@ public class ImgUploadController {
      * @date: 15:57 2018/4/17
      */
     @RequestMapping(value = "/imagesUpload", method = RequestMethod.POST)
-    public void imagesUpload(HttpServletRequest request, HttpServletResponse response) {
-        MultipartFile file = ((MultipartHttpServletRequest) request).getFile("file");
-        String taskID = request.getParameter("taskID");
+    public void imagesUpload(@RequestParam("file") MultipartFile file,@RequestParam("taskID") String taskID, HttpServletResponse response) {
         TaskDao taskDao = new TaskDao();
         Task task = taskDao.getTask(Integer.valueOf(taskID),taskDao.getAllTasks());
         task.setImageNum(task.getImageNum() + 1);
