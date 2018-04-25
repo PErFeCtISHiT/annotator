@@ -14,8 +14,9 @@
 
       <el-submenu index="2" :disabled="!isWorker">
         <template slot="title">工人</template>
-        <el-menu-item index="2-1">我发布的任务</el-menu-item>
-        <el-menu-item index="2-2">发布新任务</el-menu-item>
+        <el-menu-item index="2-1">获取新任务</el-menu-item>
+        <el-menu-item index="2-2">进行中的任务</el-menu-item>
+        <el-menu-item index="2-2">积分历史与排名</el-menu-item>
       </el-submenu>
 
       <el-submenu index="3">

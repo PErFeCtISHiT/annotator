@@ -6,14 +6,14 @@
 
         <el-col :span="12">
           <el-form-item prop="userName">
-            <el-input prefix-icon="el-icon-goods" v-model.number="registerForm.userName"
+            <el-input prefix-icon="el-icon-goods" v-model="registerForm.userName"
                       placeholder="请输入用户名"></el-input>
           </el-form-item>
         </el-col>
 
         <el-col :span="12">
           <el-form-item prop="name">
-            <el-input prefix-icon="el-icon-goods" v-model.number="registerForm.name" placeholder="请输入昵称"></el-input>
+            <el-input prefix-icon="el-icon-goods" v-model="registerForm.name" placeholder="请输入昵称"></el-input>
           </el-form-item>
         </el-col>
 
