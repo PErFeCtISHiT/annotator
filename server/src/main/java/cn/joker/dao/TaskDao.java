@@ -348,13 +348,12 @@ public class TaskDao {
     }
 
     //得到目前的任务列表，数组形式
-    private ArrayList<Task> getAllTasks() {
+    public ArrayList<Task> getAllTasks() {
         JsonObject json = JsonHelper.openJson(globalJson);
         assert json != null;
         JsonArray taskArray = json.getAsJsonArray(globalTasks);
 
         ArrayList<Task> tasks = new ArrayList<>();
-
         for (Object o : taskArray) {
             Object o1 = (JsonObject) o;
             JSONObject object = new JSONObject(o1.toString());
@@ -419,7 +418,7 @@ public class TaskDao {
         return jsonObject;
     }
 
-    private Task getTask(Integer taskID, ArrayList<Task> allTasks) {
+    public Task getTask(Integer taskID, ArrayList<Task> allTasks) {
         for (Task t : allTasks) {
             if (t.getTaskID().equals(taskID)) {
                 return t;

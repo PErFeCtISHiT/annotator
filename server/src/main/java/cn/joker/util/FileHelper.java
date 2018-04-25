@@ -78,27 +78,38 @@ public class FileHelper {
         return true;
     }
 
-    public static boolean saveFiles(String taskID, List<MultipartFile> files) {
-        if (files.isEmpty())
+    public static boolean saveFiles(String taskID, MultipartFile file) {
+        if (file.isEmpty())
             return false;
         String path = DIR + "task/" + taskID + "/images/";
-        for (MultipartFile file : files) {
-            String fileName = file.getOriginalFilename();
-            fileName = FileHelper.getRealFilePath(fileName);
-            fileName = fileName.substring(fileName.lastIndexOf(FILE_SEPARATOR) + 1);
-            File dest = new File(path + fileName);
-            if (!dest.getParentFile().getParentFile().exists()) {
-                return dest.getParentFile().getParentFile().mkdir();
+        String fileName = file.getOriginalFilename();
+        fileName = FileHelper.getRealFilePath(fileName);
+        fileName = fileName.substring(fileName.lastIndexOf(FILE_SEPARATOR) + 1);
+        File dest = new File(path + fileName);
+        if (!dest.getParentFile().getParentFile().exists()) {
+            return dest.getParentFile().getParentFile().mkdir();
+        }
+        if (!dest.getParentFile().exists()) {
+            return dest.getParentFile().mkdir();
+        }
+        try {
+            file.transferTo(dest);
+            String attr = fileName.substring(fileName.lastIndexOf('.') + 1);
+            if (attr.equals("zip")) {
+                Project p = new Project();
+                Expand e = new Expand();
+                e.setProject(p);
+                e.setSrc(new File(dest.getPath()));
+                e.setOverwrite(false);
+                e.setDest(new File(path));
+                e.setEncoding("gbk");
+                e.execute();  //解压
+                Path path1 = Paths.get(path + fileName);
+                Files.delete(path1);
             }
-            if (!dest.getParentFile().exists()) {
-                return dest.getParentFile().mkdir();
-            }
-            try {
-                file.transferTo(dest);
-            } catch (IOException e) {
-                logger.error(globalException);
-                return false;
-            }
+        } catch (IOException e) {
+            logger.error(globalException);
+            return false;
         }
         return true;
     }
