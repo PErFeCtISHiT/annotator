@@ -9,27 +9,27 @@
 var inDrawing = false;
 
 //TODO
-// var btnSwitchDrawID = "switchEdit";
-// var btnSDOriginalText = $("#" + btnSwitchDrawID).text();
-// var btnSDInDrawingText = "取消添加";
+var btnSwitchDrawID = "switchEdit";
+var btnSDOriginalText = $("#" + btnSwitchDrawID).text();
+var btnSDInDrawingText = "取消添加";
 
 //TODO
-// function setBtnSwitchDrawOfRect(btnID, originalTxt, inDrawingTxt) {
-//     $("#" + btnID).click(() => {
-//         if (!inDrawing) {
-//             $("#" + btnID).text(inDrawingTxt);
-//         } else {
-//             $("#" + btnID).text(originalTxt);
-//         }
-//         inDrawing = !inDrawing;
-//     });
-// }
+function setBtnSwitchDrawOfRect(btnID, originalTxt, inDrawingTxt) {
+    $("#" + btnID).click(() => {
+        if (!inDrawing) {
+            $("#" + btnID).text(inDrawingTxt);
+        } else {
+            $("#" + btnID).text(originalTxt);
+        }
+        inDrawing = !inDrawing;
+    });
+}
 
 //TODO
-// function btnSwitchToNormal() {
-//     $("#" + btnSwitchDrawID).text(btnSDOriginalText);
-//     inDrawing = false;
-// }
+function btnSwitchToNormal() {
+    $("#" + btnSwitchDrawID).text(btnSDOriginalText);
+    inDrawing = false;
+}
 
 
 
@@ -117,11 +117,11 @@ var CanvasExt = {
                 mouseout: rect_mouseOutFunc,
                 click: function (layer) {
                     //TODO
-//                    if (!inDrawing) {
+                    if (!inDrawing) {
                         CanvasExt.showNote(CanvasExt.canvasId, CanvasExt.inputID, layer);
                         CanvasExt.setUpdateNote(CanvasExt.inputID, CanvasExt.updateBtnID, layer);
                         CanvasExt.setDeleteNote(CanvasExt.canvasId, CanvasExt.inputID, CanvasExt.deleteBtnID, layer);
-//                    }
+                    }
                 },
             });
         }
@@ -233,7 +233,7 @@ var CanvasExt = {
             preventOutOfBorderSetted = false;
 
             //TODO
-            // if (inDrawing) {
+             if (inDrawing) {
                 //设置画笔颜色和宽度
                 var color = this.penColor;
                 var penWidth = this.penWidth;
@@ -261,6 +261,9 @@ var CanvasExt = {
                     var width = e.clientX + document.body.parentElement.scrollLeft - canvasLeft - x;
                     var height = e.clientY + document.body.parentElement.scrollTop - canvasTop - y;
 
+                    console.log(e.clientX + document.body.parentElement.scrollLeft);
+                    console.log(e.clientY + document.body.parentElement.scrollTop);
+
                     $("#" + canvasId).removeLayer(layerName);
 
                     $("#" + canvasId).addLayer({
@@ -281,7 +284,7 @@ var CanvasExt = {
                         preventOutOfBorderSetted = true;
                     }
                 }
-            // }
+             }
         };
 
         canvas.onmouseup = (e) => {
@@ -289,8 +292,8 @@ var CanvasExt = {
         }
 
         function handleUp(e) {
-            //原句：if (isDrawing!preventOutOfBorderSetted)
-            if (!preventOutOfBorderSetted) {
+            //原句：if (isDrawing&&!preventOutOfBorderSetted)
+            if (inDrawing&&!preventOutOfBorderSetted) {
                 var color = this.penColor;
                 var penWidth = this.penWidth;
 
@@ -311,9 +314,9 @@ var CanvasExt = {
 
                 function handleClick(layer) {
                     //TODO
-//                    if (!inDrawing) {
+                    if (!inDrawing) {
                         smallHandle(layer)
-//                    }
+                    }
                 }
 
 
@@ -330,7 +333,7 @@ var CanvasExt = {
                     data: dataObj,
                     mouseover: rect_mouseOverFunc,
                     mouseout: rect_mouseOutFunc,
-                    dblclick: function (layer) {
+                    click: function (layer) {
                         handleClick(layer);
                         // if (!inDrawing) {
                         //     CanvasExt.showNote(canvasId, inputID, layer);
@@ -415,7 +418,7 @@ function getRectStarted() {
     var color = "red";
     var width = 1;
     //TODO
-    // setBtnSwitchDrawOfRect(btnSwitchDrawID, btnSDOriginalText, btnSDInDrawingText);
+    setBtnSwitchDrawOfRect(btnSwitchDrawID, btnSDOriginalText, btnSDInDrawingText);
     CanvasExt.writeInit("canvas", color, width, "user", "markInput", "updateMark", "deleteNote", "showAll", "hideAll");
     getJsonFromServerAndLoadRect(global_imgURL,"provider");
     setBtnSubmit("commit");

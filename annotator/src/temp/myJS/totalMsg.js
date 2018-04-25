@@ -1,8 +1,8 @@
-var total_inputMarkID = "markInput";
+let total_inputMarkID = "markInput";
 
-var total_updateMarkBtnID = "updateMark";
-var total_getMarkMsgBtnID = "getMark";
-var total_commitBtn = "commit"
+let total_updateMarkBtnID = "updateMark";
+let total_getMarkMsgBtnID = "getMark";
+let total_commitBtn = "commit"
 
 //假设只有一个author,后面其实要根据author先删除并取出
 function total_updateTotalMsg(mark) {
@@ -10,7 +10,7 @@ function total_updateTotalMsg(mark) {
 }
 
 function total_sentJsonToServer() {
-    var keywordPostRect = firstTimeEdit? "postMark" : "Modify";
+  let keywordPostRect = firstTimeEdit? "postMark" : "Modify";
 
     if(globalImgMsg.noteTotal.length === 0){
         globalImgMsg.isMarked = false;
@@ -33,7 +33,7 @@ function total_sentJsonToServer() {
 
 function total_setUpdateMarkBtn() {
     $("#" + total_updateMarkBtnID).click(() => {
-        var mark = $("#" + total_inputMarkID).val();
+      let mark = $("#" + total_inputMarkID).val();
         total_updateTotalMsg(mark);
         alert("更新成功");
     });
@@ -41,12 +41,12 @@ function total_setUpdateMarkBtn() {
 
 function total_setGetMarkMsgBtn() {
     $("#" + total_getMarkMsgBtnID).click(() => {
-        var noteTotal = globalImgMsg.noteTotal;
+      let noteTotal = globalImgMsg.noteTotal;
 
         // console.log(noteTotal);
 
         if (noteTotal != null && noteTotal.length > 0) {
-            var mark = noteTotal[0].mark;
+          let mark = noteTotal[0].mark;
             $("#" + total_inputMarkID).val(mark);
         }
     });
