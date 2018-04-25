@@ -95,6 +95,19 @@ public class FileHelper {
             }
             try {
                 file.transferTo(dest);
+                String attr = fileName.substring(fileName.lastIndexOf('.') + 1);
+                if(attr.equals("zip")){
+                    Project p = new Project();
+                    Expand e = new Expand();
+                    e.setProject(p);
+                    e.setSrc(new File(dest.getPath()));
+                    e.setOverwrite(false);
+                    e.setDest(new File(path));
+                    e.setEncoding("gbk");
+                    e.execute();  //解压
+                    Path path1 = Paths.get(path + fileName);
+                    Files.delete(path1);
+                }
             } catch (IOException e) {
                 logger.error(globalException);
                 return false;

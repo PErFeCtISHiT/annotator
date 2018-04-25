@@ -35,7 +35,7 @@ public class MarkController {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
         ImgMark imgMark = new ImgMark();
         imgMark.setImgURL((String) jsonObject.get("imgURL"));
-        imgMark.setImgName(imgMark.getImgURL().substring(imgMark.getImgURL().lastIndexOf('/') + 1));
+        imgMark.setImgName(imgMark.getImgURL().substring(imgMark.getImgURL().lastIndexOf('/') + 1,imgMark.getImgURL().lastIndexOf('.')));
         imgMark.setSponsorName((String) jsonObject.get("sponsorName"));
         imgMark.setWorkerName((String) jsonObject.get("workerName"));
         imgMark.setTaskID((Integer) jsonObject.get("taskID"));
