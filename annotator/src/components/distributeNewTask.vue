@@ -5,7 +5,7 @@
       <el-col :span="12"><div class="grid-content bg-purple-light main-div">
 
         <el-row type="flex" class="row-bg" justify="center">
-          <el-col :span="6"><div class="grid-content bg-purple-light">
+          <el-col :span="7"><div class="grid-content bg-purple-light">
             <span id="title">新任务</span>
           </div></el-col>
         </el-row>
@@ -50,6 +50,16 @@
             <el-input type="text" v-model.number="newTask.points" auto-complete="false" clearable style="width: 500px"></el-input>
           </el-form-item>
 
+          <el-form-item>
+            <el-upload multiple :limit="5" :on-exceed="handleExceed"
+                       :file-list="fileList" list-type="picture"
+                       :beforeRemove="beforeRemove" :beforeUpload="beforeUpload"
+                       style="width: 580px">
+
+              <el-button size="medium" type="primary">点击上传</el-button>
+            </el-upload>
+          </el-form-item>
+
           <br>
           <el-form-item>
             <el-row :gutter="20">
@@ -61,7 +71,9 @@
               </div></el-col>
             </el-row>
           </el-form-item>
+
         </el-form>
+
 
       </div></el-col>
     </el-row>
@@ -129,6 +141,8 @@
           points: 0
         },
 
+        fileList: [],
+
         //表单的验证规则
         myRule: {
           taskName: [
@@ -162,7 +176,6 @@
 
     methods: {
       submitForm: function (formName) {
-        let that = this;
 
         this.$refs[formName].validate((valid) => {
           if(valid){
@@ -173,15 +186,44 @@
             console.log(this.newTask.workerLevel);
             console.log(typeof this.newTask.workerLevel);
           }else {
-            that.sendAlert('您填写的内容不符合规范', "错误提示");
+            this.$message({
+              message: "您填写的内容不合规范",
+              type: 'warning'
+            });
           }
         })
       },
 
-      resetForm(formName) {
+      resetForm (formName) {
         this.newTask.workerLevel = 0;
         this.$refs[formName].resetFields();
-      }
+      },
+
+      handleExceed (files, fileList) {
+        this.$message.warning(`当前限制选择 5 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+      },
+
+      beforeRemove (file, fileList) {
+        return this.$confirm(`确定移除${ file.name }`)
+      },
+
+      testFileCat(file){
+        const isJPG = file.type === 'jpg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          //this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      },
+
+      beforeUpload(files) {
+        return files.map(file => testFileCat(file)).filter(result => result === false).length === 0;
+      },
+
 
     }
 
