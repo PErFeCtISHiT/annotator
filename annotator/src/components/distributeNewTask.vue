@@ -29,13 +29,13 @@
           </el-form-item>
 
           <el-form-item label="开始时间" prop="taskStartDate">
-            <el-date-picker v-model="newTask.taskStartDate" placeholder="请选择开始时间" style="width: 500px" ref="startTimePicker"
-                            :picker-options="option1"></el-date-picker>
+            <el-date-picker type="date" v-model="newTask.taskStartDate" placeholder="请选择开始时间" style="width: 500px" ref="startTimePicker"
+                            :picker-options="option1" @change="getSTime" format="yyyy-MM-dd"></el-date-picker>
           </el-form-item>
 
           <el-form-item label="结束时间" prop="taskEndDate">
-            <el-date-picker v-model="newTask.taskEndDate" placeholder="请选择结束时间" style="width: 500px" ref="endTimePicker"
-                            :picker-options="option2"></el-date-picker>
+            <el-date-picker type="date" v-model="newTask.taskEndDate" placeholder="请选择结束时间" style="width: 500px" ref="endTimePicker"
+                            :picker-options="option2" @change="getETime" format="yyyy-MM-dd"></el-date-picker>
           </el-form-item>
 
           <el-form-item label="参与人数" prop="expectedNumber">
@@ -51,12 +51,15 @@
           </el-form-item>
 
           <el-form-item>
-            <el-upload multiple :limit="5" :on-exceed="handleExceed"
-                       :file-list="fileList" list-type="picture"
-                       :beforeRemove="beforeRemove" :beforeUpload="beforeUpload"
+            <el-upload multiple :limit="20" :on-exceed="handleExceed"
+                       action="dummy" :auto-upload="false"
+                       :file-list="newTask.fileList" list-type="" accept=".jpg,.png,.jpeg,.zip"
+                       :beforeRemove="beforeRemove" :http-request="uploadImage"
+                       show-file-list
                        style="width: 580px">
 
               <el-button size="medium" type="primary">点击上传</el-button>
+              <div slot="tip">上传jpg/png文件，不超过20张。或选择只上传一个zip压缩文件</div>
             </el-upload>
           </el-form-item>
 
@@ -125,7 +128,7 @@
         option2: {
           disabledDate(time) {
             let sd = that.$refs.startTimePicker.value;
-            return time.getTime() <= sd || time.getTime() < Date.now() - 86400000;
+            return time.getTime() <= sd || time.getTime() < Date.now();
           }
         },
 
@@ -134,14 +137,15 @@
           taskName: "",
           taskDescription: "",
           checkedTags: [],
-          taskStartDate: "",
-          taskEndDate: "",
+          taskStartDate: '',
+          taskEndDate: '',
           expectedNumber: 0,
           workerLevel: 0,
-          points: 0
+          points: 0,
+          fileList: []
         },
 
-        fileList: [],
+
 
         //表单的验证规则
         myRule: {
@@ -155,7 +159,7 @@
             { type: 'array', required: true, message: '请至少选择一个类别', trigger: 'change' }
           ],
           taskStartDate: [
-            { validator: checkDate, trigger: 'change' },
+            { validator: checkDate, trigger: 'blur' },
             { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
           ],
           taskEndDate: [
@@ -175,16 +179,51 @@
     },
 
     methods: {
+      getSTime(val) {
+        this.newTask.startDate = val;
+      },
+
+      getETime(val) {
+        this.newTask.endDate = val;
+      },
+
       submitForm: function (formName) {
+        let that = this;
 
         this.$refs[formName].validate((valid) => {
           if(valid){
-            console.log(this.newTask.taskName + " " + this.newTask.taskDescription);
+            console.log()
+            this.$http.post('/task/releaseTask', {
+              sponsorName: that.$store.state.user.userInfo.username,
+              taskName: that.newTask.taskName,
+              description: that.newTask.taskDescription,
+              tag: that.newTask.checkedTags,
+              startDate: that.newTask.startDate.getFullYear() + "-" + (that.newTask.startDate.getMonth()+1) + "-" + that.newTask.startDate.getDate(),
+              endDate: that.newTask.endDate.getFullYear() + "-" + (that.newTask.endDate.getMonth()+1) + "-" + that.newTask.endDate.getDate(),
+              workerLevel: that.newTask.workerLevel,
+              expectedNumber: that.newTask.expectedNumber,
+              points: that.newTask.points,
+              imgNum: 20
+            })
+              .then(function (response) {
+                console.log(response.data.mes);
+                if(response.data.mes === true)
+                  console.log("continue");
+              })
+              .catch(function (error) {
+                that.$message({
+                  message: '上传失败' + error,
+                  type: 'warning'
+                });
+              })
+
+            /*console.log(this.newTask.taskName + " " + this.newTask.taskDescription);
             console.log(this.newTask.checkedTags);
-            console.log(this.newTask.taskStartDate);
+            console.log(this.convertDate(this.newTask.taskStartDate));
             console.log(this.newTask.expectedNumber);
             console.log(this.newTask.workerLevel);
             console.log(typeof this.newTask.workerLevel);
+            this.newTask.fileList.forEach(file => console.log(file.toString()));*/
           }else {
             this.$message({
               message: "您填写的内容不合规范",
@@ -200,30 +239,16 @@
       },
 
       handleExceed (files, fileList) {
-        this.$message.warning(`当前限制选择 5 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+        this.$message.warning(`当前限制选择 20 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
       },
 
-      beforeRemove (file, fileList) {
+      beforeRemove (file) {
         return this.$confirm(`确定移除${ file.name }`)
       },
 
-      testFileCat(file){
-        const isJPG = file.type === 'jpg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
+      uploadImage () {
 
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
-        }
-        if (!isLt2M) {
-          //this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        return isJPG && isLt2M;
-      },
-
-      beforeUpload(files) {
-        return files.map(file => testFileCat(file)).filter(result => result === false).length === 0;
-      },
-
+      }
 
     }
 
