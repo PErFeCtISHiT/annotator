@@ -1,18 +1,17 @@
 package cn.joker.util;
 
+import cn.joker.entity.PaySaPi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import cn.joker.entity.PaySaPi;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 
 public class PayUtil {
 
-	private static Logger logger = LogManager.getLogger();
+	private static Logger logger = LoggerFactory.getLogger(JsonHelper.class);
 
 	public static String UID = "d6e476045dd7c4f6d6b4f85c";
 

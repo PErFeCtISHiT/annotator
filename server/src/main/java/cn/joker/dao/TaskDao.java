@@ -95,6 +95,10 @@ public class TaskDao {
             newJson.append(",");
         }
 
+        if (newJson.lastIndexOf(",") != -1) {
+            newJson.deleteCharAt(newJson.lastIndexOf(","));
+        }
+
         newJson.append("]}");
 
         return existTask && this.updateJson(newJson);
@@ -186,6 +190,9 @@ public class TaskDao {
             newJson.append(jsonObject.toString());
             newJson.append(",");
         }
+        if (newJson.lastIndexOf(",") != -1) {
+            newJson.deleteCharAt(newJson.lastIndexOf(","));
+        }
 
         newJson.append("]}");
 
@@ -210,7 +217,9 @@ public class TaskDao {
                 newJson.append(",");
             }
         }
-
+        if (newJson.lastIndexOf(",") != -1) {
+            newJson.deleteCharAt(newJson.lastIndexOf(","));
+        }
         newJson.append("]}");
 
         return this.updateJson(newJson);
@@ -253,7 +262,9 @@ public class TaskDao {
             newJson.append(jsonObject.toString());
             newJson.append(",");
         }
-
+        if (newJson.lastIndexOf(",") != -1) {
+            newJson.deleteCharAt(newJson.lastIndexOf(","));
+        }
         newJson.append("]}");
 
         return this.updateJson(newJson);
@@ -292,7 +303,9 @@ public class TaskDao {
             newJson.append(jsonObject.toString());
             newJson.append(",");
         }
-
+        if (newJson.lastIndexOf(",") != -1) {
+            newJson.deleteCharAt(newJson.lastIndexOf(","));
+        }
         newJson.append("]}");
 
         return this.updateJson(newJson);
@@ -327,7 +340,9 @@ public class TaskDao {
             newJson.append(jsonObject.toString());
             newJson.append(",");
         }
-
+        if (newJson.lastIndexOf(",") != -1) {
+            newJson.deleteCharAt(newJson.lastIndexOf(","));
+        }
         newJson.append("]}");
 
         return this.updateJson(newJson);
@@ -499,6 +514,6 @@ public class TaskDao {
 
     public Integer findMarkNumByImgNameAndUser(Integer taskID, String imgName, JSONArray users) {
         ImgMarkDao imgMarkDao = new ImgMarkDao();
-        return imgMarkDao.findAllMarks(taskID,users,imgName).size();
+        return imgMarkDao.findAllMarks(taskID, users, imgName).size();
     }
 }

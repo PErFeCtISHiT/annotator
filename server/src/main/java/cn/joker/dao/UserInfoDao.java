@@ -115,7 +115,9 @@ public class UserInfoDao {
             }
 
         }
-        newJson.deleteCharAt(newJson.lastIndexOf(","));
+        if(newJson.lastIndexOf(",") != -1){
+            newJson.deleteCharAt(newJson.lastIndexOf(","));
+        }
         newJson.append("]}");
         return this.updateJson(newJson);
 
@@ -156,7 +158,9 @@ public class UserInfoDao {
             }
 
         }
-        newJson.deleteCharAt(newJson.lastIndexOf(","));
+        if(newJson.lastIndexOf(",") != -1){
+            newJson.deleteCharAt(newJson.lastIndexOf(","));
+        }
         newJson.append("]}");
         return this.updateJson(newJson);
     }
