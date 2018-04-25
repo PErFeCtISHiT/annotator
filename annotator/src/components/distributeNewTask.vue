@@ -2,59 +2,69 @@
   <div id="distributeNewTask">
 
     <el-row type="flex" class="row-bg" justify="center">
-      <el-col :span="6"><div class="grid-content bg-purple-light">
-        <span id="title">新任务</span>
+      <el-col :span="12"><div class="grid-content bg-purple-light main-div">
+
+        <el-row type="flex" class="row-bg" justify="center">
+          <el-col :span="6"><div class="grid-content bg-purple-light">
+            <span id="title">新任务</span>
+          </div></el-col>
+        </el-row>
+        <br>
+
+        <el-form :model="newTask" status-icon :rules="myRule" ref="newTask">
+
+          <el-form-item label="任务名称" prop="taskName">
+            <el-input type="text" v-model="newTask.taskName" clearable style="width: 500px"></el-input>
+          </el-form-item>
+
+          <el-form-item label="任务描述" prop="taskDescription">
+            <el-input type="text" v-model="newTask.taskDescription" auto-complete="false" clearable style="width: 500px"
+                      maxlength=100></el-input>
+          </el-form-item>
+
+          <el-form-item label="任务类型标签" prop="checkedTags">
+            <el-checkbox-group v-model="newTask.checkedTags">
+              <el-checkbox v-for="tag in tags" :label="tag" :key="tag">{{ tag }}</el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+
+          <el-form-item label="开始时间" prop="taskStartDate">
+            <el-date-picker v-model="newTask.taskStartDate" placeholder="请选择开始时间" style="width: 500px" ref="startTimePicker"
+                            :picker-options="option1"></el-date-picker>
+          </el-form-item>
+
+          <el-form-item label="结束时间" prop="taskEndDate">
+            <el-date-picker v-model="newTask.taskEndDate" placeholder="请选择结束时间" style="width: 500px" ref="endTimePicker"
+                            :picker-options="option2"></el-date-picker>
+          </el-form-item>
+
+          <el-form-item label="参与人数" prop="expectedNumber">
+            <el-input type="text" v-model.number="newTask.expectedNumber" auto-complete="false" clearable style="width: 500px"></el-input>
+          </el-form-item>
+
+          <el-form-item label="最低工人等级">
+            <el-rate v-model="newTask.workerLevel" style="margin-top: 10px"></el-rate>
+          </el-form-item>
+
+          <el-form-item label="奖励积分" prop="points">
+            <el-input type="text" v-model.number="newTask.points" auto-complete="false" clearable style="width: 500px"></el-input>
+          </el-form-item>
+
+          <br>
+          <el-form-item>
+            <el-row :gutter="20">
+              <el-col :span="6" :offset="6"><div>
+                <el-button type="primary" @click="submitForm('newTask')">提交</el-button>
+              </div></el-col>
+              <el-col :span="6"><div>
+                <el-button @click="resetForm('newTask')">重置</el-button>
+              </div></el-col>
+            </el-row>
+          </el-form-item>
+        </el-form>
+
       </div></el-col>
-      <el-col :span="4"><div class="grid-content bg-purple-light"></div></el-col>
     </el-row>
-    <br>
-
-    <el-form :model="newTask" status-icon :rules="myRule" ref="newTask">
-
-      <el-form-item label="任务名称" prop="taskName">
-        <el-input type="text" v-model="newTask.taskName" clearable style="width: 500px"></el-input>
-      </el-form-item>
-
-      <el-form-item label="任务描述" prop="taskDescription">
-        <el-input type="text" v-model="newTask.taskDescription" auto-complete="false" clearable style="width: 500px"
-                  maxlength=100></el-input>
-      </el-form-item>
-
-      <el-form-item label="任务类型标签" prop="checkedTags">
-        <el-checkbox-group v-model="newTask.checkedTags">
-          <el-checkbox v-for="tag in tags" :label="tag" :key="tag">{{ tag }}</el-checkbox>
-        </el-checkbox-group>
-      </el-form-item>
-
-      <el-form-item label="开始时间" prop="taskStartDate">
-        <el-date-picker v-model="newTask.taskStartDate" placeholder="请选择开始时间" style="width: 500px" ref="startTimePicker"
-                        :picker-options="option1"></el-date-picker>
-      </el-form-item>
-
-      <el-form-item label="结束时间" prop="taskEndDate">
-        <el-date-picker v-model="newTask.taskEndDate" placeholder="请选择结束时间" style="width: 500px" ref="endTimePicker"
-                        :picker-options="option2"></el-date-picker>
-      </el-form-item>
-
-      <el-form-item label="参与人数" prop="expectedNumber">
-        <el-input type="text" v-model.number="newTask.expectedNumber" auto-complete="false" clearable style="width: 500px"></el-input>
-      </el-form-item>
-
-      <el-form-item label="最低工人等级">
-        <el-rate v-model="newTask.workerLevel" style="margin-top: 10px"></el-rate>
-      </el-form-item>
-
-      <el-form-item label="奖励积分" prop="points">
-        <el-input type="text" v-model.number="newTask.points" auto-complete="false" clearable style="width: 500px"></el-input>
-      </el-form-item>
-
-      <el-form-item>
-        <el-button type="primary" @click="submitForm('newTask')">提交</el-button>
-        <el-button @click="resetForm('newTask')">重置</el-button>
-      </el-form-item>
-    </el-form>
-
-
   </div>
 </template>
 
@@ -151,7 +161,27 @@
     },
 
     methods: {
+      submitForm: function (formName) {
+        let that = this;
 
+        this.$refs[formName].validate((valid) => {
+          if(valid){
+            console.log(this.newTask.taskName + " " + this.newTask.taskDescription);
+            console.log(this.newTask.checkedTags);
+            console.log(this.newTask.taskStartDate);
+            console.log(this.newTask.expectedNumber);
+            console.log(this.newTask.workerLevel);
+            console.log(typeof this.newTask.workerLevel);
+          }else {
+            that.sendAlert('您填写的内容不符合规范', "错误提示");
+          }
+        })
+      },
+
+      resetForm(formName) {
+        this.newTask.workerLevel = 0;
+        this.$refs[formName].resetFields();
+      }
 
     }
 
@@ -162,6 +192,10 @@
   #title {
     font-family: Arial;
     font-size: xx-large;
+  }
+
+  .main-div {
+
   }
 
   #distributeNewTask {
