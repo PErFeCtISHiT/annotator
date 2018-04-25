@@ -262,9 +262,6 @@ th {
 }
 @font-face {
   font-family: 'Glyphicons Halflings';
-
-  src: url('../fonts/glyphicons-halflings-regular.eot');
-  src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
 }
 .glyphicon {
   position: relative;
@@ -3118,7 +3115,7 @@ fieldset[disabled] .btn-default.focus {
 }
 .btn-primary {
   color: #fff;
-  background-color: #337ab7;
+  background-color: #22326c;
   border-color: #2e6da4;
 }
 .btn-primary:focus,
@@ -3402,8 +3399,8 @@ fieldset[disabled] .btn-danger.focus {
   background-color: #fff;
 }
 .btn-link {
-  font-weight: normal;
-  color: #337ab7;
+  font-weight: bold;
+  color: black;
   border-radius: 0;
 }
 .btn-link,
@@ -4873,7 +4870,7 @@ a.label:focus {
 }
 .label-default {
   background-color: #777;
-  margin: 0px 0px 5px 0px;
+  margin: 0 0 5% 0;
 }
 .label-default[href]:hover,
 .label-default[href]:focus {
@@ -6550,9 +6547,6 @@ button.close {
 .affix {
   position: fixed;
 }
-@-ms-viewport {
-  width: device-width;
-}
 .visible-xs,
 .visible-sm,
 .visible-md,
@@ -6818,35 +6812,19 @@ button.close {
   margin-top: 7px;
 }
 
-/*标签两个字*/
-#tag{
-  margin-top: 15px;
-  margin-left: -17px;
-}
-/*更新的按钮*/
-#updateMark{
-  margin-left: -220%;
-  margin-top: 9px;
-}
-#updateMark:focus,
-#updateMark.focus,
-#updateMark:hover{
-  color: #ffffff;
-  background-color: #5ebdb8;
-  margin-top: 8px;
-}
-
 #commit{
   width: 89%;
   margin-left: 2%;
 }
 
-/*整体标注的描述*/
-#description{
-  min-height: 100px;
-}
-
-.loadingMore:hover
-.loadingMore.hover{
-  background: url("../images/loading2.png");
+.temp-control {
+  display: block;
+  width: 100%;
+  height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.42857143;
+  color: #22326c;
+  margin: 9px 0 2px 0;
 }

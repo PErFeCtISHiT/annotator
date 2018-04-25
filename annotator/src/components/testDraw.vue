@@ -1,10 +1,11 @@
 <template>
   <div>
-    <p>{{title}}</p>
+    <!--<p>{{title}}</p>-->
     <!--<canvas id="canvas" width= 600 height=400 style="border: 1px solid #000;"></canvas>-->
     <div id = "test"></div>
     <button @click="handleCanvas">再次测试</button>
     <button @click="handleChange">区块替换</button>
+    <router-link :to="'/1-1'" replace>次级跳转测试</router-link>
   </div>
 </template>
 
@@ -18,10 +19,18 @@
     },
 
     // mounted(){
-    //   this.handleCanvas();
+    //   this.$http({
+    //     method:'post',
+    //     url:"mark/checkImage",
+    //     // data:JSON.stringify({taskID:taskID,user:[{username:user}],imgName:imgName}),
+    //     data:{taskID:123,user:[{username:"a"},{username:"b"}],imgName:"c.png"},
+    //     // contentType:'application/json',
+    //     // dataType:'json'
+    //   });
     // },
     methods:{
       handleCanvas(){
+        $("#test").append('<canvas id="canvas" width= 600 height=400 style="border: 1px solid #000;"></canvas>');
         var temp1 = 600 * Math.random();
         var temp2 = 400 * Math.random();
         var id = new Date().getTime();
@@ -35,6 +44,7 @@
         });
       },
       handleChange(){
+        $("#test").empty();
         $("#test").load('../../src/temp/markLocality.html');
       }
     }

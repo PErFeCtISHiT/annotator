@@ -119,7 +119,6 @@ function getPolygonAreaCenter(points) {
     var sum_y = 0;
     var sum_area = 0;
     var p1 = points[1];
-    debugger;
     for (var i = 2; i < points.length; i++) {
         var p2 = points[i];
         var area = polygonTempArea(points[0], p1, p2);
@@ -249,7 +248,7 @@ function setGlobalParamAndUpdateJson() {
     // // alert(src);
 
     setFirstTimeEdit(true);
-    setdrawingType("Rectangle");
+    // setdrawingType("Rectangle");
     setImgURL('../../../src/temp/smaller.jpg');
     updateGlobalJSONTypeAndURL();
 }
