@@ -13,8 +13,10 @@ function chooseSwitchOnBaseOnType() {
     }
 }
 
-rect_actualSwitchOn();
+
 setGlobalParamAndUpdateJson();
-chooseSwitchOnBaseOnType();
+rect_actualSwitchOn();
+poly_actualSwitchOn();
+// chooseSwitchOnBaseOnType();
 
 console.log(window.myVueStore.state.user.loginState);

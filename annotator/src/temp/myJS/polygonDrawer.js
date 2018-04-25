@@ -3,8 +3,8 @@
 
 var poly_isDrawingPolygon = false;
 
-var poly_startBtnID = "switchEdit";
-var poly_originalTxt = "开始添加";
+var poly_startBtnID = "polyEdit";
+var poly_originalTxt = "区域标注";
 var poly_inDrawingTxt = "停止添加"
 
 var poly_inputMarkID = "markInput";
