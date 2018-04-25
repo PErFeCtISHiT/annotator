@@ -262,8 +262,8 @@
         let that = this;
 
         let formData = new FormData();
-        formData.append('taskID', taskID + "");
         formData.append('file', item.file);
+        formData.append('taskID',1);
 
         console.log('上传图片的接口参数', item.file);
         this.$http.request({

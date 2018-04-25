@@ -31,8 +31,6 @@ public class TaskController {
     private ReportService reportService;
     @Resource
     private UserInfoService userInfoService;
-    @Resource
-    private ImgMarkService imgMarkService;
     private String globalTaskID = "taskID";
     private String globalSponsorName = "sponsorName";
     private String globalTaskName = "taskName";
@@ -66,11 +64,12 @@ public class TaskController {
         Task task = new Task();
 
         task.setDescription(jsonObject.getString(globalDescription));
-        task.setEndDate(DateHelper.convertStringToDate(jsonObject.getString(globalEndDate)));
+        String endDate = jsonObject.getString(globalEndDate);
+        endDate += " 00:00:00";
+        task.setEndDate(DateHelper.convertStringToDate(endDate));
         task.setExpectedNumber(jsonObject.getInt(globalExpectedNumber));
         task.setPoints(jsonObject.getInt(globalPoints));
         task.setSponsorName(jsonObject.getString(globalSponsorName));
-        task.setImageNum(jsonObject.getInt(globalImgNum));
 
 
         JSONArray tagArray = jsonObject.getJSONArray(globalTag);
@@ -81,12 +80,13 @@ public class TaskController {
             tags[i] = (String) list.toArray()[i];
         }
         task.setTag(tags);
+        task.setImageNum(0);
         task.setTaskName(jsonObject.getString(globalTaskName));
         task.setWorkerLevel(jsonObject.getInt(globalWorkerLevel));
         JSONObject ret = new JSONObject();
 
         ret.put(globalMes, taskService.releaseTask(task));
-        ret.put("taskID",1);
+        ret.put("taskID",12);
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -133,24 +133,22 @@ public class TaskController {
 
         Integer userRole = jsonObject.getInt(globalUserRole);
         JSONObject ret = new JSONObject();
-        Integer id = jsonObject.getInt("taskID");
 
         List<Task> tasks = taskService.checkMyTask(username, 0, userRole);
         JSONArray taskArray = new JSONArray();
         for (Task task : tasks) {
-            if(id == 0 || task.getTaskID().equals(id)) {
-                JSONObject taskObject = new JSONObject();
-                taskObject.put(globalTaskID, task.getTaskID());
-                taskObject.put(globalTaskName, task.getTaskName());
-                taskObject.put(globalDescription, task.getDescription());
-                taskObject.put(globalSponsorName, task.getSponsorName());
-                if (userRole.equals(3))
-                    taskObject.put("progress", taskService.checkTaskProgress(task.getTaskID(), username));
-                taskObject.put("totalProgress", new Double(task.getCompletedNumber() / task.getExpectedNumber()));
-                taskObject.put(globalStartDate, DateHelper.convertDateToString(task.getStartDate()));
-                taskObject.put(globalEndDate, DateHelper.convertDateToString(task.getEndDate()));
-                taskArray.put(taskObject);
-            }
+            JSONObject taskObject = new JSONObject();
+            taskObject.put(globalTaskID, task.getTaskID());
+            taskObject.put(globalTaskName, task.getTaskName());
+            taskObject.put(globalDescription, task.getDescription());
+            taskObject.put(globalImgNum,task.getImageNum());
+            taskObject.put(globalSponsorName, task.getSponsorName());
+            if (userRole.equals(3))
+                taskObject.put("progress", taskService.checkTaskProgress(task.getTaskID(), username));
+            taskObject.put("totalProgress", new Double(task.getCompletedNumber() / task.getExpectedNumber()));
+            taskObject.put(globalStartDate, DateHelper.convertDateToString(task.getStartDate()));
+            taskObject.put(globalEndDate, DateHelper.convertDateToString(task.getEndDate()));
+            taskArray.put(taskObject);
         }
         ret.put(globalTasks, taskArray);
         JsonHelper.jsonToResponse(response, ret);
@@ -364,7 +362,6 @@ public class TaskController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "/dealReport")
     public void dealReport(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, String[]> map = request.getParameterMap();
         JSONObject jsonObject = JsonHelper.requestToJson(request);
         String reportTime = jsonObject.getString("reportTime");
         String description = jsonObject.getString("description");

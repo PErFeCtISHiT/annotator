@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -47,24 +48,8 @@ public class ImgUploadController {
      * @date: 15:57 2018/4/17
      */
     @RequestMapping(value = "/imagesUpload", method = RequestMethod.POST)
-    public void imagesUpload(HttpServletRequest request, HttpServletResponse response) {
-        StringBuilder jsonStr = new StringBuilder();
-        try (InputStream inputStream = request.getInputStream()) {
-            BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-            String inputStr;
-            while ((inputStr = streamReader.readLine()) != null) {
-                jsonStr.append(inputStr);
-            }
-            streamReader.close();
-        } catch (IOException e) {
-
-        }
-        System.out.println(jsonStr);
-        MultipartFile file = ((MultipartHttpServletRequest) request).getFile("file");
-        String taskID = request.getParameter("taskID");
-        System.out.println(((MultipartHttpServletRequest) request).getRequestHeaders());
+    public void imagesUpload(@RequestParam("file") MultipartFile file,@RequestParam("taskID") String taskID, HttpServletResponse response) {
         TaskDao taskDao = new TaskDao();
-        System.out.println(jsonStr);
         Task task = taskDao.getTask(Integer.valueOf(taskID),taskDao.getAllTasks());
         task.setImageNum(task.getImageNum() + 1);
         JSONObject ret = new JSONObject();

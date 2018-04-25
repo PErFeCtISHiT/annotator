@@ -86,7 +86,8 @@ public class TaskDao {
                 jsonObject.put(globalTag, task.getTag());
                 jsonObject.put(globalPoints, task.getPoints());
                 jsonObject.put(globalExpectedNumber, task.getExpectedNumber());
-
+                if(task.getImageNum() != null)
+                    jsonObject.put(globalImgNum,task.getImageNum());
                 //时间格式要修改
                 jsonObject.put(globalEndDate, DateHelper.convertDateToString(task.getEndDate()));
             }
@@ -387,7 +388,7 @@ public class TaskDao {
             }
 
             task.setTag(tag);
-
+            task.setImageNum(object.getInt(globalImgNum));
             JSONArray userArray = object.getJSONArray(globalUserName);
             task.setUserName((ArrayList) userArray.toList());
             //task.setUserName();
