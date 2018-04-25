@@ -1,13 +1,1 @@
-{
-  "taskReportedMessages": [
-    {
-      "isDealt": true,
-      "description": "ttt",
-      "respondent": "somnus",
-      "reporter": "kiki",
-      "taskName": "人物标注",
-      "taskID": 1,
-      "reportTime": "2018-04-24 16:08:02"
-    }
-  ]
-}
+{"taskReportedMessages":[{"isDealt":true,"description":"ttt","respondent":"somnus","reporter":"kiki","taskName":"人物标注","taskID":1,"reportTime":"2018-04-24 16:08:02"},]}

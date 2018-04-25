@@ -26,7 +26,7 @@ public class testTaskController {
         requestHeaders.set("Accept", "text/plain");
         requestHeaders.set("Content-Type", "application/json; charset=utf-8");
 
-        String jsonStr = "{\"taskID\":1,\"taskName\":\"人物\",\"description\":\"划出图片中的人\",\"tag\":[\"人物\"],\"endDate\":\"2019-03-23 23:59:59\",\"expectedNumber\":20,\"points\":150}";
+        String jsonStr = "{\"taskID\":1,\"taskName\":\"人\",\"description\":\"划出图片中的人\",\"tag\":[\"人物\"],\"endDate\":\"2019-03-23 23:59:59\",\"expectedNumber\":20,\"points\":150}";
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> httpEntity = new HttpEntity<>(jsonStr, requestHeaders);
         String jsonData = restTemplate.postForObject(url, httpEntity, String.class);
@@ -41,7 +41,7 @@ public class testTaskController {
         requestHeaders.set("Accept", "text/plain");
         requestHeaders.set("Content-Type", "application/json");
 
-        String jsonStr = "{\"username\":\"cat\",\"status\":0,\"userRole\":1,\"taskID\":1}";
+        String jsonStr = "{\"username\":\"catt\",\"status\":0,\"userRole\":2}";
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> httpEntity = new HttpEntity<>(jsonStr, requestHeaders);
         String jsonData = restTemplate.postForObject(url, httpEntity, String.class);

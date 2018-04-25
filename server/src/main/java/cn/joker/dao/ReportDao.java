@@ -101,7 +101,9 @@ public class ReportDao {
             newJson.append(object.toString());
             newJson.append(",");
         }
-
+        if(newJson.lastIndexOf(",") != -1){
+            newJson.deleteCharAt(newJson.lastIndexOf(","));
+        }
         newJson.append("]}");
         if (type == 1)
             return JsonHelper.modifyJson(newJson, "json/workerReported.json");

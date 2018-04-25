@@ -1,5 +1,7 @@
 package cn.joker.controller.taskcontrollers;
 
+import cn.joker.dao.TaskDao;
+import cn.joker.entity.Task;
 import cn.joker.util.FileHelper;
 import cn.joker.util.JsonHelper;
 import org.json.JSONObject;
@@ -42,10 +44,13 @@ public class ImgUploadController {
      */
     @RequestMapping(value = "/imagesUpload", method = RequestMethod.POST)
     public void imagesUpload(HttpServletRequest request, HttpServletResponse response) {
-        List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("fileName");
+        MultipartFile file = ((MultipartHttpServletRequest) request).getFile("file");
         String taskID = request.getParameter("taskID");
+        TaskDao taskDao = new TaskDao();
+        Task task = taskDao.getTask(Integer.valueOf(taskID),taskDao.getAllTasks());
+        task.setImageNum(task.getImageNum() + 1);
         JSONObject ret = new JSONObject();
-        ret.put("mes", FileHelper.saveFiles(taskID, files));
+        ret.put("mes", FileHelper.saveFiles(taskID, file) && taskDao.modifyTask(task));
         JsonHelper.jsonToResponse(response, ret);
     }
 }
