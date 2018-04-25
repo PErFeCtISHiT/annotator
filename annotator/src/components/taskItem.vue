@@ -28,13 +28,13 @@
         </el-row>
 
         <el-row>
-          <el-progress :stroke-width="14" color="green" :percentage="100*taskMsg.progress"></el-progress>
+          <el-progress :stroke-width="14" color="green" :percentage="70"></el-progress>
         </el-row>
       </el-col>
 
       <el-col :span="2">
         <el-tooltip class="item" effect="dark" content="点击将移除此任务" placement="top-end">
-          <el-button type="danger" icon="el-icon-delete" circle></el-button>
+          <el-button type="danger" icon="el-icon-delete" :click="$emit('remove')" circle></el-button>
         </el-tooltip>
       </el-col>
     </el-row>

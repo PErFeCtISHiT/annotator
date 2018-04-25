@@ -6,21 +6,22 @@
 
         <el-col :span="12">
           <el-form-item prop="userName">
-            <el-input prefix-icon="el-icon-goods" v-model.number="registerForm.userName"
+            <el-input prefix-icon="el-icon-goods" v-model="registerForm.userName"
                       placeholder="请输入用户名"></el-input>
           </el-form-item>
         </el-col>
 
         <el-col :span="12">
           <el-form-item prop="name">
-            <el-input prefix-icon="el-icon-goods" v-model.number="registerForm.name" placeholder="请输入昵称"></el-input>
+            <el-input prefix-icon="el-icon-goods" v-model="registerForm.name" placeholder="请输入昵称"></el-input>
           </el-form-item>
         </el-col>
 
       </el-row>
 
       <el-form-item prop="pass">
-        <el-input prefix-icon="el-icon-view" type="password" placeholder="请输入密码(6-12位字母或数字)" v-model="registerForm.pass"></el-input>
+        <el-input prefix-icon="el-icon-view" type="password" :placeholder="'请输入密码('+minPass+'-'+maxPass+'位字母或数字)'"
+                  v-model="registerForm.pass"></el-input>
       </el-form-item>
 
       <el-form-item prop="checkPass">
@@ -85,9 +86,9 @@
       var validatePass = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入密码'));
-        }else if (!this.passReg.test(value)) {
+        } else if (!this.passReg.test(value)) {
           return callback(new Error('密码格式不对'));
-        }else {
+        } else {
           if (this.registerForm.checkPass !== '') {
             this.$refs.registerForm.validateField('checkPass');
           }
