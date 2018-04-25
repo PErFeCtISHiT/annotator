@@ -1164,8 +1164,8 @@
     $.ajax({
       type:'POST',
       url:"mark/checkImage",
-      // data:JSON.stringify({taskID:taskID,user:[{username:user}],imgName:imgName}),
-      data:JSON.stringify({taskID:123,user:[{username:"a"},{username:"b"}],imgName:"c.png"}),
+      data:JSON.stringify({taskID:taskID,user:[{username:user}],imgName:imgName}),
+      // data:JSON.stringify({taskID:123,user:[{username:"a"},{username:"b"}],imgName:"c.png"}),
       success:function(result){
         globalImgMsg = result.marks[0];
         CanvasExt.loadMyRect(globalImgMsg.noteRectangle);
