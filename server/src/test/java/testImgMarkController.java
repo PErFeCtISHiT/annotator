@@ -21,7 +21,7 @@ public class testImgMarkController {
         requestHeaders.set("Accept", "text/plain");
         requestHeaders.set("Content-Type", "application/json");
 
-        String jsonStr = "{\"taskID\":123,\"users\":[{\"username\":\"a\"},{\"username\":\"b\"}],\"imgName\":\"c.png\"}";
+        String jsonStr = "{\"taskID\":1,\"users\":[{\"username\":\"a\"},{\"username\":\"b\"}],\"imgName\":\"c\"}";
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> httpEntity = new HttpEntity<String>(jsonStr, requestHeaders);
         String jsonData = restTemplate.postForObject(url, httpEntity, String.class);

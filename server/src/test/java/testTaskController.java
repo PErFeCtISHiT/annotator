@@ -41,7 +41,7 @@ public class testTaskController {
         requestHeaders.set("Accept", "text/plain");
         requestHeaders.set("Content-Type", "application/json");
 
-        String jsonStr = "{\"username\":\"cat\",\"status\":0,\"userRole\":1}";
+        String jsonStr = "{\"username\":\"cat\",\"status\":0,\"userRole\":1,\"taskID\":1}";
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> httpEntity = new HttpEntity<>(jsonStr, requestHeaders);
         String jsonData = restTemplate.postForObject(url, httpEntity, String.class);
