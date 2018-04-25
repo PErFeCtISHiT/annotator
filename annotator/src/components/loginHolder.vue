@@ -185,11 +185,12 @@
       },
       actualLogin() {
         // console.log("拿取当前登录的用户信息");
-        var that = this;
+        let that = this;
         this.$http.get('/user/getCurrentUser')
           .then(function (response) {
-            // console.log(response.data);
-            that.logIn(response.data);
+            let result = response.data;
+            // result['password'] = that.loginForm.password;
+            that.logIn(result);
             that.$message({
               message: '登录成功',
               type: 'success'
