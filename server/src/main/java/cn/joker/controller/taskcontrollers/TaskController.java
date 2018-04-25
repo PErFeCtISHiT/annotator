@@ -83,6 +83,7 @@ public class TaskController {
         JSONObject ret = new JSONObject();
 
         ret.put(globalMes, taskService.releaseTask(task));
+        ret.put("taskID",1);
         JsonHelper.jsonToResponse(response, ret);
     }
 
