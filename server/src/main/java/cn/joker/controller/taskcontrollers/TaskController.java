@@ -132,21 +132,24 @@ public class TaskController {
 
         Integer userRole = jsonObject.getInt(globalUserRole);
         JSONObject ret = new JSONObject();
+        Integer id = jsonObject.getInt("taskID");
 
         List<Task> tasks = taskService.checkMyTask(username, 0, userRole);
         JSONArray taskArray = new JSONArray();
         for (Task task : tasks) {
-            JSONObject taskObject = new JSONObject();
-            taskObject.put(globalTaskID, task.getTaskID());
-            taskObject.put(globalTaskName, task.getTaskName());
-            taskObject.put(globalDescription, task.getDescription());
-            taskObject.put(globalSponsorName, task.getSponsorName());
-            if (userRole.equals(3))
-                taskObject.put("progress", taskService.checkTaskProgress(task.getTaskID(), username));
-            taskObject.put("totalProgress", new Double(task.getCompletedNumber() / task.getExpectedNumber()));
-            taskObject.put(globalStartDate, DateHelper.convertDateToString(task.getStartDate()));
-            taskObject.put(globalEndDate, DateHelper.convertDateToString(task.getEndDate()));
-            taskArray.put(taskObject);
+            if(id == 0 || task.getTaskID().equals(id)) {
+                JSONObject taskObject = new JSONObject();
+                taskObject.put(globalTaskID, task.getTaskID());
+                taskObject.put(globalTaskName, task.getTaskName());
+                taskObject.put(globalDescription, task.getDescription());
+                taskObject.put(globalSponsorName, task.getSponsorName());
+                if (userRole.equals(3))
+                    taskObject.put("progress", taskService.checkTaskProgress(task.getTaskID(), username));
+                taskObject.put("totalProgress", new Double(task.getCompletedNumber() / task.getExpectedNumber()));
+                taskObject.put(globalStartDate, DateHelper.convertDateToString(task.getStartDate()));
+                taskObject.put(globalEndDate, DateHelper.convertDateToString(task.getEndDate()));
+                taskArray.put(taskObject);
+            }
         }
         ret.put(globalTasks, taskArray);
         JsonHelper.jsonToResponse(response, ret);
