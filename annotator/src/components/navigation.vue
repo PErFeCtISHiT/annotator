@@ -7,12 +7,12 @@
     >
 
       <el-submenu index="1">
-        <template slot="title">发布者</template>
+        <template slot="title" :disabled="!isRequester">发布者</template>
         <el-menu-item index="1-1">我发布的任务</el-menu-item>
         <el-menu-item index="1-2">发布新任务</el-menu-item>
       </el-submenu>
 
-      <el-submenu index="2" disabled>
+      <el-submenu index="2" :disabled="!isWorker">
         <template slot="title">工人</template>
         <el-menu-item index="2-1">我发布的任务</el-menu-item>
         <el-menu-item index="2-2">发布新任务</el-menu-item>
@@ -48,8 +48,9 @@
     },
     methods: {
       ...mapActions(['logOut']),
+
       handleLogOut(){
-        if(this.$store.state.user.userInfo.userName==='admin'){
+        if(this.$store.state.user.userInfo.username==='admin'){
           this.logOut();
         }else{
           let that = this;
@@ -70,12 +71,27 @@
               });
             });
         }
+      },
+
+      checkContains(arr,obj){
+        for(let i = 0; i < arr.length;i++){
+          if(arr[i]===obj){
+            return true;
+          }
+        }
+        return false;
       }
     },
     computed: {
       amount: function () {
         return this.$store.state.user.userInfo.points;
-      }
+      },
+      isRequester: function () {
+        return this.checkContains(this.$store.state.user.userInfo.roleList,2);
+      },
+      isWorker: function () {
+        return this.checkContains(this.$store.state.user.userInfo.roleList,3);
+      },
     }
 
   }
