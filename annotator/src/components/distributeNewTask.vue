@@ -51,7 +51,7 @@
           </el-form-item>
 
           <el-form-item>
-            <el-upload multiple :limit="20" :on-exceed="handleExceed"
+            <el-upload multiple :limit="20" :on-exceed="handleExceed" ref="upload"
                        action="dummy" :auto-upload="false"
                        :file-list="newTask.fileList" list-type="" accept=".jpg,.png,.jpeg,.zip"
                        :beforeRemove="beforeRemove" :http-request="uploadImage"
@@ -86,6 +86,7 @@
 <script>
 
   const myTags = ['A', 'B', 'C', 'D', 'E'];
+  let taskID = -100;
 
   export default {
     components: {
@@ -179,6 +180,7 @@
     },
 
     methods: {
+      //神奇的时间转换函数。没有她格式就不对……
       getSTime(val) {
         this.newTask.startDate = val;
       },
@@ -190,6 +192,7 @@
       submitForm: function (formName) {
         let that = this;
 
+        //表单验证全部通过就发ajax请求
         this.$refs[formName].validate((valid) => {
           if(valid){
             console.log()
@@ -202,13 +205,19 @@
               endDate: that.newTask.endDate.getFullYear() + "-" + (that.newTask.endDate.getMonth()+1) + "-" + that.newTask.endDate.getDate(),
               workerLevel: that.newTask.workerLevel,
               expectedNumber: that.newTask.expectedNumber,
-              points: that.newTask.points,
-              imgNum: 20
+              points: that.newTask.points
             })
               .then(function (response) {
-                console.log(response.data.mes);
-                if(response.data.mes === true)
-                  console.log("continue");
+                //检查返回信息
+
+                if(response.data.mes === true){
+                  taskID = response.data.id;   //设定任务的id属性值
+                  this.$refs.upload.submit();  //发送ajax请求
+                }
+
+                else {
+                  that.$message.warning('上传失败');
+                }
               })
               .catch(function (error) {
                 that.$message({
@@ -246,8 +255,29 @@
         return this.$confirm(`确定移除${ file.name }`)
       },
 
-      uploadImage () {
+      uploadImage (item) {
+        let that = this;
 
+        let formData = new FormData();
+        formData.append('id', taskID + "");
+        formData.append('file', item.file);
+
+        console.log('上传图片的接口参数', item.file);
+        this.$http.request({
+          method: 'post',
+          data: formData,
+          url: 'task/imagesUpload'
+        })
+          .then(function (response) {
+            if(response.data.mes !== true)
+              that.$message.warning('上传失败');
+          })
+          .catch(function (error) {
+            that.$message({
+              message: '上传失败' + error,
+              type: 'warning'
+            });
+          });
       }
 
     }
