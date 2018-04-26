@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 
 
 Vue.use(VueRouter);
-import first from '../components/firstcomponent'
+import requestorTasks from '../components/requestorTasks'
 import distributeNewTask from '../components/distributeNewTask'
 import testDraw from '../components/testDraw'
 import admin from '../components/admin'
@@ -15,11 +15,12 @@ import workerNoteMark from '../components/workerNoteMark'
 import taskDetail from '../components/taskDetail'
 
 
+
 export default new VueRouter({
   routes: [
     {
       path: "/1-1",
-      component: first
+      component: requestorTasks
     },
     {
       path: "/1-2",
