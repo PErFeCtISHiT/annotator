@@ -37,7 +37,7 @@ public class ImgMarkDao {
         }
         if (!file.exists()) {
             TaskDao taskDao = new TaskDao();
-            List<Task> tasks = taskDao.checkMyTask(imgMark.getWorkerName(), 1, 3);
+            List<Task> tasks = taskDao.checkMyTask(imgMark.getWorkerName(), 1, 3, null);
             for (Task task : tasks) {
                 if (task.getTaskID().equals(imgMark.getTaskID())) {
                     List<String> usernames = task.getUserName();
