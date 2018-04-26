@@ -4,8 +4,8 @@
     <div class="block">
       <span class="demonstration">默认 Hover 指示器触发</span>
       <el-carousel height="150px">
-        <el-carousel-item v-for="item in 4" :key="item">
-          <h3>{{ item }}</h3>
+        <el-carousel-item v-for="item in imgURLs" :key="item">
+          <img :src="item" height="200" width="200" />
         </el-carousel-item>
       </el-carousel>
     </div>
@@ -23,6 +23,7 @@
     mounted() {
       this.refreshTaskData();
       this.refreshSelfProgress();
+      this.refreshImgURL();
       this.updateCurrentTaskID(taskID);
     },
 
@@ -41,7 +42,7 @@
         acceptNum: '',
         completedNum: '',
         totalProgress: 0,
-        imgURLs:[]
+        imgURLs:['../../src/testDrawImage/1.jpg','../../src/testDrawImage/2.jpg','../../src/testDrawImage/3.jpg','../../src/testDrawImage/4.jpg']
       }
     },
     methods: {
@@ -109,10 +110,13 @@
           }
         })
           .then(function (response) {
-            this.imgURLs =
-            console.log(response);
+            this.imgURLs = response.data.imgURLs;
           })
           .catch(function (error) {
+            that.$message({
+              message:'加载图片数据失败',
+              type:'error'
+            });
             console.log(error);
           });
       },
