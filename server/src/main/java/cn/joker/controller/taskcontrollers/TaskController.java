@@ -87,8 +87,8 @@ public class TaskController {
         task.setWorkerLevel(jsonObject.getInt(globalWorkerLevel));
         JSONObject ret = new JSONObject();
 
-        ret.put(globalMes, taskService.releaseTask(task) && userInfoService.modifyUser(userInfo));
-        ret.put("taskID",12);
+        ret.put(globalMes,userInfoService.modifyUser(userInfo));
+        ret.put("taskID",taskService.releaseTask(task));
         JsonHelper.jsonToResponse(response, ret);
     }
 
