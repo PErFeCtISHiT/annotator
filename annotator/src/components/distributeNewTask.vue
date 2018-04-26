@@ -84,6 +84,7 @@
 </template>
 
 <script>
+  import {mapActions} from 'vuex'
 
   const myTags = ['A', 'B', 'C', 'D', 'E'];
   let taskID = -100;
@@ -180,7 +181,8 @@
     },
 
     methods: {
-      ...mapActions(['logIn']),
+      ...mapActions(['updateWithoutPointer']),
+      ...mapActions(['logOut']),
 
       //神奇的时间转换函数。没有她格式就不对……
       getSTime(val) {
@@ -260,12 +262,12 @@
         return this.$confirm(`确定移除${ file.name }`)
       },
 
-      uploadImage (item) {
+      uploadImage: function (item) {
         let that = this;
 
         let formData = new FormData();
         formData.append('file', item.file);
-        formData.append('taskID', taskID+"");
+        formData.append('taskID', taskID + "");
 
         this.$http.request({
           method: 'post',
@@ -274,12 +276,12 @@
           headers: {'content-type': 'multipart/form-data'}
         })
           .then(function (response) {
-            if(response.data.mes !== true) {
-              that.$message.warning('图片上传失败。可能由网络引起');
-              console.log('3');
+            if (response.data.mes === true) {
+              that.updateWithoutPointer();
             }
             else {
-              this.logIn()
+              that.$message.warning('图片上传失败。可能由网络引起');
+              console.log('3');
             }
           })
           .catch(function (error) {
