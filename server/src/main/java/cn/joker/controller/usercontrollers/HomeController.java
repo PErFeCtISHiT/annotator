@@ -76,7 +76,7 @@ public class HomeController {
             for (SysRole sysRole : list) {
                 list1.put(sysRole.getSrid());
             }
-            jsonObject.put("role", list1);
+            jsonObject.put("roleList", list1);
         } else {
             jsonObject.put("ret", "null");
         }
