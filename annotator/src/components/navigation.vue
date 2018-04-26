@@ -22,7 +22,7 @@
       <el-submenu index="3">
         <template slot="title">
           <i class="el-icon-plus"></i>
-          <span>{{ amount }}</span>
+          <span>{{ $store.state.user.userInfo.points }}</span>
         </template>
         <el-menu-item index="/3-1">充值</el-menu-item>
         <el-menu-item index="/3-2">提现</el-menu-item>
