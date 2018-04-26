@@ -39,7 +39,7 @@ public class TaskDaoTest {
 
     @Test
     public void checkMyTask() {
-        System.out.println(new TaskDao().checkMyTask(null, 0, 1));
+        System.out.println(new TaskDao().checkMyTask(null, 0, 1, null));
     }
 
     @Test

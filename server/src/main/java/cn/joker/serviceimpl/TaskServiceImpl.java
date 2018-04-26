@@ -25,8 +25,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> checkMyTask(String userName, Integer status, Integer userRole) {
-        return taskDao.checkMyTask(userName, status, userRole);
+    public List<Task> checkMyTask(String userName, Integer status, Integer userRole, String tag) {
+        return taskDao.checkMyTask(userName, status, userRole, tag);
     }
 
     @Override

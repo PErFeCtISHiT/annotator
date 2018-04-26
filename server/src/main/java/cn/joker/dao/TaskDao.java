@@ -53,10 +53,9 @@ public class TaskDao {
             task.setTaskID(1);
 
         //接收该任务的用户列表初始化为空
-        task.setUserName(new ArrayList<String>());
+        task.setUserName(new ArrayList<>());
         //目前完成量为0
         task.setCompletedNumber(0);
-        task.setStartDate(new Date());
         JSONObject jsonObject = convertObjectToJsonObject(task);
 
         newJson.append(jsonObject.toString());
@@ -75,7 +74,7 @@ public class TaskDao {
         //把已经保存的先拉取出来
         StringBuilder newJson = new StringBuilder(globalJsonTasks);
         for (Object o : taskArray) {
-            Object o1 = (JsonObject) o;
+            Object o1 = o;
             JSONObject jsonObject = new JSONObject(o1.toString());
 
             if (jsonObject.get("taskID").toString().equals(task.getTaskID().toString())) {
@@ -109,13 +108,13 @@ public class TaskDao {
      * @param userName 用户名
      * @param status   status 任务状态（Integer）0 所有 1 正在进行 2 已结束
      * @param userRole 用户权限（Integer）1 管理员 2 发起者 3 工人
+     * @param tag 标签
      * @return 任务列表
      */
-    public List<Task> checkMyTask(String userName, Integer status, Integer userRole) {
+    public List<Task> checkMyTask(String userName, Integer status, Integer userRole, String tag) {
         ArrayList<Task> tasks = getAllTasks();
 
         tasks = searchByStatus(tasks, status);
-        ArrayList<Task> result = new ArrayList<>();
 
         if (userRole.equals(2)) {
             //查看个人发布的任务
@@ -141,6 +140,8 @@ public class TaskDao {
             }
         }
 
+        tasks = searchByTag(tasks, tag);
+
         return tasks;
     }
 
@@ -156,18 +157,8 @@ public class TaskDao {
         ArrayList<Task> tasks = getAllTasks();
 
         tasks = searchByStatus(tasks, status);
-        if (tag != null && tag.length() > 0) {
-            for (int i = 0; i < tasks.size(); i++) {
-                String[] tags = tasks.get(i).getTag();
-                boolean flag = false;
-                for (String tag1 : tags) {
-                    if (tag1.equals(tag))
-                        flag = true;
-                }
-                if (!flag)
-                    tasks.remove(i);
-            }
-        }
+
+        tasks = searchByTag(tasks, tag);
 
         return tasks;
     }
@@ -201,7 +192,6 @@ public class TaskDao {
     }
 
     //删除任务
-    //TODO 删除任务图片信息
     public boolean deleteTask(Integer taskID) {
         JsonObject json = JsonHelper.openJson(globalJson);
         assert json != null;
@@ -490,6 +480,23 @@ public class TaskDao {
                     }
                 }
                 return allTasks;
+        }
+
+        return allTasks;
+    }
+
+    private ArrayList<Task> searchByTag(ArrayList<Task> allTasks, String tag) {
+        if (tag != null && tag.length() > 0) {
+            for (int i = 0; i < allTasks.size(); i++) {
+                String[] tags = allTasks.get(i).getTag();
+                boolean flag = false;
+                for (String tag1 : tags) {
+                    if (tag1.equals(tag))
+                        flag = true;
+                }
+                if (!flag)
+                    allTasks.remove(i);
+            }
         }
 
         return allTasks;
