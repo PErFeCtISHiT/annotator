@@ -14,6 +14,10 @@
       window.myVueStore = this.$store;
       window.myHttp = this.$http;
       window.myMessage = this.$message;
+      window.myMessageBox = this.$msgbox;
+      window.myAlert = this.$alert;
+      window.myConfirm = this.$confirm;
+      window.myPrompt = this.$prompt;
     },
 
     name: 'app',

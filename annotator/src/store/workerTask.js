@@ -18,13 +18,13 @@ export default {
   },
 
   actions:{
-    updateDoingList({commit}){
+    updateDoingListAjax({commit}){
       commit('updateDoingList');
     },
-    updateCurrentTaskID({commit}){
+    updateCurrentTaskIDAjax({commit}){
       commit('updateCurrentTaskID');
     },
-    updateTaskInfo({commit}){
+    updateTaskInfoAjax({commit}){
       commit('updateTaskInfo');
     }
   }

@@ -8,15 +8,15 @@
 
       <el-submenu index="1">
         <template slot="title" :disabled="!isRequester">发布者</template>
-        <el-menu-item index="1-1">我发布的任务</el-menu-item>
-        <el-menu-item index="1-2">发布新任务</el-menu-item>
+        <el-menu-item index="/1-1">我发布的任务</el-menu-item>
+        <el-menu-item index="/1-2">发布新任务</el-menu-item>
       </el-submenu>
 
       <el-submenu index="2" :disabled="!isWorker">
         <template slot="title">工人</template>
-        <el-menu-item index="2-1">获取新任务</el-menu-item>
-        <el-menu-item index="2-2">进行中的任务</el-menu-item>
-        <el-menu-item index="2-2">积分历史与排名</el-menu-item>
+        <el-menu-item index="/2-1">获取新任务</el-menu-item>
+        <el-menu-item index="/2-2">进行中的任务</el-menu-item>
+        <el-menu-item index="/2-2">积分历史与排名</el-menu-item>
       </el-submenu>
 
       <el-submenu index="3">
@@ -24,11 +24,11 @@
           <i class="el-icon-plus"></i>
           <span>{{ amount }}</span>
         </template>
-        <el-menu-item index="3-1">充值</el-menu-item>
-        <el-menu-item index="3-2">提现</el-menu-item>
+        <el-menu-item index="/3-1">充值</el-menu-item>
+        <el-menu-item index="/3-2">提现</el-menu-item>
 
       </el-submenu>
-      <el-menu-item index="4">个人信息</el-menu-item>
+      <el-menu-item index="/4">个人信息</el-menu-item>
       &nbsp;
       <el-button class="navigation-button" @click="handleLogOut">登出</el-button>
     </el-menu>

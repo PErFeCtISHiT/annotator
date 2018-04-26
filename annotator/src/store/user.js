@@ -31,24 +31,6 @@ export default {
     logOut ({commit}) {
       commit('logOut')
     },
-    update({commit},pointer){
-      pointer.$http.get('/user/getCurrentUser')
-        .then(function (response) {
-          let result = response.data;
-          commit('logIn', result);
-          pointer.$message({
-            message: '刷新用户数据成功',
-            type: 'success'
-          });
-        })
-        .catch(function (error) {
-          pointer.$message({
-            message: '刷新用户数据失败',
-            type: 'error'
-          });
-          console.log(error);
-        });
-    },
     updateWithoutPointer({commit}){
       window.myHttp.get('/user/getCurrentUser')
         .then(function (response) {

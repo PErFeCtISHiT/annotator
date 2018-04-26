@@ -39,6 +39,38 @@
     //   }
     // },
 
+    mounted(){
+      let taskID = 0;
+      let userName = this.$store.state.user.userInfo.username;  //这里的name首字母小写
+      let status = 1;
+      let userRole = 3;
+      let that = this;
+      this.$http.post('/task/myTasks', {
+        taskID,
+        userName,
+        status,
+        userRole
+      })
+        .then(function (response) {
+          if(response.data.tasks){
+            this.onDoing = response.data.tasks;
+          }else{
+            that.$message({
+              message:'回传数据格式出错',
+              type:'error'
+            });
+          }
+          console.log(response);
+        })
+        .catch(function (error) {
+          that.$message({
+            message:'请检查您的网络',
+            type:'error'
+          });
+          console.log(error);
+        });
+    },
+
     data() {
       let temp = [
         {
@@ -111,10 +143,10 @@
         let taskID = target.taskID;
         let workerName = this.$store.state.user.userInfo.userName;
         let that = this;
-        this.$http.get('task/abortTask', {
+        this.$http.get('/task/abortTask', {
           params: {
-            taskID: taskID,
-            workerName: workerName
+            taskID,
+            workerName
           }
         })
           .then(function (response) {

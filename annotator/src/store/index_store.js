@@ -6,9 +6,11 @@ import Vuex from 'vuex'
 Vue.use(Vuex);
 
 import user from './user'
+import workerTask from './workerTask'
 
 export default new Vuex.Store({
   modules: {
-    user
+    user,
+    workerTask
   }
 });

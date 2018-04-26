@@ -39,8 +39,10 @@ export default new VueRouter({
       component: workerHistRank
     },
     {
-      path: "/noteAndMark",
-      component: workerNoteMark
+      path: "/noteAndMark/:taskID",
+      name:'noteAndMark',
+      component: workerNoteMark,
+      props: true
     },
     {
       path: "/3-1",

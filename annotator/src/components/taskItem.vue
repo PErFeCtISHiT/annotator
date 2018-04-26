@@ -13,7 +13,7 @@
     <el-row>
       <el-col :span="2">
         <el-badge :value="taskMsg.imgNum" class="item">
-          <el-button type="warning" icon="el-icon-document" v-popover:popover1></el-button>
+          <el-button type="warning" icon="el-icon-document" v-popover:popover1 @click="handleShow"></el-button>
         </el-badge>
       </el-col>
 
@@ -50,6 +50,11 @@
     data() {
       return {
         myMsg: this.taskMsg
+      }
+    },
+    methods: {
+      handleShow() {
+        this.$router.push({name: 'noteAndMark', params: {taskID: this.taskMsg.taskID}});
       }
     }
   }
