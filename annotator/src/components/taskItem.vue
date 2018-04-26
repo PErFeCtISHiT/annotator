@@ -34,7 +34,7 @@
 
       <el-col :span="2">
         <el-tooltip class="item" effect="dark" content="点击将移除此任务" placement="top-end">
-          <el-button type="danger" icon="el-icon-delete" :click="$emit('remove')" circle></el-button>
+          <el-button type="danger" icon="el-icon-delete" @click="$emit('remove')" circle></el-button>
         </el-tooltip>
       </el-col>
     </el-row>
