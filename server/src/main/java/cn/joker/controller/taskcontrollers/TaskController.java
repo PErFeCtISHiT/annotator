@@ -70,6 +70,8 @@ public class TaskController {
         task.setExpectedNumber(jsonObject.getInt(globalExpectedNumber));
         task.setPoints(jsonObject.getInt(globalPoints));
         task.setSponsorName(jsonObject.getString(globalSponsorName));
+        UserInfo userInfo = userInfoService.findByUsername(task.getSponsorName());
+        userInfo.setPoints(userInfo.getPoints() - task.getPoints() * task.getExpectedNumber());
 
 
         JSONArray tagArray = jsonObject.getJSONArray(globalTag);
@@ -85,7 +87,7 @@ public class TaskController {
         task.setWorkerLevel(jsonObject.getInt(globalWorkerLevel));
         JSONObject ret = new JSONObject();
 
-        ret.put(globalMes, taskService.releaseTask(task));
+        ret.put(globalMes, taskService.releaseTask(task) && userInfoService.modifyUser(userInfo));
         ret.put("taskID",12);
         JsonHelper.jsonToResponse(response, ret);
     }
