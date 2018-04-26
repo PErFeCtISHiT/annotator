@@ -82,12 +82,12 @@
             </div>
 
             <el-col :span="24" style="margin-bottom: 20px; margin-top:5px">
-              <el-col :span="6" offset="2">
-                <el-button type="warning" size="small">删除任务</el-button>
+              <el-col :span="6" :offset="2">
+                <el-button type="warning" size="small" @click="handleDelete">删除任务</el-button>
               </el-col>
 
-              <el-col :span="6" offset="5">
-                <el-button type="primary" size="small">结束任务</el-button>
+              <el-col :span="6" :offset="5">
+                <el-button type="primary" size="small" @click="handleFinish" :disabled="isDisabled">结束任务</el-button>
               </el-col>
             </el-col>
 
@@ -110,15 +110,32 @@
 </template>
 
 <script>
-  import ElButton from "element-ui/packages/button/src/button";
 
   export default {
-    components: {ElButton},
     name: "requester-task-item",
     props: ['taskMsg'],
+
     data() {
-      return {}
+      return {
+      }
+    },
+
+    computed: {
+      isDisabled(){
+        return this.taskMsg.totalProgress >= 0.999;
+      }
+    },
+
+    methods: {
+      handleDelete() {
+        this.$emit('remove', this.taskMsg.taskID);
+      },
+
+      handleFinish() {
+        this.$emit('complete', this.taskMsg.taskID);
+      }
     }
+
   }
 
 </script>

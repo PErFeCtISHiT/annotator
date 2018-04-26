@@ -7,10 +7,12 @@ Vue.use(Vuex);
 
 import user from './user'
 import workerTask from './workerTask'
+import requestTask from './requester'
 
 export default new Vuex.Store({
   modules: {
     user,
-    workerTask
+    workerTask,
+    requestTask
   }
 });
