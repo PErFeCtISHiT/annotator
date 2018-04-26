@@ -27,18 +27,6 @@
     components: {TaskItem},
     name: "worker-on-doing",
 
-    created() {
-      for (let i = 0; i < this.onDoing.length; i++) {
-        console.log(this.onDoing[i]);
-      }
-    },
-    // created(){
-    //   for(let item in temp){
-    //     this.onDoing.push(item);
-    //     console.log(this.onDoing);
-    //   }
-    // },
-
     mounted(){
       let taskID = 0;
       let userName = this.$store.state.user.userInfo.username;  //这里的name首字母小写

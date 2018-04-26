@@ -2,6 +2,7 @@ export default {
   state:{
     doingList:[],
     currentTaskID:0,
+    currentImageURL:"",
     currentTaskInfo:{},
   },
 
@@ -14,6 +15,9 @@ export default {
     },
     updateTaskInfo: function (state,inputInfo) {
       state.currentTaskInfo = inputInfo;
+    },
+    updateCurrentImageURL:function (state,inputURL) {
+      state.currentImageURL = inputURL
     }
   },
 
@@ -26,6 +30,9 @@ export default {
     },
     updateTaskInfoAjax({commit}){
       commit('updateTaskInfo');
+    },
+    updateCurrentImageURL({commit}){
+      commit('updateCurrentImageURL');
     }
   }
 }
