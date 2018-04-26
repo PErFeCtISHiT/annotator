@@ -1164,7 +1164,7 @@
     $.ajax({
       type:'POST',
       url:"mark/checkImage",
-      data:JSON.stringify({taskID:taskID,user:[{username:user}],imgName:imgName}),
+      data:JSON.stringify({taskID:taskID,users:[{username:user}],imgName:imgName}),
       // data:JSON.stringify({taskID:123,user:[{username:"a"},{username:"b"}],imgName:"c.png"}),
       success:function(result){
         if(result.marks[0]) {

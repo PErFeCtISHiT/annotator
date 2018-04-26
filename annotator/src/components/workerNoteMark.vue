@@ -1,6 +1,14 @@
 <template>
   <div>
     <p>{{taskID}}</p>
+    <div class="block">
+      <span class="demonstration">默认 Hover 指示器触发</span>
+      <el-carousel height="150px">
+        <el-carousel-item v-for="item in 4" :key="item">
+          <h3>{{ item }}</h3>
+        </el-carousel-item>
+      </el-carousel>
+    </div>
   </div>
 </template>
 
@@ -21,7 +29,19 @@
     data() {
       return {
         myTaskID: this.taskID,
-        taskData: {}
+        taskData: {},
+        progress: 0,
+        sponsorName: '',
+        taskName: '',
+        description: '',
+        imgNum: '',
+        startDate: '',
+        endDate: '',
+        points: '',
+        acceptNum: '',
+        completedNum: '',
+        totalProgress: 0,
+        imgURLs:[]
       }
     },
     methods: {
@@ -36,16 +56,16 @@
         })
           .then(function (response) {
             let data = response.data;
-            this.taskData.requestors = data.requestors;
-            this.taskData.taskName = data.taskName;
-            this.taskData.description = data.description;
-            this.taskData.imgNum = data.imgNum;
-            this.taskData.startDate = data.startDate;
-            this.taskData.endDate = data.endDate;
-            this.taskData.points = data.points;
-            this.taskData.acceptNum = data.acceptNum;
-            this.taskData.completedNum = data.completedNum;
-            this.taskData.totalProgress = data.totalProgress;
+            this.sponsorName = data.sponsorName;
+            this.taskName = data.taskName;
+            this.description = data.description;
+            this.imgNum = data.imgNum;
+            this.startDate = data.startDate;
+            this.endDate = data.endDate;
+            this.points = data.points;
+            this.acceptNum = data.acceptNum;
+            this.completedNum = data.completedNum;
+            this.totalProgress = data.totalProgress;
           })
           .catch(function (error) {
             that.$message({
@@ -58,18 +78,18 @@
 
       refreshSelfProgress() {
         let taskID = this.taskID;
-        let userName = this.$store.state.user.userInfo.username;
+        let username = this.$store.state.user.userInfo.username;
         let status = 1;
         let userRole = 3;
         let that = this;
         this.$http.post('/task/myTasks', {
           taskID,
-          userName,
+          username,
           status,
           userRole
         })
           .then(function (response) {
-            this.taskData.progress = response.data.progress;
+            this.progress = response.data.progress;
           })
           .catch(function (error) {
             that.$message({
@@ -80,9 +100,26 @@
           });
       },
 
+      refreshImgURL() {
+        let taskID = this.taskID;
+        let that = this;
+        this.$http.get('/task/checkImages', {
+          params: {
+            taskID
+          }
+        })
+          .then(function (response) {
+            this.imgURLs =
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      },
+
       completeTask() {
         refreshSelfProgress();
-        if (this.taskData.progress !== 1) {
+        if (this.progress !== 1) {
           this.$alert('请完成后重试', '未完成所有项目', {
             confirmButtonText: '确定',
             callback: () => {
@@ -92,7 +129,7 @@
               });
             }
           });
-        }else{        //正式提交
+        } else {        //正式提交
           let taskID = this.taskID;
           let username = this.$store.state.user.userInfo.username;
           let that = this;
@@ -102,10 +139,22 @@
               username
             }
           })
-            .then(function (response) {
-              console.log(response);
+            .then(function () {
+              that.$alert('收到您的完成提交请求', '系统反馈', {
+                confirmButtonText: '确定',
+                callback: () => {
+                  that.$message({
+                    type: 'success',
+                    message: `任务已完成`
+                  });
+                }
+              });
             })
             .catch(function (error) {
+              that.$message({
+                type: 'error',
+                message: `请检查网络连接`
+              });
               console.log(error);
             });
         }
@@ -115,5 +164,19 @@
 </script>
 
 <style scoped>
+  .el-carousel__item h3 {
+    color: #475669;
+    font-size: 14px;
+    opacity: 0.75;
+    line-height: 150px;
+    margin: auto;
+  }
 
+  .el-carousel__item:nth-child(2n) {
+    background-color: #99a9bf;
+  }
+
+  .el-carousel__item:nth-child(2n+1) {
+    background-color: #d3dce6;
+  }
 </style>

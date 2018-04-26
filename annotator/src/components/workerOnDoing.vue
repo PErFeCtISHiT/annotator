@@ -29,13 +29,13 @@
 
     mounted(){
       let taskID = 0;
-      let userName = this.$store.state.user.userInfo.username;  //这里的name首字母小写
+      let username = this.$store.state.user.userInfo.username;  //这里的name首字母小写
       let status = 1;
       let userRole = 3;
       let that = this;
       this.$http.post('/task/myTasks', {
         taskID,
-        userName,
+        username,
         status,
         userRole
       })
@@ -66,7 +66,7 @@
           taskID: 123,
           taskName: "标出所有人物",
           description: "请标出图片中的所有人物",
-          requestor: "蔡蔚霖",
+          sponsorName: "蔡蔚霖",
           startDate: "2017-4-22",
           endDate: "2017-5-1",
           progress: 0.6
@@ -76,7 +76,7 @@
           taskID: 222,
           taskName: "标出所有羊",
           description: "请标出图片中的所有羊",
-          requestor: "曹嘉玮",
+          sponsorName: "曹嘉玮",
           startDate: "2017-4-22",
           endDate: "2017-5-1",
           progress: 0.8
@@ -86,7 +86,7 @@
           taskID: 155,
           taskName: "标出所有羊",
           description: "请标出图片中的所有羊",
-          requestor: "曹嘉玮",
+          sponsorName: "曹嘉玮",
           startDate: "2017-4-22",
           endDate: "2017-5-1",
           progress: 0.8
@@ -96,7 +96,7 @@
           taskID: 179,
           taskName: "标出所有羊",
           description: "请标出图片中的所有羊",
-          requestor: "曹嘉玮",
+          sponsorName: "曹嘉玮",
           startDate: "2017-4-22",
           endDate: "2017-5-1",
           progress: 0.8
@@ -106,7 +106,7 @@
           taskID: 444,
           taskName: "标出所有羊",
           description: "请标出图片中的所有羊",
-          requestor: "曹嘉玮",
+          sponsorName: "曹嘉玮",
           startDate: "2017-4-22",
           endDate: "2017-5-1",
           progress: 0.8
