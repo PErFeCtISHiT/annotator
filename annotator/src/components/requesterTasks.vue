@@ -13,7 +13,7 @@
           <el-col :span="24">
 
             <requester-task-item v-for="(message, index) in messages"
-                                 @remove="handleRemove(index)" @complete="handleComplete(index)"
+                                 @remove="handleRemove(uid, index)" @complete="handleComplete(uid, index)"
                                  :taskMsg="message" :key="message.taskID"></requester-task-item>
 
           </el-col>
@@ -88,7 +88,7 @@
 
     name: "requester-tasks",
 
-    created: function () {
+    mounted: function () {
       this.changeTabs("total");
     },
 
@@ -132,8 +132,9 @@
           userRole: 2
         })
           .then(function (response) {
-            let data = response.data;
-            this.messages = data;
+            let data = response.data.tasks;
+            console.log(data);
+            that.messages = data;
           })
           .catch(function (error) {
             that.$message({
@@ -145,9 +146,11 @@
 
       },
 
-      handleComplete(index, uid) {
+      handleComplete(uid, index) {
         let that = this;
 
+        console.log(index);
+        console.log(uid);
         this.$confirm('结束此任务，积分无法退还。是否继续', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -184,6 +187,8 @@
       handleRemove(index, uid){
         let that = this;
 
+        console.log(index);
+        console.log(uid);
         this.$confirm('删除此任务，积分无法退还。是否继续', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
