@@ -51,9 +51,9 @@ public class ImgUploadController {
     public void imagesUpload(@RequestParam("file") MultipartFile file,@RequestParam("taskID") String taskID, HttpServletResponse response) {
         TaskDao taskDao = new TaskDao();
         Task task = taskDao.getTask(Integer.valueOf(taskID),taskDao.getAllTasks());
-        task.setImageNum(task.getImageNum() + 1);
+        task.setImageNum(FileHelper.saveFiles(taskID, file));
         JSONObject ret = new JSONObject();
-        ret.put("mes", FileHelper.saveFiles(taskID, file) && taskDao.modifyTask(task));
+        ret.put("mes", taskDao.modifyTask(task));
         JsonHelper.jsonToResponse(response, ret);
     }
 }

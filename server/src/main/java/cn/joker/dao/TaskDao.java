@@ -33,7 +33,7 @@ public class TaskDao {
     private String globalJsonTasks = "{\"tasks\":[";
     private String globalTasks = "tasks";
 
-    public boolean releaseTask(Task task) {
+    public Integer releaseTask(Task task) {
         JsonObject json = JsonHelper.openJson(globalJson);
         assert json != null;
         JsonArray taskArray = json.getAsJsonArray(globalTasks);
@@ -61,8 +61,8 @@ public class TaskDao {
 
         newJson.append(jsonObject.toString());
         newJson.append("]}");
-
-        return this.updateJson(newJson);
+        this.updateJson(newJson);
+        return task.getTaskID();
     }
 
     public boolean modifyTask(Task task) {
@@ -370,6 +370,7 @@ public class TaskDao {
         JsonArray taskArray = json.getAsJsonArray(globalTasks);
 
         ArrayList<Task> tasks = new ArrayList<>();
+        System.out.println(taskArray);
         for (Object o : taskArray) {
             Object o1 = (JsonObject) o;
             JSONObject object = new JSONObject(o1.toString());

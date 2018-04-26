@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import java.util.List;
 
 public interface TaskService {
-    boolean releaseTask(Task task);
+    Integer releaseTask(Task task);
 
     boolean modifyTask(Task task);
 

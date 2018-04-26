@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -78,20 +79,23 @@ public class FileHelper {
         return true;
     }
 
-    public static boolean saveFiles(String taskID, MultipartFile file) {
+    public static Integer saveFiles(String taskID, MultipartFile file) {
         if (file.isEmpty())
-            return false;
+            return 0;
         String path = DIR + "task/" + taskID + "/images/";
         String fileName = file.getOriginalFilename();
         fileName = FileHelper.getRealFilePath(fileName);
         fileName = fileName.substring(fileName.lastIndexOf(FILE_SEPARATOR) + 1);
         File dest = new File(path + fileName);
+        boolean bool = true;
         if (!dest.getParentFile().getParentFile().exists()) {
-            return dest.getParentFile().getParentFile().mkdir();
+            bool = dest.getParentFile().getParentFile().mkdir();
         }
         if (!dest.getParentFile().exists()) {
-            return dest.getParentFile().mkdir();
+            bool = bool && dest.getParentFile().mkdir();
         }
+        if (!bool)
+            return 0;
         try {
             file.transferTo(dest);
             String attr = fileName.substring(fileName.lastIndexOf('.') + 1);
@@ -109,8 +113,7 @@ public class FileHelper {
             }
         } catch (IOException e) {
             logger.error(globalException);
-            return false;
         }
-        return true;
+        return Objects.requireNonNull(dest.getParentFile().list()).length;
     }
 }
