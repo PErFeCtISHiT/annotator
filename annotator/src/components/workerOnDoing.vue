@@ -6,7 +6,7 @@
       v-for="(todo, index) in onDoing"
       :key="todo.taskID"
       :taskMsg="todo"
-      @remove="handleRemove(index)"
+      v-on:remove="handleRemove(index)"
     ></li>
     </ul>
 
@@ -29,7 +29,9 @@
     name: "worker-on-doing",
 
     created(){
-      console.log(this.onDoing.length);
+      for(let i = 0; i < this.onDoing.length; i++) {
+        console.log(this.onDoing[i]);
+      }
     },
     // created(){
     //   for(let item in temp){

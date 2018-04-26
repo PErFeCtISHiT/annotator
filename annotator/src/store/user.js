@@ -21,7 +21,7 @@ export default {
       localStorage.removeItem('user');
       state.loginState = false;
       Object.keys(state.userInfo).forEach(k => Vue.delete(state.userInfo, k))
-    }
+    },
   },
 
   actions: {
@@ -30,6 +30,42 @@ export default {
     },
     logOut ({commit}) {
       commit('logOut')
+    },
+    update({commit},pointer){
+      pointer.$http.get('/user/getCurrentUser')
+        .then(function (response) {
+          let result = response.data;
+          commit('logIn', result);
+          pointer.$message({
+            message: '刷新用户数据成功',
+            type: 'success'
+          });
+        })
+        .catch(function (error) {
+          pointer.$message({
+            message: '刷新用户数据失败',
+            type: 'error'
+          });
+          console.log(error);
+        });
+    },
+    updateWithoutPointer({commit}){
+      window.myHttp.get('/user/getCurrentUser')
+        .then(function (response) {
+          let result = response.data;
+          commit('logIn', result);
+          window.myMessage({
+            message: '刷新用户数据成功',
+            type: 'success'
+          });
+        })
+        .catch(function (error) {
+          window.myMessage({
+            message: '刷新用户数据失败',
+            type: 'error'
+          });
+          console.log(error);
+        });
     }
   }
 }
