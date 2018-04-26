@@ -148,6 +148,7 @@ public class TaskController {
             taskObject.put(globalDescription, task.getDescription());
             taskObject.put(globalImgNum,task.getImageNum());
             taskObject.put(globalSponsorName, task.getSponsorName());
+            taskObject.put(globalTag, task.getTag());
             if (userRole.equals(3))
                 taskObject.put("progress", taskService.checkTaskProgress(task.getTaskID(), username));
             taskObject.put("totalProgress", new Double(task.getCompletedNumber() / task.getExpectedNumber()));
