@@ -325,7 +325,7 @@
   let poly_hoverFillStyle = 'rgba(255, 0, 0, 0.5)';
 
   let poly_canvasID = "canvas";
-  let poly_penColor = "red";
+  let poly_penColor = "rgb(246,232,4)";
   let poly_penWidth = 1;
 
 
@@ -671,7 +671,7 @@
 
           function handleClick(layer) {
             //TODO
-            if (!inDrawing) {
+            if (!inDrawing && !poly_isDrawingPolygon) {
               smallHandle(layer)
             }
           }
@@ -776,7 +776,7 @@
 
 
   function getRectStarted() {
-    let color = "red";
+    let color = "rgb(246,232,4)";
     let width = 1;
     //TODO
     setBtnSwitchDrawOfRect(btnSwitchDrawID, btnSDOriginalText, btnSDInDrawingText);

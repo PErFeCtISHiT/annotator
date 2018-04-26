@@ -6,7 +6,8 @@ export default {
   // JSON.parse方法将一个字符串解析成一个JSON对象
   state: {
     //userInfo的属性：level":1,"name":"somnus","username":"somnus","points":0
-
+    isRequester:false,
+    isWorker:false,
     userInfo: JSON.parse(localStorage.getItem('user')) || {},
     loginState: Boolean(JSON.parse(localStorage.getItem('user')))        // 有就是真的，没有就是假的
   },
@@ -15,12 +16,29 @@ export default {
     logIn: function (state, user) {
       localStorage.setItem('user', JSON.stringify(user));
       state.loginState = true;
-      Object.assign(state.userInfo, user)
+      Object.assign(state.userInfo, user);
+      function checkContains(arr,obj){
+        if(!arr.length){
+          return false;
+        }
+        for(let i = 0; i < arr.length;i++){
+          if(arr[i]===obj){
+            return true;
+          }
+        }
+        return false;
+      }
+      if(state.userInfo.roleList) {
+        state.isRequester = checkContains(state.userInfo.roleList, 2);
+        state.isWorker = checkContains(state.userInfo.roleList, 3);
+      }
     },
     logOut: function (state) {
       localStorage.removeItem('user');
       state.loginState = false;
-      Object.keys(state.userInfo).forEach(k => Vue.delete(state.userInfo, k))
+      state.isWorker = false;
+      state.isRequester = false;
+      Object.keys(state.userInfo).forEach(k => Vue.delete(state.userInfo, k));
     },
   },
 

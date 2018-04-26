@@ -7,12 +7,12 @@
     >
 
       <el-submenu index="1">
-        <template slot="title" :disabled="!isRequester">发布者</template>
+        <template slot="title" :disabled="!$store.state.user.isRequester">发布者</template>
         <el-menu-item index="/1-1">我发布的任务</el-menu-item>
         <el-menu-item index="/1-2">发布新任务</el-menu-item>
       </el-submenu>
 
-      <el-submenu index="2" :disabled="!isWorker">
+      <el-submenu index="2" :disabled="!$store.state.user.isWorker">
         <template slot="title">工人</template>
         <el-menu-item index="/2-1">获取新任务</el-menu-item>
         <el-menu-item index="/2-2">进行中的任务</el-menu-item>
@@ -86,17 +86,6 @@
         return false;
       }
     },
-    computed: {
-      amount: function () {
-        return this.$store.state.user.userInfo.points;
-      },
-      isRequester: function () {
-        return this.checkContains(this.$store.state.user.userInfo.roleList,2);
-      },
-      isWorker: function () {
-        return this.checkContains(this.$store.state.user.userInfo.roleList,3);
-      },
-    }
 
   }
 </script>
