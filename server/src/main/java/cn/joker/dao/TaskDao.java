@@ -370,7 +370,6 @@ public class TaskDao {
         JsonArray taskArray = json.getAsJsonArray(globalTasks);
 
         ArrayList<Task> tasks = new ArrayList<>();
-        System.out.println(taskArray);
         for (Object o : taskArray) {
             Object o1 = (JsonObject) o;
             JSONObject object = new JSONObject(o1.toString());
