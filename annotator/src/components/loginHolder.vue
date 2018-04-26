@@ -165,7 +165,7 @@
                   if (response.data.mes === "UnknownAccount") {
                     that.sendAlert('此用户不存在', '登录错误提示');
                   } else if (response.data.mes === "IncorrectCredentials") {
-                    that.sendAlert('此用户不存在', '密码错误');
+                    that.sendAlert('密码错误', '登录错误提示');
                   } else if (response.data.mes === "success") {        //为何success就是开头小写
                     // console.log('准备拿取登入用户的信息');
                     that.actualLogin();

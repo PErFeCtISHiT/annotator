@@ -1,13 +1,13 @@
 <template>
   <div>
     <ul>
-    <li
-      is = "task-item"
-      v-for="(todo, index) in onDoing"
-      :key="todo.taskID"
-      :taskMsg="todo"
-      v-on:remove="handleRemove(index)"
-    ></li>
+      <li
+        is="task-item"
+        v-for="(todo, index) in onDoing"
+        :key="todo.taskID"
+        :taskMsg="todo"
+        @remove="handleRemove(index)"
+      ></li>
     </ul>
 
     <ul id="example-1">
@@ -23,13 +23,12 @@
   import TaskItem from "./taskItem";
 
 
-
   export default {
     components: {TaskItem},
     name: "worker-on-doing",
 
-    created(){
-      for(let i = 0; i < this.onDoing.length; i++) {
+    created() {
+      for (let i = 0; i < this.onDoing.length; i++) {
         console.log(this.onDoing[i]);
       }
     },
@@ -95,13 +94,51 @@
       ];
 
       return {
-        onDoing:temp,
+        onDoing: temp,
       }
     },
 
-    methods:{
-      handleRemove(index){
-        this.onDoing.splice(index, 1);
+    methods: {
+      handleRemove(index) {
+
+        if(this.$store.state.user.userInfo.userName==='admin'){
+          that.onDoing.splice(index, 1);
+          return;
+        }
+
+
+        let target = this.onDoing[index];
+        let taskID = target.taskID;
+        let workerName = this.$store.state.user.userInfo.userName;
+        let that = this;
+        this.$http.get('task/abortTask', {
+          params: {
+            taskID: taskID,
+            workerName: workerName
+          }
+        })
+          .then(function (response) {
+            if(response.data.mes){
+              that.$message({
+                message: '删除任务成功',
+                type: 'success'
+              });
+              that.onDoing.splice(index, 1);
+            }else{
+              that.$message({
+                message: '删除任务失败',
+                type: 'error'
+              });
+            }
+            console.log(response);
+          })
+          .catch(function (error) {
+            that.$message({
+              message: '请检查你的网络',
+              type: 'error'
+            });
+            console.log(error);
+          });
       }
     }
   }

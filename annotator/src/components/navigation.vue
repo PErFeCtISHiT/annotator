@@ -75,6 +75,9 @@
       },
 
       checkContains(arr,obj){
+        if(!arr.length){
+          return false;
+        }
         for(let i = 0; i < arr.length;i++){
           if(arr[i]===obj){
             return true;
