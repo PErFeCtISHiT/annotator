@@ -222,7 +222,7 @@
 
                 else {
                   that.$message.warning('上传失败');
-                  console.log('2')
+                  //console.log('2')
                 }
               })
               .catch(function (error) {
@@ -230,7 +230,7 @@
                   message: '上传失败' + error,
                   type: 'warning'
                 });
-                console.log('1');
+                //console.log('1');
               })
 
             /*console.log(this.newTask.taskName + " " + this.newTask.taskDescription);
@@ -281,7 +281,7 @@
             }
             else {
               that.$message.warning('图片上传失败。可能由网络引起');
-              console.log('3');
+              //console.log('3');
             }
           })
           .catch(function (error) {
@@ -289,7 +289,7 @@
               message: '图片上传失败' + error,
               type: 'warning'
             });
-            console.log('4');
+            //console.log('4');
           });
       }
 
