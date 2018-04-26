@@ -180,6 +180,8 @@
     },
 
     methods: {
+      ...mapActions(['logIn']),
+
       //神奇的时间转换函数。没有她格式就不对……
       getSTime(val) {
         this.newTask.startDate = val;
@@ -263,9 +265,8 @@
 
         let formData = new FormData();
         formData.append('file', item.file);
-        formData.append('taskID',1);
+        formData.append('taskID', taskID+"");
 
-        console.log('上传图片的接口参数', item.file);
         this.$http.request({
           method: 'post',
           data: formData,
@@ -274,13 +275,16 @@
         })
           .then(function (response) {
             if(response.data.mes !== true) {
-              that.$message.warning('上传失败');
+              that.$message.warning('图片上传失败。可能由网络引起');
               console.log('3');
+            }
+            else {
+              this.logIn()
             }
           })
           .catch(function (error) {
             that.$message({
-              message: '上传失败' + error,
+              message: '图片上传失败' + error,
               type: 'warning'
             });
             console.log('4');
