@@ -3,6 +3,7 @@
 </template>
 
 <script>
+  import requestorTaskItem from './requestorTaskItem'
   const items = [
     {
       "taskID": 6,
