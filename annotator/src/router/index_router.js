@@ -12,6 +12,7 @@ import workerGetNewTask from '../components/workerGetNewTask'
 import workerOnDoing from '../components/workerOnDoing'
 import workerHistRank from '../components/workerHistRank'
 import workerNoteMark from '../components/workerNoteMark'
+import taskDetail from '../components/taskDetail'
 
 
 export default new VueRouter({
@@ -51,6 +52,10 @@ export default new VueRouter({
     {
       path: '/testDraw',
       component: testDraw
+    },
+    {
+      path: "/taskDetail",
+      component: taskDetail
     }
   ]
 });
