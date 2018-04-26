@@ -25,7 +25,7 @@
         taskID: 123,
         taskName: "标出所有人物",
         description: "请标出图片中的所有人物",
-        requestor: "蔡蔚霖",
+        sponsorName: "蔡蔚霖",
         startDate: "2017-4-22",
         endDate: "2017-5-1",
         progress: 0.6
