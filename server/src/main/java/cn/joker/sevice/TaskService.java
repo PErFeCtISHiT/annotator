@@ -11,7 +11,7 @@ public interface TaskService {
 
     boolean modifyTask(Task task);
 
-    List<Task> checkMyTask(String userName, Integer status, Integer userRole);
+    List<Task> checkMyTask(String userName, Integer status, Integer userRole, String tag);
 
     List<Task> search(int userRole, String tag, Integer status);
 

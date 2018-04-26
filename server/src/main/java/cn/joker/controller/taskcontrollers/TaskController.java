@@ -65,14 +65,16 @@ public class TaskController {
 
         task.setDescription(jsonObject.getString(globalDescription));
         String endDate = jsonObject.getString(globalEndDate);
-        endDate += " 00:00:00";
+        endDate += " 23:59:59";
+        String startDate = jsonObject.getString(globalStartDate);
+        startDate += " " + new Date().getHours() + ":" + new Date().getSeconds() + ":" + new Date().getMinutes();
+        task.setStartDate(DateHelper.convertStringToDate(startDate));
         task.setEndDate(DateHelper.convertStringToDate(endDate));
         task.setExpectedNumber(jsonObject.getInt(globalExpectedNumber));
         task.setPoints(jsonObject.getInt(globalPoints));
         task.setSponsorName(jsonObject.getString(globalSponsorName));
         UserInfo userInfo = userInfoService.findByUsername(task.getSponsorName());
         userInfo.setPoints(userInfo.getPoints() - task.getPoints() * task.getExpectedNumber());
-
 
         JSONArray tagArray = jsonObject.getJSONArray(globalTag);
         List list = tagArray.toList();
@@ -132,11 +134,12 @@ public class TaskController {
     public void checkMyTask(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
         String username = jsonObject.getString(globalUsername);
-
+        String tag = jsonObject.getString(globalTag);
+        Integer status = jsonObject.getInt(globalStatus);
         Integer userRole = jsonObject.getInt(globalUserRole);
         JSONObject ret = new JSONObject();
 
-        List<Task> tasks = taskService.checkMyTask(username, 0, userRole);
+        List<Task> tasks = taskService.checkMyTask(username, status, userRole, tag);
         JSONArray taskArray = new JSONArray();
         for (Task task : tasks) {
             JSONObject taskObject = new JSONObject();
@@ -145,6 +148,7 @@ public class TaskController {
             taskObject.put(globalDescription, task.getDescription());
             taskObject.put(globalImgNum,task.getImageNum());
             taskObject.put(globalSponsorName, task.getSponsorName());
+            taskObject.put(globalTag, task.getTag());
             if (userRole.equals(3))
                 taskObject.put("progress", taskService.checkTaskProgress(task.getTaskID(), username));
             taskObject.put("totalProgress", new Double(task.getCompletedNumber() / task.getExpectedNumber()));
