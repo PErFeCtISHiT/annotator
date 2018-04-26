@@ -1,11 +1,21 @@
 <template>
   <div class="requester-tasks">
+    <el-row type="flex" justify="center">
+      <el-col :span="20"><div>
+
+        <tag-bar v-on:change="changeTabs"></tag-bar>
+        <requester-task-item :taskMsg="message"></requester-task-item>
+
+      </div></el-col>
+    </el-row>
+
 
 
   </div>
 </template>
 
 <script>
+  import tagBar from './tagBar'
   import requesterTaskItem from './requesterTaskItem'
   const items = [
     {
@@ -19,16 +29,34 @@
   ];
 
   export default {
+    components: {
+      requesterTaskItem,
+      tagBar
+    },
+
     name: "requester-tasks",
 
+    mounted: function () {
+
+    },
 
 
     data () {
       return {
-
-      }
+        message: items[0]
+      };
     },
 
+    methods: {
+      changeTabs: function (tabName) {
+        console.log(tabName, "ok");
+      },
+
+      askForTasks (category) {
+
+      }
+
+    }
 
   }
 </script>
