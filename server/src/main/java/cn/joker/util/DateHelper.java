@@ -11,7 +11,6 @@ public class DateHelper {
         throw new IllegalStateException("Utility class");
     }
 
-    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
      * 日期的表示形式是"2018-03-23 23:36:23"
@@ -19,6 +18,7 @@ public class DateHelper {
     public static String convertDateToString(Date date) {
         if (date == null)
             return null;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return dateFormat.format(date);
     }
 
@@ -29,6 +29,8 @@ public class DateHelper {
         if (dateInString == null)
             return null;
         try {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
             return dateFormat.parse(dateInString);
         } catch (ParseException e) {
             return null;
