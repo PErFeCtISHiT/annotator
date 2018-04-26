@@ -1,1 +1,226 @@
-{"tasks":[{"endDate":"2019-03-23 23:59:59","sponsorName":"kiii","description":"划出图片中的人","expectedNumber":20,"userName":[],"points":150,"completedNumber":0,"taskName":"人-","tag":["人物"],"workerLevel":2,"taskID":1,"startDate":"2018-04-25 16:51:22","imgNum":13},{"endDate":"2018-05-24 23:59:59","sponsorName":"kiii","description":"标出图片中的人","expectedNumber":10,"userName":[],"points":123,"completedNumber":0,"taskName":"人物标注","tag":["人物","旅游"],"workerLevel":2,"taskID":2,"startDate":"2018-04-25 16:55:04","imgNum":12},{"endDate":"2018-04-27 00:00:00","sponsorName":"admin","description":"2","expectedNumber":1,"userName":[],"points":2,"completedNumber":0,"taskName":"1","tag":["B"],"workerLevel":3,"taskID":3,"startDate":"2018-04-25 21:32:56","imgNum":0},{"endDate":"2018-04-27 00:00:00","sponsorName":"admin","description":"2","expectedNumber":1,"userName":[],"points":2,"completedNumber":0,"taskName":"1","tag":["B"],"workerLevel":3,"taskID":4,"startDate":"2018-04-25 21:33:28","imgNum":0},{"endDate":"2018-04-27 00:00:00","sponsorName":"admin","description":"2","expectedNumber":1,"userName":[],"points":2,"completedNumber":0,"taskName":"1","tag":["B"],"workerLevel":3,"taskID":5,"startDate":"2018-04-25 21:34:12","imgNum":0},{"endDate":"2018-04-27 00:00:00","sponsorName":"admin","description":"2","expectedNumber":1,"userName":[],"points":2,"completedNumber":0,"taskName":"1","tag":["B"],"workerLevel":3,"taskID":6,"startDate":"2018-04-25 21:36:58","imgNum":0}]}
+{
+  "tasks": [
+    {
+      "endDate": "2019-03-23 23:59:59",
+      "sponsorName": "kiii",
+      "description": "划出图片中的人",
+      "expectedNumber": 20,
+      "userName": [],
+      "points": 150,
+      "completedNumber": 0,
+      "taskName": "人-",
+      "tag": [
+        "人物"
+      ],
+      "workerLevel": 2,
+      "taskID": 1,
+      "startDate": "2018-04-25 16:51:22",
+      "imgNum": 13
+    },
+    {
+      "endDate": "2018-05-24 23:59:59",
+      "sponsorName": "kiii",
+      "description": "标出图片中的人",
+      "expectedNumber": 10,
+      "userName": [],
+      "points": 123,
+      "completedNumber": 0,
+      "taskName": "人物标注",
+      "tag": [
+        "人物",
+        "旅游"
+      ],
+      "workerLevel": 2,
+      "taskID": 2,
+      "startDate": "2018-04-25 16:55:04",
+      "imgNum": 12
+    },
+    {
+      "endDate": "2018-04-27 00:00:00",
+      "sponsorName": "admin",
+      "description": "2",
+      "expectedNumber": 1,
+      "userName": [],
+      "points": 2,
+      "completedNumber": 0,
+      "taskName": "1",
+      "tag": [
+        "B"
+      ],
+      "workerLevel": 3,
+      "taskID": 3,
+      "startDate": "2018-04-25 21:32:56",
+      "imgNum": 0
+    },
+    {
+      "endDate": "2018-04-27 00:00:00",
+      "sponsorName": "admin",
+      "description": "2",
+      "expectedNumber": 1,
+      "userName": [],
+      "points": 2,
+      "completedNumber": 0,
+      "taskName": "1",
+      "tag": [
+        "B"
+      ],
+      "workerLevel": 3,
+      "taskID": 4,
+      "startDate": "2018-04-25 21:33:28",
+      "imgNum": 0
+    },
+    {
+      "endDate": "2018-04-27 00:00:00",
+      "sponsorName": "admin",
+      "description": "2",
+      "expectedNumber": 1,
+      "userName": [],
+      "points": 2,
+      "completedNumber": 0,
+      "taskName": "1",
+      "tag": [
+        "B"
+      ],
+      "workerLevel": 3,
+      "taskID": 5,
+      "startDate": "2018-04-25 21:34:12",
+      "imgNum": 0
+    },
+    {
+      "endDate": "2018-04-27 00:00:00",
+      "sponsorName": "admin",
+      "description": "2",
+      "expectedNumber": 1,
+      "userName": [],
+      "points": 2,
+      "completedNumber": 0,
+      "taskName": "1",
+      "tag": [
+        "B"
+      ],
+      "workerLevel": 3,
+      "taskID": 6,
+      "startDate": "2018-04-25 21:36:58",
+      "imgNum": 0
+    },
+    {
+      "endDate": "2018-05-05 00:00:00",
+      "sponsorName": "admin",
+      "description": "32",
+      "expectedNumber": 123,
+      "userName": [],
+      "points": 34,
+      "completedNumber": 0,
+      "taskName": "12",
+      "tag": [
+        "A"
+      ],
+      "workerLevel": 3,
+      "taskID": 7,
+      "startDate": "2018-04-26 09:56:09",
+      "imgNum": 2
+    },
+    {
+      "endDate": "2018-05-05 00:00:00",
+      "sponsorName": "admin",
+      "description": "123",
+      "expectedNumber": 123,
+      "userName": [],
+      "points": 1,
+      "completedNumber": 0,
+      "taskName": "123",
+      "tag": [
+        "B"
+      ],
+      "workerLevel": 2,
+      "taskID": 8,
+      "startDate": "2018-04-26 09:58:43",
+      "imgNum": 1
+    },
+    {
+      "endDate": "2018-04-27 00:00:00",
+      "sponsorName": "admin",
+      "description": "1",
+      "expectedNumber": 1,
+      "userName": [],
+      "points": 1,
+      "completedNumber": 0,
+      "taskName": "123",
+      "tag": [
+        "B"
+      ],
+      "workerLevel": 1,
+      "taskID": 9,
+      "startDate": "2018-04-26 10:02:36",
+      "imgNum": 1
+    },
+    {
+      "endDate": "2018-05-05 00:00:00",
+      "sponsorName": "admin",
+      "description": "1",
+      "expectedNumber": 1,
+      "userName": [],
+      "points": 1,
+      "completedNumber": 0,
+      "taskName": "1",
+      "tag": [
+        "B"
+      ],
+      "workerLevel": 3,
+      "taskID": 10,
+      "startDate": "2018-04-26 10:09:06",
+      "imgNum": 1
+    },
+    {
+      "endDate": "2018-05-05 00:00:00",
+      "sponsorName": "admin",
+      "description": "1",
+      "expectedNumber": 1,
+      "userName": [],
+      "points": 1,
+      "completedNumber": 0,
+      "taskName": "1",
+      "tag": [
+        "B"
+      ],
+      "workerLevel": 3,
+      "taskID": 11,
+      "startDate": "2018-04-26 10:09:34",
+      "imgNum": 2
+    },
+    {
+      "endDate": "2018-05-05 00:00:00",
+      "sponsorName": "admin",
+      "description": "1",
+      "expectedNumber": 1,
+      "userName": [],
+      "points": 1,
+      "completedNumber": 0,
+      "taskName": "1",
+      "tag": [
+        "B"
+      ],
+      "workerLevel": 3,
+      "taskID": 12,
+      "startDate": "2018-04-26 10:10:48",
+      "imgNum": 2
+    },
+    {
+      "endDate": "2021-06-24 00:00:00",
+      "sponsorName": "admin",
+      "description": "1",
+      "expectedNumber": 1,
+      "userName": [],
+      "points": 1,
+      "completedNumber": 0,
+      "taskName": "1",
+      "tag": [
+        "B"
+      ],
+      "workerLevel": 3,
+      "taskID": 13,
+      "startDate": "2018-04-26 10:16:23",
+      "imgNum": 3
+    }
+  ]
+}

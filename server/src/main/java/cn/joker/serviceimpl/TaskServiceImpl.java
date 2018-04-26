@@ -15,7 +15,7 @@ public class TaskServiceImpl implements TaskService {
     private TaskDao taskDao = new TaskDao();
 
     @Override
-    public boolean releaseTask(Task task) {
+    public Integer releaseTask(Task task) {
         return taskDao.releaseTask(task);
     }
 
