@@ -1,11 +1,12 @@
 <template>
-  <div class="requestor-tasks">
+  <div class="requester-tasks">
+
 
   </div>
 </template>
 
 <script>
-  import requestorTaskItem from './requesterTaskItem'
+  import requesterTaskItem from './requesterTaskItem'
   const items = [
     {
       "taskID": 6,
@@ -18,7 +19,7 @@
   ];
 
   export default {
-    name: "requestor-tasks",
+    name: "requester-tasks",
 
 
 

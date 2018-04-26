@@ -44,7 +44,7 @@
 
 <script>
   export default {
-    name: "requestor-task-item",
+    name: "requester-task-item",
     props: ['taskMsg'],
     data() {
       return {}
