@@ -4,15 +4,18 @@
       <!-- navigation bar  -->
       <el-header>
         <el-row class="navigation-background">
-          <el-col :span="4" >
+          <el-col :span="1" style="margin-top: 2px; margin-left: 10px">
+            <img src="../images/logo.png" style="width: 55px; height: 55px;">
+          </el-col>
+
+          <el-col :span="3">
             <div id="navigation-div1" class="grid-content bg-purple">
               <span id="navigation-name">ImgAnnotator</span>
             </div>
           </el-col>
 
-          <el-col :span="20">
+          <el-col :span="19">
             <div>
-
               <!-- 这里放一个靠右边的栅格 -->
               <el-row type="flex" id="navigation-div2" justify="end">
                 <el-col :span="18"><div id="navigation-div2-1"><navigation></navigation></div></el-col>
