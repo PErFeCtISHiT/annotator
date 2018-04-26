@@ -48,6 +48,24 @@ export default {
           });
           console.log(error);
         });
+    },
+    updateWithoutPointer({commit}){
+      window.myHttp.get('/user/getCurrentUser')
+        .then(function (response) {
+          let result = response.data;
+          commit('logIn', result);
+          window.myMessage({
+            message: '刷新用户数据成功',
+            type: 'success'
+          });
+        })
+        .catch(function (error) {
+          window.myMessage({
+            message: '刷新用户数据失败',
+            type: 'error'
+          });
+          console.log(error);
+        });
     }
   }
 }
