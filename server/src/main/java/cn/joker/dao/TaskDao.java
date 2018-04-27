@@ -116,33 +116,28 @@ public class TaskDao {
 
         tasks = searchByStatus(tasks, status);
 
+        ArrayList<Task> result = new ArrayList<>();
         if (userRole.equals(2)) {
             //查看个人发布的任务
             for (int i = 0; i < tasks.size(); i++) {
-                if (!tasks.get(i).getSponsorName().equals(userName)) {
-                    tasks.remove(i);
+                if (tasks.get(i).getSponsorName().equals(userName)) {
+                    result.add(tasks.get(i));
                 }
             }
         } else if (userRole.equals(3)) {
             //查看已接收任务
             for (int i = 0; i < tasks.size(); i++) {
-                /**
-                 * flag用来判断该用户是否接受该任务
-                 */
-                boolean flag = false;
                 for (int j = 0; j < tasks.get(i).getUserName().size(); i++) {
                     if (userName.equals(tasks.get(i).getUserName().get(j).split("-")[0])) {
-                        flag = true;
+                        result.add(tasks.get(i));
                     }
                 }
-                if (!flag)
-                    tasks.remove(i);
             }
         }
 
-        tasks = searchByTag(tasks, tag);
+        result = searchByTag(result, tag);
 
-        return tasks;
+        return result;
     }
 
     /**
@@ -216,7 +211,7 @@ public class TaskDao {
         return this.updateJson(newJson);
     }
 
-    //要搜索客户那边的任务，一起完成
+    //完成任务
     public boolean completeTask(Integer taskID, String workerName) {
         JsonObject json = JsonHelper.openJson(globalJson);
         assert json != null;
@@ -361,7 +356,7 @@ public class TaskDao {
 
         ArrayList<Task> tasks = new ArrayList<>();
         for (Object o : taskArray) {
-            Object o1 = (JsonObject) o;
+            Object o1 = o;
             JSONObject object = new JSONObject(o1.toString());
             Task task = new Task();
             task.setTaskID(object.getInt(globalTaskID));
@@ -465,41 +460,43 @@ public class TaskDao {
      * @return 满足条件的任务列表
      */
     private ArrayList<Task> searchByStatus(ArrayList<Task> allTasks, Integer status) {
+        ArrayList<Task> result = new ArrayList<>();
         switch (status) {
+            case 0:
+                return allTasks;
             case 1:
                 for (int i = 0; i < allTasks.size(); i++) {
-                    if (isEnd(allTasks.get(i))) {
-                        allTasks.remove(allTasks.get(i));
+                    if (!isEnd(allTasks.get(i))) {
+                        result.add(allTasks.get(i));
                     }
                 }
-                return allTasks;
+                return result;
             case 2:
                 for (int i = 0; i < allTasks.size(); i++) {
-                    if (!isEnd(allTasks.get(i))) {
-                        allTasks.remove(allTasks.get(i));
+                    if (isEnd(allTasks.get(i))) {
+                        result.add(allTasks.get(i));
                     }
                 }
-                return allTasks;
+                return result;
         }
 
         return allTasks;
     }
 
     private ArrayList<Task> searchByTag(ArrayList<Task> allTasks, String tag) {
+        ArrayList<Task> result = new ArrayList<>();
+
         if (tag != null && tag.length() > 0) {
             for (int i = 0; i < allTasks.size(); i++) {
                 String[] tags = allTasks.get(i).getTag();
-                boolean flag = false;
                 for (String tag1 : tags) {
                     if (tag1.equals(tag))
-                        flag = true;
+                        result.add(allTasks.get(i));
                 }
-                if (!flag)
-                    allTasks.remove(i);
             }
         }
 
-        return allTasks;
+        return result;
     }
 
     private boolean isEnd(Task t) {
