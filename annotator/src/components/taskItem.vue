@@ -22,7 +22,7 @@
         <el-row>
           <span>ID: {{taskMsg.taskID}} |</span>
           <span>名称: {{taskMsg.taskName}} |</span>
-          <span>发起人: {{taskMsg.requestor}} |</span>
+          <span>发起人: {{taskMsg.sponsorName}} |</span>
           <span>发起时间: {{taskMsg.startDate}} |</span>
           <span>结束时间: {{taskMsg.endDate}}</span>
         </el-row>

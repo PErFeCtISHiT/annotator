@@ -3,6 +3,7 @@ export default {
     doingList:[],
     currentTaskID:0,
     currentImageURL:"",
+    currentSponsor:"",
     currentTaskInfo:{},
   },
 
@@ -11,13 +12,17 @@ export default {
       state.doingList = inputList;
     },
     updateCurrentTaskID: function (state,inputID) {
-      state.currentTaskID = inputID;
+      let result = isNaN(inputID)?inputID:parseInt(inputID);
+      state.currentTaskID = result;
     },
     updateTaskInfo: function (state,inputInfo) {
       state.currentTaskInfo = inputInfo;
     },
     updateCurrentImageURL:function (state,inputURL) {
-      state.currentImageURL = inputURL
+      state.currentImageURL = inputURL;
+    },
+    updateCurrentSponsor:function (state,inputSponsor) {
+      state.updateCurrentSponsor = inputSponsor;
     }
   },
 

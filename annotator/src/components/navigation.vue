@@ -42,6 +42,11 @@
   export default {
     name: "navigation",
 
+    // mounted(){
+    //   console.log(this.$store.state.user.isRequester);
+    //   console.log(this.$store.state.user.isWorker);
+    // },
+
     data () {
       return {
 
