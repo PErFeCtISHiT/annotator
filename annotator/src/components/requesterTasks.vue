@@ -157,8 +157,10 @@
 
             //确认的话发一个ajax请求
             console.log(uid);
-            that.$http.get('/task/endTask', {
-              params: uid
+            that.$http.get('/task/endTask',{
+              params:{
+                taskID: uid
+              }
             })
               .then(function (response) {
                 if(response.data.mes === true){
@@ -195,11 +197,13 @@
             //确认的话发一个ajax请求
             console.log(payload.uid);
             that.$http.get('/task/deleteTask', {
-              params: payload.uid
+              params:{
+                taskID: payload.uid
+              }
             })
               .then(function (response) {
                 if(response.data.mes === true){
-                  that.messages.splice(index, 1);
+                  that.messages.splice(payload.index, 1);
                   that.$message.success('删除成功');
                 }
                 else{
