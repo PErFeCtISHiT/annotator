@@ -1,9 +1,9 @@
 <template>
 
 
-    <el-col :span="8" class="slot-border">
-      <!-- 最外面一层是给引用它的都看的 -->
-      <div>
+  <el-col :span="8" class="slot-border">
+    <!-- 最外面一层是给引用它的都看的 -->
+    <div>
       <el-col :span="24">
 
         <!-- 主体 -->
@@ -16,13 +16,11 @@
                 <img src="../images/task.png" style="width: 55px; height: 55px"/>
               </el-col>
               <el-col :span="17">
-                <el-button type="text" @click="jump">
-                  <div style="font-size: larger;">任务名称</div>
-                  <div
-                    style="text-align: center; margin-right: 20px; margin-top: 14px; font-size: larger; font-weight: bolder;">
-                    {{ taskMsg.taskName }}
-                  </div>
-                </el-button>
+                <div style="font-size: larger;">任务名称</div>
+                <div
+                  style="text-align: center; margin-right: 20px; margin-top: 14px; font-size: larger; font-weight: bolder;">
+                  {{ taskMsg.taskName }}
+                </div>
               </el-col>
               <!--<el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
             </div>
@@ -60,7 +58,7 @@
                   <span>发布时间:</span>
                 </el-col>
                 <el-col :span="12" class="label-all label_detail">
-                  <span>{{ taskMsg.startDate.split(" ")[0] }}</span>
+                  <span>{{ taskMsg.startDate }}</span>
                 </el-col>
               </div>
 
@@ -69,7 +67,7 @@
                   <span>结束时间:</span>
                 </el-col>
                 <el-col :span="12" class="label-all label_detail">
-                  <span>{{ taskMsg.endDate.split(" ")[0] }}</span>
+                  <span>{{ taskMsg.endDate }}</span>
                 </el-col>
               </div>
 
@@ -103,9 +101,9 @@
           <img src="../images/ping.png" height="50" width="50" style="margin-left: -38px; margin-top: -20px">
         </el-col>
       </el-col>
-      </div>
+    </div>
 
-    </el-col>
+  </el-col>
 
 
 
@@ -114,7 +112,7 @@
 <script>
 
   export default {
-    name: "requester-task-item",
+    name: "worker-task-item",
     props: ['taskMsg', 'theIndex'],
 
     computed: {
@@ -135,17 +133,7 @@
       handleFinish() {
         //console.log('2line----------------------------',this.theIndex, this.taskMsg.taskID, 'finish--------------');
         this.$emit('complete', this.taskMsg.taskID, this.theIndex);
-      },
-
-      jump() {
-        this.$router.push({
-          name: 'taskDetail',
-          params: {
-            taskID: this.taskMsg.taskID
-          }
-      });
       }
-
     }
 
   }

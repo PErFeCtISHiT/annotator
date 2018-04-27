@@ -4,7 +4,10 @@
     <el-menu
       :default-active="$route.path" class="el-menu-demo" mode="horizontal"
       router text-color="#fff" background-color="#222C62" active-text-color="#ffd04b"
+      ref="naviBar"
     >
+
+      <el-menu-item index="/0">首页</el-menu-item>
 
       <el-submenu index="1">
         <template slot="title" :disabled="!$store.state.user.isRequester">发布者</template>
@@ -52,6 +55,13 @@
 
       }
     },
+
+    computed: {
+      amount () {
+        return this.$store.state.user.userInfo.points;
+      }
+    },
+
     methods: {
       ...mapActions(['logOut']),
 

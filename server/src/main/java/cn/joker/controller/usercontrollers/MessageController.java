@@ -66,7 +66,7 @@ public class MessageController {
         userInfo.setRoleList(roleList);
         userInfo.setPassword((String) jsonObject.get(globalPasswr));
         PasswordHelper.encryptPassword(userInfo);
-        userInfo.setLevel(1);
+        userInfo.setLevel(1.0);
         userInfo.setName((String) jsonObject.get(globalName));
         userInfo.setState(1);
         userInfo.setBonus(0);
@@ -234,7 +234,7 @@ public class MessageController {
         if (userInfo != null) {
             userInfo.setPoints(userInfo.getPoints() + bonusHistory.getPoints());
             userInfo.setBonus(userInfo.getBonus() + bonusHistory.getPoints());
-
+            userInfo.setLevel(userInfo.getLevel() + bonusHistory.getPoints() / 100);
 
             ret.put(globalMes, bonusHistoryService.addBonusHistory(bonusHistory) && userInfoService.modifyUser(userInfo));
         } else

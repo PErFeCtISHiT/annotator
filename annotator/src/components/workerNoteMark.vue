@@ -16,6 +16,7 @@
 
 <script>
   import {mapMutations} from 'vuex'
+  import {mapActions} from 'vuex'
 
   export default {
     name: "worker-note-mark",
@@ -49,7 +50,7 @@
     },
     methods: {
       ...mapMutations(['updateCurrentTaskID', 'updateCurrentImageURL','updateCurrentSponsor']),
-
+      ...mapActions(['updateWithoutPointer']),
       refreshTaskData() {
         let that = this;
         let taskID = this.taskID;
@@ -82,15 +83,11 @@
 
       refreshSelfProgress() {
         let taskID = this.taskID;
-        let username = this.$store.state.user.userInfo.username;
-        let status = 1;
-        let userRole = 3;
         let that = this;
-        this.$http.post('/task/myTasks', {
-          taskID,
-          username,
-          status,
-          userRole
+        this.$http.get('/checkWorkerProgress', {
+          params:{
+            taskID
+          }
         })
           .then(function (response) {
             that.progress = response.data.progress;
@@ -156,6 +153,7 @@
                   });
                 }
               });
+              that.updateWithoutPointer();
             })
             .catch(function (error) {
               that.$message({

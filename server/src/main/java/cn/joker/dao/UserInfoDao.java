@@ -180,7 +180,7 @@ public class UserInfoDao {
         userInfo.setPoints(Integer.valueOf(String.valueOf(object.get(globalPoints))));
         userInfo.setUid(Integer.valueOf(String.valueOf(object.get(globalUid))));
         userInfo.setUsername(JsonHelper.format(object.get(globalUsername).toString()));
-        userInfo.setLevel(Integer.valueOf(String.valueOf(object.get(globalLevel))));
+        userInfo.setLevel(Double.valueOf(String.valueOf(object.get(globalLevel))));
         userInfo.setState(Integer.valueOf(String.valueOf(object.get(globalState))));
         userInfo.setBonus(Integer.valueOf(String.valueOf(object.get(globalBonus))));
         return userInfo;

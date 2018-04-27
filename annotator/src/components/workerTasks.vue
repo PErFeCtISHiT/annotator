@@ -2,7 +2,7 @@
   <div class="requester-tasks">
     <el-row type="flex" justify="center">
       <el-col :span="22"><div>
-        <tag-bar v-on:change="changeTabs"></tag-bar>
+        <worker-tag-bar v-on:change="changeTabs"> </worker-tag-bar>
       </div></el-col>
     </el-row>
 
@@ -12,9 +12,9 @@
         <el-row :gutter="10">
           <el-col :span="24">
 
-            <requester-task-item v-for="(message, index) in messages"
+            <worker-task-item v-for="(message, index) in messages"
                                  @remove="handleRemove" @complete="handleComplete"
-                                 :taskMsg="message" :theIndex="index" :key="message.taskID"></requester-task-item>
+                                 :taskMsg="message" :theIndex="index" :key="message.taskID"> </worker-task-item>
 
           </el-col>
         </el-row>
@@ -28,8 +28,8 @@
 </template>
 
 <script>
-  import tagBar from './tagBar'
-  import requesterTaskItem from './requesterTaskItem'
+  import WorkerTagBar from "./workerTagBar";
+  import WorkerTaskItem from "./workerTaskItem";
   const items = [
     {
       taskID: 6,
@@ -82,11 +82,11 @@
 
   export default {
     components: {
-      requesterTaskItem,
-      tagBar
+      WorkerTaskItem,
+      WorkerTagBar,
     },
 
-    name: "requester-tasks",
+    name: "worker-tasks",
 
     mounted: function () {
       this.changeTabs("total");
@@ -103,7 +103,7 @@
 
     methods: {
       /**
-      * 这里那个bar需要用到的。
+       * 这里那个bar需要用到的。
        * tabName是你里面传回来的
        */
       changeTabs: function (tabName) {
@@ -123,7 +123,7 @@
           tab = tabName;
         }
 
-        //console.log('status and tag: ', status, tab);
+        console.log('status and tag: ', status, tab);
         this.$http.post('/task/myTasks', {
           username: this.$store.state.user.userInfo.username,
           status: status,

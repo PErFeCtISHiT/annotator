@@ -8,7 +8,7 @@
   let totalHolderID = "totalMsg";
   let totalInputID = "totalInput";
 
-  let firstTimeEdit = false;  //就是!isMark
+  let isModified = false;  //就是!isMark
   // let drawingType = "";       //TODO 设置图画类型用的
   let global_imgURL = "";
   let global_taskID = 0;
@@ -23,8 +23,8 @@
     global_sponsor = input;
   }
 
-  function setFirstTimeEdit(boolean) {
-    firstTimeEdit = boolean;
+  function setIsModified(boolean) {
+    isModified = boolean;
   }
 
   //TODO 设置图画类型用的
@@ -47,13 +47,14 @@
 
   function getClearJson() {
     return {
+      isModified: false,
       imgURL: "",
       workerName: "workerName",
       sponsorName: "sponsor",
       taskID: 0,
       noteRectangle: [],
       notePolygon: [],
-      noteTotal: [],
+      noteTotal: {},
     };
   }
 
@@ -265,7 +266,7 @@
 
   function updateGlobalJSON() {
     // globalImgMsg.type = drawingType;
-    // globalImgMsg.isMarked = !firstTimeEdit;
+    // globalImgMsg.isMarked = !isModified;
     globalImgMsg.imgURL = global_imgURL;
     globalImgMsg.taskID = global_taskID;
     globalImgMsg.workerName = global_user;
@@ -284,7 +285,7 @@
     // // alert(type);
     // // alert(src);
 
-    setFirstTimeEdit(true);
+    setIsModified(false);
     // setdrawingType("Rectangle");
     setImgURL(imgURL);
     setGlobalSponsor(sponsorName);
@@ -571,6 +572,10 @@
       let canvasWidth = canvasRect.width;
       let canvasHeight = canvasRect.height;
 
+      console.log(canvasLeft);
+      console.log(canvasTop);
+
+
       let id;
       let layerName;
       let x = 0;
@@ -745,7 +750,7 @@
 
   //TODO 这个拿数据要合并
   // function getJsonFromServerAndLoadRect(imgURL, provider) {
-  //   if(!firstTimeEdit) {
+  //   if(!isModified) {
   //     $.getJSON("/Worker/Check", {imgURL: imgURL, provider: provider}, function (data) {
   //       writeGlobalImgMsg(data);
   //       CanvasExt.loadMyRect(globalImgMsg.noteRectangle);
@@ -758,7 +763,7 @@
   // function rect_sentJsonToServer(){
   //   // console.log(JSON.stringify(CanvasExt.getRefreshedJson()));
   //
-  //   let keywordPostRect = firstTimeEdit? "postMark" : "Modify";
+  //   let keywordPostRect = isModified? "postMark" : "Modify";
   //
   //   $.ajax({
   //     type:'POST',
@@ -1015,9 +1020,9 @@
           offsetLeft = document.body.parentElement.scrollLeft;
           setBtnDisabled(true);
 
-          points.push(new Poly_Point(getLocX(e, canvasLeft)-offsetLeft, getLocY(e, canvasTop)-offSetTop));
+          points.push(new Poly_Point(getLocX(e, canvasLeft) - offsetLeft, getLocY(e, canvasTop) - offSetTop));
           // console.log('x:'+getLocX(e, canvasLeft)+'y:'+getLocY(e, canvasTop));
-          points.push(new Poly_Point(getLocX(e, canvasLeft)-offsetLeft, getLocY(e, canvasTop)-offSetTop));
+          points.push(new Poly_Point(getLocX(e, canvasLeft) - offsetLeft, getLocY(e, canvasTop) - offSetTop));
 
           id = getIDByTime();
           refreshLayerMsg(id);
@@ -1028,13 +1033,13 @@
           firstPoint = false;
           secondPoint = true;
         } else if (!firstPoint && secondPoint) {
-          points[1] = new Poly_Point(getLocX(e, canvasLeft)-offsetLeft, getLocY(e, canvasTop)-offSetTop);
+          points[1] = new Poly_Point(getLocX(e, canvasLeft) - offsetLeft, getLocY(e, canvasTop) - offSetTop);
           // console.log('x:'+getLocX(e, canvasLeft)+'y:'+getLocY(e, canvasTop));
           // draw the line
           drawLines();
           secondPoint = false;
         } else {
-          if (testIfCloseEnough(getLocX(e, canvasLeft)-offsetLeft, points[0].x, 14) && testIfCloseEnough(getLocY(e, canvasTop)-offSetTop, points[0].y, 14)) {
+          if (testIfCloseEnough(getLocX(e, canvasLeft) - offsetLeft, points[0].x, 14) && testIfCloseEnough(getLocY(e, canvasTop) - offSetTop, points[0].y, 14)) {
             // console.log('x:'+getLocX(e, canvasLeft)+'y:'+getLocY(e, canvasTop));
             //close the shape
             obj['closed'] = true;
@@ -1063,7 +1068,7 @@
             setJQObjDisabled(btnPoly, false);
             reInit();
           } else {
-            points.push(new Poly_Point(getLocX(e, canvasLeft)-offsetLeft, getLocY(e, canvasTop)-offSetTop));
+            points.push(new Poly_Point(getLocX(e, canvasLeft) - offsetLeft, getLocY(e, canvasTop) - offSetTop));
             //redraw the lines
             drawLines();
           }
@@ -1094,7 +1099,7 @@
 
 
   // function poly_getJsonFromServerAndLoadPoly(imgURL, provider) {
-  //   if(!firstTimeEdit) {
+  //   if(!isModified) {
   //     $.getJSON("/Worker/Check", {imgURL: imgURL, provider: provider}, function (data) {
   //       writeGlobalImgMsg(data);
   //       poly_loadPolygon(globalImgMsg.notePolygon);
@@ -1103,7 +1108,7 @@
   // }
 
   function poly_sentJsonToServer() {
-    let keywordPostRect = firstTimeEdit ? "postMark" : "Modify";
+    let keywordPostRect = isModified ? "postMark" : "Modify";
 
     $.ajax({
       type: 'POST',
@@ -1180,8 +1185,9 @@
       data: JSON.stringify({taskID: taskID, users: [{username: user}], imgName: imgName}),
       // data:JSON.stringify({taskID:123,user:[{username:"a"},{username:"b"}],imgName:"c.png"}),
       success: function (result) {
-        if (result.marks[0]) {
+        if (result.marks && result.marks[0]) {
           globalImgMsg = result.marks[0];
+          isModified = true;
         }
         CanvasExt.loadMyRect(globalImgMsg.noteRectangle);
         poly_loadPolygon(globalImgMsg.notePolygon);
@@ -1192,24 +1198,50 @@
     });
   }
 
+  function checkIfHasMarks() {
+    return globalImgMsg.notePolygon.length > 0 && globalImgMsg.noteTotal.length > 0 && globalImgMsg.noteTotal !== {};
+  }
+
   function setGlobalBtnSubmit(btnSubmitID) {
     $("#" + btnSubmitID).click(() => {
-      multiplyRate();
-      poly_getRefreshedJson();
-      CanvasExt.getRefreshedJson();
-      console.log(globalImgMsg);
-      $.ajax({
-        type: 'POST',
-        url: "mark/postMark",
-        data: JSON.stringify(globalImgMsg),
-        success: function (result) {
-          console.log(result);
-        },
-        contentType: 'application/json',
-        dataType: 'json'
-      });
-      //TODO 后面就可以去掉下面这句了
-      alert("提交成功");
+      if (checkIfHasMarks()) {
+        multiplyRate();
+        poly_getRefreshedJson();
+        CanvasExt.getRefreshedJson();
+        globalImgMsg.isModified = isModified;
+        globalImgMsg.noteTotal.mark = $("#" + totalInputID).val();
+        console.log(globalImgMsg);
+        $.ajax({
+          type: 'POST',
+          url: "mark/postMark",
+          data: JSON.stringify(globalImgMsg),
+          success: function (result) {
+            console.log(result);
+          },
+          contentType: 'application/json',
+          dataType: 'json'
+        });
+        //TODO 后面就可以去掉下面这句了
+        window.myMessage(
+          {
+            message: '提交成功',
+            type: 'success',
+            duration: 1000
+          }
+        );
+      } else {
+        window.myAlert('这是一段内容', '标题名称', {
+          confirmButtonText: '确定',
+          callback: () => {
+            window.myMessage({
+              message: '提交成功',
+              type: 'error',
+              duration: 1000
+            });
+          }
+        });
+      }
+
     });
   }
 
@@ -1224,8 +1256,8 @@
       let width = image.width;
       let height = image.height;
 
-      if(width>backgroundMaxWidth){
-        globalRate = width/backgroundMaxWidth;
+      if (width > backgroundMaxWidth) {
+        globalRate = width / backgroundMaxWidth;
         width = backgroundMaxWidth;
         height /= globalRate;
       }
@@ -1242,15 +1274,15 @@
       div.css('height', height);
       div.append(txt);
 
-        $().ready(() => {
-          let temp = global_imgURL.split('/');
-          let imgName = temp[temp.length - 1];
-          getJsonFromServerAndLoadAllMarks(global_taskID, global_user, imgName);
-          setGlobalBtnSubmit("commit");
-          setInputBind();
-          callBack1();
-          callBack2();
-        });
+      $().ready(() => {
+        let temp = global_imgURL.split('/');
+        let imgName = temp[temp.length - 1];
+        getJsonFromServerAndLoadAllMarks(global_taskID, global_user, imgName);
+        setGlobalBtnSubmit("commit");
+        setInputBind();
+        callBack1();
+        callBack2();
+      });
 
     }
 
@@ -1274,16 +1306,16 @@
 
 
   function multiplyRate() {
-    if(globalRate!==1){
+    if (globalRate !== 1) {
       $("#" + poly_canvasID).getLayers(function (layer) {
         if (layer.type === 'line') {
           let points = layer.data.points;
-          for(let i = 0; i < points.length; i++){
+          for (let i = 0; i < points.length; i++) {
             points[i].x *= globalRate;
             points[i].y *= globalRate;
           }
         }
-        if (layer.type === 'rectangle'){
+        if (layer.type === 'rectangle') {
           let data = layer.data;
           data.top *= globalRate;
           data.left *= globalRate;

@@ -19,6 +19,10 @@ import firstPart from '../components/firstPart'
 export default new VueRouter({
   routes: [
     {
+      path: "/0",
+      component: firstPart
+    },
+    {
       path: "/1-1",
       component: requesterTasks
     },
@@ -39,6 +43,12 @@ export default new VueRouter({
       component: workerHistRank
     },
     {
+      path: "/taskDetail/:taskID",
+      name: 'taskDetail',
+      component: taskDetail,
+      props: true
+    },
+    {
       path: "/noteAndMark/:taskID",
       name:'noteAndMark',
       component: workerNoteMark,
@@ -57,7 +67,7 @@ export default new VueRouter({
       component: testDraw
     },
     {
-      path: "/taskDetail",
+      path: "/taskDetailC",
       component: taskDetail
     },
     {
