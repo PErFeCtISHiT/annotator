@@ -34,4 +34,6 @@ public interface TaskService {
     List findImgURLByID(String taskID);
 
     Integer findMarkNumByImgNameAndUserAndID(Integer taskID, String imgName, JSONArray users);
+
+    boolean postMark(String workerName, Integer taskID);
 }

@@ -111,7 +111,7 @@
       };
 
       let checkPoints = (rule, value, callback) => {
-        if(value * this.newTask.points > this.$store.state.user.userInfo.points)
+        if(value * this.newTask.expectedNumber > this.$store.state.user.userInfo.points)
           return callback(new Error("超出现有金额"));
         else
           callback();
@@ -218,6 +218,10 @@
                 if(response.data.mes === true){
                   taskID = response.data.taskID;   //设定任务的id属性值
                   that.$refs.upload.submit();  //发送ajax请求
+
+                  //全部提交完成
+                  that.resetForm('newTask');
+                  that.$refs.upload.clearFiles();
                 }
 
                 else {
@@ -277,7 +281,6 @@
         })
           .then(function (response) {
             if (response.data.mes === true) {
-              that.resetForm('newTask');
               that.updateWithoutPointer();
             }
             else {
