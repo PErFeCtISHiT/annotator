@@ -13,8 +13,8 @@
           <el-col :span="24">
 
             <requester-task-item v-for="(message, index) in messages"
-                                 @remove="handleRemove(uid, index)" @complete="handleComplete(uid, index)"
-                                 :taskMsg="message" :key="message.taskID"></requester-task-item>
+                                 @remove="handleRemove" @complete="handleComplete"
+                                 :taskMsg="message" :theIndex="index" :key="message.taskID"></requester-task-item>
 
           </el-col>
         </el-row>
@@ -96,6 +96,7 @@
     data () {
       return {
         messages: [],
+        tags: [],
         tabName: ""
       };
     },
@@ -112,19 +113,17 @@
         //检查类型
         let status = 0, that = this, tab = "";
         if(tabName === 'already'){
-          console.log('already');
           status = 2;
         }else if (tabName === 'undergoing'){
-          console.log('undergoing');
           status = 1;
         }else if (tabName === 'total'){
           status = 0;
-          console.log('total');
         }else{
           status = 0;
           tab = tabName;
         }
 
+        console.log('status and tag: ', status, tab);
         this.$http.post('/task/myTasks', {
           username: this.$store.state.user.userInfo.username,
           status: status,
@@ -133,7 +132,7 @@
         })
           .then(function (response) {
             let data = response.data.tasks;
-            console.log(data);
+
             that.messages = data;
           })
           .catch(function (error) {
@@ -149,8 +148,6 @@
       handleComplete(uid, index) {
         let that = this;
 
-        console.log(index);
-        console.log(uid);
         this.$confirm('结束此任务，积分无法退还。是否继续', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -159,7 +156,8 @@
           .then(() => {
 
             //确认的话发一个ajax请求
-            this.$http.get('/task/endTask', {
+            console.log(uid);
+            that.$http.get('/task/endTask', {
               params: uid
             })
               .then(function (response) {
@@ -177,18 +175,16 @@
 
           })
           .catch(() => {
-            this.$message.info('已取消');
+            that.$message.info('已取消');
           })
       },
 
       /**
        * 删除任务。是从子组件emit过来的
        * */
-      handleRemove(index, uid){
+      handleRemove(payload){
         let that = this;
 
-        console.log(index);
-        console.log(uid);
         this.$confirm('删除此任务，积分无法退还。是否继续', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -197,8 +193,9 @@
           .then(() => {
 
             //确认的话发一个ajax请求
-            this.$http.get('/task/deleteTask', {
-              params: uid
+            console.log(payload.uid);
+            that.$http.get('/task/deleteTask', {
+              params: payload.uid
             })
               .then(function (response) {
                 if(response.data.mes === true){
