@@ -28,13 +28,13 @@
     name: "worker-on-doing",
 
     mounted(){
-      let taskID = 0;
       let username = this.$store.state.user.userInfo.username;  //这里的name首字母小写
+      let tag = "";    //这里不需要tag
       let status = 1;
       let userRole = 3;
       let that = this;
       this.$http.post('/task/myTasks', {
-        taskID,
+        tag,
         username,
         status,
         userRole
