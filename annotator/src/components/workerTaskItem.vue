@@ -39,7 +39,8 @@
                 <el-col :span="8" class="label-all" style="margin-top: 45px">
                   <span>任务描述:</span>
                 </el-col>
-                <el-col :span="14" class="label-all label_detail" style="text-align: left; height: 100px">
+                <el-col :span="14" class="label-all label_detail"
+                        style="text-align: left; height: 50px; background-color: #d3dce6">
                   <span>{{ taskMsg.description }}</span>
                 </el-col>
               </div>
@@ -49,7 +50,7 @@
                 </el-col>
                 <el-col :span="12" class="label-all label_detail">
                   <span v-for="theTag in taskMsg.tag">
-                    <el-tag >{{ theTag }}</el-tag>&thinsp;
+                    <el-tag>{{ theTag }}</el-tag>&thinsp;
                   </span>
                 </el-col>
               </div>
@@ -58,7 +59,7 @@
                   <span>发布时间:</span>
                 </el-col>
                 <el-col :span="12" class="label-all label_detail">
-                  <span>{{ taskMsg.startDate }}</span>
+                  <span>{{(taskMsg.startDate)?taskMsg.startDate.split(' ')[0]:""}}</span>
                 </el-col>
               </div>
 
@@ -67,7 +68,25 @@
                   <span>结束时间:</span>
                 </el-col>
                 <el-col :span="12" class="label-all label_detail">
-                  <span>{{ taskMsg.endDate }}</span>
+                  <span>{{(taskMsg.endDate)?taskMsg.endDate.split(' ')[0]:""}}</span>
+                </el-col>
+              </div>
+
+              <div>
+                <el-col :span="10" class="label-all">
+                  <span>任务奖励:</span>
+                </el-col>
+                <el-col :span="12" class="label-all label_detail">
+                  <span>{{taskMsg.points}}</span>
+                </el-col>
+              </div>
+
+              <div>
+                <el-col :span="16" class="label-all">
+                  <span>标注者最低等级:</span>
+                </el-col>
+                <el-col :span="6" class="label-all label_detail" :style="$store.state.user.userInfo.level<taskMsg.workerLevel?'color: #e44030;':''">
+                  <span>{{taskMsg.workerLevel}}</span>
                 </el-col>
               </div>
 
@@ -76,19 +95,28 @@
                   <span>任务进度:</span>
                 </el-col>
                 <el-col :span="12" class="label-all">
-                  <el-progress :text-inside="true" :stroke-width="18" :percentage="taskMsg.totalProgress * 100"></el-progress>
+                  <el-progress :text-inside="true" :stroke-width="18"
+                               :percentage="taskMsg.totalProgress * 100"> </el-progress>
                 </el-col>
               </div>
             </div>
 
+
+
+
             <el-col :span="24" style="margin-bottom: 20px; margin-top:5px">
               <el-col :span="6" :offset="2">
-                <el-button type="warning" size="small" @click="handleDelete">删除任务</el-button>
+                <el-button type="primary" size="small" @click="handleFinish"
+                           :disabled="taskMsg.totalProgress >= 0.999||($store.state.user.userInfo.level<taskMsg.workerLevel)">
+                  接受任务
+                </el-button>
               </el-col>
 
               <el-col :span="6" :offset="5">
-                <el-button type="primary" size="small" @click="handleFinish" :disabled="isDisabled">结束任务</el-button>
+                <el-button size="small" @click="handleDelete">移出视图</el-button>
               </el-col>
+
+
             </el-col>
 
           </el-card>
@@ -106,7 +134,6 @@
   </el-col>
 
 
-
 </template>
 
 <script>
@@ -115,24 +142,17 @@
     name: "worker-task-item",
     props: ['taskMsg', 'theIndex'],
 
-    computed: {
-      isDisabled(){
-        return this.taskMsg.totalProgress >= 0.999;
-      }
+    mounted(){
+      console.log(this.taskMsg.totalProgress);
     },
 
     methods: {
       handleDelete() {
-        //console.log('2line----------------------------',this.theIndex, this.taskMsg.taskID, 'finish--------------');
-        this.$emit('remove', {
-          uid: this.taskMsg.taskID,
-          index: this.theIndex
-        });
+        this.$emit('remove');
       },
 
       handleFinish() {
-        //console.log('2line----------------------------',this.theIndex, this.taskMsg.taskID, 'finish--------------');
-        this.$emit('complete', this.taskMsg.taskID, this.theIndex);
+        this.$emit('accept', this.taskMsg.taskID, this.theIndex);
       }
     }
 
@@ -164,6 +184,7 @@
     margin-top: 12px;
     color: #4f4f52;
   }
+
   /*任务ID单独要放大显示*/
   .taskIDLabel {
     color: #e44030;

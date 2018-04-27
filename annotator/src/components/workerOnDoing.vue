@@ -129,12 +129,12 @@
 
         let target = this.onDoing[index];
         let taskID = target.taskID;
-        let workerName = this.$store.state.user.userInfo.userName;
+        let username = this.$store.state.user.userInfo.userName;
         let that = this;
         this.$http.get('/task/abortTask', {
           params: {
             taskID,
-            workerName
+            username
           }
         })
           .then(function (response) {

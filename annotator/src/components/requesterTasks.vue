@@ -14,7 +14,7 @@
 
             <requester-task-item v-for="(message, index) in messages"
                                  @remove="handleRemove" @complete="handleComplete"
-                                 :taskMsg="message" :theIndex="index" :key="message.taskID"></requester-task-item>
+                                 :taskMsg="message" :theIndex="index" :key="message.taskID"> </requester-task-item>
 
           </el-col>
         </el-row>
@@ -145,7 +145,7 @@
 
       },
 
-      handleComplete(uid, index) {
+      handleAccept(uid, index) {
         let that = this;
 
         this.$confirm('结束此任务，积分无法退还。是否继续', '提示', {
