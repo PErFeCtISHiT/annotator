@@ -435,7 +435,7 @@
 
     // 注意先调用writeInit
     loadMyRect: function (noteRectangle) {
-      console.log(noteRectangle);
+      // console.log(noteRectangle);
       let canvasJQ = $("#" + CanvasExt.canvasId);
 
       for (let i = 0; i < noteRectangle.length; i++) {
@@ -572,8 +572,9 @@
       let canvasWidth = canvasRect.width;
       let canvasHeight = canvasRect.height;
 
-      console.log(canvasLeft);
-      console.log(canvasTop);
+
+      // console.log(canvasLeft);
+      // console.log(canvasTop);
 
 
       let id;
@@ -731,6 +732,7 @@
       $("#" + CanvasExt.canvasId).getLayers(function (layer) {
         if (layer.type === 'rectangle') {
           noteRectangle.push(layer.data);
+          // console.log('push_rectangle');
         }
         return false;
       });
@@ -1185,6 +1187,7 @@
       data: JSON.stringify({taskID: taskID, users: [{username: user}], imgName: imgName}),
       // data:JSON.stringify({taskID:123,user:[{username:"a"},{username:"b"}],imgName:"c.png"}),
       success: function (result) {
+        console.log(result);
         if (result.marks && result.marks[0]) {
           globalImgMsg = result.marks[0];
           isModified = true;
@@ -1199,21 +1202,25 @@
   }
 
   function checkIfHasMarks() {
-    return globalImgMsg.notePolygon.length > 0 && globalImgMsg.noteTotal.length > 0 && globalImgMsg.noteTotal !== {};
+    return globalImgMsg.notePolygon.length > 0 || globalImgMsg.noteTotal.length > 0 || globalImgMsg.noteTotal !== {};
   }
 
   function setGlobalBtnSubmit(btnSubmitID) {
     $("#" + btnSubmitID).click(() => {
-      if (checkIfHasMarks()) {
+
+      //先刷新数据
+
         multiplyRate();
         poly_getRefreshedJson();
         CanvasExt.getRefreshedJson();
+
+      if (checkIfHasMarks()) {
         globalImgMsg.isModified = isModified;
         globalImgMsg.noteTotal.mark = $("#" + totalInputID).val();
         console.log(globalImgMsg);
         $.ajax({
           type: 'POST',
-          url: "mark/postMark",
+          url: "/mark/postMark",
           data: JSON.stringify(globalImgMsg),
           success: function (result) {
             console.log(result);
@@ -1230,11 +1237,11 @@
           }
         );
       } else {
-        window.myAlert('这是一段内容', '标题名称', {
+        window.myAlert('您未进行任何标注', '错误提示', {
           confirmButtonText: '确定',
           callback: () => {
             window.myMessage({
-              message: '提交成功',
+              message: '提交失败',
               type: 'error',
               duration: 1000
             });

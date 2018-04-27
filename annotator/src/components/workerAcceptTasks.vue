@@ -132,6 +132,7 @@
         })
           .then(function (response) {
             that.messages = response.data.tasks;
+            console.log(response.data.tasks);
           })
           .catch(function (error) {
             that.$message({
