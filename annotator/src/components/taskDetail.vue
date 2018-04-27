@@ -77,7 +77,11 @@
     mounted () {
       console.log(this.taskID);
       console.log(this.$route.params.taskID);
-      this.$http.get('task/taskDetail?taskID=' + this.taskID)
+      this.$http.get('/task/checkTaskDetail', {
+        params: {
+          taskID: this.taskID,
+        }
+      })
         .then(function (response) {
           console.log(response.data);
         })
