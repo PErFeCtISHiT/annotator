@@ -39,6 +39,12 @@ export default new VueRouter({
       component: workerHistRank
     },
     {
+      path: "/taskDetail/:taskID",
+      name: 'taskDetail',
+      component: taskDetail,
+      props: true
+    },
+    {
       path: "/noteAndMark/:taskID",
       name:'noteAndMark',
       component: workerNoteMark,
@@ -57,7 +63,7 @@ export default new VueRouter({
       component: testDraw
     },
     {
-      path: "/taskDetail",
+      path: "/taskDetailC",
       component: taskDetail
     },
     {

@@ -123,7 +123,7 @@
           tab = tabName;
         }
 
-        console.log('status and tag: ', status, tab);
+        //console.log('status and tag: ', status, tab);
         this.$http.post('/task/myTasks', {
           username: this.$store.state.user.userInfo.username,
           status: status,

@@ -3,7 +3,9 @@
     <!--任务详情-->
     <el-col :span="7">
       <el-row type="flex" id="navigation-div2" justify="left">
-        <el-col :span="24"><div><oneTask> </oneTask></div></el-col>
+        <el-col :span="24"><div>
+          <oneTask></oneTask>
+        </div></el-col>
       </el-row>
     </el-col>
 
@@ -68,6 +70,26 @@
   export default {
     components: {
       oneTask
+    },
+
+    props: ['taskID'],
+
+    mounted () {
+      console.log(this.taskID);
+      console.log(this.$route.params.taskID);
+      this.$http.get('task/taskDetail?taskID=' + this.taskID)
+        .then(function (response) {
+          console.log(response.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+    },
+
+    data () {
+      return {
+        detailInfo: {},
+      }
     }
   }
 </script>
