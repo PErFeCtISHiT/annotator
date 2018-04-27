@@ -48,8 +48,8 @@
                   <span>任务标签:</span>
                 </el-col>
                 <el-col :span="12" class="label-all label_detail">
-                  <span v-for="tag in taskMsg.tags">
-                    <el-tag >{{ tag }}</el-tag>&thinsp;
+                  <span v-for="theTag in taskMsg.tag">
+                    <el-tag >{{ theTag }}</el-tag>&thinsp;
                   </span>
                 </el-col>
               </div>
@@ -64,7 +64,7 @@
 
               <div>
                 <el-col :span="10" class="label-all">
-                  <span>发布时间:</span>
+                  <span>结束时间:</span>
                 </el-col>
                 <el-col :span="12" class="label-all label_detail">
                   <span>{{ taskMsg.endDate }}</span>
@@ -113,12 +113,7 @@
 
   export default {
     name: "requester-task-item",
-    props: ['taskMsg'],
-
-    data() {
-      return {
-      }
-    },
+    props: ['taskMsg', 'theIndex'],
 
     computed: {
       isDisabled(){
@@ -128,11 +123,16 @@
 
     methods: {
       handleDelete() {
-        this.$emit('remove', this.taskMsg.taskID);
+        //console.log('2line----------------------------',this.theIndex, this.taskMsg.taskID, 'finish--------------');
+        this.$emit('remove', {
+          uid: this.taskMsg.taskID,
+          index: this.theIndex
+        });
       },
 
       handleFinish() {
-        this.$emit('complete', this.taskMsg.taskID);
+        //console.log('2line----------------------------',this.theIndex, this.taskMsg.taskID, 'finish--------------');
+        this.$emit('complete', this.taskMsg.taskID, this.theIndex);
       }
     }
 

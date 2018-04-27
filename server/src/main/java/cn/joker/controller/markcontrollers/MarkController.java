@@ -2,6 +2,7 @@ package cn.joker.controller.markcontrollers;
 
 import cn.joker.entity.ImgMark;
 import cn.joker.sevice.ImgMarkService;
+import cn.joker.sevice.TaskService;
 import cn.joker.util.JsonHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,6 +25,8 @@ import java.util.List;
 public class MarkController {
     @Resource
     private ImgMarkService imgMarkService;
+    @Resource
+    private TaskService taskService;
 
     /**
      * @author:pis
