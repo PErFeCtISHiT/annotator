@@ -195,8 +195,9 @@
             that.$message({
               message: '登录成功',
               type: 'success',
-              duration: 1000
+              duration: 500
             });
+            that.$router.push('/0');
           })
           .catch(function (error) {
             that.sendAlert('请检查您的网络连接', '网络错误');
