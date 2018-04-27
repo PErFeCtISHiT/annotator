@@ -64,7 +64,7 @@
 
               <div>
                 <el-col :span="10" class="label-all">
-                  <span>发布时间:</span>
+                  <span>结束时间:</span>
                 </el-col>
                 <el-col :span="12" class="label-all label_detail">
                   <span>{{ taskMsg.endDate }}</span>

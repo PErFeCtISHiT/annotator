@@ -47,7 +47,7 @@
           </el-form-item>
 
           <el-form-item label="奖励积分" prop="points">
-            <el-input type="text" v-model.number="newTask.points" auto-complete="false" clearable style="width: 500px"></el-input>
+            <el-input type="text" v-model.number="newTask.points" auto-complete="false" placeholder="发布任务扣除积分为此栏积分数与人数的乘积" clearable style="width: 500px"></el-input>
           </el-form-item>
 
           <el-form-item>
@@ -111,7 +111,7 @@
       };
 
       let checkPoints = (rule, value, callback) => {
-        if(value > this.$store.state.user.userInfo.points)
+        if(value * this.newTask.points > this.$store.state.user.userInfo.points)
           return callback(new Error("超出现有金额"));
         else
           callback();
@@ -277,6 +277,7 @@
         })
           .then(function (response) {
             if (response.data.mes === true) {
+              that.resetForm('newTask');
               that.updateWithoutPointer();
             }
             else {
