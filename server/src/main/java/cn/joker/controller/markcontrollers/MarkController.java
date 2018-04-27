@@ -42,8 +42,12 @@ public class MarkController {
         imgMark.setSponsorName((String) jsonObject.get("sponsorName"));
         imgMark.setWorkerName((String) jsonObject.get("workerName"));
         imgMark.setTaskID((Integer) jsonObject.get("taskID"));
+        boolean b = true;
+        if(!jsonObject.getBoolean("isModified")){
+            b = taskService.postMark(imgMark.getWorkerName(),imgMark.getTaskID());
+        }
         JSONObject ret = new JSONObject();
-        ret.put("mes", imgMarkService.refreshMark(imgMark, jsonObject));
+        ret.put("mes", imgMarkService.refreshMark(imgMark, jsonObject) && b);
         JsonHelper.jsonToResponse(response, ret);
     }
 

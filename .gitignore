@@ -5,3 +5,6 @@
 
 /server/target/
 /server/src/main/resources/application.properties
+/annotator/task/
+/annotator/json/
+/.gitignore/
