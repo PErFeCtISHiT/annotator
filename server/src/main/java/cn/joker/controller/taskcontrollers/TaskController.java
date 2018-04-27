@@ -234,6 +234,7 @@ public class TaskController {
         String username = map.get(globalUsername)[0];
         UserInfo userInfo = userInfoService.findByUsername(username);
         userInfo.setPoints(userInfo.getPoints() + task.getInt(globalPoints));
+        userInfo.setLevel(userInfo.getLevel() + task.getInt(globalPoints));
         JSONObject ret = new JSONObject();
         ret.put(globalMes, taskService.completeTask(taskID, username) && userInfoService.modifyUser(userInfo));
         JsonHelper.jsonToResponse(response, ret);
@@ -347,7 +348,7 @@ public class TaskController {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(globalUsername,string.split("-")[0]);
             UserInfo userInfo = userInfoService.findByUsername(string.split("-")[0]);
-            jsonObject.put("level",userInfo.getLevel());
+            jsonObject.put("level",(int)(Math.log(userInfo.getLevel()) / Math.log(10)));
             jsonObject.put(globalCompletedNumber,Integer.valueOf(string.split("-")[1]));
             userInfos.put(jsonObject);
         }

@@ -22,17 +22,17 @@ public class UserInfo implements Serializable {
         this.bonus = bonus;
     }
 
-    private Integer level;//等级
+    private Double level;//等级
 
     public Integer getPoints() {
         return points;
     }
 
-    public Integer getLevel() {
+    public Double getLevel() {
         return level;
     }
 
-    public void setLevel(Integer level) {
+    public void setLevel(Double level) {
         this.level = level;
     }
 
