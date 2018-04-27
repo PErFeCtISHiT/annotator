@@ -16,11 +16,13 @@
                 <img src="../images/task.png" style="width: 55px; height: 55px"/>
               </el-col>
               <el-col :span="17">
-                <div style="font-size: larger;">任务名称</div>
-                <div
-                  style="text-align: center; margin-right: 20px; margin-top: 14px; font-size: larger; font-weight: bolder;">
-                  {{ taskMsg.taskName }}
-                </div>
+                <el-button type="text" @click="jump">
+                  <div style="font-size: larger;">任务名称</div>
+                  <div
+                    style="text-align: center; margin-right: 20px; margin-top: 14px; font-size: larger; font-weight: bolder;">
+                    {{ taskMsg.taskName }}
+                  </div>
+                </el-button>
               </el-col>
               <!--<el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
             </div>
@@ -58,7 +60,7 @@
                   <span>发布时间:</span>
                 </el-col>
                 <el-col :span="12" class="label-all label_detail">
-                  <span>{{ taskMsg.startDate }}</span>
+                  <span>{{ taskMsg.startDate.split(" ")[0] }}</span>
                 </el-col>
               </div>
 
@@ -67,7 +69,7 @@
                   <span>结束时间:</span>
                 </el-col>
                 <el-col :span="12" class="label-all label_detail">
-                  <span>{{ taskMsg.endDate }}</span>
+                  <span>{{ taskMsg.endDate.split(" ")[0] }}</span>
                 </el-col>
               </div>
 
@@ -133,7 +135,17 @@
       handleFinish() {
         //console.log('2line----------------------------',this.theIndex, this.taskMsg.taskID, 'finish--------------');
         this.$emit('complete', this.taskMsg.taskID, this.theIndex);
+      },
+
+      jump() {
+        this.$router.push({
+          name: 'taskDetail',
+          params: {
+            taskID: this.taskMsg.taskID
+          }
+      });
       }
+
     }
 
   }
