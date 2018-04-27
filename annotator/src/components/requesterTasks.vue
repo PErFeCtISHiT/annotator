@@ -156,7 +156,6 @@
           .then(() => {
 
             //确认的话发一个ajax请求
-            console.log(uid);
             that.$http.get('/task/endTask',{
               params:{
                 taskID: uid
@@ -195,7 +194,6 @@
           .then(() => {
 
             //确认的话发一个ajax请求
-            console.log(payload.uid);
             that.$http.get('/task/deleteTask', {
               params:{
                 taskID: payload.uid

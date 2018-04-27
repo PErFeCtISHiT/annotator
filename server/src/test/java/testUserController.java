@@ -166,7 +166,7 @@ public class testUserController {
      *@date: 18:43 2018/4/13
      */
     @Test
-    public void testFeleteUser(){
+    public void testDeleteUser(){
         RestTemplate restTemplate = new RestTemplate();
 
         String url = "http://localhost:8080/user/deleteUser?username=test";

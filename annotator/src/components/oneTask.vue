@@ -11,7 +11,7 @@
             <div style="font-size: larger;">任务名称</div>
             <div
               style="text-align: center; margin-right: 20px; margin-top: 14px; font-size: larger; font-weight: bolder;">
-              人物标注
+              {{ detailInfo.taskName }}
             </div>
           </el-col>
           <!--<el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
@@ -23,7 +23,7 @@
             </el-col>
             <el-col :span="13" class="label-all" style="text-align: right; margin-right: 10px">
               <span class="taskIDLabel">NO.</span>
-              <span class="taskIDLabel" id="taskID">3</span>
+              <span class="taskIDLabel" id="taskID">{{ uid }}</span>
             </el-col>
           </div>
           <div>
@@ -31,7 +31,7 @@
               <span>任务描述:</span>
             </el-col>
             <el-col :span="14" class="label-all label_detail" style="text-align: right;">
-              <span>标出图片中的人</span>
+              <span>{{ detailInfo.description }}</span>
             </el-col>
           </div>
           <div>
@@ -39,8 +39,7 @@
               <span>任务标签:</span>
             </el-col>
             <el-col :span="12" class="label-all label_detail">
-              <el-tag type="success">人</el-tag>
-              <el-tag type="warning">旅游</el-tag>
+              <el-tag v-for="(tag, index) in detailInfo.tag" :key="index">{{ tag }}</el-tag>
             </el-col>
           </div>
           <div>
@@ -48,7 +47,7 @@
               <span>发布时间:</span>
             </el-col>
             <el-col :span="12" class="label-all label_detail">
-              <span>2018-04-23</span>
+              <span>{{ detailInfo.startDate ? detailInfo.startDate.split(" ")[0] : detailInfo.startDate }}</span>
             </el-col>
           </div>
           <div>
@@ -56,7 +55,7 @@
               <span>结束时间:</span>
             </el-col>
             <el-col :span="12" class="label-all label_detail">
-              <span>2018-05-02</span>
+              <span>{{ detailInfo.endDate ? detailInfo.endDate.split(" ")[0] : detailInfo.endDate }}</span>
             </el-col>
           </div>
           <div>
@@ -64,15 +63,7 @@
               <span>图片数量:</span>
             </el-col>
             <el-col :span="12" class="label-all label_detail">
-              <span>13</span>
-            </el-col>
-          </div>
-          <div>
-            <el-col :span="10" class="label-all">
-              <span>要求人数:</span>
-            </el-col>
-            <el-col :span="12" class="label-all label_detail">
-              <span>30</span>
+              <span>共 {{ detailInfo.imgNum }} 张</span>
             </el-col>
           </div>
           <div>
@@ -80,7 +71,15 @@
               <span>任务奖励:</span>
             </el-col>
             <el-col :span="12" class="label-all label_detail">
-              <span>12</span>
+              <span>{{ detailInfo.points }}点/人</span>
+            </el-col>
+          </div>
+          <div>
+            <el-col :span="10" class="label-all">
+              <span>要求人数:</span>
+            </el-col>
+            <el-col :span="12" class="label-all label_detail">
+              <span>{{ detailInfo.expectedNumber }}</span>
             </el-col>
           </div>
           <div>
@@ -88,7 +87,7 @@
               <span>已接受人数:</span>
             </el-col>
             <el-col :span="12" class="label-all label_detail">
-              <span>30</span>
+              <span>{{ detailInfo.acceptNum}}</span>
             </el-col>
           </div>
           <div>
@@ -96,7 +95,7 @@
               <span>已完成人数:</span>
             </el-col>
             <el-col :span="12" class="label-all label_detail">
-              <span>20</span>
+              <span>{{ detailInfo.completedNumber}}</span>
             </el-col>
           </div>
           <div>
@@ -104,7 +103,7 @@
               <span>任务进度:</span>
             </el-col>
             <el-col :span="12" class="label-all">
-              <el-progress :text-inside="true" :stroke-width="18" :percentage="66.7"></el-progress>
+              <el-progress :text-inside="true" :stroke-width="18" :percentage="detailInfo.totalProgress * 100"></el-progress>
             </el-col>
           </div>
         </div>
@@ -112,14 +111,16 @@
     </el-col>
     <!--图钉-->
     <el-col :span="3">
-      <img src="../images/ping.png" height="60" width="60" style="margin-left: -38px; margin-top: -20px">
+      <img src="../images/ping.png" height="60" width="60" style="margin-left: -38px; margin-top: -5px">
     </el-col>
   </el-col>
 </template>
 
 <script>
   export default {
-    name: "one-task"
+    name: "one-task",
+
+    props: ['detailInfo', 'uid']
   }
 </script>
 
@@ -139,6 +140,7 @@
   }
 
   .box-card {
+    margin-top: 20px;
     background-color: #f8ffff
   }
 

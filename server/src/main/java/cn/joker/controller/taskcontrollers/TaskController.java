@@ -234,6 +234,7 @@ public class TaskController {
         String username = map.get(globalUsername)[0];
         UserInfo userInfo = userInfoService.findByUsername(username);
         userInfo.setPoints(userInfo.getPoints() + task.getInt(globalPoints));
+        userInfo.setLevel(userInfo.getLevel() + task.getInt(globalPoints));
         JSONObject ret = new JSONObject();
         ret.put(globalMes, taskService.completeTask(taskID, username) && userInfoService.modifyUser(userInfo));
         JsonHelper.jsonToResponse(response, ret);
@@ -340,9 +341,16 @@ public class TaskController {
         ret.put("totalProgress", (double) ret.getInt("completedNumber") / (double) ret.getInt("expectedNumber"));
         JSONArray users = ret.getJSONArray("userName");
         JSONArray newUsers = new JSONArray();
+        JSONArray userInfos = new JSONArray();
         for (Object o : users) {
             String string = (String) o;
             newUsers.put(string.split("-")[0]);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(globalUsername,string.split("-")[0]);
+            UserInfo userInfo = userInfoService.findByUsername(string.split("-")[0]);
+            jsonObject.put("level",(int)(Math.log(userInfo.getLevel()) / Math.log(10)));
+            jsonObject.put(globalCompletedNumber,Integer.valueOf(string.split("-")[1]));
+            userInfos.put(jsonObject);
         }
         List imgURLs = taskService.findImgURLByID(String.valueOf(taskID));
         Integer totalTagNum = 0;
@@ -358,6 +366,7 @@ public class TaskController {
         ret.put("totalTagNum", totalTagNum);
         ret.put("averageTagNum", totalTagNum / imgURLs.size());
         ret.put("totalImgTagNum", jsonArray);
+        ret.put("workerInfo",userInfos);
         JsonHelper.jsonToResponse(response, ret);
     }
 
