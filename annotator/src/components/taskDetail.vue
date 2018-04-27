@@ -74,19 +74,30 @@
 
     props: ['taskID'],
 
+    data () {
+      return {
+        response: {},
+      }
+    },
+
     mounted () {
-      console.log(this.taskID);
-      console.log(this.$route.params.taskID);
+      let that = this;
+      //console.log(this.$route.params.taskID);
       this.$http.get('/task/checkTaskDetail', {
         params: {
           taskID: this.taskID,
         }
       })
         .then(function (response) {
-          console.log(response.data);
+          
+
         })
         .catch(function (error) {
-          console.log(error);
+          that.$message({
+            message: '网络请求失败' + error,
+            type: 'warning'
+          });
+          console.log('分类错误');
         })
     },
 
