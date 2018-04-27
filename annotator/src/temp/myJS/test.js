@@ -571,6 +571,10 @@
       let canvasWidth = canvasRect.width;
       let canvasHeight = canvasRect.height;
 
+      console.log(canvasLeft);
+      console.log(canvasTop);
+
+
       let id;
       let layerName;
       let x = 0;
