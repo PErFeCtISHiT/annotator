@@ -172,6 +172,7 @@ public class TaskDao {
 
             if (jsonObject.getInt(globalTaskID) == taskID) {
                 jsonObject.put(globalEndDate, DateHelper.convertDateToString(new Date()));
+                jsonObject.put(globalCompletedNumber,jsonObject.getInt(globalExpectedNumber));
             }
 
             newJson.append(jsonObject.toString());
