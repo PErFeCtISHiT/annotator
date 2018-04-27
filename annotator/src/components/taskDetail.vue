@@ -4,7 +4,7 @@
     <el-col :span="7">
       <el-row type="flex" id="navigation-div2" justify="left">
         <el-col :span="24"><div>
-          <oneTask></oneTask>
+          <oneTask :detailInfo="response" :uid="taskID"></oneTask>
         </div></el-col>
       </el-row>
     </el-col>
@@ -27,12 +27,7 @@
           align="center"
           width="120">
         </el-table-column>
-        <el-table-column
-          prop="acceptTime"
-          label="接受时间"
-          align="center"
-          width="230">
-        </el-table-column>
+
         <el-table-column
           prop="completeNum"
           align="center"
@@ -83,29 +78,25 @@
     mounted () {
       let that = this;
       //console.log(this.$route.params.taskID);
+      console.log(this.taskID);
       this.$http.get('/task/checkTaskDetail', {
         params: {
           taskID: this.taskID,
         }
       })
         .then(function (response) {
-          
-
+          that.response = response.data;
+          console.log('response:---------\n');
         })
         .catch(function (error) {
           that.$message({
             message: '网络请求失败' + error,
             type: 'warning'
           });
-          console.log('分类错误');
+          console.log('网络请求错误');
         })
     },
 
-    data () {
-      return {
-        detailInfo: {},
-      }
-    }
   }
 </script>
 
