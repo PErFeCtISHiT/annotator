@@ -13,7 +13,7 @@ import workerOnDoing from '../components/workerOnDoing'
 import workerHistRank from '../components/workerHistRank'
 import workerNoteMark from '../components/workerNoteMark'
 import taskDetail from '../components/taskDetail'
-
+import firstPart from '../components/firstPart'
 
 
 export default new VueRouter({
@@ -59,6 +59,10 @@ export default new VueRouter({
     {
       path: "/taskDetail",
       component: taskDetail
+    },
+    {
+      path: '/index',
+      component: firstPart
     }
   ]
 });
