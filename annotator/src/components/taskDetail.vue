@@ -81,7 +81,7 @@
     },
 
     mounted () {
-
+      let that = this;
       //console.log(this.$route.params.taskID);
       this.$http.get('/task/checkTaskDetail', {
         params: {
@@ -89,10 +89,15 @@
         }
       })
         .then(function (response) {
+          
 
         })
         .catch(function (error) {
-          console.log(error);
+          that.$message({
+            message: '网络请求失败' + error,
+            type: 'warning'
+          });
+          console.log('分类错误');
         })
     },
 
