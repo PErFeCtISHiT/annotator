@@ -1,7 +1,8 @@
-(function(){
+(function (imgURL, workerName, sponsorName, taskID) {
   safelyQuit("canvas");
 
-  // let backgroundMaxWidth = 500;
+  let backgroundMaxWidth = 500;
+  let globalRate = 1;
   // let backgroundMaxHeight = 500;
 
   let totalHolderID = "totalMsg";
@@ -15,6 +16,8 @@
   let labelSaverID = "labelSaver";
   let global_sponsor = "";
 
+  let global_left_saver = 0;
+  let global_top_saver = 0;
 
   function setGlobalSponsor(input) {
     global_sponsor = input;
@@ -47,7 +50,7 @@
       imgURL: "",
       workerName: "workerName",
       sponsorName: "sponsor",
-      taskID: "",
+      taskID: 0,
       noteRectangle: [],
       notePolygon: [],
       noteTotal: [],
@@ -102,6 +105,8 @@
   }
 
   function getLocY(e, top) {
+    // console.log(e.clientY + document.body.parentElement.scrollTop - top);
+    // console.log(e.clientY - top);
     return e.clientY + document.body.parentElement.scrollTop - top;
   }
 
@@ -176,7 +181,7 @@
     let labelSaver = $("#" + labelSaverID);
     labelSaver.empty();
     $("#" + canvasID).getLayers(function (layer) {
-      let htmlMsg = $("<span></span>").text(layer.data.mark).attr("class", "label label-default").css('margin','0 0 5% 0');
+      let htmlMsg = $("<span></span>").text(layer.data.mark).attr("class", "label label-default").css('margin', '0 0 5% 0');
       labelSaver.append(htmlMsg);
       let space = $("<span></span>").text(" ");
       labelSaver.append(space);
@@ -194,6 +199,7 @@
   function setCanvasSizeAndSwitchOn(imgSrc, inputCanvasID, inputDivID, callBack) {
     let image = new Image();
     image.src = imgSrc;
+
     // alert(image.src);
 
     function handle(image) {
@@ -263,6 +269,7 @@
     globalImgMsg.imgURL = global_imgURL;
     globalImgMsg.taskID = global_taskID;
     globalImgMsg.workerName = global_user;
+    globalImgMsg.sponsorName = global_sponsor;
   }
 
 
@@ -279,10 +286,10 @@
 
     setFirstTimeEdit(true);
     // setdrawingType("Rectangle");
-    setImgURL('../../../src/temp/smaller.jpg');
-    setGlobalSponsor("");
-    setGlobalTaskID(123);
-    setGlobalUser("");
+    setImgURL(imgURL);
+    setGlobalSponsor(sponsorName);
+    setGlobalTaskID(taskID);
+    setGlobalUser(workerName);
     updateGlobalJSON();
   }
 
@@ -303,7 +310,7 @@
 
 //TODO
   let btnSwitchDrawID = "switchEdit";
-  let btnRect = $("#"+btnSwitchDrawID);
+  let btnRect = $("#" + btnSwitchDrawID);
   let btnSDOriginalText = btnRect.text();
   let btnSDInDrawingText = "停止添加";
 
@@ -311,7 +318,7 @@
   let poly_isDrawingPolygon = false;
 
   let poly_startBtnID = "polyEdit";
-  let btnPoly = $("#"+poly_startBtnID);
+  let btnPoly = $("#" + poly_startBtnID);
   let poly_originalTxt = "区域标注";
   let poly_inDrawingTxt = "停止添加";
 
@@ -325,17 +332,17 @@
   let poly_hoverFillStyle = 'rgba(255, 0, 0, 0.5)';
 
   let poly_canvasID = "canvas";
-  let poly_penColor = "red";
+  let poly_penColor = "rgb(246,232,4)";
   let poly_penWidth = 1;
 
 
-  function setJQObjDisabled(obj,boolean) {
-    obj.attr("disabled",boolean);
+  function setJQObjDisabled(obj, boolean) {
+    obj.attr("disabled", boolean);
   }
 
   function setBtnDisabled(boolean) {
-    btnRect.attr("disabled",boolean);
-    btnPoly.attr("disabled",boolean);
+    btnRect.attr("disabled", boolean);
+    btnPoly.attr("disabled", boolean);
   }
 
 
@@ -344,10 +351,10 @@
     $("#" + btnID).click(() => {
       if (!inDrawing) {
         $("#" + btnID).text(inDrawingTxt);
-        setJQObjDisabled(btnPoly,true);
+        setJQObjDisabled(btnPoly, true);
       } else {
         $("#" + btnID).text(originalTxt);
-        setJQObjDisabled(btnPoly,false);
+        setJQObjDisabled(btnPoly, false);
       }
       inDrawing = !inDrawing;
     });
@@ -358,8 +365,6 @@
 //     $("#" + btnSwitchDrawID).text(btnSDOriginalText);
 //     inDrawing = false;
 //   }
-
-
 
 
   class NoteRectangle {
@@ -375,7 +380,7 @@
   }
 
   function rect_mouseOverFunc(layer) {
-    if(!poly_isDrawingPolygon&&!inDrawing) {
+    if (!poly_isDrawingPolygon && !inDrawing) {
       $(this).animateLayer(layer, {
         fillStyle: 'rgba(255, 0, 0, 0.5)',
       }, 100);
@@ -392,7 +397,7 @@
   }
 
   function rect_mouseOutFunc(layer) {
-    if(!poly_isDrawingPolygon&&!inDrawing) {
+    if (!poly_isDrawingPolygon && !inDrawing) {
       $(this).animateLayer(layer, {
         fillStyle: 'transparent',
       }, 0);
@@ -437,7 +442,6 @@
         console.log(note);
 
 
-
         canvasJQ.addLayer({
           type: 'rectangle',
           strokeStyle: CanvasExt.penColor,
@@ -462,7 +466,7 @@
       }
       canvasJQ.drawLayers();
 
-      refreshLabels(CanvasExt.canvasId,labelSaverID);
+      refreshLabels(CanvasExt.canvasId, labelSaverID);
     },
 
     showAllLayers: function (canvasId) {
@@ -531,7 +535,7 @@
         let tempJQ = $("#" + inputID);
         layer.data.mark = tempJQ.val();
         tempJQ.val("");
-        refreshLabels(CanvasExt.canvasId,labelSaverID);
+        refreshLabels(CanvasExt.canvasId, labelSaverID);
         alert("更新成功");
       });
     },
@@ -542,7 +546,7 @@
       tempJQ.click(() => {
         $("#" + inputID).val("");
         $("#" + canvasId).removeLayer(layer.name);
-        refreshLabels(CanvasExt.canvasId,labelSaverID);
+        refreshLabels(CanvasExt.canvasId, labelSaverID);
         alert("删除成功");
       });
     },
@@ -557,6 +561,11 @@
       //canvas 的矩形框
       let canvasRect = canvas.getBoundingClientRect();
       //矩形框的左上角坐标
+
+      // while(canvasRect.left===0||canvasRect.top===0||canvasRect.width===0||canvasRect.height===0){
+      //   console.log(canvasRect.top);
+      // }                              //单线程 这种写法会引起阻塞
+
       let canvasLeft = canvasRect.left;
       let canvasTop = canvasRect.top;
       let canvasWidth = canvasRect.width;
@@ -614,8 +623,6 @@
             let height = e.clientY + document.body.parentElement.scrollTop - canvasTop - y;
 
 
-
-
             tempJQCA.removeLayer(layerName);
 
             tempJQCA.addLayer({
@@ -631,7 +638,7 @@
 
             $("#" + canvasId).drawLayers();
 
-            if (x + width >= canvasWidth-10 || y + height >= canvasHeight-10) {
+            if (x + width >= canvasWidth - 10 || y + height >= canvasHeight - 10) {
               handleUp(e);
               preventOutOfBorderSetted = true;
             }
@@ -644,11 +651,12 @@
       };
 
       let that = this;
+
       function handleUp(e) {
         //原句：if (isDrawing&&!preventOutOfBorderSetted)
-        if (inDrawing&&!preventOutOfBorderSetted) {
+        if (inDrawing && !preventOutOfBorderSetted) {
 
-          setJQObjDisabled(btnRect,false);
+          setJQObjDisabled(btnRect, false);
 
           let color = that.penColor;
           let penWidth = that.penWidth;
@@ -671,11 +679,10 @@
 
           function handleClick(layer) {
             //TODO
-            if (!inDrawing) {
+            if (!inDrawing && !poly_isDrawingPolygon) {
               smallHandle(layer)
             }
           }
-
 
 
           tempJQCA.addLayer({
@@ -774,9 +781,8 @@
   // }
 
 
-
   function getRectStarted() {
-    let color = "red";
+    let color = "rgb(246,232,4)";
     let width = 1;
     //TODO
     setBtnSwitchDrawOfRect(btnSwitchDrawID, btnSDOriginalText, btnSDInDrawingText);
@@ -796,7 +802,6 @@
 //getClearJson,getLocX,getLocY在global那里
 
 
-
 //千万注意这传的是note的信息
   function poly_loadPolygon(notePolygons) {
     for (let i = 0; i < notePolygons.length; i++) {
@@ -812,7 +817,7 @@
         name: "polygon" + note.id,
         data: note,
         mouseover: function (layer) {
-          if(!poly_isDrawingPolygon&&!inDrawing) {
+          if (!poly_isDrawingPolygon && !inDrawing) {
             $(this).animateLayer(layer, {
               fillStyle: poly_hoverFillStyle,
             }, 100);
@@ -831,7 +836,7 @@
       }
 
       $("#" + poly_canvasID).drawLine(obj);
-      refreshLabels(poly_canvasID,labelSaverID);
+      refreshLabels(poly_canvasID, labelSaverID);
     }
   }
 
@@ -843,7 +848,7 @@
   }
 
   function poly_mouseOut(layer) {
-    if(!poly_isDrawingPolygon) {
+    if (!poly_isDrawingPolygon) {
       $(this).animateLayer(layer, {
         fillStyle: 'transparent',
       }, 0);
@@ -875,7 +880,7 @@
     tempJQ.click(() => {
       layer.data.mark = tempJQ.val();
       tempJQ.val("");
-      refreshLabels(poly_canvasID,labelSaverID);
+      refreshLabels(poly_canvasID, labelSaverID);
       alert("更新成功");
     });
   }
@@ -886,7 +891,7 @@
     tempJQ.click(() => {
       $("#" + poly_inputMarkID).val("");
       $("#" + poly_canvasID).removeLayer(layer.name);
-      refreshLabels(poly_canvasID,labelSaverID);
+      refreshLabels(poly_canvasID, labelSaverID);
       alert("删除成功");
     });
   }
@@ -906,11 +911,11 @@
   function poly_setStartDrawingBtn(startBtnID, originalTxt, inDrawingTxt, author) {
     $("#" + startBtnID).click(() => {
       if (!poly_isDrawingPolygon) {
-        setJQObjDisabled(btnRect,true);
+        setJQObjDisabled(btnRect, true);
         $("#" + startBtnID).text(inDrawingTxt);
         poly_startDrawing(poly_canvasID, poly_penColor, poly_penWidth, author);
       } else {
-        setJQObjDisabled(btnRect,false);
+        setJQObjDisabled(btnRect, false);
         $("#" + startBtnID).text(originalTxt);
       }
       poly_isDrawingPolygon = !poly_isDrawingPolygon;
@@ -937,6 +942,8 @@
 
     let canvasPoly = canvas.getBoundingClientRect();
 
+    // while(canvasPoly.left===0||canvasPoly.top===0){console.log(canvasPoly.top)} 单线程 这种写法会引起阻塞
+
     let canvasLeft = canvasPoly.left;
 
     let canvasTop = canvasPoly.top;
@@ -952,7 +959,7 @@
     let layerName = polyPrefix + id;
 
 
-    let reInit = function() {
+    let reInit = function () {
       firstPoint = true;
       secondPoint = false;
       obj = {
@@ -999,14 +1006,18 @@
     };
 
     canvas.onclick = null;
+    let offSetTop = 0;
+    let offsetLeft = 0;
     canvas.onclick = (e) => {
       if (poly_isDrawingPolygon) {
         if (firstPoint && !secondPoint) {
-
+          offSetTop = document.body.parentElement.scrollTop;
+          offsetLeft = document.body.parentElement.scrollLeft;
           setBtnDisabled(true);
 
-          points.push(new Poly_Point(getLocX(e, canvasLeft), getLocY(e, canvasTop)));
-          points.push(new Poly_Point(getLocX(e, canvasLeft), getLocY(e, canvasTop)));
+          points.push(new Poly_Point(getLocX(e, canvasLeft)-offsetLeft, getLocY(e, canvasTop)-offSetTop));
+          // console.log('x:'+getLocX(e, canvasLeft)+'y:'+getLocY(e, canvasTop));
+          points.push(new Poly_Point(getLocX(e, canvasLeft)-offsetLeft, getLocY(e, canvasTop)-offSetTop));
 
           id = getIDByTime();
           refreshLayerMsg(id);
@@ -1017,16 +1028,18 @@
           firstPoint = false;
           secondPoint = true;
         } else if (!firstPoint && secondPoint) {
-          points[1] = new Poly_Point(getLocX(e, canvasLeft), getLocY(e, canvasTop));
+          points[1] = new Poly_Point(getLocX(e, canvasLeft)-offsetLeft, getLocY(e, canvasTop)-offSetTop);
+          // console.log('x:'+getLocX(e, canvasLeft)+'y:'+getLocY(e, canvasTop));
           // draw the line
           drawLines();
           secondPoint = false;
         } else {
-          if (testIfCloseEnough(getLocX(e, canvasLeft), points[0].x, 14) && testIfCloseEnough(getLocY(e, canvasTop), points[0].y, 14)) {
+          if (testIfCloseEnough(getLocX(e, canvasLeft)-offsetLeft, points[0].x, 14) && testIfCloseEnough(getLocY(e, canvasTop)-offSetTop, points[0].y, 14)) {
+            // console.log('x:'+getLocX(e, canvasLeft)+'y:'+getLocY(e, canvasTop));
             //close the shape
             obj['closed'] = true;
             obj['mouseover'] = function (layer) {
-              if(!poly_isDrawingPolygon&&!inDrawing) {
+              if (!poly_isDrawingPolygon && !inDrawing) {
                 $(this).animateLayer(layer, {
                   fillStyle: poly_hoverFillStyle,
                 }, 100);
@@ -1043,14 +1056,14 @@
             drawLines();
             // poly_ActualBtnStartToNormal();
 
-            poly_layerMsgDivide($("#"+poly_canvasID).getLayer(layerName));
+            poly_layerMsgDivide($("#" + poly_canvasID).getLayer(layerName));
 
             //这步很重要，结束绘画动作
             // canvas.onclick = null;
-            setJQObjDisabled(btnPoly,false);
+            setJQObjDisabled(btnPoly, false);
             reInit();
           } else {
-            points.push(new Poly_Point(getLocX(e, canvasLeft), getLocY(e, canvasTop)));
+            points.push(new Poly_Point(getLocX(e, canvasLeft)-offsetLeft, getLocY(e, canvasTop)-offSetTop));
             //redraw the lines
             drawLines();
           }
@@ -1063,7 +1076,7 @@
     let notePolygon = [];
     $("#" + poly_canvasID).getLayers(function (layer) {
       if (layer.type === 'line') {
-      notePolygon.push(layer.data);
+        notePolygon.push(layer.data);
       }
       return false;
     });
@@ -1090,35 +1103,35 @@
   // }
 
   function poly_sentJsonToServer() {
-    let keywordPostRect = firstTimeEdit? "postMark" : "Modify";
+    let keywordPostRect = firstTimeEdit ? "postMark" : "Modify";
 
     $.ajax({
-      type:'POST',
-      url:"/Worker/"+keywordPostRect,
-      data:JSON.stringify(poly_getRefreshedJson()),
-      success:function(result){
+      type: 'POST',
+      url: "/Worker/" + keywordPostRect,
+      data: JSON.stringify(poly_getRefreshedJson()),
+      success: function (result) {
         console.log(result);
       },
-      contentType:'application/json',
-      dataType:'json'
+      contentType: 'application/json',
+      dataType: 'json'
     });
     alert("提交成功");
   }
 
   function poly_setBtnShowAll() {
-    $("#"+poly_showAll).click(()=>{
+    $("#" + poly_showAll).click(() => {
       showAllLayers(poly_canvasID);
     });
   }
 
   function poly_setBtnHideAll() {
-    $("#"+poly_hideAll).click(()=>{
+    $("#" + poly_hideAll).click(() => {
       hideAllLayers(poly_canvasID);
     });
   }
 
   function poly_setButtonCommit() {
-    $("#"+poly_submit).click(()=>{
+    $("#" + poly_submit).click(() => {
       poly_sentJsonToServer();
     });
   }
@@ -1132,7 +1145,7 @@
   }
 
   function poly_actualSwitchOn() {
-    setCanvasSizeAndSwitchOn(global_imgURL,"canvas","canvasSaver",poly_switchPolygonModuleStarted);
+    setCanvasSizeAndSwitchOn(global_imgURL, "canvas", "canvasSaver", poly_switchPolygonModuleStarted);
   }
 
 
@@ -1143,56 +1156,57 @@
     let prefix = 'total';
     globalImgMsg.noteTotal.id = prefix + getIDByTime();
     let txt = globalImgMsg.noteTotal.mark;
-    let totalInput = $("#"+totalInputID);
-    let totalHolder = $("#"+totalHolderID);
+    let totalInput = $("#" + totalInputID);
+    let totalHolder = $("#" + totalHolderID);
     totalHolder.val(txt);
     totalInput.val(txt);
   }
 
   function setInputBind() {
-    let totalInput = $("#"+totalInputID);
-    let totalHolder = $("#"+totalHolderID);
-    totalInput.get(0).oninput = ()=>{
+    let totalInput = $("#" + totalInputID);
+    let totalHolder = $("#" + totalHolderID);
+    totalInput.get(0).oninput = () => {
       totalHolder.val(totalInput.val());
       globalImgMsg.noteTotal.mark = totalInput.val();
     }
   }
 
 
-  function getJsonFromServerAndLoadAllMarks(taskID,user,imgName) {
-    console.log({taskID:taskID,users:[{username:user}],imgName:imgName});
+  function getJsonFromServerAndLoadAllMarks(taskID, user, imgName) {
+    console.log({taskID: taskID, users: [{username: user}], imgName: imgName});
     $.ajax({
-      type:'POST',
-      url:"mark/checkImage",
-      data:JSON.stringify({taskID:taskID,users:[{username:user}],imgName:imgName}),
+      type: 'POST',
+      url: "mark/checkImage",
+      data: JSON.stringify({taskID: taskID, users: [{username: user}], imgName: imgName}),
       // data:JSON.stringify({taskID:123,user:[{username:"a"},{username:"b"}],imgName:"c.png"}),
-      success:function(result){
-        if(result.marks[0]) {
+      success: function (result) {
+        if (result.marks[0]) {
           globalImgMsg = result.marks[0];
         }
         CanvasExt.loadMyRect(globalImgMsg.noteRectangle);
         poly_loadPolygon(globalImgMsg.notePolygon);
         loadTotal();
       },
-      contentType:'application/json',
-      dataType:'json'
+      contentType: 'application/json',
+      dataType: 'json'
     });
   }
 
   function setGlobalBtnSubmit(btnSubmitID) {
-    $("#"+btnSubmitID).click(()=>{
+    $("#" + btnSubmitID).click(() => {
+      multiplyRate();
       poly_getRefreshedJson();
       CanvasExt.getRefreshedJson();
       console.log(globalImgMsg);
       $.ajax({
-        type:'POST',
-        url:"mark/postMark",
-        data:JSON.stringify(globalImgMsg),
-        success:function(result){
+        type: 'POST',
+        url: "mark/postMark",
+        data: JSON.stringify(globalImgMsg),
+        success: function (result) {
           console.log(result);
         },
-        contentType:'application/json',
-        dataType:'json'
+        contentType: 'application/json',
+        dataType: 'json'
       });
       //TODO 后面就可以去掉下面这句了
       alert("提交成功");
@@ -1203,11 +1217,19 @@
   function setCanvasSizeAndSwitchOn2(imgSrc, inputCanvasID, inputDivID, callBack1, callBack2) {
     let image = new Image();
     image.src = imgSrc;
+
     // alert(image.src);
 
     function handle(image) {
       let width = image.width;
       let height = image.height;
+
+      if(width>backgroundMaxWidth){
+        globalRate = width/backgroundMaxWidth;
+        width = backgroundMaxWidth;
+        height /= globalRate;
+      }
+
       let div = $("#" + inputDivID);
 
       div.empty();
@@ -1219,14 +1241,17 @@
       div.css('width', width);
       div.css('height', height);
       div.append(txt);
-      $().ready(()=>{
-        let temp = global_imgURL.split('/');
-        let imgName = temp[temp.length-1];
-        getJsonFromServerAndLoadAllMarks(global_taskID,global_user,imgName);
-        setGlobalBtnSubmit("commit");
-        setInputBind();
-        callBack1();
-        callBack2()});
+
+        $().ready(() => {
+          let temp = global_imgURL.split('/');
+          let imgName = temp[temp.length - 1];
+          getJsonFromServerAndLoadAllMarks(global_taskID, global_user, imgName);
+          setGlobalBtnSubmit("commit");
+          setInputBind();
+          callBack1();
+          callBack2();
+        });
+
     }
 
 
@@ -1248,13 +1273,37 @@
   }
 
 
+  function multiplyRate() {
+    if(globalRate!==1){
+      $("#" + poly_canvasID).getLayers(function (layer) {
+        if (layer.type === 'line') {
+          let points = layer.data.points;
+          for(let i = 0; i < points.length; i++){
+            points[i].x *= globalRate;
+            points[i].y *= globalRate;
+          }
+        }
+        if (layer.type === 'rectangle'){
+          let data = layer.data;
+          data.top *= globalRate;
+          data.left *= globalRate;
+          data.width *= globalRate;
+          data.height *= globalRate;
+        }
+        return false;
+      });
+    }
+  }
+
   setGlobalParamAndUpdateJson();
   // rect_actualSwitchOn();
   // poly_actualSwitchOn();
-  setCanvasSizeAndSwitchOn2(global_imgURL,"canvas","canvasSaver",poly_switchPolygonModuleStarted,getRectStarted);
+  setCanvasSizeAndSwitchOn2(global_imgURL, "canvas", "canvasSaver", poly_switchPolygonModuleStarted, getRectStarted);
 // chooseSwitchOnBaseOnType();
 
   console.log(window.myVueStore.state.user.loginState);
 //TODO 以上starter
 
-})();
+})(window.myVueStore.state.workerTask.currentImageURL, window.myVueStore.state.user.userInfo.username, window.myVueStore.state.workerTask.currentSponsor, window.myVueStore.state.workerTask.currentTaskID);
+
+//imgURL,workerName,sponsorName,taskID

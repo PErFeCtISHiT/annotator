@@ -3,12 +3,14 @@
     <p>{{taskID}}</p>
     <div class="block">
       <span class="demonstration">默认 Hover 指示器触发</span>
-      <el-carousel height="150px">
+      <el-carousel height="200px">
         <el-carousel-item v-for="item in imgURLs" :key="item">
-          <img :src="item" height="200" width="200" />
+          <img :src="item" height="200" width="200" @click ="handleDrawing(item)"/>
         </el-carousel-item>
       </el-carousel>
     </div>
+
+    <div id="drawingArea"></div>
   </div>
 </template>
 
@@ -24,7 +26,7 @@
       this.refreshTaskData();
       this.refreshSelfProgress();
       this.refreshImgURL();
-      this.updateCurrentTaskID(taskID);
+      this.updateCurrentTaskID(this.taskID);
     },
 
     data() {
@@ -46,27 +48,28 @@
       }
     },
     methods: {
-      ...mapMutations(['updateCurrentTaskID', 'updateCurrentImageURL']),
+      ...mapMutations(['updateCurrentTaskID', 'updateCurrentImageURL','updateCurrentSponsor']),
 
       refreshTaskData() {
         let that = this;
-        this.$http.get('/task/taskDetail', {
+        let taskID = this.taskID;
+        this.$http.get('/task/checkTaskDetail', {
           params: {
-            taskID: this.taskID
+            taskID,
           }
         })
           .then(function (response) {
             let data = response.data;
-            this.sponsorName = data.sponsorName;
-            this.taskName = data.taskName;
-            this.description = data.description;
-            this.imgNum = data.imgNum;
-            this.startDate = data.startDate;
-            this.endDate = data.endDate;
-            this.points = data.points;
-            this.acceptNum = data.acceptNum;
-            this.completedNum = data.completedNum;
-            this.totalProgress = data.totalProgress;
+            that.sponsorName = data.sponsorName;
+            that.taskName = data.taskName;
+            that.description = data.description;
+            that.imgNum = data.imgNum;
+            that.startDate = data.startDate;
+            that.endDate = data.endDate;
+            that.points = data.points;
+            that.acceptNum = data.acceptNum;
+            that.completedNum = data.completedNum;
+            that.totalProgress = data.totalProgress;
           })
           .catch(function (error) {
             that.$message({
@@ -90,7 +93,7 @@
           userRole
         })
           .then(function (response) {
-            this.progress = response.data.progress;
+            that.progress = response.data.progress;
           })
           .catch(function (error) {
             that.$message({
@@ -110,7 +113,7 @@
           }
         })
           .then(function (response) {
-            this.imgURLs = response.data.imgURLs;
+            that.imgURLs = response.data.imgURLs;
           })
           .catch(function (error) {
             that.$message({
@@ -162,6 +165,14 @@
               console.log(error);
             });
         }
+      },
+
+      handleDrawing(imgURL){
+        this.updateCurrentImageURL(imgURL);
+        this.updateCurrentSponsor(this.sponsorName);
+        let drawingArea = $("#drawingArea");
+        drawingArea.empty();
+        drawingArea.load('../../src/temp/markLocality.html');
       }
     }
   }

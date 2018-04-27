@@ -15,7 +15,7 @@
       <el-form-item prop="verification">
         <el-row :gutter="20">
           <el-col :span="16">
-            <el-input prefix-icon="el-icon-edit-outline" placeholder="请输入验证码（大小写敏感）"
+            <el-input prefix-icon="el-icon-edit-outline" placeholder="请输入验证码（不区分大小写）"
                       v-model="loginForm.verification"></el-input>
           </el-col>
           <el-col :span="8">
@@ -54,11 +54,11 @@
 
     data() {
 
-      var ver = "";
-      var verNum = 6;
-      var verReg = new RegExp('\\w{' + verNum + '}');//验证码的正则表达式
+      let ver = "";
+      let verNum = 6;
+      let verReg = new RegExp('\\w{' + verNum + '}');//验证码的正则表达式
 
-      var validateUsername = (rule, value, callback) => {
+      let validateUsername = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('用户名不能为空'));
         }
@@ -76,7 +76,7 @@
               if (!response.data.existed) {
                 // console.log(response.data.existed);
                 callback(new Error('该用户不存在'));
-              }else{
+              } else {
                 callback();
               }
             })
@@ -88,7 +88,7 @@
       };
 
 
-      var validatePassword = (rule, value, callback) => {
+      let validatePassword = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('密码不能为空'));
         } else {
@@ -97,12 +97,12 @@
       };
 
 
-      var validateVerification = (rule, value, callback) => {
+      let validateVerification = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('验证码不能为空'));
         } else if (!this.verReg.test(value)) {
           return callback(new Error('验证码格式不对'));
-        } else if (this.ver !== value) {
+        } else if (this.ver.toUpperCase() !== value.toUpperCase()) {
           return callback(new Error('输入了错误的验证码'));
         } else {
           callback();
@@ -139,14 +139,15 @@
       ...mapActions(['logIn']),
 
       submitForm(formName) {
-        var that = this;
+        let that = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if (this.loginForm.username === "admin") {
-              this.logIn({level:1,name:"",username:"admin",points:1000,roleList:[1,2,3]});
+              this.logIn({level: 1, name: "", username: "admin", points: 1000, roleList: [1, 2, 3]});
               that.$message({
                 message: '登录成功',
-                type: 'success'
+                type: 'success',
+                duration: 1000
               });
             }
             else {
@@ -193,7 +194,8 @@
             that.logIn(result);
             that.$message({
               message: '登录成功',
-              type: 'success'
+              type: 'success',
+              duration: 1000
             });
           })
           .catch(function (error) {
@@ -207,7 +209,8 @@
           callback: () => {
             this.$message({
               type: 'info',
-              message: '已回到登录页面'
+              message: '已回到登录页面',
+              duration: 1000
             });
           }
         });
@@ -222,18 +225,18 @@
         this.ver = this.getVerCode();
       },
       getVerCode() {
-        var result = "";
+        let result = "";
         for (let i = 0; i < this.verNum; i++) {
           result += this.getRandomChar();
         }
         return result;
       },
       getRandomChar() {
-        var va = this.getRandomIntInclusive(65, 90);
-        var vb = this.getRandomIntInclusive(97, 122);
-        var vc = this.getRandomIntInclusive(48, 57);
+        let va = this.getRandomIntInclusive(65, 90);
+        let vb = this.getRandomIntInclusive(97, 122);
+        let vc = this.getRandomIntInclusive(48, 57);
 
-        var temp = [va, vb, vc];
+        let temp = [va, vb, vc];
         return String.fromCharCode(temp[this.getRandomIntInclusive(0, 2)]);
       },
       getRandomIntInclusive(min, max) {

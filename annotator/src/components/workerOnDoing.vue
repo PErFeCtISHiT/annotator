@@ -41,7 +41,7 @@
       })
         .then(function (response) {
           if(response.data.tasks){
-            this.onDoing = response.data.tasks;
+            that.onDoing = response.data.tasks;
           }else{
             that.$message({
               message:'回传数据格式出错',
