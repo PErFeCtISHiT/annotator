@@ -7,6 +7,8 @@
       ref="naviBar"
     >
 
+      <el-menu-item index="/0">首页</el-menu-item>
+
       <el-submenu index="1">
         <template slot="title" :disabled="!$store.state.user.isRequester">发布者</template>
         <el-menu-item index="/1-1">我发布的任务</el-menu-item>

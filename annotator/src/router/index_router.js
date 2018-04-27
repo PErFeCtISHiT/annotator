@@ -19,6 +19,10 @@ import firstPart from '../components/firstPart'
 export default new VueRouter({
   routes: [
     {
+      path: "/0",
+      component: firstPart
+    },
+    {
       path: "/1-1",
       component: requesterTasks
     },
