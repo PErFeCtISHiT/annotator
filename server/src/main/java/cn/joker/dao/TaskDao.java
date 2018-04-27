@@ -318,7 +318,7 @@ public class TaskDao {
             if (jsonObject.getInt(globalTaskID) == taskID) {
                 //工人标注数量修改
                 ArrayList<String> userArray = (ArrayList) jsonObject.getJSONArray(globalUserName).toList();
-                System.out.println(userArray.size());
+
                 userArray.add(workerName + "-0");
                 jsonObject.put(globalUserName, userArray);
             }
@@ -523,5 +523,44 @@ public class TaskDao {
     public Integer findMarkNumByImgNameAndUser(Integer taskID, String imgName, JSONArray users) {
         ImgMarkDao imgMarkDao = new ImgMarkDao();
         return imgMarkDao.findAllMarks(taskID, users, imgName).size();
+    }
+
+    public boolean postMark(String workerName, Integer taskID) {
+        JsonObject json = JsonHelper.openJson(globalJson);
+        assert json != null;
+        JsonArray taskArray = json.getAsJsonArray(globalTasks);
+
+        //把已经保存的先拉取出来
+        StringBuilder newJson = new StringBuilder(globalJsonTasks);
+        for (Object o : taskArray) {
+            Object o1 = o;
+            JSONObject jsonObject = new JSONObject(o1.toString());
+
+            if (jsonObject.getInt(globalTaskID) == taskID) {
+                //工人标注数量修改
+                ArrayList<String> userArray = (ArrayList) jsonObject.getJSONArray(globalUserName).toList();
+                JSONArray newArray = new JSONArray();
+                for(String str : userArray){
+                    String username = str.split("-")[0];
+                    if(username.equals(workerName)){
+                        username += '-' + String.valueOf(Integer.valueOf(str.split("-")[1]) + 1);
+                        newArray.put(username);
+                    }
+                    else{
+                        newArray.put(str);
+                    }
+                }
+                jsonObject.put(globalUserName, newArray);
+            }
+
+            newJson.append(jsonObject.toString());
+            newJson.append(",");
+        }
+        if (newJson.lastIndexOf(",") != -1) {
+            newJson.deleteCharAt(newJson.lastIndexOf(","));
+        }
+        newJson.append("]}");
+
+        return this.updateJson(newJson);
     }
 }

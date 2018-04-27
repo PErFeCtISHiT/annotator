@@ -79,5 +79,10 @@ public class TaskServiceImpl implements TaskService {
         return taskDao.findMarkNumByImgNameAndUser(taskID, imgName, users);
     }
 
+    @Override
+    public boolean postMark(String workerName, Integer taskID) {
+        return taskDao.postMark(workerName,taskID);
+    }
+
 
 }
