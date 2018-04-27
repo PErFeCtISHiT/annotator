@@ -365,7 +365,7 @@ public class TaskController {
         ret.put("totalTagNum", totalTagNum);
         ret.put("averageTagNum", totalTagNum / imgURLs.size());
         ret.put("totalImgTagNum", jsonArray);
-        ret.put("workerInfos",userInfos);
+        ret.put("workerInfo",userInfos);
         JsonHelper.jsonToResponse(response, ret);
     }
 
