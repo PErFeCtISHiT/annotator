@@ -4,6 +4,7 @@
     <el-menu
       :default-active="$route.path" class="el-menu-demo" mode="horizontal"
       router text-color="#fff" background-color="#222C62" active-text-color="#ffd04b"
+      ref="naviBar"
     >
 
       <el-submenu index="1">
@@ -52,6 +53,13 @@
 
       }
     },
+
+    computed: {
+      amount () {
+        return this.$store.state.user.userInfo.points;
+      }
+    },
+
     methods: {
       ...mapActions(['logOut']),
 
