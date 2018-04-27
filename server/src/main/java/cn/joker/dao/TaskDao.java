@@ -494,9 +494,12 @@ public class TaskDao {
                         result.add(allTasks.get(i));
                 }
             }
+            return result;
+        }
+        else{
+            return allTasks;
         }
 
-        return result;
     }
 
     private boolean isEnd(Task t) {

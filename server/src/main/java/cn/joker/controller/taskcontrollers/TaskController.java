@@ -10,6 +10,8 @@ import cn.joker.sevice.TaskService;
 import cn.joker.sevice.UserInfoService;
 import cn.joker.util.DateHelper;
 import cn.joker.util.JsonHelper;
+import com.google.gson.JsonObject;
+import org.apache.shiro.SecurityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
@@ -334,7 +336,6 @@ public class TaskController {
         Map<String, String[]> map = request.getParameterMap();
         Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
         JSONObject ret = taskService.checkTaskDetail(taskID);
-        System.out.println(ret.toString());
         ret.put("acceptNum", ret.getJSONArray("userName").length());
         ret.put("totalProgress", (double) ret.getInt("completedNumber") / (double) ret.getInt("expectedNumber"));
         JSONArray users = ret.getJSONArray("userName");
@@ -396,5 +397,15 @@ public class TaskController {
         }
         ret.put("imgURLs", array);
         JsonHelper.jsonToResponse(response, ret);
+    }
+
+    @RequestMapping(value = "/checkWorkerProgress",method = RequestMethod.POST)
+    public void checkWorkerProgress(HttpServletRequest request,HttpServletResponse response){
+        Map<String, String[]> map = request.getParameterMap();
+        String userName = SecurityUtils.getSubject().getPrincipal().toString();
+        Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
+        JSONObject ret = new JSONObject();
+        ret.put("progress",taskService.checkTaskProgress(taskID,userName));
+        JsonHelper.jsonToResponse(response,ret);
     }
 }
