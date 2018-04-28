@@ -62,6 +62,8 @@
           </div>
         </el-col>
       </el-row>
+      <!-- 总体信息部分结束 -->
+
 
       <br>
       <el-row>
@@ -96,7 +98,7 @@
           </div>
         </el-col>
       </el-row>
-
+      <!-- 用户信息结束 -->
       <br>
 
       <el-row>
@@ -136,6 +138,8 @@
           </div>
         </el-col>
       </el-row>
+      <!--任务信息结束-->
+
 
       <el-row>
         <el-col :span="24">
@@ -186,6 +190,8 @@
           </div>
         </el-col>
       </el-row>
+
+      <!--投诉信息结束-->
     </div>
 </template>
 

@@ -39,7 +39,9 @@
               <span>任务标签:</span>
             </el-col>
             <el-col :span="12" class="label-all label_detail">
-              <el-tag v-for="(tag, index) in detailInfo.tag" :key="index">{{ tag }}&thinsp;</el-tag>
+              <span v-for="(tag, index) in detailInfo.tag" :key="index">
+                <el-tag >{{ tag }}</el-tag>&thinsp;
+              </span>
             </el-col>
           </div>
           <div>

@@ -349,7 +349,7 @@ public class TaskController {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(globalUsername,string.split("-")[0]);
             UserInfo userInfo = userInfoService.findByUsername(string.split("-")[0]);
-            jsonObject.put("level",(int)(Math.log(userInfo.getLevel()) / Math.log(10)));
+            jsonObject.put("level",(int)(Math.log(userInfo.getLevel()) / Math.log(10)) + 1);
             jsonObject.put(globalCompletedNumber,Integer.valueOf(string.split("-")[1]));
             userInfos.put(jsonObject);
         }
