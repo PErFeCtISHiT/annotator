@@ -1,12 +1,46 @@
 <template>
   <div>
-    <div class="block" style="width:600px">
-      <el-carousel height="400px">
-        <el-carousel-item v-for="item in imgURLs" :key="item">
-          <img :src="item" height="400" width="600" @click ="handleDrawing(item)"/>
-        </el-carousel-item>
-      </el-carousel>
-    </div>
+
+    <el-col :span="24">
+
+      <!--任务详情-->
+      <el-col :span="7">
+        <el-row type="flex" id="navigation-div2" justify="left">
+          <el-col :span="24">
+            <div>
+              <oneTask :detailInfo="taskData" :uid="taskID"> </oneTask>
+            </div>
+          </el-col>
+        </el-row>
+      </el-col>
+
+
+      <el-col :span="17">
+
+        <div class="block" style="width:800px; height:50px; margin:3% auto">
+          <el-row :gutter="15">
+            <el-col :span="4" style="margin-top: 10px">
+              <span>我的进度：</span>
+            </el-col>
+            <el-col :span="18" style="margin-top: 10px">
+              <el-progress :stroke-width="14"  :status="progress===1?'success':''" :percentage="progress*100"> </el-progress>
+            </el-col>
+            <el-col :span="2">
+              <el-button :disabled="progress < 1" @click="completeTask">完成</el-button>
+            </el-col>
+          </el-row>
+        </div>
+
+        <div class="block" style="width:800px; height:600px; margin:auto">
+          <el-carousel height="400px">
+            <el-carousel-item v-for="item in imgURLs" :key="item">
+              <img :src="item" height="600" width="800" @click="handleDrawing(item)"/>
+            </el-carousel-item>
+          </el-carousel>
+        </div>
+      </el-col>
+
+    </el-col>
 
     <div id="drawingArea"></div>
   </div>
@@ -15,8 +49,10 @@
 <script>
   import {mapMutations} from 'vuex'
   import {mapActions} from 'vuex'
+  import OneTask from "./oneTask";
 
   export default {
+    components: {OneTask},
     name: "worker-note-mark",
 
     props: ['taskID'],
@@ -43,11 +79,11 @@
         acceptNum: '',
         completedNum: '',
         totalProgress: 0,
-        imgURLs:['../../src/testDrawImage/1.jpg','../../src/testDrawImage/2.jpg','../../src/testDrawImage/3.jpg','../../src/testDrawImage/4.jpg']
+        imgURLs: ['../../src/testDrawImage/1.jpg', '../../src/testDrawImage/2.jpg', '../../src/testDrawImage/3.jpg', '../../src/testDrawImage/4.jpg']
       }
     },
     methods: {
-      ...mapMutations(['updateCurrentTaskID', 'updateCurrentImageURL','updateCurrentSponsor']),
+      ...mapMutations(['updateCurrentTaskID', 'updateCurrentImageURL', 'updateCurrentSponsor']),
       ...mapActions(['updateWithoutPointer']),
       refreshTaskData() {
         let that = this;
@@ -70,7 +106,9 @@
             that.completedNum = data.completedNum;
             that.totalProgress = data.totalProgress;
 
-            console.log("写入store的sponsorName:"+that.sponsorName);
+            that.taskData = response.data;
+
+            console.log("写入store的sponsorName:" + that.sponsorName);
             that.updateCurrentSponsor(that.sponsorName);
             console.log(that.$store.state.workerTask.currentSponsor);
           })
@@ -87,7 +125,7 @@
         let taskID = this.taskID;
         let that = this;
         this.$http.get('task/checkWorkerProgress', {
-          params:{
+          params: {
             taskID
           }
         })
@@ -116,22 +154,23 @@
           })
           .catch(function (error) {
             that.$message({
-              message:'加载图片数据失败',
-              type:'error'
+              message: '加载图片数据失败',
+              type: 'error'
             });
             console.log(error);
           });
       },
 
       completeTask() {
-        refreshSelfProgress();
-        if (this.progress !== 1) {
+        this.refreshSelfProgress();
+        if (this.progress < 1) {
           this.$alert('请完成后重试', '未完成所有项目', {
             confirmButtonText: '确定',
             callback: () => {
               this.$message({
                 type: 'info',
-                message: `已回到标注页面`
+                message: '已回到标注页面',
+                duration: 1200,
               });
             }
           });
@@ -151,8 +190,10 @@
                 callback: () => {
                   that.$message({
                     type: 'success',
-                    message: `任务已完成`
+                    message: '任务已完成',
+                    duration: 1200,
                   });
+                  that.$router.push('/2-2')
                 }
               });
               that.updateWithoutPointer();
@@ -160,14 +201,15 @@
             .catch(function (error) {
               that.$message({
                 type: 'error',
-                message: `请检查网络连接`
+                message: '请检查网络连接',
+                duration: 1200,
               });
               console.log(error);
             });
         }
       },
 
-      handleDrawing(imgURL){
+      handleDrawing(imgURL) {
         this.updateCurrentImageURL(imgURL);
 
         let drawingArea = $("#drawingArea");

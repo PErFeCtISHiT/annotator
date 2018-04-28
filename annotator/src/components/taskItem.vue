@@ -13,7 +13,7 @@
     <el-row>
       <el-col :span="2">
         <el-badge :value="taskMsg.imgNum" class="item">
-          <el-button type="warning" icon="el-icon-document" v-popover:popover1 @click="handleShow"></el-button>
+          <el-button type="warning" icon="el-icon-document" v-popover:popover1 @click="handleShow"> </el-button>
         </el-badge>
       </el-col>
 
@@ -28,13 +28,13 @@
         </el-row>
 
         <el-row>
-          <el-progress :stroke-width="14" color="green" :percentage="70"></el-progress>
+          <el-progress :stroke-width="14" :percentage="myMsg.progress*100"> </el-progress>
         </el-row>
       </el-col>
 
       <el-col :span="2">
         <el-tooltip class="item" effect="dark" content="点击将移除此任务" placement="top-end">
-          <el-button type="danger" icon="el-icon-delete" @click="$emit('remove')" circle></el-button>
+          <el-button type="danger" icon="el-icon-delete" @click="$emit('remove')" circle> </el-button>
         </el-tooltip>
       </el-col>
     </el-row>
