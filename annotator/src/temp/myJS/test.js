@@ -488,7 +488,7 @@
           mouseout: rect_mouseOutFunc,
           click: function (layer) {
             //TODO
-            if (!inDrawing) {
+            if (!inDrawing&&!poly_isDrawingPolygon) {
               CanvasExt.showNote(CanvasExt.canvasId, CanvasExt.inputID, layer);
               CanvasExt.setUpdateNote(CanvasExt.inputID, CanvasExt.updateBtnID, layer);
               CanvasExt.setDeleteNote(CanvasExt.canvasId, CanvasExt.inputID, CanvasExt.deleteBtnID, layer);
@@ -869,11 +869,18 @@
     for (let i = 0; i < notePolygons.length; i++) {
       let note = notePolygons[i];
 
+      console.log("多边形信息：");
+      console.log(note);
+
       let points = [];
 
-      for (let i = 0; i < note.points; i++) {
-        points.push({x: note.points[i].x/globalRate, y: note.points[i].y/globalRate});
+      for (let g = 0; g < note.points.length; g++) {
+        // console.log(note.points[i].x);
+        // console.log(note.points[i].y);
+        points.push({x: note.points[g].x/globalRate, y: note.points[g].y/globalRate});
       }
+
+      console.log(points);
 
       let obj = {
         strokeStyle: poly_penColor,
@@ -901,7 +908,11 @@
         obj['y' + (p + 1)] = points[p].y;
       }
 
-      $("#" + poly_canvasID).drawLine(obj);
+      console.log(obj);
+
+      let tempJQ = $("#" + poly_canvasID);
+      tempJQ.drawLine(obj);
+      tempJQ.getLayer("polygon" + note.id).type = 'line';
       refreshLabels(poly_canvasID, labelSaverID);
     }
   }
@@ -1175,11 +1186,11 @@
 
     canvas.onmousedown = () => {
       canvas.onmousemove = null;
-      if (!firstPoint) {
+
         inMoving = true;
         canvas.onmousemove = (e) => {
           poly_handleMouseEvent(e);
-        }
+
       }
     };
 
