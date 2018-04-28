@@ -66,10 +66,6 @@ export default {
         .then(function (response) {
           let result = response.data;
           commit('logIn', result);
-          window.myMessage({
-            message: '刷新用户数据成功',
-            type: 'success'
-          });
         })
         .catch(function (error) {
           window.myMessage({

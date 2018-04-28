@@ -91,8 +91,8 @@ public class TaskController {
         task.setWorkerLevel(jsonObject.getInt(globalWorkerLevel));
         JSONObject ret = new JSONObject();
 
-        ret.put(globalMes,userInfoService.modifyUser(userInfo));
-        ret.put("taskID",taskService.releaseTask(task));
+        ret.put(globalMes, userInfoService.modifyUser(userInfo));
+        ret.put("taskID", taskService.releaseTask(task));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -148,15 +148,21 @@ public class TaskController {
             taskObject.put(globalTaskID, task.getTaskID());
             taskObject.put(globalTaskName, task.getTaskName());
             taskObject.put(globalDescription, task.getDescription());
-            taskObject.put(globalImgNum,task.getImageNum());
+            taskObject.put(globalImgNum, task.getImageNum());
             taskObject.put(globalSponsorName, task.getSponsorName());
             taskObject.put(globalTag, task.getTag());
-            if (userRole.equals(3))
-                taskObject.put("progress", taskService.checkTaskProgress(task.getTaskID(), username));
             taskObject.put("totalProgress", new Double(task.getCompletedNumber() / task.getExpectedNumber()));
             taskObject.put(globalStartDate, DateHelper.convertDateToString(task.getStartDate()));
             taskObject.put(globalEndDate, DateHelper.convertDateToString(task.getEndDate()));
-            taskArray.put(taskObject);
+            if (userRole.equals(3)) {
+                Double progress = taskService.checkTaskProgress(task.getTaskID(), username);
+                if (progress != -1.0) {
+                    taskObject.put("progress", progress);
+                    taskArray.put(taskObject);
+                }
+            } else {
+                taskArray.put(taskObject);
+            }
         }
         ret.put(globalTasks, taskArray);
         JsonHelper.jsonToResponse(response, ret);
@@ -347,10 +353,10 @@ public class TaskController {
             String string = (String) o;
             newUsers.put(string.split("-")[0]);
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(globalUsername,string.split("-")[0]);
+            jsonObject.put(globalUsername, string.split("-")[0]);
             UserInfo userInfo = userInfoService.findByUsername(string.split("-")[0]);
-            jsonObject.put("level",(int)(Math.log(userInfo.getLevel()) / Math.log(10)) + 1);
-            jsonObject.put(globalCompletedNumber,Integer.valueOf(string.split("-")[1]));
+            jsonObject.put("level", userInfo.getRealLevel());
+            jsonObject.put(globalCompletedNumber, Integer.valueOf(string.split("-")[1]));
             userInfos.put(jsonObject);
         }
         List imgURLs = taskService.findImgURLByID(String.valueOf(taskID));
@@ -367,7 +373,7 @@ public class TaskController {
         ret.put("totalTagNum", totalTagNum);
         ret.put("averageTagNum", totalTagNum / imgURLs.size());
         ret.put("totalImgTagNum", jsonArray);
-        ret.put("workerInfo",userInfos);
+        ret.put("workerInfo", userInfos);
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -409,13 +415,13 @@ public class TaskController {
         JsonHelper.jsonToResponse(response, ret);
     }
 
-    @RequestMapping(value = "/checkWorkerProgress",method = RequestMethod.GET)
-    public void checkWorkerProgress(HttpServletRequest request,HttpServletResponse response){
+    @RequestMapping(value = "/checkWorkerProgress", method = RequestMethod.GET)
+    public void checkWorkerProgress(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
         String userName = SecurityUtils.getSubject().getPrincipal().toString();
         Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
         JSONObject ret = new JSONObject();
-        ret.put("progress",taskService.checkTaskProgress(taskID,userName));
-        JsonHelper.jsonToResponse(response,ret);
+        ret.put("progress", taskService.checkTaskProgress(taskID, userName));
+        JsonHelper.jsonToResponse(response, ret);
     }
 }

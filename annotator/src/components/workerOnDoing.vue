@@ -10,11 +10,11 @@
       ></li>
     </ul>
 
-    <ul id="example-1">
-      <li v-for="item in onDoing">
-        {{ item.imgNum }}
-      </li>
-    </ul>
+    <!--<ul id="example-1">-->
+      <!--<li v-for="item in onDoing">-->
+        <!--{{ item.imgNum }}-->
+      <!--</li>-->
+    <!--</ul>-->
 
   </div>
 </template>

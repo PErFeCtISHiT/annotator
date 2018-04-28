@@ -32,6 +32,10 @@ public class UserInfo implements Serializable {
         return level;
     }
 
+    public Integer getRealLevel() {
+        return (int) (Math.log(this.getLevel()) / Math.log(10)) + 1;
+    }
+
     public void setLevel(Double level) {
         this.level = level;
     }
