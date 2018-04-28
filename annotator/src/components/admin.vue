@@ -15,49 +15,7 @@
     <br>
     <el-row>
       <el-col :span="24">
-        <div class="grid-bg row-bg2">
-          <!--标题-->
-          <div class="big-label">用户详情</div>
 
-          <el-table :data="userDetail" class="normal-table" height="300" style="width: 90%">
-
-            <el-table-column prop="username" label="用户名" width="160">
-            </el-table-column>
-
-            <el-table-column prop="name" label="昵称" width="160">
-            </el-table-column>
-
-            <el-table-column label="角色" width="160">
-              <template slot-scope="scope">
-                <span v-for="oneRole in scope.row.role">
-                  <el-tag type="info">{{ myShift(oneRole) }}</el-tag>&thinsp;
-                </span>
-              </template>
-            </el-table-column>
-
-            <el-table-column label="等级" width="220">
-              <template slot-scope="scope">
-                <el-popover trigger="click" placement="top">
-                  <p>等级为: {{ scope.row.level }}</p>
-                  <div slot="reference" class="name-wrapper">
-                    <el-rate v-model="scope.row.level" disabled></el-rate>
-                  </div>
-                </el-popover>
-              </template>
-            </el-table-column>
-
-            <el-table-column prop="points" label="积分" width="80">
-            </el-table-column>
-
-
-            <el-table-column label="操作" width="280" fixed="right">
-              <template slot-scope="scope">
-                <el-button type="primary" size="medium" disabled>修改积分</el-button>
-                <el-button type="danger" size="medium" disabled>删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
       </el-col>
     </el-row>
     <!-- 用户信息结束 -->
@@ -160,6 +118,7 @@
 <script>
   import adminTaskStat from './admin/adminTaskStat'
   import adminUserStat from './admin/adminUserStat'
+  import adminTaskDetail from './admin/adminTaskDetail'
 
   export default {
     //id
@@ -225,6 +184,27 @@
         if (oneRole === 1) return "管理员";
         else if (oneRole === 2) return "发起者";
         else if (oneRole === 3) return "工人";
+      },
+
+      dealDelete(index, row) {
+        let that = this;
+
+        this.$http.get('/user/deleteUser', {
+          params: {
+            username: row.username
+          }
+        })
+          .then(function (response) {
+            if(response.data.mes === true){
+              that.$message.success('删除成功');
+              that.userDetail.splice(index, 1);
+            }else {
+              that.$message.warning('删除失败');
+            }
+          })
+          .catch(function (error) {
+            that.$message.warning('服务器连接异常。删除失败' + error)
+          })
       }
     }
 
