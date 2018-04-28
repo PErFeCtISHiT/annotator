@@ -32,7 +32,11 @@
 
       </el-main>
 
-      <el-footer>Footer</el-footer>
+      <el-footer>
+        <el-col :span="24" style="text-align: center">
+          copyright © ️2018 www.joker66.cn Joker 版权所有
+        </el-col>
+      </el-footer>
     </el-container>
 
 
