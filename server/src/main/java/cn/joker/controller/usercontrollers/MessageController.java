@@ -54,7 +54,7 @@ public class MessageController {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
         UserInfo userInfo = new UserInfo();
         userInfo.setUid(1);
-        userInfo.setPoints(0);
+        userInfo.setPoints(100);
         userInfo.setUsername((String) jsonObject.get(globalUsername));
 
         JSONArray jsonArray = jsonObject.getJSONArray(globalRoleList);
