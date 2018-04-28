@@ -15,34 +15,7 @@
     <br>
     <el-row>
       <el-col :span="24">
-        <div class="grid-bg row-bg2">
-          <div class="big-label">用户详情</div>
-          <el-table
-            :data="userTableData"
-            class="normal-table"
-            height="300"
-          >
-            <el-table-column
-              prop="username"
-              label="用户名"
-              width="300">
-            </el-table-column>
-            <el-table-column
-              prop="name"
-              label="昵称"
-              width="300">
-            </el-table-column>
-            <el-table-column
-              prop="role"
-              label="角色"
-              width="300">
-            </el-table-column>
-            <el-table-column
-              prop="points"
-              label="积分">
-            </el-table-column>
-          </el-table>
-        </div>
+        <!--<adminUserDetail :detail="userDetail"></adminUserDetail>-->
       </el-col>
     </el-row>
     <!-- 用户信息结束 -->
@@ -169,29 +142,47 @@
       this.$http.get('/statistic/checkUserNum')
         .then(function (response) {
           that.userStat = response.data;
-          console.log('user', response.data);
+          //console.log('user', response.data);
         })
         .catch(function (error) {
           that.$message.warning('请求服务器数据失败' + error)
         });
 
+      //2
       this.$http.get('/statistic/checkTaskNum')
         .then(function (response) {
           that.taskStat = response.data;
-          console.log('task', response.data);
+          //console.log('task', response.data);
         })
         .catch(function (error) {
           that.$message.warning('请求服务器数据失败' + error)
         });
+
+      //3
+      this.$http.get('/user/checkUser')
+        .then(function (response) {
+          that.userDetail = response.data.users;
+          console.log('user detail: ', response.data);
+        })
+        .catch(function (error) {
+          that.$message.warning('请求服务器数据失败' + error)
+        })
+
+      //4
     },
 
     data() {
       return {
-        userStat:{},
-        taskStat:{},
+        userStat: {},
+        taskStat: {},
+        userDetail: {},
+        taskDetail: {}
       }
-    }
+    },
 
+    methods: {
+
+    }
 
   }
 </script>
