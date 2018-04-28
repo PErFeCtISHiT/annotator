@@ -113,22 +113,22 @@
       </el-col>
     </el-row>
     <!--方便提交表单-->
-    <form id='formpay' name='formpay' method='post' action='https://pay.paysapi.com'>
-      <input name='goodsname' id='goodsname' type='text' value='hhh' class="submit-input"/>
-      <input name='istype' id='istype' type='text' value='1' class="submit-input"/>
-      <input name='key' id='key' type='text'
-             value='hhh1http://wwww.baidu.com201804251334kiki0.1http://www.baidu.com9fc9a411cac1508a6ab0687b2105b060d6e476045dd7c4f6d6b4f85c'
-             class="submit-input"/>
-      <input name='notify_url' id='notify_url' type='text' value='http://www.baidu.com' class="submit-input"/>
-      <input name='orderid' id='orderid' type='text' value='201804251334' class="submit-input"/>
-      <input name='orderuid' id='orderuid' type='text' value='kiki' class="submit-input"/>
-      <input name='price' id='price' type='text' value='0.1' class="submit-input"/>
-      <input name='return_url' id='return_url' type='text' value='http://wwww.baidu.com' class="submit-input"/>
-      <input name='uid' id='uid' type='text' value='d6e476045dd7c4f6d6b4f85c' class="submit-input"/>
-      <input type="submit" value="确认支付" class="submit-input"/>
-    </form>
+    <!--<form id='formpay' name='formpay' method='post' action='https://pay.paysapi.com'>-->
+      <!--<input name='goodsname' id='goodsname' type='text' value='hhh' class="submit-input"/>-->
+      <!--<input name='istype' id='istype' type='text' value='1' class="submit-input"/>-->
+      <!--<input name='key' id='key' type='text'-->
+             <!--value='hhh1http://wwww.baidu.com201804251334kiki0.1http://www.baidu.com9fc9a411cac1508a6ab0687b2105b060d6e476045dd7c4f6d6b4f85c'-->
+             <!--class="submit-input"/>-->
+      <!--<input name='notify_url' id='notify_url' type='text' value='http://www.baidu.com' class="submit-input"/>-->
+      <!--<input name='orderid' id='orderid' type='text' value='201804251334' class="submit-input"/>-->
+      <!--<input name='orderuid' id='orderuid' type='text' value='kiki' class="submit-input"/>-->
+      <!--<input name='price' id='price' type='text' value='0.1' class="submit-input"/>-->
+      <!--<input name='return_url' id='return_url' type='text' value='http://wwww.baidu.com' class="submit-input"/>-->
+      <!--<input name='uid' id='uid' type='text' value='d6e476045dd7c4f6d6b4f85c' class="submit-input"/>-->
+      <!--<input type="submit" value="确认支付" class="submit-input"/>-->
+    <!--</form>-->
     <el-col :span="4">
-      <el-button value="确认支付" id="demoBtn1" onclick=""
+      <el-button value="确认支付" id="demoBtn1" @click="handleClick"
                  style="margin-left: 73px; margin-top: 10px; color: #ffffff; background-color: #56b5dc;">确认支付
       </el-button>
     </el-col>
@@ -155,6 +155,10 @@
 
     methods: {
       // 得到支付方式
+      handleClick(){
+        this.$message.error('尚未开通此功能');
+      },
+
       getMode() {
         return getVarDate(mode)
       },

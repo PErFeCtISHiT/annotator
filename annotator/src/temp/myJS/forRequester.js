@@ -1542,7 +1542,7 @@
   console.log(window.myVueStore.state.user.loginState);
 //TODO 以上starter
 
-})(window.myVueStore.state.workerTask.currentImageURL, window.myVueStore.state.user.userInfo.username, window.myVueStore.state.workerTask.currentSponsor, window.myVueStore.state.workerTask.currentTaskID);
+})(window.myVueStore.state.workerTask.currentImageURL, window.myVueStore.state.workerTask.currentUsername, window.myVueStore.state.workerTask.currentSponsor, window.myVueStore.state.workerTask.currentTaskID);
 
 //imgURL,workerName,sponsorName,taskID
 
