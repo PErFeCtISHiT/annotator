@@ -15,7 +15,49 @@
     <br>
     <el-row>
       <el-col :span="24">
-        <!--<adminUserDetail :detail="userDetail"></adminUserDetail>-->
+        <div class="grid-bg row-bg2">
+          <!--标题-->
+          <div class="big-label">用户详情</div>
+
+          <el-table :data="userDetail" class="normal-table" height="300" style="width: 100%">
+
+            <el-table-column prop="username" label="用户名" width="160">
+            </el-table-column>
+
+            <el-table-column prop="name" label="昵称" width="160">
+            </el-table-column>
+
+            <el-table-column label="角色" width="160">
+              <template slot-scope="scope">
+                <span v-for="oneRole in myShift(scope.row.role)">
+                  <el-tag type="info">{{ oneRole }}</el-tag>&thinsp;
+                </span>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="等级" width="300">
+              <template slot-scope="scope">
+                <el-popover trigger="click" placement="top">
+                  <p>等级为: {{ scope.row.level }}</p>
+                  <div slot="reference" class="name-wrapper">
+                    <el-rate v-model="scope.row.level" disabled></el-rate>
+                  </div>
+                </el-popover>
+              </template>
+            </el-table-column>
+
+            <el-table-column prop="points" label="积分" width="150">
+            </el-table-column>
+
+
+            <el-table-column label="操作" width="400">
+              <template slot-scope="scope">
+                <el-button type="primary" size="medium" disabled>修改积分</el-button>
+                <el-button type="danger" size="medium" disabled>删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
       </el-col>
     </el-row>
     <!-- 用户信息结束 -->
@@ -118,7 +160,6 @@
 <script>
   import adminTaskStat from './admin/adminTaskStat'
   import adminUserStat from './admin/adminUserStat'
-  import adminUserDetail from './admin/adminUserDetail'
 
   export default {
     //id
@@ -128,7 +169,6 @@
     components: {
       adminUserStat,
       adminTaskStat,
-      adminUserDetail
     },
 
     /**
@@ -136,7 +176,7 @@
      * 2.请求任务基本统计
      * 3.操作任务
      * 4.操作用户*/
-    mounted (){
+    mounted() {
       let that = this;
       //1
       this.$http.get('/statistic/checkUserNum')
@@ -162,7 +202,9 @@
       this.$http.get('/user/checkUser')
         .then(function (response) {
           that.userDetail = response.data.users;
-          console.log('user detail: ', response.data);
+          that.userDetail.map((x) => {
+            return that.myShift(x);
+          });
         })
         .catch(function (error) {
           that.$message.warning('请求服务器数据失败' + error)
@@ -175,13 +217,15 @@
       return {
         userStat: {},
         taskStat: {},
-        userDetail: {},
-        taskDetail: {}
+        userDetail: [],
+        taskDetail: []
       }
     },
 
     methods: {
-
+      myShift(roles) {
+        roles.map(role => role === 2 ? "发起者" : "工人");
+      }
     }
 
   }
@@ -216,7 +260,6 @@
     font-weight: bold;
     color: #464646;
   }
-
 
   /*每个合计统计数据的设置*/
   .total-label {
