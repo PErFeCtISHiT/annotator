@@ -1,4 +1,8 @@
 (function (imgURL, workerName, sponsorName, taskID) {
+
+  console.log("sponsorName:" + window.myVueStore.state.workerTask.currentSponsor);
+  console.log("sponsorName:" + sponsorName);
+
   safelyQuit("canvas");
 
   let backgroundMaxWidth = 500;
@@ -73,7 +77,7 @@
       taskID: 0,
       noteRectangle: [],
       notePolygon: [],
-      noteTotal: {},
+      noteTotal: [{mark: '', id: ''}],
     };
   }
 
@@ -121,13 +125,13 @@
 
 
   function getLocX(e, left) {
-    return e.clientX + document.body.parentElement.scrollLeft - left;
+    return e.clientX - left;
   }
 
   function getLocY(e, top) {
     // console.log(e.clientY + document.body.parentElement.scrollTop - top);
     // console.log(e.clientY - top);
-    return e.clientY + document.body.parentElement.scrollTop - top;
+    return e.clientY - top;
   }
 
   function safelyQuit() {
@@ -148,13 +152,13 @@
 
   }
 
-  function showAllLayers(canvasId) {
-    $("#" + canvasId).setLayers({visible: true}).drawLayers();
-  }
-
-  function hideAllLayers(canvasId) {
-    $("#" + canvasId).setLayers({visible: false}).drawLayers();
-  }
+  // function showAllLayers(canvasId) {
+  //   $("#" + canvasId).setLayers({visible: true}).drawLayers();
+  // }
+  //
+  // function hideAllLayers(canvasId) {
+  //   $("#" + canvasId).setLayers({visible: false}).drawLayers();
+  // }
 
   function polygonTempArea(p0, p1, p2) {
     let area = p0.x * p1.y + p1.x * p2.y + p2.x * p0.y - p1.x * p0.y - p2.x * p1.y - p0.x * p2.y;
@@ -209,54 +213,54 @@
     });
   }
 
-  function writeGlobalImgMsg(data) {
-    if (data.isMarked === "true" || data.isMarked === true) {
-      globalImgMsg = data;
-      // globalImgMsg = JSON.parse(data);
-    }
-  }
+  // function writeGlobalImgMsg(data) {
+  //   if (data.isMarked === "true" || data.isMarked === true) {
+  //     globalImgMsg = data;
+  //     // globalImgMsg = JSON.parse(data);
+  //   }
+  // }
 
-  function setCanvasSizeAndSwitchOn(imgSrc, inputCanvasID, inputDivID, callBack) {
-    let image = new Image();
-    image.src = imgSrc;
-
-    // alert(image.src);
-
-    function handle(image) {
-      let width = image.width;
-      let height = image.height;
-      let div = $("#" + inputDivID);
-
-      div.empty();
-
-      //这里都是attr！不要写错写成height后面却接attr的内容
-      let txt = $("<canvas></canvas>").attr('width', width).attr('height', height).attr('id', inputCanvasID).css('border', "1px solid #000");
-
-      div.css('background-image', 'url("' + imgSrc + '")');
-      div.css('width', width);
-      div.css('height', height);
-      div.append(txt);
-      $().ready(callBack);
-
-    }
-
-
-    if (image.complete) {
-      handle(image);
-      image.onload = function () {
-      };
-    } else {
-      image.onload = function () {
-        handle(image);
-        // clear onLoad, IE behaves erratically with animated gifs otherwise
-        image.onload = function () {
-        };
-      };
-      image.onerror = function () {
-        alert("Could not load image.");
-      }
-    }
-  }
+  // function setCanvasSizeAndSwitchOn(imgSrc, inputCanvasID, inputDivID, callBack) {
+  //   let image = new Image();
+  //   image.src = imgSrc;
+  //
+  //   // alert(image.src);
+  //
+  //   function handle(image) {
+  //     let width = image.width;
+  //     let height = image.height;
+  //     let div = $("#" + inputDivID);
+  //
+  //     div.empty();
+  //
+  //     //这里都是attr！不要写错写成height后面却接attr的内容
+  //     let txt = $("<canvas></canvas>").attr('width', width).attr('height', height).attr('id', inputCanvasID).css('border', "1px solid #000");
+  //
+  //     div.css('background-image', 'url("' + imgSrc + '")');
+  //     div.css('width', width);
+  //     div.css('height', height);
+  //     div.append(txt);
+  //     $().ready(callBack);
+  //
+  //   }
+  //
+  //
+  //   if (image.complete) {
+  //     handle(image);
+  //     image.onload = function () {
+  //     };
+  //   } else {
+  //     image.onload = function () {
+  //       handle(image);
+  //       // clear onLoad, IE behaves erratically with animated gifs otherwise
+  //       image.onload = function () {
+  //       };
+  //     };
+  //     image.onerror = function () {
+  //       alert("Could not load image.");
+  //     }
+  //   }
+  // }
 
   //TODO 调整整体图像用的
   // function setImgSizeAndSwitchTotalOn(imgSrc, inputDivID, callBack) {
@@ -345,9 +349,9 @@
   let poly_inputMarkID = "markInput";
   let poly_updateMark = "updateMark";
   let poly_deleteNote = "deleteNote";
-  let poly_showAll = "showAll";
-  let poly_hideAll = "hideAll";
-  let poly_submit = "commit";
+  // let poly_showAll = "showAll";
+  // let poly_hideAll = "hideAll";
+  // let poly_submit = "commit";
 
   let poly_hoverFillStyle = 'rgba(255, 0, 0, 0.5)';
 
@@ -355,9 +359,11 @@
   let poly_penColor = "rgb(246,232,4)";
   let poly_penWidth = 1;
 
-  let poly_refresh_up_and_down = function () {};
+  let poly_refresh_up_and_down = function () {
+  };
 
-  let rect_refresh_up_and_down = function () {};
+  let rect_refresh_up_and_down = function () {
+  };
 
   function setJQObjDisabled(obj, boolean) {
     obj.attr("disabled", boolean);
@@ -474,9 +480,9 @@
           strokeWidth: CanvasExt.strokeWidth,
           name: "rectangle" + note.id,
           fromCenter: false,
-          x: note.left, y: note.top,
-          width: note.width,
-          height: note.height,
+          x: note.left / globalRate, y: note.top / globalRate,      //缩放比例
+          width: note.width / globalRate,
+          height: note.height / globalRate,
           data: note,
           mouseover: rect_mouseOverFunc,
           mouseout: rect_mouseOutFunc,
@@ -598,6 +604,14 @@
       let canvasHeight = canvasRect.height;
 
 
+      let refreshCanvasLoc = function () {
+        canvasRect = canvas.getBoundingClientRect();
+        canvasLeft = canvasRect.left;
+        canvasTop = canvasRect.top;
+        canvasWidth = canvasRect.width;
+        canvasHeight = canvasRect.height;
+      };
+
       // console.log(canvasLeft);
       // console.log(canvasTop);
 
@@ -615,6 +629,8 @@
       canvas.onmousedown = (e) => {
         //回复flag状态
 
+        refreshCanvasLoc();
+
         preventOutOfBorderSetted = false;
 
         //TODO
@@ -626,8 +642,8 @@
 
           id = getIDByTime();
           layerName = "rectangle" + id;
-          x = e.clientX + document.body.parentElement.scrollLeft - canvasLeft;
-          y = e.clientY + document.body.parentElement.scrollTop - canvasTop;
+          x = e.clientX - canvasLeft;
+          y = e.clientY - canvasTop;
 
           // console.log(canvasLeft);
           // console.log(canvasHeight);
@@ -651,8 +667,10 @@
           tempJQCA.saveCanvas();
           //鼠标移动事件，画图
           canvas.onmousemove = (e) => {
-            let width = e.clientX + document.body.parentElement.scrollLeft - canvasLeft - x;
-            let height = e.clientY + document.body.parentElement.scrollTop - canvasTop - y;
+            refreshCanvasLoc();
+
+            let width = e.clientX - canvasLeft - x;
+            let height = e.clientY - canvasTop - y;
 
 
             tempJQCA.removeLayer(layerName);
@@ -695,6 +713,8 @@
 
       function handleUp(e) {
         //原句：if (isDrawing&&!preventOutOfBorderSetted)
+        refreshCanvasLoc();
+
         if (inDrawing && !preventOutOfBorderSetted) {
 
           setJQObjDisabled(btnRect, false);
@@ -704,8 +724,8 @@
 
           canvas.onmousemove = null;
 
-          let width = e.clientX + document.body.parentElement.scrollLeft - canvasLeft - x;
-          let height = e.clientY + document.body.parentElement.scrollTop - canvasTop - y;
+          let width = e.clientX - canvasLeft - x;
+          let height = e.clientY - canvasTop - y;
 
           let tempJQCA = $("#" + canvasId);
           tempJQCA.removeLayer(layerName);
@@ -849,7 +869,11 @@
     for (let i = 0; i < notePolygons.length; i++) {
       let note = notePolygons[i];
 
-      let points = note.points;
+      let points = [];
+
+      for (let i = 0; i < note.points; i++) {
+        points.push({x: note.points[i].x/globalRate, y: note.points[i].y/globalRate});
+      }
 
       let obj = {
         strokeStyle: poly_penColor,
@@ -863,7 +887,7 @@
             $(this).animateLayer(layer, {
               fillStyle: poly_hoverFillStyle,
             }, 100);
-            let pointCenter = getPolygonAreaCenter(note.points);
+            let pointCenter = getPolygonAreaCenter(points);
             drawHintTextOnLayer(this, layer, pointCenter.x, pointCenter.y);
           }
         },
@@ -967,14 +991,14 @@
     });
   }
 
-  function poly_btnStartToNormal(startBtnID, originalTxt) {
-    $("#" + startBtnID).text(originalTxt);
-    poly_isDrawingPolygon = false;
-  }
+  // function poly_btnStartToNormal(startBtnID, originalTxt) {
+  //   $("#" + startBtnID).text(originalTxt);
+  //   poly_isDrawingPolygon = false;
+  // }
 
-  function poly_ActualBtnStartToNormal() {
-    poly_btnStartToNormal(poly_startBtnID, poly_originalTxt);
-  }
+  // function poly_ActualBtnStartToNormal() {
+  //   poly_btnStartToNormal(poly_startBtnID, poly_originalTxt);
+  // }
 
   function Poly_Point(x, y) {
     this.x = x;
@@ -1007,6 +1031,15 @@
 
     let bolderPenWidth = 8;
 
+
+    let refreshCanvasLoc = function () {
+      canvasPoly = canvas.getBoundingClientRect();
+
+      canvasLeft = canvasPoly.left;
+
+      canvasTop = canvasPoly.top;
+    };
+
     let reInit = function () {
       firstPoint = true;
       secondPoint = false;
@@ -1018,7 +1051,7 @@
         rounded: true,
         layer: true,
         name: layerName,
-        type:'line'
+        type: 'line'
       };
       refreshLayerMsg();
       points = [];
@@ -1061,6 +1094,9 @@
     let offsetLeft = 0;          //实际上没有用
 
     let poly_handleMouseEvent = function (e) {
+
+      refreshCanvasLoc();
+
       if (poly_isDrawingPolygon) {
         if (firstPoint && !secondPoint) {
           obj.strokeWidth = bolderPenWidth;
@@ -1165,7 +1201,7 @@
   function poly_getRefreshedJson() {
     let notePolygon = [];
     $("#" + poly_canvasID).getLayers(function (layer) {
-      if (layer.type === 'line'&&layer.data&&layer.data.points&&layer.data.points.length>0) {
+      if (layer.type === 'line' && layer.data && layer.data.points && layer.data.points.length > 0) {
         notePolygon.push(layer.data);
       }
       return false;
@@ -1192,39 +1228,39 @@
   //   }
   // }
 
-  function poly_sentJsonToServer() {
-    let keywordPostRect = isModified ? "postMark" : "Modify";
+  // function poly_sentJsonToServer() {
+  //   let keywordPostRect = isModified ? "postMark" : "Modify";
+  //
+  //   $.ajax({
+  //     type: 'POST',
+  //     url: "/Worker/" + keywordPostRect,
+  //     data: JSON.stringify(poly_getRefreshedJson()),
+  //     success: function (result) {
+  //       console.log(result);
+  //     },
+  //     contentType: 'application/json',
+  //     dataType: 'json'
+  //   });
+  //   alert("提交成功");
+  // }
 
-    $.ajax({
-      type: 'POST',
-      url: "/Worker/" + keywordPostRect,
-      data: JSON.stringify(poly_getRefreshedJson()),
-      success: function (result) {
-        console.log(result);
-      },
-      contentType: 'application/json',
-      dataType: 'json'
-    });
-    alert("提交成功");
-  }
-
-  function poly_setBtnShowAll() {
-    $("#" + poly_showAll).click(() => {
-      showAllLayers(poly_canvasID);
-    });
-  }
-
-  function poly_setBtnHideAll() {
-    $("#" + poly_hideAll).click(() => {
-      hideAllLayers(poly_canvasID);
-    });
-  }
-
-  function poly_setButtonCommit() {
-    $("#" + poly_submit).click(() => {
-      poly_sentJsonToServer();
-    });
-  }
+  // function poly_setBtnShowAll() {
+  //   $("#" + poly_showAll).click(() => {
+  //     showAllLayers(poly_canvasID);
+  //   });
+  // }
+  //
+  // function poly_setBtnHideAll() {
+  //   $("#" + poly_hideAll).click(() => {
+  //     hideAllLayers(poly_canvasID);
+  //   });
+  // }
+  //
+  // function poly_setButtonCommit() {
+  //   $("#" + poly_submit).click(() => {
+  //     poly_sentJsonToServer();
+  //   });
+  // }
 
   function poly_switchPolygonModuleStarted() {
     // poly_setBtnShowAll();
@@ -1235,9 +1271,9 @@
     poly_setStartDrawingBtn(poly_startBtnID, poly_originalTxt, poly_inDrawingTxt);
   }
 
-  function poly_actualSwitchOn() {
-    setCanvasSizeAndSwitchOn(global_imgURL, "canvas", "canvasSaver", poly_switchPolygonModuleStarted);
-  }
+  // function poly_actualSwitchOn() {
+  //   setCanvasSizeAndSwitchOn(global_imgURL, "canvas", "canvasSaver", poly_switchPolygonModuleStarted);
+  // }
 
 
   //TODO 以上polygonDrawer
@@ -1245,8 +1281,8 @@
 
   function loadTotal() {
     let prefix = 'total';
-    globalImgMsg.noteTotal.id = prefix + getIDByTime();
-    let txt = globalImgMsg.noteTotal.mark;
+    globalImgMsg.noteTotal[0].id = prefix + getIDByTime();
+    let txt = globalImgMsg.noteTotal && globalImgMsg.noteTotal[0] ? globalImgMsg.noteTotal[0].mark : '';
     let totalInput = $("#" + totalInputID);
     let totalHolder = $("#" + totalHolderID);
     totalHolder.val(txt);
@@ -1258,7 +1294,7 @@
     let totalHolder = $("#" + totalHolderID);
     totalInput.get(0).oninput = () => {
       totalHolder.val(totalInput.val());
-      globalImgMsg.noteTotal.mark = totalInput.val();
+      globalImgMsg.noteTotal[0].mark = totalInput.val();
     }
   }
 
@@ -1300,7 +1336,7 @@
 
       if (checkIfHasMarks()) {
         globalImgMsg.isModified = isModified;
-        globalImgMsg.noteTotal.mark = $("#" + totalInputID).val();
+        globalImgMsg.noteTotal[0].mark = $("#" + totalInputID).val();
         console.log(globalImgMsg);
         $.ajax({
           type: 'POST',
