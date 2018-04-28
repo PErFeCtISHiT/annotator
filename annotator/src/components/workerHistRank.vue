@@ -7,7 +7,7 @@
             用户名:&nbsp
           </span>
           <span class="label-all" style="font-weight: bolder">
-            kiki
+            {{$store.state.user.userInfo.username}}
           </span>
         </div>
         <div style="padding-top: 29px">
@@ -15,7 +15,7 @@
             积分数:&nbsp
           </span>
           <span class="label-all" style="font-weight: bolder">
-            300
+            {{$store.state.user.userInfo.points}}
           </span>
         </div>
         <div style="padding-top: 29px">
@@ -23,7 +23,7 @@
             排名:&nbsp&nbsp&nbsp&nbsp
           </span>
           <span class="label-all" style="font-weight: bolder">
-            3
+            {{rank!==0?rank:'error'}}
           </span>
         </div>
       </el-card>
@@ -42,16 +42,16 @@
 
       <el-table
         height="250px"
-        :data="tableData"
+        :data="messages"
         style="width: 80%; padding-left: 40px">
         <el-table-column
-          prop="date"
+          prop="taskID"
           label="任务编号"
           align="center"
           width="310px">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="points"
           label="获得积分"
           align="center"
           width="310px">
@@ -63,7 +63,67 @@
 
 <script>
   export default {
-    name: "worker-hist-rank"
+    name: "worker-hist-rank",
+    data() {
+      return {
+        messages: [],
+        rank: 0,
+        rankMsg: []
+      }
+    },
+    mounted() {
+      let that = this;
+
+      that.$http.get('/statistic/checkBonus', {
+        params: {
+          username: that.$store.state.user.userInfo.username
+        }
+      })
+        .then(function (response) {
+          that.messages = response.data.mes;
+        })
+        .catch(function (error) {
+          console.log(error);
+          that.$message({
+            message:'更新积分历史失败',
+            type: 'error',
+            duration: 1500
+          });
+        });
+
+      that.$http.get('/statistic/checkRanking')
+        .then(function (response) {
+          that.rankMsg = response.data.workers;
+          that.refreshRank();
+        })
+        .catch(function (error) {
+          console.log(error);
+          that.$message({
+            message:'更新积分历史失败',
+            type: 'error',
+            duration: 1500
+          });
+        });
+    },
+    methods: {
+
+      refreshRank() {
+        for (let mes in this.rankMsg) {
+          if (mes.username === this.$store.state.user.userInfo.username) {
+            this.rank = mes.rank;
+            return;
+          }
+          this.$message({
+            message: '您的数据不在排名系统中，请联系管理员',
+            type:'error',
+            duration: 1500
+          });
+        }
+      }
+
+
+
+    }
   }
 </script>
 
