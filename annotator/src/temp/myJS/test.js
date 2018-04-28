@@ -568,7 +568,11 @@
         layer.data.mark = tempJQ.val();
         tempJQ.val("");
         refreshLabels(CanvasExt.canvasId, labelSaverID);
-        alert("更新成功");
+        window.myMessage({
+          message:'更新单个矩形标签成功',
+          type: 'success',
+          duration: 1200
+        });
       });
     },
 
@@ -953,12 +957,24 @@
 
   function poly_setUpdateNote(layer) {
     let tempJQ = $("#" + poly_updateMark);
+    let tempJQInput = $("#" + poly_inputMarkID);
     tempJQ.unbind();
     tempJQ.click(() => {
-      layer.data.mark = tempJQ.val();
+      layer.data.mark = tempJQInput.val();
+
+      // console.log("输入框的信息");
+      // console.log(tempJQInput.val());
+      //
+      // console.log("多边形标注信息");
+      // console.log(layer.data.mark);
+
       tempJQ.val("");
       refreshLabels(poly_canvasID, labelSaverID);
-      alert("更新成功");
+      window.myMessage({
+        message:'更新单个区域划分标签成功',
+        type: 'success',
+        duration: 1200
+      });
     });
   }
 
