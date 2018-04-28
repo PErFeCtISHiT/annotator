@@ -55,13 +55,7 @@ export default new VueRouter({
       path: "/3-1",
       component: recharge
     },
-    {
-      path: "/3-2",
-      component: admin
-    },
-
-
-
+    
     {
       path: "/requesterLike/:taskID/:workerName",
       name: 'forTest',
@@ -79,6 +73,11 @@ export default new VueRouter({
       name:'noteAndMark',
       component: workerNoteMark,
       props: true
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: admin
     },
 
     {
