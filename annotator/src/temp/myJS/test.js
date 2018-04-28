@@ -1130,8 +1130,6 @@
 
     let points = [];
 
-    let pointsCache = [];
-
     let refreshLayerMsg = function (inputId) {
       id = inputId;
       layerName = polyPrefix + id;
@@ -1196,7 +1194,7 @@
             console.log('注入点集');
             console.log(points);
 
-            pointsCache = points;
+
 
             obj['mouseover'] = function (layer) {
               if (!poly_isDrawingPolygon && !inDrawing) {
@@ -1204,9 +1202,7 @@
                   fillStyle: poly_hoverFillStyle,
                 }, 100);
 
-                console.log('注入点集');
-                console.log(pointsCache);
-                let pointCenter = getPolygonAreaCenter(pointsCache);
+                let pointCenter = getPolygonAreaCenter(layer.data.points);
                 drawHintTextOnLayer(this, layer, pointCenter.x, pointCenter.y);
               }
             };
