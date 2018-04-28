@@ -5,7 +5,8 @@ export default {
 
   // JSON.parse方法将一个字符串解析成一个JSON对象
   state: {
-    //userInfo的属性：level":1,"name":"somnus","username":"somnus","points":0
+    //userInfo的属性：level":[1, 2, 3],"name":"somnus","username":"somnus","points":0
+    isAdmin: localStorage.getItem('isAdmin') ? JSON.parse(localStorage.getItem('isAdmin')).isAdmin : false,
     isRequester: localStorage.getItem('isRequester')? JSON.parse(localStorage.getItem('isRequester')).isRequester : false,
     isWorker: localStorage.getItem('isWorker')? JSON.parse(localStorage.getItem('isWorker')).isWorker : false,
     // isRequester: false,
@@ -39,6 +40,8 @@ export default {
         localStorage.setItem('isRequester', JSON.stringify({isRequester: state.isRequester}));
         state.isWorker = checkContains(state.userInfo.roleList, 3);
         localStorage.setItem('isWorker', JSON.stringify({isWorker:state.isWorker}));
+        state.isAdmin = checkContains(state.userInfo.roleList, 1);
+        localStorage.setItem('isAdmin', JSON.stringify({isAdmin: state.isAdmin}));
         // console.log(localStorage.getItem('isRequester'));
         // console.log(localStorage.getItem('isWorker'));
       }
@@ -47,9 +50,11 @@ export default {
       localStorage.removeItem('user');
       localStorage.setItem('isRequester', JSON.stringify({isRequester: false}));
       localStorage.setItem('isWorker', JSON.stringify({isWorker:false}));
+      localStorage.setItem('isAdmin', JSON.stringify({isAdmin:false}));
       state.loginState = false;
       state.isWorker = false;
       state.isRequester = false;
+      state.isAdmin = false;
       Object.keys(state.userInfo).forEach(k => Vue.delete(state.userInfo, k));
     },
   },
