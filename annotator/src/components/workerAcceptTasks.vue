@@ -1,9 +1,11 @@
 <template>
   <div class="requester-tasks">
     <el-row type="flex" justify="center">
-      <el-col :span="22"><div>
-        <worker-tag-bar v-on:change="changeTabs"> </worker-tag-bar>
-      </div></el-col>
+      <el-col :span="22">
+        <div>
+          <worker-tag-bar v-on:change="changeTabs"> </worker-tag-bar>
+        </div>
+      </el-col>
     </el-row>
 
     <el-row type="flex" justify="center">
@@ -13,8 +15,8 @@
           <el-col :span="24">
 
             <worker-task-item v-for="(message, index) in messages"
-                                 @remove="handleRemove" @complete="handleComplete"
-                                 :taskMsg="message" :theIndex="index" :key="message.taskID"> </worker-task-item>
+                              @remove="handleRemove(index)" @accept="handleAccept"
+                              :taskMsg="message" :theIndex="index" :key="message.taskID"> </worker-task-item>
 
           </el-col>
         </el-row>
@@ -23,13 +25,13 @@
     </el-row>
 
 
-
   </div>
 </template>
 
 <script>
   import WorkerTagBar from "./workerTagBar";
   import WorkerTaskItem from "./workerTaskItem";
+
   const items = [
     {
       taskID: 6,
@@ -79,23 +81,22 @@
   ];
 
 
-
   export default {
     components: {
       WorkerTaskItem,
       WorkerTagBar,
     },
 
-    name: "worker-tasks",
+    name: "worker-accept-tasks",
 
     mounted: function () {
       this.changeTabs("total");
     },
 
 
-    data () {
+    data() {
       return {
-        messages: [],
+        messages: items,
         tags: [],
         tabName: ""
       };
@@ -111,70 +112,80 @@
         this.tabName = tabName;
 
         //检查类型
-        let status = 0, that = this, tab = "";
-        if(tabName === 'already'){
+        let status = 1, that = this, tab = "", userRole = 3; //3是工人
+        if (tabName === 'already') {
           status = 2;
-        }else if (tabName === 'undergoing'){
+        } else if (tabName === 'undergoing') {
           status = 1;
-        }else if (tabName === 'total'){
+        } else if (tabName === 'total') {
           status = 0;
-        }else{
-          status = 0;
+        } else {
+          status = 1;
           tab = tabName;
         }
 
-        console.log('status and tag: ', status, tab);
-        this.$http.post('/task/myTasks', {
-          username: this.$store.state.user.userInfo.username,
-          status: status,
-          tag: tab,
-          userRole: 2
+        //console.log('status and tag: ', status, tab);
+        this.$http.post('/task/allTasks', {
+            status: status,
+            tag: tab,
+            userRole: userRole
         })
           .then(function (response) {
-            let data = response.data.tasks;
-
-            that.messages = data;
+            that.messages = response.data.tasks;
+            console.log(response.data.tasks);
           })
           .catch(function (error) {
             that.$message({
               message: '请求分类失败' + error,
-              type: 'warning'
+              type: 'warning',
+              duration: 500
             });
             console.log('分类错误');
           });
 
       },
 
-      handleComplete(uid, index) {
+      handleAccept(uid, index) {
         let that = this;
 
-        this.$confirm('结束此任务，积分无法退还。是否继续', '提示', {
+        this.$confirm('接受此任务后，请到工人-进行中页面进行标注', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'info'
         })
           .then(() => {
-
             //确认的话发一个ajax请求
             console.log(uid);
-            that.$http.get('/task/endTask',{
-              params:{
-                taskID: uid
+            that.$http.get('/task/acceptTask', {
+              params: {
+                taskID: uid,
+                username: that.$store.state.user.userInfo.username
               }
             })
               .then(function (response) {
-                if(response.data.mes === true){
-                  that.messages.splice(index, 1);
-                  that.$message.success('已结束任务');
+                if (response.data.mes) {
+                  that.$message({
+                    message: '接受任务成功',
+                    type: 'success',
+                    duration: 500
+                  });
                 }
-                else{
-                  that.$message.warning('结束任务失败');
+                else {
+                  that.$message({
+                    message: '接受失败，您已经接收过该任务',
+                    type: 'warning',
+                    duration: 500
+                  });
                 }
+                that.messages.splice(index, 1);
               })
               .catch(function (error) {
-                that.$message.warning('结束任务失败' + error);
+                that.$message({
+                  message: '接受失败：'+error,
+                  type: 'warning',
+                  duration: 500
+                });
               })
-
           })
           .catch(() => {
             that.$message.info('已取消');
@@ -184,40 +195,8 @@
       /**
        * 删除任务。是从子组件emit过来的
        * */
-      handleRemove(payload){
-        let that = this;
-
-        this.$confirm('删除此任务，积分无法退还。是否继续', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-          .then(() => {
-
-            //确认的话发一个ajax请求
-            console.log(payload.uid);
-            that.$http.get('/task/deleteTask', {
-              params:{
-                taskID: payload.uid
-              }
-            })
-              .then(function (response) {
-                if(response.data.mes === true){
-                  that.messages.splice(payload.index, 1);
-                  that.$message.success('删除成功');
-                }
-                else{
-                  that.$message.warning('删除失败');
-                }
-              })
-              .catch(function (error) {
-                that.$message.warning('删除失败' + error);
-              })
-
-          })
-          .catch(() => {
-            this.$message.info('已取消');
-          })
+      handleRemove(index) {
+        this.messages.splice(index, 1);
       }
 
     }

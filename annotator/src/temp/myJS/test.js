@@ -16,8 +16,27 @@
   let labelSaverID = "labelSaver";
   let global_sponsor = "";
 
-  let global_left_saver = 0;
-  let global_top_saver = 0;
+  let global_canvas = $('#canvas')[0];         //后面这个其实不好这么写 要用全局的
+
+  let cacheOfMouseDown = null;
+  let cacheOfMouseUp = null;
+  let cacheOfMouseMove = null;
+  let cacheOfMouseClick = null;
+
+
+  function pushMouseEvent() {
+    cacheOfMouseDown = global_canvas.onmousedown;
+    cacheOfMouseUp = global_canvas.onmouseup;
+    cacheOfMouseMove = global_canvas.onmousemove;
+    cacheOfMouseClick = global_canvas.onclick;
+  }
+
+  function popMouseEvent() {
+    global_canvas.onmousedown = cacheOfMouseDown;
+    global_canvas.onmouseup = cacheOfMouseUp;
+    global_canvas.onmousemove = cacheOfMouseMove;
+    global_canvas.onclick = cacheOfMouseClick;
+  }
 
   function setGlobalSponsor(input) {
     global_sponsor = input;
@@ -336,6 +355,9 @@
   let poly_penColor = "rgb(246,232,4)";
   let poly_penWidth = 1;
 
+  let poly_refresh_up_and_down = function () {};
+
+  let rect_refresh_up_and_down = function () {};
 
   function setJQObjDisabled(obj, boolean) {
     obj.attr("disabled", boolean);
@@ -351,9 +373,12 @@
   function setBtnSwitchDrawOfRect(btnID, originalTxt, inDrawingTxt) {
     $("#" + btnID).click(() => {
       if (!inDrawing) {
+        pushMouseEvent();
+        rect_refresh_up_and_down();
         $("#" + btnID).text(inDrawingTxt);
         setJQObjDisabled(btnPoly, true);
       } else {
+        popMouseEvent();
         $("#" + btnID).text(originalTxt);
         setJQObjDisabled(btnPoly, false);
       }
@@ -435,7 +460,7 @@
 
     // 注意先调用writeInit
     loadMyRect: function (noteRectangle) {
-      console.log(noteRectangle);
+      // console.log(noteRectangle);
       let canvasJQ = $("#" + CanvasExt.canvasId);
 
       for (let i = 0; i < noteRectangle.length; i++) {
@@ -572,8 +597,9 @@
       let canvasWidth = canvasRect.width;
       let canvasHeight = canvasRect.height;
 
-      console.log(canvasLeft);
-      console.log(canvasTop);
+
+      // console.log(canvasLeft);
+      // console.log(canvasTop);
 
 
       let id;
@@ -584,6 +610,7 @@
       let preventOutOfBorderSetted = false;
 
       canvas.onmousedown = null;
+      canvas.onmouseup = null;
       //鼠标点击按下事件，画图准备
       canvas.onmousedown = (e) => {
         //回复flag状态
@@ -655,7 +682,16 @@
         handleUp(e);
       };
 
+      let cacheDown = canvas.onmousedown;
+      let cacheUp = canvas.onmouseup;
+
       let that = this;
+
+      rect_refresh_up_and_down = function () {
+        canvas.onmousedown = cacheDown;
+        canvas.onmouseup = cacheUp;
+      };
+
 
       function handleUp(e) {
         //原句：if (isDrawing&&!preventOutOfBorderSetted)
@@ -731,6 +767,7 @@
       $("#" + CanvasExt.canvasId).getLayers(function (layer) {
         if (layer.type === 'rectangle') {
           noteRectangle.push(layer.data);
+          // console.log('push_rectangle');
         }
         return false;
       });
@@ -913,13 +950,16 @@
     }
   }
 
-  function poly_setStartDrawingBtn(startBtnID, originalTxt, inDrawingTxt, author) {
+  function poly_setStartDrawingBtn(startBtnID, originalTxt, inDrawingTxt) {
     $("#" + startBtnID).click(() => {
       if (!poly_isDrawingPolygon) {
+        pushMouseEvent();
+        poly_refresh_up_and_down();
         setJQObjDisabled(btnRect, true);
         $("#" + startBtnID).text(inDrawingTxt);
-        poly_startDrawing(poly_canvasID, poly_penColor, poly_penWidth, author);
+        // poly_startDrawing(poly_canvasID, poly_penColor, poly_penWidth, author);
       } else {
+        popMouseEvent();
         setJQObjDisabled(btnRect, false);
         $("#" + startBtnID).text(originalTxt);
       }
@@ -963,16 +1003,22 @@
 
     let layerName = polyPrefix + id;
 
+    let inMoving = false;
+
+    let bolderPenWidth = 8;
 
     let reInit = function () {
       firstPoint = true;
       secondPoint = false;
+      offsetLeft = 0;
+      offSetTop = 0;
       obj = {
         strokeStyle: penColor,
         strokeWidth: penWidth,
         rounded: true,
         layer: true,
         name: layerName,
+        type:'line'
       };
       refreshLayerMsg();
       points = [];
@@ -1011,13 +1057,15 @@
     };
 
     canvas.onclick = null;
-    let offSetTop = 0;
-    let offsetLeft = 0;
-    canvas.onclick = (e) => {
+    let offSetTop = 0;           //实际上没有用
+    let offsetLeft = 0;          //实际上没有用
+
+    let poly_handleMouseEvent = function (e) {
       if (poly_isDrawingPolygon) {
         if (firstPoint && !secondPoint) {
-          offSetTop = document.body.parentElement.scrollTop;
-          offsetLeft = document.body.parentElement.scrollLeft;
+          obj.strokeWidth = bolderPenWidth;
+          // offSetTop = document.body.parentElement.scrollTop;
+          // offsetLeft = document.body.parentElement.scrollLeft;
           setBtnDisabled(true);
 
           points.push(new Poly_Point(getLocX(e, canvasLeft) - offsetLeft, getLocY(e, canvasTop) - offSetTop));
@@ -1033,13 +1081,14 @@
           firstPoint = false;
           secondPoint = true;
         } else if (!firstPoint && secondPoint) {
+          obj.strokeWidth = penWidth;
           points[1] = new Poly_Point(getLocX(e, canvasLeft) - offsetLeft, getLocY(e, canvasTop) - offSetTop);
           // console.log('x:'+getLocX(e, canvasLeft)+'y:'+getLocY(e, canvasTop));
           // draw the line
           drawLines();
           secondPoint = false;
         } else {
-          if (testIfCloseEnough(getLocX(e, canvasLeft) - offsetLeft, points[0].x, 14) && testIfCloseEnough(getLocY(e, canvasTop) - offSetTop, points[0].y, 14)) {
+          if (testIfCloseEnough(getLocX(e, canvasLeft) - offsetLeft, points[0].x, 14) && testIfCloseEnough(getLocY(e, canvasTop) - offSetTop, points[0].y, 14) && !inMoving) {
             // console.log('x:'+getLocX(e, canvasLeft)+'y:'+getLocY(e, canvasTop));
             //close the shape
             obj['closed'] = true;
@@ -1061,10 +1110,16 @@
             drawLines();
             // poly_ActualBtnStartToNormal();
 
-            poly_layerMsgDivide($("#" + poly_canvasID).getLayer(layerName));
+            let layerJQ = $("#" + poly_canvasID);
+
+            layerJQ.getLayer(layerName).type = 'line';
+
+            poly_layerMsgDivide(layerJQ.getLayer(layerName));
 
             //这步很重要，结束绘画动作
             // canvas.onclick = null;
+            canvas.onmousemove = null;
+            inMoving = false;
             setJQObjDisabled(btnPoly, false);
             reInit();
           } else {
@@ -1075,12 +1130,42 @@
         }
       }
     };
+
+    canvas.onclick = (e) => {
+      poly_handleMouseEvent(e);
+    };
+
+    canvas.onmousedown = null;
+
+    canvas.onmousedown = () => {
+      canvas.onmousemove = null;
+      if (!firstPoint) {
+        inMoving = true;
+        canvas.onmousemove = (e) => {
+          poly_handleMouseEvent(e);
+        }
+      }
+    };
+
+    canvas.onmouseup = () => {
+      inMoving = false;
+      canvas.onmousemove = null;
+    };
+
+    let cacheDown = canvas.onmousedown;
+    let cacheUp = canvas.onmouseup;
+
+    poly_refresh_up_and_down = function () {
+      canvas.onmousedown = cacheDown;
+      canvas.onmouseup = cacheUp;
+    };
+
   }
 
   function poly_getRefreshedJson() {
     let notePolygon = [];
     $("#" + poly_canvasID).getLayers(function (layer) {
-      if (layer.type === 'line') {
+      if (layer.type === 'line'&&layer.data&&layer.data.points&&layer.data.points.length>0) {
         notePolygon.push(layer.data);
       }
       return false;
@@ -1146,7 +1231,8 @@
     // poly_setBtnHideAll();         //TODO rect那边设置过一次全展示了
     // poly_getJsonFromServerAndLoadPoly(global_imgURL,"provider");
     // poly_setButtonCommit();
-    poly_setStartDrawingBtn(poly_startBtnID, poly_originalTxt, poly_inDrawingTxt, global_user);
+    poly_startDrawing(poly_canvasID, poly_penColor, poly_penWidth, global_user);
+    poly_setStartDrawingBtn(poly_startBtnID, poly_originalTxt, poly_inDrawingTxt);
   }
 
   function poly_actualSwitchOn() {
@@ -1185,6 +1271,7 @@
       data: JSON.stringify({taskID: taskID, users: [{username: user}], imgName: imgName}),
       // data:JSON.stringify({taskID:123,user:[{username:"a"},{username:"b"}],imgName:"c.png"}),
       success: function (result) {
+        console.log(result);
         if (result.marks && result.marks[0]) {
           globalImgMsg = result.marks[0];
           isModified = true;
@@ -1199,21 +1286,25 @@
   }
 
   function checkIfHasMarks() {
-    return globalImgMsg.notePolygon.length > 0 && globalImgMsg.noteTotal.length > 0 && globalImgMsg.noteTotal !== {};
+    return globalImgMsg.notePolygon.length > 0 || globalImgMsg.noteTotal.length > 0 || globalImgMsg.noteTotal !== {};
   }
 
   function setGlobalBtnSubmit(btnSubmitID) {
     $("#" + btnSubmitID).click(() => {
+
+      //先刷新数据
+
+      multiplyRate();
+      poly_getRefreshedJson();
+      CanvasExt.getRefreshedJson();
+
       if (checkIfHasMarks()) {
-        multiplyRate();
-        poly_getRefreshedJson();
-        CanvasExt.getRefreshedJson();
         globalImgMsg.isModified = isModified;
         globalImgMsg.noteTotal.mark = $("#" + totalInputID).val();
         console.log(globalImgMsg);
         $.ajax({
           type: 'POST',
-          url: "mark/postMark",
+          url: "/mark/postMark",
           data: JSON.stringify(globalImgMsg),
           success: function (result) {
             console.log(result);
@@ -1230,11 +1321,11 @@
           }
         );
       } else {
-        window.myAlert('这是一段内容', '标题名称', {
+        window.myAlert('您未进行任何标注', '错误提示', {
           confirmButtonText: '确定',
           callback: () => {
             window.myMessage({
-              message: '提交成功',
+              message: '提交失败',
               type: 'error',
               duration: 1000
             });

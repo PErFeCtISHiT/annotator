@@ -17,7 +17,7 @@
 
       <el-submenu index="2" :disabled="!$store.state.user.isWorker">
         <template slot="title">工人</template>
-        <el-menu-item index="/2-1">获取新任务</el-menu-item>
+        <el-menu-item index="/2-1">查看与获取任务</el-menu-item>
         <el-menu-item index="/2-2">进行中的任务</el-menu-item>
         <el-menu-item index="/2-3">积分历史与排名</el-menu-item>
       </el-submenu>

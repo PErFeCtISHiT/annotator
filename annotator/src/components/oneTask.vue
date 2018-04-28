@@ -39,7 +39,7 @@
               <span>任务标签:</span>
             </el-col>
             <el-col :span="12" class="label-all label_detail">
-              <el-tag v-for="tag in detailInfo.tag">{{ tag }}</el-tag>
+              <el-tag v-for="(tag, index) in detailInfo.tag" :key="index">{{ tag }}&thinsp;</el-tag>
             </el-col>
           </div>
           <div>
@@ -47,7 +47,7 @@
               <span>发布时间:</span>
             </el-col>
             <el-col :span="12" class="label-all label_detail">
-              <span>{{ detailInfo.startDate.split(" ")[0] }}</span>
+              <span>{{ detailInfo.startDate ? detailInfo.startDate.split(" ")[0] : detailInfo.startDate }}</span>
             </el-col>
           </div>
           <div>
@@ -55,7 +55,7 @@
               <span>结束时间:</span>
             </el-col>
             <el-col :span="12" class="label-all label_detail">
-              <span>{{ detailInfo.endDate.split(" ")[0] }}</span>
+              <span>{{ detailInfo.endDate ? detailInfo.endDate.split(" ")[0] : detailInfo.endDate }}</span>
             </el-col>
           </div>
           <div>
