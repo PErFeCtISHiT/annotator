@@ -16,8 +16,27 @@
   let labelSaverID = "labelSaver";
   let global_sponsor = "";
 
-  let global_left_saver = 0;
-  let global_top_saver = 0;
+  let global_canvas = $('#canvas')[0];         //后面这个其实不好这么写 要用全局的
+
+  let cacheOfMouseDown = null;
+  let cacheOfMouseUp = null;
+  let cacheOfMouseMove = null;
+  let cacheOfMouseClick = null;
+
+
+  function pushMouseEvent() {
+    cacheOfMouseDown = global_canvas.onmousedown;
+    cacheOfMouseUp = global_canvas.onmouseup;
+    cacheOfMouseMove = global_canvas.onmousemove;
+    cacheOfMouseClick = global_canvas.onclick;
+  }
+
+  function popMouseEvent() {
+    global_canvas.onmousedown = cacheOfMouseDown;
+    global_canvas.onmouseup = cacheOfMouseUp;
+    global_canvas.onmousemove = cacheOfMouseMove;
+    global_canvas.onclick = cacheOfMouseClick;
+  }
 
   function setGlobalSponsor(input) {
     global_sponsor = input;
@@ -336,6 +355,9 @@
   let poly_penColor = "rgb(246,232,4)";
   let poly_penWidth = 1;
 
+  let poly_refresh_up_and_down = function () {};
+
+  let rect_refresh_up_and_down = function () {};
 
   function setJQObjDisabled(obj, boolean) {
     obj.attr("disabled", boolean);
@@ -351,9 +373,12 @@
   function setBtnSwitchDrawOfRect(btnID, originalTxt, inDrawingTxt) {
     $("#" + btnID).click(() => {
       if (!inDrawing) {
+        pushMouseEvent();
+        rect_refresh_up_and_down();
         $("#" + btnID).text(inDrawingTxt);
         setJQObjDisabled(btnPoly, true);
       } else {
+        popMouseEvent();
         $("#" + btnID).text(originalTxt);
         setJQObjDisabled(btnPoly, false);
       }
@@ -585,6 +610,7 @@
       let preventOutOfBorderSetted = false;
 
       canvas.onmousedown = null;
+      canvas.onmouseup = null;
       //鼠标点击按下事件，画图准备
       canvas.onmousedown = (e) => {
         //回复flag状态
@@ -656,7 +682,16 @@
         handleUp(e);
       };
 
+      let cacheDown = canvas.onmousedown;
+      let cacheUp = canvas.onmouseup;
+
       let that = this;
+
+      rect_refresh_up_and_down = function () {
+        canvas.onmousedown = cacheDown;
+        canvas.onmouseup = cacheUp;
+      };
+
 
       function handleUp(e) {
         //原句：if (isDrawing&&!preventOutOfBorderSetted)
@@ -915,13 +950,16 @@
     }
   }
 
-  function poly_setStartDrawingBtn(startBtnID, originalTxt, inDrawingTxt, author) {
+  function poly_setStartDrawingBtn(startBtnID, originalTxt, inDrawingTxt) {
     $("#" + startBtnID).click(() => {
       if (!poly_isDrawingPolygon) {
+        pushMouseEvent();
+        poly_refresh_up_and_down();
         setJQObjDisabled(btnRect, true);
         $("#" + startBtnID).text(inDrawingTxt);
-        poly_startDrawing(poly_canvasID, poly_penColor, poly_penWidth, author);
+        // poly_startDrawing(poly_canvasID, poly_penColor, poly_penWidth, author);
       } else {
+        popMouseEvent();
         setJQObjDisabled(btnRect, false);
         $("#" + startBtnID).text(originalTxt);
       }
@@ -972,6 +1010,8 @@
     let reInit = function () {
       firstPoint = true;
       secondPoint = false;
+      offsetLeft = 0;
+      offSetTop = 0;
       obj = {
         strokeStyle: penColor,
         strokeWidth: penWidth,
@@ -1017,15 +1057,15 @@
     };
 
     canvas.onclick = null;
-    let offSetTop = 0;
-    let offsetLeft = 0;
+    let offSetTop = 0;           //实际上没有用
+    let offsetLeft = 0;          //实际上没有用
 
     let poly_handleMouseEvent = function (e) {
       if (poly_isDrawingPolygon) {
         if (firstPoint && !secondPoint) {
           obj.strokeWidth = bolderPenWidth;
-          offSetTop = document.body.parentElement.scrollTop;
-          offsetLeft = document.body.parentElement.scrollLeft;
+          // offSetTop = document.body.parentElement.scrollTop;
+          // offsetLeft = document.body.parentElement.scrollLeft;
           setBtnDisabled(true);
 
           points.push(new Poly_Point(getLocX(e, canvasLeft) - offsetLeft, getLocY(e, canvasTop) - offSetTop));
@@ -1096,6 +1136,7 @@
     };
 
     canvas.onmousedown = null;
+
     canvas.onmousedown = () => {
       canvas.onmousemove = null;
       if (!firstPoint) {
@@ -1109,6 +1150,14 @@
     canvas.onmouseup = () => {
       inMoving = false;
       canvas.onmousemove = null;
+    };
+
+    let cacheDown = canvas.onmousedown;
+    let cacheUp = canvas.onmouseup;
+
+    poly_refresh_up_and_down = function () {
+      canvas.onmousedown = cacheDown;
+      canvas.onmouseup = cacheUp;
     };
 
   }
@@ -1182,7 +1231,8 @@
     // poly_setBtnHideAll();         //TODO rect那边设置过一次全展示了
     // poly_getJsonFromServerAndLoadPoly(global_imgURL,"provider");
     // poly_setButtonCommit();
-    poly_setStartDrawingBtn(poly_startBtnID, poly_originalTxt, poly_inDrawingTxt, global_user);
+    poly_startDrawing(poly_canvasID, poly_penColor, poly_penWidth, global_user);
+    poly_setStartDrawingBtn(poly_startBtnID, poly_originalTxt, poly_inDrawingTxt);
   }
 
   function poly_actualSwitchOn() {
