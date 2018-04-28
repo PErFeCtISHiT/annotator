@@ -1,10 +1,9 @@
 <template>
   <div>
-    <div class="block">
-      <span class="demonstration">默认 Hover 指示器触发</span>
-      <el-carousel height="200px">
+    <div class="block" style="width:600px">
+      <el-carousel height="400px">
         <el-carousel-item v-for="item in imgURLs" :key="item">
-          <img :src="item" height="200" width="200" @click ="handleDrawing(item)"/>
+          <img :src="item" height="400" width="600" @click ="handleDrawing(item)"/>
         </el-carousel-item>
       </el-carousel>
     </div>
@@ -70,6 +69,10 @@
             that.acceptNum = data.acceptNum;
             that.completedNum = data.completedNum;
             that.totalProgress = data.totalProgress;
+
+            console.log("写入store的sponsorName:"+that.sponsorName);
+            that.updateCurrentSponsor(that.sponsorName);
+            console.log(that.$store.state.workerTask.currentSponsor);
           })
           .catch(function (error) {
             that.$message({
@@ -166,7 +169,7 @@
 
       handleDrawing(imgURL){
         this.updateCurrentImageURL(imgURL);
-        this.updateCurrentSponsor(this.sponsorName);
+
         let drawingArea = $("#drawingArea");
         drawingArea.empty();
         drawingArea.load('../../src/temp/markLocality.html');
