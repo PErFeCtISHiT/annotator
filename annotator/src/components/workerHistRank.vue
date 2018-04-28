@@ -94,6 +94,7 @@
       that.$http.get('/statistic/checkRanking')
         .then(function (response) {
           that.rankMsg = response.data.workers;
+          console.log(that.rankMsg);
           that.refreshRank();
         })
         .catch(function (error) {
@@ -108,17 +109,19 @@
     methods: {
 
       refreshRank() {
-        for (let mes in this.rankMsg) {
-          if (mes.username === this.$store.state.user.userInfo.username) {
-            this.rank = mes.rank;
+        let that = this;
+        for (let i = 0; i < that.rankMsg.length; i++ ) {
+          if (that.rankMsg[i].username === this.$store.state.user.userInfo.username) {
+            this.rank = that.rankMsg[i].rank;
             return;
           }
-          this.$message({
-            message: '您的数据不在排名系统中，请联系管理员',
-            type:'error',
-            duration: 1500
-          });
         }
+
+        this.$message({
+          message: '您的数据不在排名系统中，请联系管理员',
+          type:'error',
+          duration: 1500
+        });
       }
 
 
