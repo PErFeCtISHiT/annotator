@@ -5,6 +5,7 @@ export default {
     currentImageURL:"",
     currentSponsor:"",
     currentTaskInfo:{},
+    currentUsername:""
   },
 
   mutations:{
@@ -22,6 +23,9 @@ export default {
     },
     updateCurrentSponsor:function (state,inputSponsor) {
       state.currentSponsor = inputSponsor;
+    },
+    updateCurrentUserName:function (state,inputUsername) {
+      state.currentUsername = inputUsername;
     }
   },
 

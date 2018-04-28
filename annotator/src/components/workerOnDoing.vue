@@ -129,8 +129,10 @@
 
         let target = this.onDoing[index];
         let taskID = target.taskID;
-        let username = this.$store.state.user.userInfo.userName;
+        let username = this.$store.state.user.userInfo.username;
         let that = this;
+        console.log("传用户");
+        console.log(username);
         this.$http.get('/task/abortTask', {
           params: {
             taskID,
