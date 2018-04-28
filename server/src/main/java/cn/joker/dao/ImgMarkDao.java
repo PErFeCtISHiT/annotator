@@ -73,6 +73,7 @@ public class ImgMarkDao {
             newArray.put(username);
         }
         String imgName = jsonObject.getString("imgName");
+        imgName = imgName.substring(0,imgName.lastIndexOf("."));
         return findAllMarks(taskID, newArray, imgName);
     }
 
