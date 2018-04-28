@@ -19,7 +19,7 @@
           <!--标题-->
           <div class="big-label">用户详情</div>
 
-          <el-table :data="userDetail" class="normal-table" height="300" style="width: 100%">
+          <el-table :data="userDetail" class="normal-table" height="300" style="width: 90%">
 
             <el-table-column prop="username" label="用户名" width="160">
             </el-table-column>
@@ -29,13 +29,13 @@
 
             <el-table-column label="角色" width="160">
               <template slot-scope="scope">
-                <span v-for="oneRole in myShift(scope.row.role)">
-                  <el-tag type="info">{{ oneRole }}</el-tag>&thinsp;
+                <span v-for="oneRole in scope.row.role">
+                  <el-tag type="info">{{ myShift(oneRole) }}</el-tag>&thinsp;
                 </span>
               </template>
             </el-table-column>
 
-            <el-table-column label="等级" width="300">
+            <el-table-column label="等级" width="220">
               <template slot-scope="scope">
                 <el-popover trigger="click" placement="top">
                   <p>等级为: {{ scope.row.level }}</p>
@@ -46,14 +46,14 @@
               </template>
             </el-table-column>
 
-            <el-table-column prop="points" label="积分" width="150">
+            <el-table-column prop="points" label="积分" width="80">
             </el-table-column>
 
 
-            <el-table-column label="操作" width="400">
+            <el-table-column label="操作" width="280" fixed="right">
               <template slot-scope="scope">
                 <el-button type="primary" size="medium" disabled>修改积分</el-button>
-                <el-button type="danger" size="medium" disabled>删除</el-button>
+                <el-button type="danger" size="medium" @click="dealDelete(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -65,93 +65,39 @@
 
     <el-row>
       <el-col :span="24">
-        <div class="grid-bg row-bg3">
-          <div class="big-label">任务详情</div>
-          <el-table
-            :data="taskTableData"
-            class="normal-table"
-            height="300"
-          >
-            <el-table-column
-              prop="taskID"
-              label="任务编号"
-              width="200">
-            </el-table-column>
-            <el-table-column
-              prop="taskName"
-              label="任务名称"
-              width="250">
-            </el-table-column>
-            <el-table-column
-              prop="sponsorName"
-              label="任务发起者"
-              width="250">
-            </el-table-column>
-            <el-table-column
-              prop="startDate"
-              label="开始时间"
-              width="280">
-            </el-table-column>
-            <el-table-column
-              prop="endDate"
-              label="结束时间">
-            </el-table-column>
-          </el-table>
-        </div>
+        <adminTaskDetail :info="taskDetail"></adminTaskDetail>
       </el-col>
     </el-row>
     <!--任务信息结束-->
 
 
-    <el-row>
-      <el-col :span="24">
-        <div class="grid-bg row-bg3">
-          <div class="big-label">投诉详情</div>
-          <el-table
-            :data="reportTableData"
-            class="normal-table"
-            height="300"
-          >
-            <el-table-column
-              prop="reportTime"
-              label="投诉时间"
-              width="190">
-            </el-table-column>
-            <el-table-column
-              prop="reporter"
-              label="投诉人"
-              width="190">
-            </el-table-column>
-            <el-table-column
-              prop="respondent"
-              label="被投诉人"
-              width="190">
-            </el-table-column>
-            <el-table-column
-              prop="taskID"
-              label="投诉任务编号"
-              width="190">
-            </el-table-column>
-            <el-table-column
-              prop="description"
-              label="投诉内容"
-              width="250"
-            >
-            </el-table-column>
-            <el-table-column
-              fixed="right"
-              label="操作"
-              align="center"
-              width="100">
-              <template slot-scope="scope">
-                <el-button @click="" type="text" size="small">处理</el-button>
-                <el-button type="text" size="small">拒绝</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-      </el-col>
-    </el-row>
+    <!--<el-row>-->
+    <!--<el-col :span="24">-->
+    <!--<div class="grid-bg row-bg3">-->
+    <!--<div class="big-label">投诉详情</div>-->
+    <!--<el-table :data="reportTableData" class="normal-table" height="300">-->
+    <!--<el-table-column prop="reportTime" label="投诉时间" width="190">-->
+    <!--</el-table-column>-->
+    <!--<el-table-column prop="reporter" label="投诉人" width="190">-->
+    <!--</el-table-column>-->
+    <!--<el-table-column prop="respondent" label="被投诉人" width="190">-->
+    <!--</el-table-column>-->
+    <!--<el-table-column prop="taskID" label="投诉任务编号" width="190">-->
+    <!--</el-table-column>-->
+    <!--<el-table-column prop="description" label="投诉内容" width="250"-->
+    <!--&gt;-->
+    <!--</el-table-column>-->
+    <!--<el-table-column fixed="right" label="操作" align="center"-->
+    <!--width="100">-->
+    <!--<template slot-scope="scope">-->
+    <!--<el-button @click="" type="text" size="small">处理</el-button>-->
+    <!--<el-button type="text" size="small">拒绝</el-button>-->
+    <!--</template>-->
+    <!--</el-table-column>-->
+    <!--</el-table>-->
+    <!--</div>-->
+    <!--</el-col>-->
+    <!--</el-row>-->
 
     <!--投诉信息结束-->
   </div>
@@ -160,6 +106,7 @@
 <script>
   import adminTaskStat from './admin/adminTaskStat'
   import adminUserStat from './admin/adminUserStat'
+  import adminTaskDetail from './admin/adminTaskDetail'
 
   export default {
     //id
@@ -167,6 +114,7 @@
     //taskNum 任务总数 processNum 进行中任务数 finishNum 已结束任务数
     //userTableData 用户信息表 taskTableDate 任务信息表 reportTableData 举报信息表
     components: {
+      adminTaskDetail,
       adminUserStat,
       adminTaskStat,
     },
@@ -202,15 +150,25 @@
       this.$http.get('/user/checkUser')
         .then(function (response) {
           that.userDetail = response.data.users;
-          that.userDetail.map((x) => {
-            return that.myShift(x);
-          });
+          //console.log(that.userDetail);
         })
         .catch(function (error) {
           that.$message.warning('请求服务器数据失败' + error)
-        })
+        });
 
       //4
+      this.$http.post('/task/allTasks', {
+        userRole: 1,
+        tag: "",
+        status: 0
+      })
+        .then(function (response) {
+          that.taskDetail = response.data.tasks;
+          console.log('正常点', that.taskDetail);
+        })
+        .catch(function (error) {
+          that.$message.warning('请求服务器数据失败' + error)
+        });
     },
 
     data() {
@@ -223,8 +181,31 @@
     },
 
     methods: {
-      myShift(roles) {
-        roles.map(role => role === 2 ? "发起者" : "工人");
+      myShift(oneRole) {
+        if (oneRole === 1) return "管理员";
+        else if (oneRole === 2) return "发起者";
+        else if (oneRole === 3) return "工人";
+      },
+
+      dealDelete(index, row) {
+        let that = this;
+
+        this.$http.get('/user/deleteUser', {
+          params: {
+            username: row.username
+          }
+        })
+          .then(function (response) {
+            if (response.data.mes === true) {
+              that.$message.success('删除成功');
+              that.userDetail.splice(index, 1);
+            } else {
+              that.$message.warning('删除失败');
+            }
+          })
+          .catch(function (error) {
+            that.$message.warning('服务器连接异常。删除失败' + error)
+          })
       }
     }
 
