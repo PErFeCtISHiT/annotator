@@ -234,7 +234,7 @@ public class TaskDao {
                             //完成数量加1
                             jsonObject.put(globalCompletedNumber, Integer.valueOf(jsonObject.get(globalCompletedNumber).toString()) + 1);
 
-                        userArray.set(i, userArray.get(i).split("-")[0] + "-" + jsonObject.get(globalImgNum).toString());
+                        userArray.set(i, userArray.get(i).split("-")[0] + "-" + "end");
                         jsonObject.put(globalUserName, userArray);
                     }
                 }
@@ -449,6 +449,8 @@ public class TaskDao {
                 ArrayList<String> userArray = (ArrayList) jsonObject.getJSONArray(globalUserName).toList();
                 for (int i = 0; i < userArray.size(); i++) {
                     if (workerName.equals((userArray.get(i).split("-")[0]))) {
+                        if(userArray.get(i).split("-")[1].equals("end"))
+                            return -1.0;
                         Integer markNum = Integer.parseInt(userArray.get(i).split("-")[1]);
                         return markNum / totalNum;
                     }

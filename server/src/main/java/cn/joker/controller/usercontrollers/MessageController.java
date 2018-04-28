@@ -149,6 +149,8 @@ public class MessageController {
                 list1.put(sysRole.getSrid());
             }
             jsonObject.put("role", list1);
+            jsonObject.put("level",userInfo.getRealLevel());
+            jsonObject.put(globalPoints,userInfo.getPoints());
             userInfoArray.put(jsonObject);
         }
         ret.put("users", userInfoArray);
