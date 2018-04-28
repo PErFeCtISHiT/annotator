@@ -84,7 +84,7 @@
       refreshSelfProgress() {
         let taskID = this.taskID;
         let that = this;
-        this.$http.get('/checkWorkerProgress', {
+        this.$http.get('task/checkWorkerProgress', {
           params:{
             taskID
           }

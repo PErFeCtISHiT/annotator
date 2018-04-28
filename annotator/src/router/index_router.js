@@ -8,20 +8,29 @@ import distributeNewTask from '../components/distributeNewTask'
 import testDraw from '../components/testDraw'
 import admin from '../components/admin'
 import recharge from '../components/recharge'
-import workerGetNewTask from '../components/workerGetNewTask'
+import workerAcceptTasks from '../components/workerAcceptTasks'
 import workerOnDoing from '../components/workerOnDoing'
 import workerHistRank from '../components/workerHistRank'
 import workerNoteMark from '../components/workerNoteMark'
 import taskDetail from '../components/taskDetail'
 import firstPart from '../components/firstPart'
-
+import requesterWannaSee from '../components/requestorWannaSee'
 
 export default new VueRouter({
   routes: [
+    /**
+     * 这前两个是一样的*/
     {
       path: "/0",
       component: firstPart
     },
+    {
+      path: '/index',
+      component: firstPart
+    },
+
+    /**
+     * 菜单项*/
     {
       path: "/1-1",
       component: requesterTasks
@@ -32,7 +41,7 @@ export default new VueRouter({
     },
     {
       path: "/2-1",
-      component: workerGetNewTask
+      component: workerAcceptTasks
     },
     {
       path: "/2-2",
@@ -41,6 +50,23 @@ export default new VueRouter({
     {
       path: "/2-3",
       component: workerHistRank
+    },
+    {
+      path: "/3-1",
+      component: recharge
+    },
+    {
+      path: "/3-2",
+      component: admin
+    },
+
+
+
+    {
+      path: "/requesterLike/:taskID/:workerName",
+      name: 'forTest',
+      component: requesterWannaSee,
+      props: true
     },
     {
       path: "/taskDetail/:taskID",
@@ -54,25 +80,11 @@ export default new VueRouter({
       component: workerNoteMark,
       props: true
     },
-    {
-      path: "/3-1",
-      component: recharge
-    },
-    {
-      path: "/3-2",
-      component: admin
-    },
+
     {
       path: '/testDraw',
       component: testDraw
     },
-    {
-      path: "/taskDetailC",
-      component: taskDetail
-    },
-    {
-      path: '/index',
-      component: firstPart
-    }
+
   ]
 });

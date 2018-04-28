@@ -179,6 +179,7 @@ public class TaskController {
         JSONArray taskArray = new JSONArray();
         for (Task task : tasks) {
             JSONObject taskObj = taskDao.convertObjectToJsonObject(task);
+            taskObj.put("totalProgress", new Double(task.getCompletedNumber() / task.getExpectedNumber()));
             taskArray.put(taskObj);
         }
         JSONObject ret = new JSONObject();
@@ -408,7 +409,7 @@ public class TaskController {
         JsonHelper.jsonToResponse(response, ret);
     }
 
-    @RequestMapping(value = "/checkWorkerProgress",method = RequestMethod.POST)
+    @RequestMapping(value = "/checkWorkerProgress",method = RequestMethod.GET)
     public void checkWorkerProgress(HttpServletRequest request,HttpServletResponse response){
         Map<String, String[]> map = request.getParameterMap();
         String userName = SecurityUtils.getSubject().getPrincipal().toString();

@@ -127,7 +127,7 @@ public class TaskDao {
         } else if (userRole.equals(3)) {
             //查看已接收任务
             for (int i = 0; i < tasks.size(); i++) {
-                for (int j = 0; j < tasks.get(i).getUserName().size(); i++) {
+                for (int j = 0; j < tasks.get(i).getUserName().size(); j++) {
                     if (userName.equals(tasks.get(i).getUserName().get(j).split("-")[0])) {
                         result.add(tasks.get(i));
                     }
