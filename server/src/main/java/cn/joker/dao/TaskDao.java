@@ -319,7 +319,10 @@ public class TaskDao {
             if (jsonObject.getInt(globalTaskID) == taskID) {
                 //工人标注数量修改
                 ArrayList<String> userArray = (ArrayList) jsonObject.getJSONArray(globalUserName).toList();
-
+                for(String str : userArray){
+                    if(str.split("-")[0].equals(workerName))
+                        return false;
+                }
                 userArray.add(workerName + "-0");
                 jsonObject.put(globalUserName, userArray);
             }
