@@ -57,7 +57,7 @@ public class AdminController {
     @RequestMapping(value = "/checkTaskNum", method = RequestMethod.GET)
     public void checkTaskNum(HttpServletResponse response) {
         JSONObject ret = new JSONObject();
-        int taskNum = 0;
+        int taskNum ;
         int producing = 0;
         int finished = 0;
         List<Task> tasks = taskService.search(1, null, 0);
@@ -70,9 +70,9 @@ public class AdminController {
             } else
                 producing++;
         }
-        ret.put("sponsorNum", taskNum);
-        ret.put("workerNum", producing);
-        ret.put("adminNum", finished);
+        ret.put("taskNum", taskNum);
+        ret.put("producing", producing);
+        ret.put("finished", finished);
         JsonHelper.jsonToResponse(response, ret);
     }
 }
