@@ -965,6 +965,9 @@
 
     let layerName = polyPrefix + id;
 
+    let inMoving = false;
+
+    let bolderPenWidth = 8;
 
     let reInit = function () {
       firstPoint = true;
@@ -975,6 +978,7 @@
         rounded: true,
         layer: true,
         name: layerName,
+        type:'line'
       };
       refreshLayerMsg();
       points = [];
@@ -1015,9 +1019,11 @@
     canvas.onclick = null;
     let offSetTop = 0;
     let offsetLeft = 0;
-    canvas.onclick = (e) => {
+
+    let poly_handleMouseEvent = function (e) {
       if (poly_isDrawingPolygon) {
         if (firstPoint && !secondPoint) {
+          obj.strokeWidth = bolderPenWidth;
           offSetTop = document.body.parentElement.scrollTop;
           offsetLeft = document.body.parentElement.scrollLeft;
           setBtnDisabled(true);
@@ -1035,13 +1041,14 @@
           firstPoint = false;
           secondPoint = true;
         } else if (!firstPoint && secondPoint) {
+          obj.strokeWidth = penWidth;
           points[1] = new Poly_Point(getLocX(e, canvasLeft) - offsetLeft, getLocY(e, canvasTop) - offSetTop);
           // console.log('x:'+getLocX(e, canvasLeft)+'y:'+getLocY(e, canvasTop));
           // draw the line
           drawLines();
           secondPoint = false;
         } else {
-          if (testIfCloseEnough(getLocX(e, canvasLeft) - offsetLeft, points[0].x, 14) && testIfCloseEnough(getLocY(e, canvasTop) - offSetTop, points[0].y, 14)) {
+          if (testIfCloseEnough(getLocX(e, canvasLeft) - offsetLeft, points[0].x, 14) && testIfCloseEnough(getLocY(e, canvasTop) - offSetTop, points[0].y, 14) && !inMoving) {
             // console.log('x:'+getLocX(e, canvasLeft)+'y:'+getLocY(e, canvasTop));
             //close the shape
             obj['closed'] = true;
@@ -1063,10 +1070,16 @@
             drawLines();
             // poly_ActualBtnStartToNormal();
 
-            poly_layerMsgDivide($("#" + poly_canvasID).getLayer(layerName));
+            let layerJQ = $("#" + poly_canvasID);
+
+            layerJQ.getLayer(layerName).type = 'line';
+
+            poly_layerMsgDivide(layerJQ.getLayer(layerName));
 
             //这步很重要，结束绘画动作
             // canvas.onclick = null;
+            canvas.onmousemove = null;
+            inMoving = false;
             setJQObjDisabled(btnPoly, false);
             reInit();
           } else {
@@ -1077,12 +1090,33 @@
         }
       }
     };
+
+    canvas.onclick = (e) => {
+      poly_handleMouseEvent(e);
+    };
+
+    canvas.onmousedown = null;
+    canvas.onmousedown = () => {
+      canvas.onmousemove = null;
+      if (!firstPoint) {
+        inMoving = true;
+        canvas.onmousemove = (e) => {
+          poly_handleMouseEvent(e);
+        }
+      }
+    };
+
+    canvas.onmouseup = () => {
+      inMoving = false;
+      canvas.onmousemove = null;
+    };
+
   }
 
   function poly_getRefreshedJson() {
     let notePolygon = [];
     $("#" + poly_canvasID).getLayers(function (layer) {
-      if (layer.type === 'line') {
+      if (layer.type === 'line'&&layer.data&&layer.data.points&&layer.data.points.length>0) {
         notePolygon.push(layer.data);
       }
       return false;
@@ -1210,9 +1244,9 @@
 
       //先刷新数据
 
-        multiplyRate();
-        poly_getRefreshedJson();
-        CanvasExt.getRefreshedJson();
+      multiplyRate();
+      poly_getRefreshedJson();
+      CanvasExt.getRefreshedJson();
 
       if (checkIfHasMarks()) {
         globalImgMsg.isModified = isModified;
