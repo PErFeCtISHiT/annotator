@@ -190,11 +190,16 @@
 
 //line 249 计算polygon的质心
   function getPolygonAreaCenter(points) {
+    console.log(points);
+
     let sum_x = 0;
     let sum_y = 0;
     let sum_area = 0;
     let p1 = points[1];
     for (let i = 2; i < points.length; i++) {
+
+      console.log(points[i]);
+
       let p2 = points[i];
       let area = polygonTempArea(points[0], p1, p2);
       sum_area += area;
@@ -208,6 +213,13 @@
   }
 
   function drawHintTextOnLayer(pointer, layer, inputX, inputY) {
+    console.log(inputX);
+    console.log(inputY);
+
+    console.log('多边形的数据');
+    console.log(layer.data.mark);
+
+
     $(pointer).drawText({
       fillStyle: '#000',
       x: inputX, y: inputY,
@@ -372,8 +384,8 @@
   let poly_inputMarkID = "markInput";
   let poly_updateMark = "updateMark";
   let poly_deleteNote = "deleteNote";
-  // let poly_showAll = "showAll";
-  // let poly_hideAll = "hideAll";
+  let poly_showAll = "showAll";
+  let poly_hideAll = "hideAll";
   // let poly_submit = "commit";
 
   let poly_hoverFillStyle = 'rgba(255, 0, 0, 0.5)';
@@ -1118,6 +1130,8 @@
 
     let points = [];
 
+    let pointsCache = [];
+
     let refreshLayerMsg = function (inputId) {
       id = inputId;
       layerName = polyPrefix + id;
@@ -1178,12 +1192,21 @@
             // console.log('x:'+getLocX(e, canvasLeft)+'y:'+getLocY(e, canvasTop));
             //close the shape
             obj['closed'] = true;
+
+            console.log('注入点集');
+            console.log(points);
+
+            pointsCache = points;
+
             obj['mouseover'] = function (layer) {
               if (!poly_isDrawingPolygon && !inDrawing) {
                 $(this).animateLayer(layer, {
                   fillStyle: poly_hoverFillStyle,
                 }, 100);
-                let pointCenter = getPolygonAreaCenter(points);
+
+                console.log('注入点集');
+                console.log(pointsCache);
+                let pointCenter = getPolygonAreaCenter(pointsCache);
                 drawHintTextOnLayer(this, layer, pointCenter.x, pointCenter.y);
               }
             };
@@ -1509,6 +1532,8 @@
   }
 
   setGlobalParamAndUpdateJson();
+  CanvasExt.setShowAllBtn(poly_canvasID, poly_showAll);
+  CanvasExt.setHideAllBtn(poly_canvasID, poly_hideAll);
   // rect_actualSwitchOn();
   // poly_actualSwitchOn();
   setCanvasSizeAndSwitchOn2(global_imgURL, "canvas", "canvasSaver", poly_switchPolygonModuleStarted, getRectStarted);
@@ -1517,6 +1542,8 @@
   console.log(window.myVueStore.state.user.loginState);
 //TODO 以上starter
 
-})(window.myVueStore.state.workerTask.currentImageURL, window.myVueStore.state.user.userInfo.username, window.myVueStore.state.workerTask.currentSponsor, window.myVueStore.state.workerTask.currentTaskID);
+})(window.myVueStore.state.workerTask.currentImageURL, window.myVueStore.state.workerTask.currentUsername, window.myVueStore.state.workerTask.currentSponsor, window.myVueStore.state.workerTask.currentTaskID);
 
 //imgURL,workerName,sponsorName,taskID
+
+//window.myVueStore.state.workerTask.currentUsername 第二个属性改掉

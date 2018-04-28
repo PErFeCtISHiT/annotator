@@ -69,16 +69,16 @@
         myTaskID: this.taskID,
         taskData: {},
         progress: 0,
-        sponsorName: '',
-        taskName: '',
-        description: '',
-        imgNum: '',
-        startDate: '',
-        endDate: '',
-        points: '',
-        acceptNum: '',
-        completedNum: '',
-        totalProgress: 0,
+        // sponsorName: '',
+        // taskName: '',
+        // description: '',
+        // imgNum: '',
+        // startDate: '',
+        // endDate: '',
+        // points: '',
+        // acceptNum: '',
+        // completedNum: '',
+        // totalProgress: 0,
         imgURLs: ['../../src/testDrawImage/1.jpg', '../../src/testDrawImage/2.jpg', '../../src/testDrawImage/3.jpg', '../../src/testDrawImage/4.jpg']
       }
     },
@@ -96,15 +96,15 @@
           .then(function (response) {
             let data = response.data;
             that.sponsorName = data.sponsorName;
-            that.taskName = data.taskName;
-            that.description = data.description;
-            that.imgNum = data.imgNum;
-            that.startDate = data.startDate;
-            that.endDate = data.endDate;
-            that.points = data.points;
-            that.acceptNum = data.acceptNum;
-            that.completedNum = data.completedNum;
-            that.totalProgress = data.totalProgress;
+            // that.taskName = data.taskName;
+            // that.description = data.description;
+            // that.imgNum = data.imgNum;
+            // that.startDate = data.startDate;
+            // that.endDate = data.endDate;
+            // that.points = data.points;
+            // that.acceptNum = data.acceptNum;
+            // that.completedNum = data.completedNum;
+            // that.totalProgress = data.totalProgress;
 
             that.taskData = response.data;
 
