@@ -1391,7 +1391,9 @@
   }
 
   function checkIfHasMarks() {
-    return globalImgMsg.notePolygon.length > 0 || globalImgMsg.noteTotal.length > 0 || globalImgMsg.noteTotal !== {};
+    console.log("标注了吗？");
+    // console.log(globalImgMsg.notePolygon.length > 0 || globalImgMsg.noteRectangle.length > 0 || (globalImgMsg.noteTotal.length > 0&&globalImgMsg.noteTotal[0].mark!==''&&globalImgMsg.noteTotal[0].mark!==null));
+    return globalImgMsg.notePolygon.length > 0 || globalImgMsg.noteRectangle.length > 0 || (globalImgMsg.noteTotal.length > 0&&globalImgMsg.noteTotal[0].mark!==''&&globalImgMsg.noteTotal[0].mark!==null);
   }
 
   function setGlobalBtnSubmit(btnSubmitID) {
