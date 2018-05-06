@@ -96,7 +96,7 @@
                 </el-col>
                 <el-col :span="12" class="label-all">
                   <el-progress :text-inside="true" :stroke-width="18"
-                               :percentage="taskMsg.totalProgress * 100"> </el-progress>
+                               :percentage="taskMsg.totalProgress.toFixed(2) * 100"> </el-progress>
                 </el-col>
               </div>
             </div>

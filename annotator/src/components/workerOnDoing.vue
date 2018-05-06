@@ -2,6 +2,7 @@
   <div>
     <ul>
       <li
+        style="margin-top: 10px; margin-bottom: 10px"
         is="task-item"
         v-for="(todo, index) in onDoing"
         :key="todo.taskID"

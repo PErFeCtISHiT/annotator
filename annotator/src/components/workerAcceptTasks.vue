@@ -14,9 +14,11 @@
         <el-row :gutter="10">
           <el-col :span="24">
 
-            <worker-task-item v-for="(message, index) in messages"
-                              @remove="handleRemove(index)" @accept="handleAccept"
-                              :taskMsg="message" :theIndex="index" :key="message.taskID"> </worker-task-item>
+            <worker-task-item
+              style="height: 542px;"
+              v-for="(message, index) in messages"
+              @remove="handleRemove(index)" @accept="handleAccept"
+              :taskMsg="message" :theIndex="index" :key="message.taskID"> </worker-task-item>
 
           </el-col>
         </el-row>

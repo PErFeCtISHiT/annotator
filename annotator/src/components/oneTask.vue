@@ -1,4 +1,5 @@
 <template>
+  <div style="height: 542px">
   <el-col :span="24">
     <!--任务详情-->
     <el-col :span="21">
@@ -116,6 +117,7 @@
       <img src="../images/ping.png" height="60" width="60" style="margin-left: -38px; margin-top: -5px">
     </el-col>
   </el-col>
+  </div>
 </template>
 
 <script>
