@@ -44,7 +44,7 @@
           label="进度"
           width="350">
           <template slot-scope="scope">
-            <el-progress :percentage="scope.row.completedNumber * 100 / response.imgNum" status="success"></el-progress>
+            <el-progress :percentage="scope.row.completedNumber.toFixed(2) * 100 / response.imgNum" :status="scope.row.completedNumber===1?'success':''"></el-progress>
           </template>
 
         </el-table-column>
