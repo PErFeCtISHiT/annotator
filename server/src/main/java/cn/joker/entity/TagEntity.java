@@ -1,0 +1,76 @@
+package cn.joker.entity;
+
+import javax.persistence.*;
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * @author: pis
+ * @description: good good study
+ * @date: create in 21:55 2018/5/4
+ */
+@Entity
+@Table(name = "tag", schema = "imgannotator", catalog = "")
+public class TagEntity {
+    private Integer id;
+    private String tag;
+    private String description;
+    private List<TaskEntity> taskEntityList;
+
+    @ManyToMany(cascade = CascadeType.ALL,mappedBy = "tagEntityList")
+    public List<TaskEntity> getTaskEntityList() {
+        return taskEntityList;
+    }
+
+    public void setTaskEntityList(List<TaskEntity> taskEntityList) {
+        this.taskEntityList = taskEntityList;
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false)
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    @Basic
+    @Column(name = "tag", nullable = false, length = 200)
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    @Basic
+    @Column(name = "description", nullable = true)
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TagEntity tagEntity = (TagEntity) o;
+        return Objects.equals(id, tagEntity.id) &&
+                Objects.equals(tag, tagEntity.tag) &&
+                Objects.equals(description, tagEntity.description) &&
+                Objects.equals(taskEntityList, tagEntity.taskEntityList);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, tag, description, taskEntityList);
+    }
+}

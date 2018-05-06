@@ -1,0 +1,117 @@
+package cn.joker.entity;
+
+import javax.persistence.*;
+import java.util.Objects;
+
+/**
+ * @author: pis
+ * @description: good good study
+ * @date: create in 21:55 2018/5/4
+ */
+@Entity
+@Table(name = "img_mark", schema = "imgannotator", catalog = "")
+public class ImgMarkEntity {
+    private Integer id;
+    private ImageEntity image_imgMark;
+    private UserEntity worker;
+    private String noteRectangle;
+    private String notePolygon;
+    private String noteTotal;
+    private TaskEntity imgMark_task;
+
+
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    public ImageEntity getImage_imgMark() {
+        return image_imgMark;
+    }
+
+    public void setImage_imgMark(ImageEntity image_imgMark) {
+        this.image_imgMark = image_imgMark;
+    }
+
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "task_id")
+    public TaskEntity getImgMark_task() {
+        return imgMark_task;
+    }
+
+    public void setImgMark_task(TaskEntity imgMark_task) {
+        this.imgMark_task = imgMark_task;
+    }
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false)
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    public UserEntity getWorker() {
+        return worker;
+    }
+
+    public void setWorker(UserEntity worker) {
+        this.worker = worker;
+    }
+
+    @Basic
+    @Column(name = "noteRectangle", nullable = true)
+    public String getNoteRectangle() {
+        return noteRectangle;
+    }
+
+    public void setNoteRectangle(String noteRectangle) {
+        this.noteRectangle = noteRectangle;
+    }
+
+    @Basic
+    @Column(name = "notePolygon", nullable = true)
+    public String getNotePolygon() {
+        return notePolygon;
+    }
+
+    public void setNotePolygon(String notePolygon) {
+        this.notePolygon = notePolygon;
+    }
+
+    @Basic
+    @Column(name = "noteTotal", nullable = true, length = 200)
+    public String getNoteTotal() {
+        return noteTotal;
+    }
+
+    public void setNoteTotal(String noteTotal) {
+        this.noteTotal = noteTotal;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ImgMarkEntity that = (ImgMarkEntity) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(image_imgMark, that.image_imgMark) &&
+                Objects.equals(worker, that.worker) &&
+                Objects.equals(noteRectangle, that.noteRectangle) &&
+                Objects.equals(notePolygon, that.notePolygon) &&
+                Objects.equals(noteTotal, that.noteTotal) &&
+                Objects.equals(imgMark_task, that.imgMark_task);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, image_imgMark, worker, noteRectangle, notePolygon, noteTotal, imgMark_task);
+    }
+}

@@ -1,0 +1,7 @@
+#/annotator/.idea/
+#/annotator/node_modules/
+#/annotator/dist/
+#/.idea/
+#
+#/server/target/
+##/server/src/main/resources/application.properties
