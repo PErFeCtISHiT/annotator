@@ -8,5 +8,5 @@ import cn.joker.entity.SysPermissionEntity;
  * @date: create in 20:25 2018/3/28
  */
 public interface SysPermissionService {
-    SysPermissionEntity findBySysPermissionId(String spid);
+    SysPermissionEntity findBySysPermissionId(Integer spid);
 }
