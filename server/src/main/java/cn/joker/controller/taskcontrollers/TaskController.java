@@ -1,13 +1,11 @@
 package cn.joker.controller.taskcontrollers;
 
 import cn.joker.dao.TaskDao;
+import cn.joker.entity.BonusHistory;
 import cn.joker.entity.ReportMessage;
 import cn.joker.entity.Task;
 import cn.joker.entity.UserInfo;
-import cn.joker.sevice.ImgMarkService;
-import cn.joker.sevice.ReportService;
-import cn.joker.sevice.TaskService;
-import cn.joker.sevice.UserInfoService;
+import cn.joker.sevice.*;
 import cn.joker.util.DateHelper;
 import cn.joker.util.JsonHelper;
 import com.google.gson.JsonObject;
@@ -33,6 +31,8 @@ public class TaskController {
     private ReportService reportService;
     @Resource
     private UserInfoService userInfoService;
+    @Resource
+    private BonusHistoryService bonusHistoryService;
     private String globalTaskID = "taskID";
     private String globalSponsorName = "sponsorName";
     private String globalTaskName = "taskName";
@@ -242,8 +242,12 @@ public class TaskController {
         UserInfo userInfo = userInfoService.findByUsername(username);
         userInfo.setPoints(userInfo.getPoints() + task.getInt(globalPoints));
         userInfo.setLevel(userInfo.getLevel() + task.getInt(globalPoints));
+        BonusHistory bonusHistory = new BonusHistory();
+        bonusHistory.setPoints(task.getInt(globalPoints));
+        bonusHistory.setTaskID(taskID);
+        bonusHistory.setWorkerName(username);
         JSONObject ret = new JSONObject();
-        ret.put(globalMes, taskService.completeTask(taskID, username) && userInfoService.modifyUser(userInfo));
+        ret.put(globalMes, taskService.completeTask(taskID, username) && userInfoService.modifyUser(userInfo) && bonusHistoryService.addBonusHistory(bonusHistory));
         JsonHelper.jsonToResponse(response, ret);
     }
 
