@@ -145,7 +145,7 @@
 
       },
 
-      handleAccept(uid, index) {
+      handleComplete(uid, index) {
         let that = this;
 
         this.$confirm('结束此任务，积分无法退还。是否继续', '提示', {
