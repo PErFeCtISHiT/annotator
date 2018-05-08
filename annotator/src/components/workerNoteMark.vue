@@ -70,7 +70,7 @@
         myTaskID: this.taskID,
         taskData: {},
         progress: 0,
-        imgURLs: ['../../src/testDrawImage/1.jpg', '../../src/testDrawImage/2.jpg', '../../src/testDrawImage/3.jpg', '../../src/testDrawImage/4.jpg']
+        imgURLs: []
       }
     },
     methods: {

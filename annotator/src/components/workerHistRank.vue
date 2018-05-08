@@ -80,6 +80,8 @@
         }
       })
         .then(function (response) {
+          console.log('积分历史：');
+          console.log(response.data.mes);
           that.messages = response.data.mes;
         })
         .catch(function (error) {
