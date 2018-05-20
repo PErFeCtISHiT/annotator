@@ -1,6 +1,7 @@
 package cn.joker.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "user", schema = "imgannotator", catalog = "")
-public class UserEntity {
+public class UserEntity implements Serializable{
     private Integer id;
     private String username;
     private String passwr;
@@ -126,7 +127,7 @@ public class UserEntity {
         this.email = email;
     }
 
-    @ManyToMany(cascade=CascadeType.ALL)
+    @ManyToMany(cascade=CascadeType.PERSIST)
     @JoinTable(name="user_role", joinColumns={@JoinColumn(referencedColumnName="ID")}
             , inverseJoinColumns={@JoinColumn(referencedColumnName="ID")})
 
@@ -140,7 +141,7 @@ public class UserEntity {
 
 
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name="user_ability",joinColumns = {@JoinColumn(referencedColumnName = "ID")},
             inverseJoinColumns = {@JoinColumn(referencedColumnName = "ID")})
 
@@ -153,7 +154,7 @@ public class UserEntity {
         this.abilityEntityList = abilityEntityList;
     }
 
-    @OneToMany(mappedBy = "bonusHistory_user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "bonusHistory_user",cascade = CascadeType.PERSIST)
 
     public List<BonusHistoryEntity> getBonusHistoryEntityList() {
         return bonusHistoryEntityList;

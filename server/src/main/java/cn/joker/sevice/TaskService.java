@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public interface TaskService {
+public interface TaskService extends PubService{
     Integer releaseTask(TaskEntity task);
 
     boolean modifyTask(TaskEntity task);
@@ -16,8 +16,6 @@ public interface TaskService {
     List<TaskEntity> search(int userRole, String tag, Integer status);
 
     boolean endTask(Integer taskID);
-
-    boolean deleteTask(Integer taskID);
 
     boolean completeTask(Integer taskID, String workerName);
 
@@ -36,4 +34,5 @@ public interface TaskService {
     Integer findMarkNumByImgNameAndUserAndID(Integer taskID, String imgName, JSONArray users);
 
     boolean postMark(String workerName, Integer taskID);
+
 }

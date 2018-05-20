@@ -1,6 +1,6 @@
 package cn.joker.dao;
 
-import cn.joker.entity.SysRoleEntity;
+import cn.joker.entity.ReportmessageEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,9 +9,9 @@ import javax.persistence.Table;
 /**
  * @author: pis
  * @description: good good study
- * @date: create in 12:53 2018/5/5
+ * @date: create in 7:31 2018/5/18
  */
 @Repository
-@Table(name = "sys_role")
-public interface SysRoleRepository extends JpaRepository<SysRoleEntity,Integer>{
+@Table(name = "reportmessage")
+public interface ReportmessageRepository extends JpaRepository<ReportmessageEntity,Integer> {
 }

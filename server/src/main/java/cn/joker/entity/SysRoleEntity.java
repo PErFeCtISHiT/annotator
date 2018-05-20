@@ -1,6 +1,7 @@
 package cn.joker.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "sys_role", schema = "imgannotator", catalog = "")
-public class SysRoleEntity {
+public class SysRoleEntity implements Serializable {
     private Integer id;
     private String role;
     private String description;
@@ -45,7 +46,7 @@ public class SysRoleEntity {
         return description;
     }
 
-    @ManyToMany(mappedBy = "roleEntityList",cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "roleEntityList",cascade = CascadeType.PERSIST)
 
     public List<UserEntity> getUserEntityList() {
         return userEntityList;
@@ -55,7 +56,7 @@ public class SysRoleEntity {
         this.userEntityList = userEntityList;
     }
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name="role_permission", joinColumns={@JoinColumn(referencedColumnName="ID")}
             , inverseJoinColumns={@JoinColumn(referencedColumnName="ID")})
 

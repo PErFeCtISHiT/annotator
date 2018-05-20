@@ -9,9 +9,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import javax.persistence.EntityManagerFactory;
 import javax.servlet.MultipartConfigElement;
 import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
@@ -19,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @Configuration
+@EnableTransactionManagement
 public class ShiroConfig extends WebMvcConfigurerAdapter {
     @Bean
     public ShiroFilterFactoryBean shirFilter(DefaultWebSecurityManager securityManager) {
@@ -114,5 +118,12 @@ public class ShiroConfig extends WebMvcConfigurerAdapter {
         /// 设置总上传数据总大小
         factory.setMaxRequestSize("50MB");
         return factory.createMultipartConfig();
+    }
+
+    @Bean
+    public JpaTransactionManager transactionManager(EntityManagerFactory factory){
+        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager(factory);
+        jpaTransactionManager.setGlobalRollbackOnParticipationFailure(false);
+        return jpaTransactionManager;
     }
 }

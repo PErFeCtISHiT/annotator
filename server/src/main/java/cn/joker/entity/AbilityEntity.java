@@ -1,6 +1,7 @@
 package cn.joker.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "ability", schema = "imgannotator", catalog = "")
-public class AbilityEntity {
+public class AbilityEntity implements Serializable{
     private Integer id;
     private Double totalPoints;
     private List<UserEntity> userEntityList;
@@ -37,7 +38,7 @@ public class AbilityEntity {
         this.totalPoints = totalPoints;
     }
 
-    @ManyToMany(mappedBy = "abilityEntityList",cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "abilityEntityList",cascade = CascadeType.PERSIST)
     public List<UserEntity> getUserEntityList() {
         return userEntityList;
     }

@@ -10,7 +10,7 @@ import java.util.List;
  * @description: good good study
  * @date: create in 9:11 2018/4/14
  */
-public interface ImgMarkService {
+public interface ImgMarkService extends PubService{
     boolean refreshMark(ImageEntity imgMark, JSONObject jsonObject);
 
     List<ImageEntity> findAllMarks(JSONObject jsonObject);

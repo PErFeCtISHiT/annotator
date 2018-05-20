@@ -1,6 +1,7 @@
 package cn.joker.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "reportmessage", schema = "imgannotator", catalog = "")
-public class ReportmessageEntity {
+public class ReportmessageEntity implements Serializable {
     private Integer id;
     private UserEntity respondent;
     private UserEntity reporter;
@@ -33,7 +34,7 @@ public class ReportmessageEntity {
     }
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "respondent_id")
     public UserEntity getRespondent() {
         return respondent;
@@ -43,7 +44,7 @@ public class ReportmessageEntity {
         this.respondent = respondent;
     }
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "reporter_id")
     public UserEntity getReporter() {
         return reporter;
@@ -53,7 +54,7 @@ public class ReportmessageEntity {
         this.reporter = reporter;
     }
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "task_id")
     public TaskEntity getTask() {
         return task;

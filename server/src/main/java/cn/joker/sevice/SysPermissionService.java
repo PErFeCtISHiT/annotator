@@ -7,6 +7,5 @@ import cn.joker.entity.SysPermissionEntity;
  * @description: good good study
  * @date: create in 20:25 2018/3/28
  */
-public interface SysPermissionService {
-    SysPermissionEntity findBySysPermissionId(Integer spid);
+public interface SysPermissionService extends PubService{
 }

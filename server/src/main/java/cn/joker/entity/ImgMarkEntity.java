@@ -1,6 +1,7 @@
 package cn.joker.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "img_mark", schema = "imgannotator", catalog = "")
-public class ImgMarkEntity {
+public class ImgMarkEntity implements Serializable {
     private Integer id;
     private ImageEntity image_imgMark;
     private UserEntity worker;
@@ -21,7 +22,7 @@ public class ImgMarkEntity {
 
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "image_id")
     public ImageEntity getImage_imgMark() {
         return image_imgMark;
@@ -32,7 +33,7 @@ public class ImgMarkEntity {
     }
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "task_id")
     public TaskEntity getImgMark_task() {
         return imgMark_task;

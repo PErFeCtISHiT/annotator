@@ -1,6 +1,7 @@
 package cn.joker.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,13 +12,13 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "tag", schema = "imgannotator", catalog = "")
-public class TagEntity {
+public class TagEntity implements Serializable {
     private Integer id;
     private String tag;
     private String description;
     private List<TaskEntity> taskEntityList;
 
-    @ManyToMany(cascade = CascadeType.ALL,mappedBy = "tagEntityList")
+    @ManyToMany(cascade = CascadeType.PERSIST,mappedBy = "tagEntityList")
     public List<TaskEntity> getTaskEntityList() {
         return taskEntityList;
     }

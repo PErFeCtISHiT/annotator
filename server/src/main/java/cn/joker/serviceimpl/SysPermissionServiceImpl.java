@@ -4,17 +4,26 @@ import cn.joker.dao.SysPermissionRepository;
 import cn.joker.entity.SysPermissionEntity;
 import cn.joker.sevice.SysPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author: pis
  * @description: good good study
  * @date: create in 21:22 2018/5/6
  */
-public class SysPermissionServiceImpl implements SysPermissionService{
+@Service
+@Transactional(readOnly = true,propagation = Propagation.NESTED)
+@CacheConfig
+public class SysPermissionServiceImpl extends PubServiceImpl implements SysPermissionService{
+    private final SysPermissionRepository sysPermissionRepository;
+
     @Autowired
-    private SysPermissionRepository sysPermissionRepository;
-    @Override
-    public SysPermissionEntity findBySysPermissionId(Integer spid) {
-        return sysPermissionRepository.findById(spid);
+    public SysPermissionServiceImpl(SysPermissionRepository sysPermissionRepository) {
+        this.repository = sysPermissionRepository;
+        this.sysPermissionRepository = sysPermissionRepository;
     }
+
 }

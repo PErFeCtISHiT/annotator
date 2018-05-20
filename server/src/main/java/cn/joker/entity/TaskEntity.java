@@ -1,6 +1,7 @@
 package cn.joker.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
@@ -12,7 +13,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "task", schema = "imgannotator", catalog = "")
-public class TaskEntity {
+public class TaskEntity implements Serializable{
     private Integer id;
     private UserEntity sponsor;
     private String taskName;
@@ -31,7 +32,7 @@ public class TaskEntity {
     private List<WorkersForTheTaskEntity> workersForTheTaskEntityList;
     private List<TagEntity> tagEntityList;
 
-    @ManyToMany(cascade=CascadeType.ALL)
+    @ManyToMany(cascade=CascadeType.PERSIST)
     @JoinTable(name="task_tag", joinColumns={@JoinColumn(referencedColumnName="ID")}
             , inverseJoinColumns={@JoinColumn(referencedColumnName="ID")})
     public List<TagEntity> getTagEntityList() {
@@ -42,7 +43,7 @@ public class TaskEntity {
         this.tagEntityList = tagEntityList;
     }
 
-    @OneToMany(mappedBy = "workers_task",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "workers_task",cascade = CascadeType.PERSIST)
     public List<WorkersForTheTaskEntity> getWorkersForTheTaskEntityList() {
         return workersForTheTaskEntityList;
     }
@@ -51,7 +52,7 @@ public class TaskEntity {
         this.workersForTheTaskEntityList = workersForTheTaskEntityList;
     }
 
-    @OneToMany(mappedBy = "imgMark_task",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "imgMark_task",cascade = CascadeType.PERSIST)
     public List<ImgMarkEntity> getImgMarkEntityList() {
         return imgMarkEntityList;
     }
@@ -60,7 +61,7 @@ public class TaskEntity {
         this.imgMarkEntityList = imgMarkEntityList;
     }
 
-    @OneToMany(mappedBy = "img_task",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "img_task",cascade = CascadeType.PERSIST)
     public List<ImageEntity> getImageEntityList() {
         return imageEntityList;
     }
@@ -71,7 +72,7 @@ public class TaskEntity {
 
 
 
-    @OneToMany(mappedBy = "bonusHistory_task",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "bonusHistory_task",cascade = CascadeType.PERSIST)
     public List<BonusHistoryEntity> getBonusHistoryEntityList() {
         return bonusHistoryEntityList;
     }
@@ -92,7 +93,7 @@ public class TaskEntity {
         this.id = id;
     }
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     public UserEntity getSponsor() {
         return sponsor;
