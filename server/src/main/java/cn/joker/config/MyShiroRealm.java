@@ -51,7 +51,7 @@ public class MyShiroRealm extends AuthorizingRealm {
         return new SimpleAuthenticationInfo(
                 UserEntity.getUsername(), //用户名
                 UserEntity.getPasswr(), //密码
-                ByteSource.Util.bytes( UserEntity.getUsername() + UserEntity.getSalt()),//salt=username+salt
+                ByteSource.Util.bytes(UserEntity.getUsername() + UserEntity.getSalt()),//salt=username+salt
                 getName()  //realm name
         );
     }

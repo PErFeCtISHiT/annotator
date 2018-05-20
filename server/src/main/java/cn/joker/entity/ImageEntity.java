@@ -15,7 +15,18 @@ public class ImageEntity implements Serializable {
     private Integer id;
     private String url;
     private TaskEntity img_task;
+    private String name;
 
+
+    @Basic
+    @Column(name = "name",nullable = false,length = 200)
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "task_id")
@@ -47,6 +58,7 @@ public class ImageEntity implements Serializable {
     public void setUrl(String url) {
         this.url = url;
     }
+
 
     @Override
     public boolean equals(Object o) {

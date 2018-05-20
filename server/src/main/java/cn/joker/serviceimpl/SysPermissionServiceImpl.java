@@ -1,7 +1,6 @@
 package cn.joker.serviceimpl;
 
 import cn.joker.dao.SysPermissionRepository;
-import cn.joker.entity.SysPermissionEntity;
 import cn.joker.sevice.SysPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -15,9 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @date: create in 21:22 2018/5/6
  */
 @Service
-@Transactional(readOnly = true,propagation = Propagation.NESTED)
-@CacheConfig
-public class SysPermissionServiceImpl extends PubServiceImpl implements SysPermissionService{
+public class SysPermissionServiceImpl extends PubServiceImpl implements SysPermissionService {
     private final SysPermissionRepository sysPermissionRepository;
 
     @Autowired

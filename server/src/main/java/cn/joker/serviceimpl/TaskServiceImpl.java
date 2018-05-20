@@ -2,16 +2,14 @@ package cn.joker.serviceimpl;
 
 import cn.joker.dao.TaskRepository;
 import cn.joker.entity.TaskEntity;
-import cn.joker.namespace.stdName;
+import cn.joker.entity.UserEntity;
+import cn.joker.entity.WorkersForTheTaskEntity;
 import cn.joker.sevice.TaskService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -22,8 +20,6 @@ import java.util.List;
  * @date: create in 15:34 2018/5/6
  */
 @Service
-@Transactional(readOnly = true,propagation = Propagation.NESTED)
-@CacheConfig
 public class TaskServiceImpl extends PubServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
 
@@ -31,18 +27,6 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
     public TaskServiceImpl(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
         this.repository = taskRepository;
-    }
-
-    @Override
-    @Transactional
-    @CacheEvict(cacheNames = "secondlevels", allEntries = true)
-    public Integer releaseTask(TaskEntity task) {
-        return taskRepository.saveAndFlush(task).getId();
-    }
-
-    @Override
-    public boolean modifyTask(TaskEntity task) {
-        return taskRepository.save(task) != null;
     }
 
     @Override
@@ -96,11 +80,22 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
     }
 
     @Override
-    public boolean postMark(String workerName, Integer taskID) {
-        return false;
+    public boolean postMark(UserEntity userEntity, TaskEntity taskEntity) {
+        List<WorkersForTheTaskEntity> workersForTheTaskEntities = taskEntity.getWorkersForTheTaskEntityList();
+        for (WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities) {
+            if (workersForTheTaskEntity.getWorker().getUsername().equals(userEntity.getUsername())) {
+                workersForTheTaskEntity.setMarkedNum(workersForTheTaskEntity.getMarkedNum() + 1);
+                break;
+            }
+        }
+        taskEntity.setWorkersForTheTaskEntityList(workersForTheTaskEntities);
+        return this.modify(taskEntity);
     }
 
-
+    @Override
+    public List<TaskEntity> findAll() {
+        return taskRepository.findAll();
+    }
 
 
 }

@@ -1,16 +1,16 @@
 package cn.joker.controller.taskcontrollers;
 
 import cn.joker.dao.TaskDao;
-import cn.joker.entity.ReportMessage;
-import cn.joker.entity.Task;
-import cn.joker.entity.UserInfo;
-import cn.joker.sevice.ImgMarkService;
+import cn.joker.entity.TagEntity;
+import cn.joker.entity.TaskEntity;
+import cn.joker.entity.UserEntity;
+import cn.joker.namespace.stdName;
 import cn.joker.sevice.ReportService;
+import cn.joker.sevice.TagService;
 import cn.joker.sevice.TaskService;
-import cn.joker.sevice.UserInfoService;
+import cn.joker.sevice.UserService;
 import cn.joker.util.DateHelper;
 import cn.joker.util.JsonHelper;
-import com.google.gson.JsonObject;
 import org.apache.shiro.SecurityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -32,25 +33,10 @@ public class TaskController {
     @Resource
     private ReportService reportService;
     @Resource
-    private UserInfoService userInfoService;
-    private String globalTaskID = "taskID";
-    private String globalSponsorName = "sponsorName";
-    private String globalTaskName = "taskName";
-    private String globalDescription = "description";
-    private String globalWorkerLevel = "workerLevel";
-    private String globalTag = "tag";
-    private String globalPoints = "points";
-    private String globalExpectedNumber = "expectedNumber";
-    private String globalCompletedNumber = "completedNumber";
-    private String globalStartDate = "startDate";
-    private String globalEndDate = "endDate";
-    private String globalMes = "mes";
-    private String globalUsername = "username";
-    private String globalUserRole = "userRole";
-    private String globalStatus = "status";
-    private String globalTasks = "tasks";
-    private String globalImgNum = "imgNum";
-    private String globalReportList = "reportList";
+    private UserService userService;
+    @Resource
+    private TagService tagService;
+
 
     /**
      * 发起任务
@@ -63,36 +49,31 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.POST, value = "/releaseTask")
     public void releaseTask(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        Task task = new Task();
+        TaskEntity task = new TaskEntity();
 
-        task.setDescription(jsonObject.getString(globalDescription));
-        String endDate = jsonObject.getString(globalEndDate);
-        endDate += " 23:59:59";
-        String startDate = jsonObject.getString(globalStartDate);
-        startDate += " " + new Date().getHours() + ":" + new Date().getSeconds() + ":" + new Date().getMinutes();
+        task.setDescription(jsonObject.getString(stdName.DESCRIPTION));
+        String endDate = jsonObject.getString(stdName.ENDDATE);
+        String startDate = jsonObject.getString(stdName.STARTDATE);
         task.setStartDate(DateHelper.convertStringToDate(startDate));
         task.setEndDate(DateHelper.convertStringToDate(endDate));
-        task.setExpectedNumber(jsonObject.getInt(globalExpectedNumber));
-        task.setPoints(jsonObject.getInt(globalPoints));
-        task.setSponsorName(jsonObject.getString(globalSponsorName));
-        UserInfo userInfo = userInfoService.findByUsername(task.getSponsorName());
-        userInfo.setPoints(userInfo.getPoints() - task.getPoints() * task.getExpectedNumber());
+        task.setExpectedNumber(jsonObject.getInt(stdName.EXCEPTEDNUMBER));
+        task.setPoints(jsonObject.getInt(stdName.POINTS));
+        UserEntity userEntity = userService.findByUsername(stdName.SPONSORNAME);
+        task.setSponsor(userEntity);
+        userEntity.setPoints(userEntity.getPoints() - task.getPoints() * task.getExpectedNumber());
 
-        JSONArray tagArray = jsonObject.getJSONArray(globalTag);
-        List list = tagArray.toList();
-        String[] tags = new String[list.size()];
+        JSONArray tagArray = jsonObject.getJSONArray(stdName.TAG);
+        List<TagEntity> tagEntities = new ArrayList<>();
 
-        for (int i = 0; i < list.size(); i++) {
-            tags[i] = (String) list.toArray()[i];
-        }
-        task.setTag(tags);
+        addTag(tagArray, tagEntities);
+        task.setTagEntityList(tagEntities);
         task.setImageNum(0);
-        task.setTaskName(jsonObject.getString(globalTaskName));
-        task.setWorkerLevel(jsonObject.getInt(globalWorkerLevel));
+        task.setTaskName(jsonObject.getString(stdName.TASKNAME));
+        task.setWorkerLevel(jsonObject.getInt(stdName.WORKERLEVEL));
         JSONObject ret = new JSONObject();
 
-        ret.put(globalMes, userInfoService.modifyUser(userInfo));
-        ret.put("taskID", taskService.releaseTask(task));
+        ret.put(stdName.MES, userService.modify(userEntity));
+        ret.put(stdName.TASKID, taskService.add(task));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -106,25 +87,22 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.POST, value = "/modifyTask")
     public void modifyTask(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        Task task = new Task();
-        task.setDescription(jsonObject.getString(globalDescription));
-        task.setEndDate(DateHelper.convertStringToDate(jsonObject.getString(globalEndDate)));
-        JSONArray tagArray = jsonObject.getJSONArray(globalTag);
-        List list = tagArray.toList();
-        String[] tags = new String[list.size()];
+        TaskEntity task = (TaskEntity) taskService.findByID(jsonObject.getInt(stdName.TASKID));
+        task.setDescription(jsonObject.getString(stdName.DESCRIPTION));
+        task.setEndDate(DateHelper.convertStringToDate(jsonObject.getString(stdName.ENDDATE)));
+        JSONArray tagArray = jsonObject.getJSONArray(stdName.TAG);
+        List<TagEntity> tagEntities = new ArrayList<>();
 
-        for (int i = 0; i < list.size(); i++) {
-            tags[i] = (String) list.toArray()[i];
-        }
-        task.setTag(tags);
-        task.setExpectedNumber(jsonObject.getInt(globalExpectedNumber));
-        task.setTaskName(jsonObject.getString(globalTaskName));
-        task.setPoints(jsonObject.getInt(globalPoints));
-        task.setTaskID(jsonObject.getInt(globalTaskID));
+        addTag(tagArray, tagEntities);
+        task.setTagEntityList(tagEntities);
+        task.setExpectedNumber(jsonObject.getInt(stdName.EXCEPTEDNUMBER));
+        task.setTaskName(jsonObject.getString(stdName.TASKNAME));
+        task.setPoints(jsonObject.getInt(stdName.POINTS));
         JSONObject ret = new JSONObject();
-        ret.put(globalMes, taskService.modifyTask(task));
+        ret.put(stdName.MES, taskService.modify(task));
         JsonHelper.jsonToResponse(response, ret);
     }
+
 
     /**
      * 查看某个用户的所有任务
@@ -423,5 +401,14 @@ public class TaskController {
         JSONObject ret = new JSONObject();
         ret.put("progress", taskService.checkTaskProgress(taskID, userName));
         JsonHelper.jsonToResponse(response, ret);
+    }
+
+    private void addTag(JSONArray tagArray, List<TagEntity> tagEntities) {
+        for (Object o : tagArray) {
+            String str = (String) o;
+            TagEntity tagEntity = tagService.findByTag(str);
+            if (tagEntity != null)
+                tagEntities.add(tagEntity);
+        }
     }
 }

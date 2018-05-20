@@ -1,7 +1,6 @@
 package cn.joker.serviceimpl;
 
 import cn.joker.dao.BonusHistoryRepository;
-import cn.joker.dao.UserRepository;
 import cn.joker.entity.BonusHistoryEntity;
 import cn.joker.sevice.BonusHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,6 @@ import java.util.List;
  * @date: create in 7:22 2018/5/18
  */
 @Service
-@Transactional(readOnly = true,propagation = Propagation.NESTED)
-@CacheConfig
 public class BonusHistoryServiceImpl extends PubServiceImpl implements BonusHistoryService {
     private BonusHistoryRepository bonusHistoryRepository;
 
@@ -29,12 +26,13 @@ public class BonusHistoryServiceImpl extends PubServiceImpl implements BonusHist
         this.repository = bonusHistoryRepository;
         this.bonusHistoryRepository = bonusHistoryRepository;
     }
+
     @Override
     public List<BonusHistoryEntity> findByName(String username) {
         List<BonusHistoryEntity> bonusHistoryEntities = bonusHistoryRepository.findAll();
         List<BonusHistoryEntity> ret = new ArrayList<>();
-        for(BonusHistoryEntity bonusHistoryEntity: bonusHistoryEntities){
-            if(bonusHistoryEntity.getBonusHistory_user().getUsername().equals(username))
+        for (BonusHistoryEntity bonusHistoryEntity : bonusHistoryEntities) {
+            if (bonusHistoryEntity.getBonusHistory_user().getUsername().equals(username))
                 ret.add(bonusHistoryEntity);
         }
         return ret;

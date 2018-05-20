@@ -1,5 +1,6 @@
 package cn.joker.util;
 
+import cn.joker.namespace.stdName;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Expand;
 import org.slf4j.Logger;
@@ -11,7 +12,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Objects;
 
 
@@ -23,7 +23,7 @@ import java.util.Objects;
 public class FileHelper {
 
     private FileHelper() {
-        throw new IllegalStateException("Utility class");
+        throw new IllegalStateException(stdName.UTILCLASS);
     }
 
     private static Logger logger = LoggerFactory.getLogger(JsonHelper.class);
@@ -79,10 +79,10 @@ public class FileHelper {
         return true;
     }
 
-    public static Integer saveFiles(String taskID, MultipartFile file) {
+    public static Integer saveFiles(Integer taskID, MultipartFile file) {
         if (file.isEmpty())
             return 0;
-        String path = DIR + "task/" + taskID + "/images/";
+        String path = DIR + "task/" + String.valueOf(taskID) + "/images/";
         String fileName = file.getOriginalFilename();
         fileName = FileHelper.getRealFilePath(fileName);
         fileName = fileName.substring(fileName.lastIndexOf(FILE_SEPARATOR) + 1);

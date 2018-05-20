@@ -121,7 +121,7 @@ public class ShiroConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public JpaTransactionManager transactionManager(EntityManagerFactory factory){
+    public JpaTransactionManager transactionManager(EntityManagerFactory factory) {
         JpaTransactionManager jpaTransactionManager = new JpaTransactionManager(factory);
         jpaTransactionManager.setGlobalRollbackOnParticipationFailure(false);
         return jpaTransactionManager;

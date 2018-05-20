@@ -12,13 +12,13 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "ability", schema = "imgannotator", catalog = "")
-public class AbilityEntity implements Serializable{
+public class AbilityEntity implements Serializable {
     private Integer id;
     private Double totalPoints;
     private List<UserEntity> userEntityList;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -38,7 +38,7 @@ public class AbilityEntity implements Serializable{
         this.totalPoints = totalPoints;
     }
 
-    @ManyToMany(mappedBy = "abilityEntityList",cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "abilityEntityList", cascade = CascadeType.PERSIST)
     public List<UserEntity> getUserEntityList() {
         return userEntityList;
     }

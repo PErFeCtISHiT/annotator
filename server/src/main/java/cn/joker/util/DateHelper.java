@@ -1,14 +1,16 @@
 package cn.joker.util;
 
+import cn.joker.namespace.stdName;
+
+import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class DateHelper {
 
     private DateHelper() {
-        throw new IllegalStateException("Utility class");
+        throw new IllegalStateException(stdName.UTILCLASS);
     }
 
 
@@ -18,7 +20,7 @@ public class DateHelper {
     public static String convertDateToString(Date date) {
         if (date == null)
             return null;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(date);
     }
 
@@ -29,9 +31,9 @@ public class DateHelper {
         if (dateInString == null)
             return null;
         try {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-            return dateFormat.parse(dateInString);
+            return (Date) dateFormat.parse(dateInString);
         } catch (ParseException e) {
             return null;
         }

@@ -1,15 +1,14 @@
 package cn.joker.sevice;
 
 import cn.joker.entity.TaskEntity;
+import cn.joker.entity.UserEntity;
+import javafx.concurrent.Task;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
 
 public interface TaskService extends PubService{
-    Integer releaseTask(TaskEntity task);
-
-    boolean modifyTask(TaskEntity task);
 
     List<TaskEntity> checkMyTask(String userName, Integer status, Integer userRole, String tag);
 
@@ -33,6 +32,8 @@ public interface TaskService extends PubService{
 
     Integer findMarkNumByImgNameAndUserAndID(Integer taskID, String imgName, JSONArray users);
 
-    boolean postMark(String workerName, Integer taskID);
+    boolean postMark(UserEntity userEntity, TaskEntity taskEntity);
+
+    List<TaskEntity> findAll();
 
 }

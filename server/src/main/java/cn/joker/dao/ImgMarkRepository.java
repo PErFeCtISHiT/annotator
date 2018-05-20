@@ -1,6 +1,9 @@
 package cn.joker.dao;
 
 import cn.joker.entity.ImageEntity;
+import cn.joker.entity.ImgMarkEntity;
+import cn.joker.entity.TaskEntity;
+import cn.joker.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +16,6 @@ import javax.persistence.Table;
  */
 @Repository
 @Table(name = "img_mark")
-public interface ImgMarkRepository extends JpaRepository<ImageEntity,Integer> {
+public interface ImgMarkRepository extends JpaRepository<ImgMarkEntity,Integer> {
+    ImgMarkEntity findByImage_imgMarkAndImgMark_taskAndWorker(ImageEntity imageEntity, TaskEntity taskEntity, UserEntity userEntity);
 }

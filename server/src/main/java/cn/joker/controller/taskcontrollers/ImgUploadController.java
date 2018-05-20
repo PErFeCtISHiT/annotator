@@ -1,10 +1,12 @@
 package cn.joker.controller.taskcontrollers;
 
-import cn.joker.dao.TaskDao;
-import cn.joker.entity.Task;
+import cn.joker.entity.TaskEntity;
+import cn.joker.namespace.stdName;
+import cn.joker.sevice.TaskService;
 import cn.joker.util.FileHelper;
 import cn.joker.util.JsonHelper;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,13 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.List;
 
 /**
  * @author: pis
@@ -28,6 +26,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/task")
 public class ImgUploadController {
+    @Resource
+    private TaskService taskService;
+
     /**
      * @author:pis
      * @description: 上传文件（zip)
@@ -35,10 +36,10 @@ public class ImgUploadController {
      */
     @RequestMapping(value = "/zipFileUpload", method = RequestMethod.POST)
     public void zipFileUpload(HttpServletRequest request, HttpServletResponse response) {
-        MultipartFile file = ((MultipartHttpServletRequest) request).getFile("fileName");
-        String taskID = request.getParameter("taskID");
+        MultipartFile file = ((MultipartHttpServletRequest) request).getFile(stdName.FILENAME);
+        String taskID = request.getParameter(stdName.TASKID);
         JSONObject ret = new JSONObject();
-        ret.put("mes", FileHelper.saveZip(taskID, file));
+        ret.put(stdName.MES, FileHelper.saveZip(taskID, file));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -48,12 +49,15 @@ public class ImgUploadController {
      * @date: 15:57 2018/4/17
      */
     @RequestMapping(value = "/imagesUpload", method = RequestMethod.POST)
-    public void imagesUpload(@RequestParam("file") MultipartFile file,@RequestParam("taskID") String taskID, HttpServletResponse response) {
-        TaskDao taskDao = new TaskDao();
-        Task task = taskDao.getTask(Integer.valueOf(taskID),taskDao.getAllTasks());
-        task.setImageNum(FileHelper.saveFiles(taskID, file));
+    public void imagesUpload(@RequestParam(stdName.FILE) MultipartFile file, @RequestParam(stdName.TASKID) Integer taskID, HttpServletResponse response) {
+        TaskEntity taskEntity = (TaskEntity) taskService.findByID(taskID);
         JSONObject ret = new JSONObject();
-        ret.put("mes", taskDao.modifyTask(task));
+        if (taskEntity == null) {
+            ret.put(stdName.MES, stdName.NULL);
+        } else {
+            taskEntity.setImageNum(FileHelper.saveFiles(taskID, file));
+            ret.put(stdName.MES, taskService.modify(taskEntity));
+        }
         JsonHelper.jsonToResponse(response, ret);
     }
 }

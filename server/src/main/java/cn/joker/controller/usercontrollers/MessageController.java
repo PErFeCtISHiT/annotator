@@ -1,6 +1,9 @@
 package cn.joker.controller.usercontrollers;
 
-import cn.joker.entity.*;
+import cn.joker.entity.BonusHistoryEntity;
+import cn.joker.entity.SysRoleEntity;
+import cn.joker.entity.TaskEntity;
+import cn.joker.entity.UserEntity;
 import cn.joker.namespace.stdName;
 import cn.joker.sevice.*;
 import cn.joker.util.JsonHelper;
@@ -34,8 +37,6 @@ public class MessageController {
     private TaskService taskService;
     @Resource
     private BonusHistoryService bonusHistoryService;
-    @Resource
-    private SysPermissionService sysPermissionService;
 
 
     /**
@@ -103,7 +104,7 @@ public class MessageController {
      */
 
     @RequestMapping(value = "/checkUser", method = RequestMethod.GET)
-    public List<Object> checkUser() {
+    public List<UserEntity> checkUser() {
         return userService.findAll();
 
     }
@@ -134,7 +135,7 @@ public class MessageController {
     @RequestMapping(value = "/changePoints", method = RequestMethod.POST)
     public void changePoints(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        String username =  jsonObject.getString(stdName.USERNAME);
+        String username = jsonObject.getString(stdName.USERNAME);
         Integer points = jsonObject.getInt(stdName.POINTS);
         UserEntity userEntity = userService.findByUsername(username);
         JSONObject ret = new JSONObject();
@@ -156,7 +157,7 @@ public class MessageController {
     @RequestMapping(value = "/managePoints", method = RequestMethod.POST)
     public void managePoints(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        String username =  jsonObject.getString(stdName.USERNAME);
+        String username = jsonObject.getString(stdName.USERNAME);
         Integer points = jsonObject.getInt(stdName.POINTS);
         UserEntity userEntity = userService.findByUsername(username);
         JSONObject ret = new JSONObject();

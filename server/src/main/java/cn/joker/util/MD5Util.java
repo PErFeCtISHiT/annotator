@@ -7,9 +7,8 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * 生成一个MD5码
- * 
- * @author Administrator
  *
+ * @author Administrator
  */
 public class MD5Util {
 
@@ -30,7 +29,7 @@ public class MD5Util {
     public static String getMD5(byte[] source) {
         String s = null;
         char hexDigits[] = { // 用来将字节转换成 16 进制表示的字符
-                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(source);
@@ -56,7 +55,7 @@ public class MD5Util {
 
     public final static String MD5(String inputStr) {
         // 用于加密的字符
-        char md5String[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+        char md5String[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
         try {
             // 使用utf-8字符集将此 String 编码为 byte序列，并将结果存储到一个新的 byte数组中
             byte[] btInput = inputStr.getBytes("utf-8");
@@ -87,33 +86,33 @@ public class MD5Util {
             return null;
         }
     }
-    
-	public static String encryption(String plain) {
-		String re_md5 = new String();
-		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			md.update(plain.getBytes("utf-8"));
-			byte b[] = md.digest();
 
-			int i;
+    public static String encryption(String plain) {
+        String re_md5 = new String();
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(plain.getBytes("utf-8"));
+            byte b[] = md.digest();
 
-			StringBuffer buf = new StringBuffer("");
-			for (int offset = 0; offset < b.length; offset++) {
-				i = b[offset];
-				if (i < 0)
-					i += 256;
-				if (i < 16)
-					buf.append("0");
-				buf.append(Integer.toHexString(i));
-			}
+            int i;
 
-			re_md5 = buf.toString();
+            StringBuffer buf = new StringBuffer("");
+            for (int offset = 0; offset < b.length; offset++) {
+                i = b[offset];
+                if (i < 0)
+                    i += 256;
+                if (i < 16)
+                    buf.append("0");
+                buf.append(Integer.toHexString(i));
+            }
 
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
+            re_md5 = buf.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         return re_md5;
-	}
+    }
 }

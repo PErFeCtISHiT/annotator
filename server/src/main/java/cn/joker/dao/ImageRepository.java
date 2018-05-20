@@ -13,5 +13,8 @@ import javax.persistence.Table;
  */
 @Repository
 @Table(name = "image")
-public interface ImageRepository extends JpaRepository<ImageEntity,Integer> {
+public interface ImageRepository extends JpaRepository<ImageEntity, Integer> {
+    ImageEntity findByUrl(String url);
+
+    ImageEntity findByName(String name);
 }

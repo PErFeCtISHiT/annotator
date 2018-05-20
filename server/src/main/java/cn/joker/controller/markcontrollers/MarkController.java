@@ -1,8 +1,14 @@
 package cn.joker.controller.markcontrollers;
 
-import cn.joker.entity.ImgMark;
+import cn.joker.entity.ImageEntity;
+import cn.joker.entity.ImgMarkEntity;
+import cn.joker.entity.TaskEntity;
+import cn.joker.entity.UserEntity;
+import cn.joker.namespace.stdName;
 import cn.joker.sevice.ImgMarkService;
+import cn.joker.sevice.ImgService;
 import cn.joker.sevice.TaskService;
+import cn.joker.sevice.UserService;
 import cn.joker.util.JsonHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * @author: pis
@@ -27,6 +32,10 @@ public class MarkController {
     private ImgMarkService imgMarkService;
     @Resource
     private TaskService taskService;
+    @Resource
+    private ImgService imgService;
+    @Resource
+    private UserService userService;
 
     /**
      * @author:pis
@@ -36,18 +45,19 @@ public class MarkController {
     @RequestMapping(value = "/postMark", method = RequestMethod.POST)
     public void postMark(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        ImgMark imgMark = new ImgMark();
-        imgMark.setImgURL((String) jsonObject.get("imgURL"));
-        imgMark.setImgName(imgMark.getImgURL().substring(imgMark.getImgURL().lastIndexOf('/') + 1,imgMark.getImgURL().lastIndexOf('.')));
-        imgMark.setSponsorName((String) jsonObject.get("sponsorName"));
-        imgMark.setWorkerName((String) jsonObject.get("workerName"));
-        imgMark.setTaskID((Integer) jsonObject.get("taskID"));
+        ImgMarkEntity imgMark = new ImgMarkEntity();
+        imgMark.setWorker(userService.findByUsername(jsonObject.getString(stdName.WORKERNAME)));
+        imgMark.setImage_imgMark(imgService.findByUrl(jsonObject.getString(stdName.IMGURL)));
+        imgMark.setImgMark_task((TaskEntity) taskService.findByID(jsonObject.getInt(stdName.TASKID)));
+        imgMark.setNotePolygon(jsonObject.getString(stdName.NOTEPOLYGON));
+        imgMark.setNoteRectangle(jsonObject.getString(stdName.NOTERECTANGLE));
+        imgMark.setNoteTotal(jsonObject.getString(stdName.NOTETOTAL));
         boolean b = true;
-        if(!jsonObject.getBoolean("isModified")){
-            b = taskService.postMark(imgMark.getWorkerName(),imgMark.getTaskID());
+        if (!jsonObject.getBoolean(stdName.ISMODIFYED)) {
+            b = taskService.postMark(imgMark.getWorker(), imgMark.getImgMark_task());
         }
         JSONObject ret = new JSONObject();
-        ret.put("mes", imgMarkService.refreshMark(imgMark, jsonObject) && b);
+        ret.put(stdName.MES, imgMarkService.add(imgMark) && b);
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -59,24 +69,28 @@ public class MarkController {
     @RequestMapping(value = "/checkImage", method = RequestMethod.POST)
     public void checkMark(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        JSONObject ret = new JSONObject();
-        JSONArray imgMarkArray = new JSONArray();
-        List<ImgMark> imgMarks = imgMarkService.findAllMarks(jsonObject);
-        for (ImgMark imgMark : imgMarks) {
-            JSONObject imgMarkJson = new JSONObject();
-            imgMarkJson.put("imgURL", imgMark.getImgURL());
-            imgMarkJson.put("workerName", imgMark.getWorkerName());
-            imgMarkJson.put("sponsorName", imgMark.getSponsorName());
-            JSONArray jsonArray = new JSONArray(imgMark.getNotePolygon());
-            imgMarkJson.put("notePolygon", jsonArray);
-            jsonArray = new JSONArray(imgMark.getNoteRectangle());
-            imgMarkJson.put("noteRectangle", jsonArray);
-            jsonArray = new JSONArray(imgMark.getNoteTotal());
-            imgMarkJson.put("noteTotal", jsonArray);
-            imgMarkJson.put("taskID", imgMark.getTaskID());
-            imgMarkArray.put(imgMarkJson);
+        TaskEntity taskEntity = (TaskEntity) taskService.findByID(jsonObject.getInt(stdName.TASKID));
+        ImageEntity imageEntity = imgService.findByName(jsonObject.getString(stdName.IMGNAME));
+        JSONArray userArray = jsonObject.getJSONArray(stdName.USERS);
+        JSONArray marksArray = new JSONArray();
+        for (Object o : userArray) {
+            String username = (String) o;
+            UserEntity userEntity = userService.findByUsername(username);
+            ImgMarkEntity imgMarkEntity = imgMarkService.findByImage_imgMarkAndImgMark_taskAndWorker(imageEntity, taskEntity, userEntity);
+            if (imageEntity != null) {
+                JSONObject mark = new JSONObject();
+                mark.put(stdName.IMGURL, imageEntity.getUrl());
+                mark.put(stdName.WORKERNAME, userEntity.getUsername());
+                mark.put(stdName.SPONSORNAME, taskEntity.getSponsor());
+                mark.put(stdName.TASKID, taskEntity.getId());
+                mark.put(stdName.NOTEPOLYGON, imgMarkEntity.getNotePolygon());
+                mark.put(stdName.NOTERECTANGLE, imgMarkEntity.getNoteRectangle());
+                mark.put(stdName.NOTETOTAL, imgMarkEntity.getNoteTotal());
+                marksArray.put(mark);
+            }
         }
-        ret.put("marks", imgMarkArray);
+        JSONObject ret = new JSONObject();
+        ret.put(stdName.MARKS, marksArray);
         JsonHelper.jsonToResponse(response, ret);
     }
 }

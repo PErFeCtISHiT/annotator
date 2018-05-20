@@ -14,7 +14,6 @@ public interface PubService {
 
     boolean modify(Object o);
 
-    List<Object> findAll();
 
     boolean delete(Object o);
 
