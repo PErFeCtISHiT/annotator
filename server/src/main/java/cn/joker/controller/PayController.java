@@ -28,7 +28,7 @@ public class PayController {
 		remoteMap.put("price", price);
 		remoteMap.put("istype", istype);
 		remoteMap.put("orderid", PayUtil.getOrderIdByUUId());
-		remoteMap.put("orderuid", DateHelper.convertDateToString(new Date()));
+		remoteMap.put("orderuid", DateHelper.convertDateToString((java.sql.Date) new Date()));
 		remoteMap.put("goodsname", "您自己的商品名称");
 		resultMap.put("data", PayUtil.payOrder(remoteMap));
 		return resultMap;

@@ -1,5 +1,7 @@
 package cn.joker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
@@ -31,10 +33,14 @@ public class TaskEntity implements Serializable{
     private List<ImgMarkEntity> imgMarkEntityList;
     private List<WorkersForTheTaskEntity> workersForTheTaskEntityList;
     private List<TagEntity> tagEntityList;
+    @Transient
+    private Double totalProgress;
+
 
     @ManyToMany(cascade=CascadeType.PERSIST)
     @JoinTable(name="task_tag", joinColumns={@JoinColumn(referencedColumnName="ID")}
             , inverseJoinColumns={@JoinColumn(referencedColumnName="ID")})
+    @JsonIgnore
     public List<TagEntity> getTagEntityList() {
         return tagEntityList;
     }
@@ -44,6 +50,7 @@ public class TaskEntity implements Serializable{
     }
 
     @OneToMany(mappedBy = "workers_task",cascade = CascadeType.PERSIST)
+    @JsonIgnore
     public List<WorkersForTheTaskEntity> getWorkersForTheTaskEntityList() {
         return workersForTheTaskEntityList;
     }
@@ -53,6 +60,7 @@ public class TaskEntity implements Serializable{
     }
 
     @OneToMany(mappedBy = "imgMark_task",cascade = CascadeType.PERSIST)
+    @JsonIgnore
     public List<ImgMarkEntity> getImgMarkEntityList() {
         return imgMarkEntityList;
     }
@@ -62,6 +70,7 @@ public class TaskEntity implements Serializable{
     }
 
     @OneToMany(mappedBy = "img_task",cascade = CascadeType.PERSIST)
+    @JsonIgnore
     public List<ImageEntity> getImageEntityList() {
         return imageEntityList;
     }
@@ -73,6 +82,7 @@ public class TaskEntity implements Serializable{
 
 
     @OneToMany(mappedBy = "bonusHistory_task",cascade = CascadeType.PERSIST)
+    @JsonIgnore
     public List<BonusHistoryEntity> getBonusHistoryEntityList() {
         return bonusHistoryEntityList;
     }
@@ -95,6 +105,7 @@ public class TaskEntity implements Serializable{
 
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     public UserEntity getSponsor() {
         return sponsor;
     }
@@ -201,6 +212,14 @@ public class TaskEntity implements Serializable{
 
     public void setImageNum(Integer imageNum) {
         this.imageNum = imageNum;
+    }
+
+    public Double getTotalProgress(){
+        return (double) (completedNumber / expectedNumber);
+    }
+
+    public void setTotalProgress(Double totalProgress) {
+        this.totalProgress = totalProgress;
     }
 
     @Override

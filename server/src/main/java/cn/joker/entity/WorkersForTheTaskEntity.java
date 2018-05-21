@@ -1,5 +1,7 @@
 package cn.joker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -16,10 +18,12 @@ public class WorkersForTheTaskEntity implements Serializable{
     private UserEntity worker;
     private Integer markedNum;
     private TaskEntity workers_task;
+    private Integer completedNum;
 
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "task_id")
+    @JsonIgnore
     public TaskEntity getWorkers_task() {
         return workers_task;
     }
@@ -41,6 +45,7 @@ public class WorkersForTheTaskEntity implements Serializable{
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     public UserEntity getWorker() {
         return worker;
     }
@@ -57,6 +62,16 @@ public class WorkersForTheTaskEntity implements Serializable{
 
     public void setMarkedNum(Integer markedNum) {
         this.markedNum = markedNum;
+    }
+
+    @Basic
+    @Column(name = "completedNum", nullable = true)
+    public Integer getCompletedNum() {
+        return completedNum;
+    }
+
+    public void setCompletedNum(Integer completedNum) {
+        this.completedNum = completedNum;
     }
 
     @Override

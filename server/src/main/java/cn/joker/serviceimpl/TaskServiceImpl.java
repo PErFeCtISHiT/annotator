@@ -1,17 +1,17 @@
 package cn.joker.serviceimpl;
 
 import cn.joker.dao.TaskRepository;
+import cn.joker.entity.TagEntity;
 import cn.joker.entity.TaskEntity;
 import cn.joker.entity.UserEntity;
 import cn.joker.entity.WorkersForTheTaskEntity;
 import cn.joker.sevice.TaskService;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import cn.joker.sevice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +22,8 @@ import java.util.List;
 @Service
 public class TaskServiceImpl extends PubServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
+    @Resource
+    private UserService userService;
 
     @Autowired
     public TaskServiceImpl(TaskRepository taskRepository) {
@@ -30,8 +32,54 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
     }
 
     @Override
+    public Integer releaseTask(TaskEntity task) {
+        if (taskRepository.saveAndFlush(task) != null)
+            return task.getId();
+        else
+            return -1;
+    }
+
+    @Override
     public List<TaskEntity> checkMyTask(String userName, Integer status, Integer userRole, String tag) {
-        return null;
+        UserEntity userEntity = userService.findByUsername(userName);
+        List<TaskEntity> ret = new ArrayList<>();
+        List<TaskEntity> taskEntities = taskRepository.findAll();
+        for (TaskEntity taskEntity : taskEntities) {
+            if (taskEntity.getState().equals(status)) {
+                if (userRole == 2 && taskEntity.getSponsor().getUsername().equals(userName)) {
+                    if (tag.length() == 0)
+                        ret.add(taskEntity);
+                    else {
+                        List<TagEntity> tagEntities = taskEntity.getTagEntityList();
+                        for (TagEntity tagEntity : tagEntities) {
+                            if (tagEntity.getTag().equals(tag)) {
+                                ret.add(taskEntity);
+                                break;
+                            }
+                        }
+                    }
+                } else if (userRole == 3) {
+                    List<WorkersForTheTaskEntity> workersForTheTaskEntities = taskEntity.getWorkersForTheTaskEntityList();
+                    for (WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities) {
+                        if (workersForTheTaskEntity.getWorker().getUsername().equals(userName)) {
+                            if (tag.length() == 0) {
+                                ret.add(taskEntity);
+                                break;
+                            } else {
+                                List<TagEntity> tagEntities = taskEntity.getTagEntityList();
+                                for (TagEntity tagEntity : tagEntities) {
+                                    if (tagEntity.getTag().equals(tag)) {
+                                        ret.add(taskEntity);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return ret;
     }
 
     @Override
@@ -41,6 +89,11 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
 
     @Override
     public boolean endTask(Integer taskID) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteTask(Integer taskID) {
         return false;
     }
 
@@ -60,22 +113,7 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
     }
 
     @Override
-    public JSONObject checkTaskDetail(Integer taskID) {
-        return null;
-    }
-
-    @Override
     public Double checkTaskProgress(Integer taskID, String workerName) {
-        return null;
-    }
-
-    @Override
-    public List findImgURLByID(String taskID) {
-        return null;
-    }
-
-    @Override
-    public Integer findMarkNumByImgNameAndUserAndID(Integer taskID, String imgName, JSONArray users) {
         return null;
     }
 
@@ -96,6 +134,4 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
     public List<TaskEntity> findAll() {
         return taskRepository.findAll();
     }
-
-
 }

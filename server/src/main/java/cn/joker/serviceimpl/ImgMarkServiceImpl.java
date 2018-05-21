@@ -33,6 +33,7 @@ public class ImgMarkServiceImpl extends PubServiceImpl implements ImgMarkService
 
     @Override
     public ImgMarkEntity findByImage_imgMarkAndImgMark_taskAndWorker(ImageEntity imageEntity, TaskEntity taskEntity, UserEntity userEntity) {
-        return imgMarkRepository.findByImage_imgMarkAndImgMark_taskAndWorker(imageEntity, taskEntity, userEntity);
+        return null;
+        // return imgMarkRepository.findByImage_imgMarkAndImgMark_taskAndWorker(imageEntity, taskEntity, userEntity);
     }
 }

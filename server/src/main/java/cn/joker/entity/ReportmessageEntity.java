@@ -1,5 +1,7 @@
 package cn.joker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
@@ -36,6 +38,7 @@ public class ReportmessageEntity implements Serializable {
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "respondent_id")
+    @JsonIgnore
     public UserEntity getRespondent() {
         return respondent;
     }
@@ -46,6 +49,7 @@ public class ReportmessageEntity implements Serializable {
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "reporter_id")
+    @JsonIgnore
     public UserEntity getReporter() {
         return reporter;
     }
@@ -56,6 +60,7 @@ public class ReportmessageEntity implements Serializable {
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "task_id")
+    @JsonIgnore
     public TaskEntity getTask() {
         return task;
     }

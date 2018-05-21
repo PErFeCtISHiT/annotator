@@ -1,5 +1,7 @@
 package cn.joker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -30,6 +32,7 @@ public class ImageEntity implements Serializable {
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "task_id")
+    @JsonIgnore
     public TaskEntity getImg_task() {
         return img_task;
     }

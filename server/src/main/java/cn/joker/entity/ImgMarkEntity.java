@@ -1,5 +1,7 @@
 package cn.joker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -24,6 +26,7 @@ public class ImgMarkEntity implements Serializable {
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "image_id")
+    @JsonIgnore
     public ImageEntity getImage_imgMark() {
         return image_imgMark;
     }
@@ -35,6 +38,7 @@ public class ImgMarkEntity implements Serializable {
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "task_id")
+    @JsonIgnore
     public TaskEntity getImgMark_task() {
         return imgMark_task;
     }
@@ -58,6 +62,7 @@ public class ImgMarkEntity implements Serializable {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     public UserEntity getWorker() {
         return worker;
     }

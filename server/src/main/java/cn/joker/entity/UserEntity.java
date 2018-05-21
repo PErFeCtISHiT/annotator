@@ -1,5 +1,7 @@
 package cn.joker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -26,6 +28,7 @@ public class UserEntity implements Serializable{
     private List<SysRoleEntity> roleEntityList;
     private List<AbilityEntity> abilityEntityList;
     private List<BonusHistoryEntity> bonusHistoryEntityList;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
@@ -130,7 +133,7 @@ public class UserEntity implements Serializable{
     @ManyToMany(cascade=CascadeType.PERSIST)
     @JoinTable(name="user_role", joinColumns={@JoinColumn(referencedColumnName="ID")}
             , inverseJoinColumns={@JoinColumn(referencedColumnName="ID")})
-
+    @JsonIgnore
     public List<SysRoleEntity> getRoleEntityList() {
         return roleEntityList;
     }
@@ -145,7 +148,7 @@ public class UserEntity implements Serializable{
     @JoinTable(name="user_ability",joinColumns = {@JoinColumn(referencedColumnName = "ID")},
             inverseJoinColumns = {@JoinColumn(referencedColumnName = "ID")})
 
-
+    @JsonIgnore
     public List<AbilityEntity> getAbilityEntityList() {
         return abilityEntityList;
     }
@@ -155,7 +158,7 @@ public class UserEntity implements Serializable{
     }
 
     @OneToMany(mappedBy = "bonusHistory_user",cascade = CascadeType.PERSIST)
-
+    @JsonIgnore
     public List<BonusHistoryEntity> getBonusHistoryEntityList() {
         return bonusHistoryEntityList;
     }

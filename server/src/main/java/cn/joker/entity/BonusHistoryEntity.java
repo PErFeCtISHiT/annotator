@@ -1,5 +1,7 @@
 package cn.joker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -32,7 +34,7 @@ public class BonusHistoryEntity implements Serializable{
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "task_id")
-
+    @JsonIgnore
     public TaskEntity getBonusHistory_task() {
         return bonusHistory_task;
     }
@@ -53,7 +55,7 @@ public class BonusHistoryEntity implements Serializable{
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
-
+    @JsonIgnore
     public UserEntity getBonusHistory_user() {
         return bonusHistory_user;
     }

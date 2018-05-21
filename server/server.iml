@@ -30,7 +30,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/src/main/java/cn/joker/controller/taskcontrollers" />
       <excludeFolder url="file://$MODULE_DIR$/src/test/java/cn" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>

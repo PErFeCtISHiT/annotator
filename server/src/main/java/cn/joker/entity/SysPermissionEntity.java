@@ -1,5 +1,7 @@
 package cn.joker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -39,7 +41,7 @@ public class SysPermissionEntity implements Serializable {
     }
 
     @ManyToMany(mappedBy = "sysPermissionEntityList",cascade = CascadeType.PERSIST)
-
+    @JsonIgnore
     public List<SysRoleEntity> getSysRoleEntityList() {
         return sysRoleEntityList;
     }

@@ -1,5 +1,7 @@
 package cn.joker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -47,7 +49,7 @@ public class SysRoleEntity implements Serializable {
     }
 
     @ManyToMany(mappedBy = "roleEntityList",cascade = CascadeType.PERSIST)
-
+    @JsonIgnore
     public List<UserEntity> getUserEntityList() {
         return userEntityList;
     }
@@ -59,7 +61,7 @@ public class SysRoleEntity implements Serializable {
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name="role_permission", joinColumns={@JoinColumn(referencedColumnName="ID")}
             , inverseJoinColumns={@JoinColumn(referencedColumnName="ID")})
-
+    @JsonIgnore
     public List<SysPermissionEntity> getSysPermissionEntityList() {
         return sysPermissionEntityList;
     }

@@ -1,9 +1,6 @@
 package cn.joker.controller.taskcontrollers;
 
-import cn.joker.dao.TaskDao;
-import cn.joker.entity.TagEntity;
-import cn.joker.entity.TaskEntity;
-import cn.joker.entity.UserEntity;
+import cn.joker.entity.*;
 import cn.joker.namespace.stdName;
 import cn.joker.sevice.ReportService;
 import cn.joker.sevice.TagService;
@@ -14,7 +11,10 @@ import cn.joker.util.JsonHelper;
 import org.apache.shiro.SecurityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -73,7 +73,7 @@ public class TaskController {
         JSONObject ret = new JSONObject();
 
         ret.put(stdName.MES, userService.modify(userEntity));
-        ret.put(stdName.TASKID, taskService.add(task));
+        ret.put(stdName.TASKID, taskService.releaseTask(task));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -113,36 +113,36 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.POST, value = "/myTasks")
     public void checkMyTask(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        String username = jsonObject.getString(globalUsername);
-        String tag = jsonObject.getString(globalTag);
-        Integer status = jsonObject.getInt(globalStatus);
-        Integer userRole = jsonObject.getInt(globalUserRole);
+        String username = jsonObject.getString(stdName.USERNAME);
+        String tag = jsonObject.getString(stdName.TAG);
+        Integer status = jsonObject.getInt(stdName.STATUS);
+        Integer userRole = jsonObject.getInt(stdName.USERROLE);
         JSONObject ret = new JSONObject();
 
-        List<Task> tasks = taskService.checkMyTask(username, status, userRole, tag);
+        List<TaskEntity> tasks = taskService.checkMyTask(username, status, userRole, tag);
         JSONArray taskArray = new JSONArray();
-        for (Task task : tasks) {
+        for (TaskEntity task : tasks) {
             JSONObject taskObject = new JSONObject();
-            taskObject.put(globalTaskID, task.getTaskID());
-            taskObject.put(globalTaskName, task.getTaskName());
-            taskObject.put(globalDescription, task.getDescription());
-            taskObject.put(globalImgNum, task.getImageNum());
-            taskObject.put(globalSponsorName, task.getSponsorName());
-            taskObject.put(globalTag, task.getTag());
-            taskObject.put("totalProgress", new Double(task.getCompletedNumber() / task.getExpectedNumber()));
-            taskObject.put(globalStartDate, DateHelper.convertDateToString(task.getStartDate()));
-            taskObject.put(globalEndDate, DateHelper.convertDateToString(task.getEndDate()));
-            if (userRole.equals(3)) {
-                Double progress = taskService.checkTaskProgress(task.getTaskID(), username);
+            taskObject.put(stdName.TASKID, task.getId());
+            taskObject.put(stdName.TASKNAME, task.getTaskName());
+            taskObject.put(stdName.DESCRIPTION, task.getDescription());
+            taskObject.put(stdName.IMGNUM, task.getImageNum());
+            taskObject.put(stdName.SPONSORNAME, task.getSponsor().getUsername());
+            taskObject.put(stdName.TAG, task.getTagEntityList());
+            taskObject.put(stdName.TOTALPROGRESS, new Double(task.getCompletedNumber() / task.getExpectedNumber()));
+            taskObject.put(stdName.STARTDATE, DateHelper.convertDateToString(task.getStartDate()));
+            taskObject.put(stdName.ENDDATE, DateHelper.convertDateToString(task.getEndDate()));
+            if (userRole.equals(4)) {
+                Double progress = taskService.checkTaskProgress(task.getId(), username);
                 if (progress != -1.0) {
-                    taskObject.put("progress", progress);
+                    taskObject.put(stdName.PROGRESS, progress);
                     taskArray.put(taskObject);
                 }
             } else {
                 taskArray.put(taskObject);
             }
         }
-        ret.put(globalTasks, taskArray);
+        ret.put(stdName.TASKS, taskArray);
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -153,22 +153,12 @@ public class TaskController {
      * @param response http
      */
     @RequestMapping(method = RequestMethod.POST, value = "/allTasks")
-    public void search(HttpServletRequest request, HttpServletResponse response) {
+    public List<TaskEntity> search(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        Integer userRole = jsonObject.getInt(globalUserRole);
-        String tag = jsonObject.getString(globalTag);
-        Integer status = jsonObject.getInt(globalStatus);
-        List<Task> tasks = taskService.search(userRole, tag, status);
-        TaskDao taskDao = new TaskDao();
-        JSONArray taskArray = new JSONArray();
-        for (Task task : tasks) {
-            JSONObject taskObj = taskDao.convertObjectToJsonObject(task);
-            taskObj.put("totalProgress", new Double(task.getCompletedNumber() / task.getExpectedNumber()));
-            taskArray.put(taskObj);
-        }
-        JSONObject ret = new JSONObject();
-        ret.put(globalTasks, taskArray);
-        JsonHelper.jsonToResponse(response, ret);
+        Integer userRole = jsonObject.getInt(stdName.USERROLE);
+        String tag = jsonObject.getString(stdName.TAG);
+        Integer status = jsonObject.getInt(stdName.STATUS);
+        return taskService.search(userRole, tag, status);
 
     }
 
@@ -182,9 +172,9 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.GET, value = "/endTask")
     public void endTask(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
-        Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
+        Integer taskID = Integer.valueOf(map.get(stdName.TASKID)[0]);
         JSONObject ret = new JSONObject();
-        ret.put(globalMes, taskService.endTask(taskID));
+        ret.put(stdName.MES, taskService.endTask(taskID));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -198,9 +188,9 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.GET, value = "/deleteTask")
     public void deleteTask(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
-        Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
+        Integer taskID = Integer.valueOf(map.get(stdName.TASKID)[0]);
         JSONObject ret = new JSONObject();
-        ret.put(globalMes, taskService.deleteTask(taskID));
+        ret.put(stdName.MES, taskService.deleteTask(taskID));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -214,14 +204,14 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.GET, value = "/completeTask")
     public void completeTask(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
-        Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
-        JSONObject task = taskService.checkTaskDetail(taskID);
-        String username = map.get(globalUsername)[0];
-        UserInfo userInfo = userInfoService.findByUsername(username);
-        userInfo.setPoints(userInfo.getPoints() + task.getInt(globalPoints));
-        userInfo.setLevel(userInfo.getLevel() + task.getInt(globalPoints));
+        Integer taskID = Integer.valueOf(map.get(stdName.TASKID)[0]);
+        TaskEntity taskEntity = (TaskEntity) taskService.findByID(taskID);
+        String username = map.get(stdName.USERNAME)[0];
+        UserEntity userInfo = userService.findByUsername(username);
+        userInfo.setPoints(userInfo.getPoints() + taskEntity.getPoints());
+        userInfo.setBonus(userInfo.getBonus() + taskEntity.getPoints());
         JSONObject ret = new JSONObject();
-        ret.put(globalMes, taskService.completeTask(taskID, username) && userInfoService.modifyUser(userInfo));
+        ret.put(stdName.MES, taskService.completeTask(taskID, username) && userService.modify(userInfo));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -235,10 +225,10 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.GET, value = "/abortTask")
     public void abortTask(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
-        Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
-        String username = map.get(globalUsername)[0];
+        Integer taskID = Integer.valueOf(map.get(stdName.TASKID)[0]);
+        String username = map.get(stdName.USERNAME)[0];
         JSONObject ret = new JSONObject();
-        ret.put(globalMes, taskService.abortTask(taskID, username));
+        ret.put(stdName.MES, taskService.abortTask(taskID, username));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -252,40 +242,62 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.GET, value = "/acceptTask")
     public void acceptTask(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
-        Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
-        String username = map.get(globalUsername)[0];
+        Integer taskID = Integer.valueOf(map.get(stdName.TASKID)[0]);
+        String username = map.get(stdName.USERNAME)[0];
         JSONObject ret = new JSONObject();
-        ret.put(globalMes, taskService.acceptTask(taskID, username));
+        ret.put(stdName.MES, taskService.acceptTask(taskID, username));
         JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
      * 举报任务
      *
-     * @param reportMessage 举报信息
+     * @param
      * @return boolean 成功与否
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/reportTask")
-    public void reportTask(@RequestBody ReportMessage reportMessage, HttpServletResponse response) {
+    public void reportTask(HttpServletRequest request, HttpServletResponse response) {
+        JSONObject jsonObject = JsonHelper.requestToJson(request);
+        TaskEntity taskEntity = (TaskEntity) taskService.findByID(jsonObject.getInt(stdName.TASKID));
+        UserEntity respondent = userService.findByUsername(jsonObject.getString(stdName.RESPONDENT));
+        UserEntity reporter = userService.findByUsername(jsonObject.getString(stdName.REPORTER));
+        ReportmessageEntity reportmessageEntity = new ReportmessageEntity();
         JSONObject ret = new JSONObject();
-        reportMessage.setReportTime(DateHelper.convertDateToString(new Date()));
-        ret.put(globalMes, reportService.reportTask(reportMessage));
+        reportmessageEntity.setReportTime((java.sql.Date) new Date());
+        reportmessageEntity.setDescription(jsonObject.getString(stdName.DESCRIPTION));
+        reportmessageEntity.setIsDealt((byte) 0);
+        reportmessageEntity.setReporter(reporter);
+        reportmessageEntity.setRespondent(respondent);
+        reportmessageEntity.setTask(taskEntity);
+        reportmessageEntity.setType(0);
+        ret.put(stdName.MES, reportService.add(reportmessageEntity));
         JsonHelper.jsonToResponse(response, ret);
     }
 
     /**
      * 举报工人
      *
-     * @param reportMessage 举报信息
+     * @param
      * @return boolean 成功与否
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/reportWorker")
-    public void reportWorker(@RequestBody ReportMessage reportMessage, HttpServletResponse response) {
+    public void reportWorker(HttpServletRequest request, HttpServletResponse response) {
+        JSONObject jsonObject = JsonHelper.requestToJson(request);
+        TaskEntity taskEntity = (TaskEntity) taskService.findByID(jsonObject.getInt(stdName.TASKID));
+        UserEntity respondent = userService.findByUsername(jsonObject.getString(stdName.RESPONDENT));
+        UserEntity reporter = userService.findByUsername(jsonObject.getString(stdName.REPORTER));
+        ReportmessageEntity reportmessageEntity = new ReportmessageEntity();
         JSONObject ret = new JSONObject();
-        reportMessage.setReportTime(DateHelper.convertDateToString(new Date()));
-        ret.put(globalMes, reportService.reportWorker(reportMessage));
+        reportmessageEntity.setReportTime((java.sql.Date) new Date());
+        reportmessageEntity.setDescription(jsonObject.getString(stdName.DESCRIPTION));
+        reportmessageEntity.setIsDealt((byte) 0);
+        reportmessageEntity.setReporter(reporter);
+        reportmessageEntity.setRespondent(respondent);
+        reportmessageEntity.setTask(taskEntity);
+        reportmessageEntity.setType(1);
+        ret.put(stdName.MES, reportService.add(reportmessageEntity));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -293,22 +305,18 @@ public class TaskController {
      * 管理员查看用户被举报的所有信息
      */
     @RequestMapping(method = RequestMethod.GET, value = "/checkWorkerReport")
-    public void checkWorkerReport(HttpServletResponse response) {
-        JSONObject ret = new JSONObject();
-        ret.put(globalReportList, reportService.checkWorkerReport());
-        JsonHelper.jsonToResponse(response, ret);
+    public List<ReportmessageEntity> checkWorkerReport() {
+        return reportService.checkWorkerReport();
     }
 
     /**
      * 管理员查看任务被举报的所有信息
      *
-     * @param response http
+     * @param
      */
     @RequestMapping(method = RequestMethod.GET, value = "/checkTaskReport")
-    public void checkTaskReport(HttpServletResponse response) {
-        JSONObject ret = new JSONObject();
-        ret.put(globalReportList, reportService.checkTaskReport());
-        JsonHelper.jsonToResponse(response, ret);
+    public List<ReportmessageEntity> checkTaskReport() {
+        return reportService.checkTaskReport();
     }
 
     /**
@@ -320,38 +328,25 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.GET, value = "/checkTaskDetail")
     public void checkTaskDetail(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
-        Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
-        JSONObject ret = taskService.checkTaskDetail(taskID);
-        ret.put("acceptNum", ret.getJSONArray("userName").length());
-        ret.put("totalProgress", (double) ret.getInt("completedNumber") / (double) ret.getInt("expectedNumber"));
-        JSONArray users = ret.getJSONArray("userName");
-        JSONArray newUsers = new JSONArray();
+        Integer taskID = Integer.valueOf(map.get(stdName.TASKID)[0]);
+        TaskEntity taskEntity = (TaskEntity) taskService.findByID(taskID);
+        JSONObject ret = new JSONObject(taskEntity);
+        List<WorkersForTheTaskEntity> workersForTheTaskEntities = taskEntity.getWorkersForTheTaskEntityList();
+        ret.put(stdName.ACCEPTNUM, workersForTheTaskEntities.size());
+        Integer totalTagNum = 0;
         JSONArray userInfos = new JSONArray();
-        for (Object o : users) {
-            String string = (String) o;
-            newUsers.put(string.split("-")[0]);
+        for (WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities) {
+            totalTagNum += workersForTheTaskEntity.getMarkedNum();
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(globalUsername, string.split("-")[0]);
-            UserInfo userInfo = userInfoService.findByUsername(string.split("-")[0]);
-            jsonObject.put("level", userInfo.getRealLevel());
-            jsonObject.put(globalCompletedNumber, Integer.valueOf(string.split("-")[1]));
+
+            UserEntity userEntity = workersForTheTaskEntity.getWorker();
+            jsonObject.put(stdName.USERNAME, userEntity.getUsername());
+            jsonObject.put(stdName.LEVEL, userEntity.getLev());
+            jsonObject.put(stdName.COMPLETEDNUMBER, workersForTheTaskEntity.getCompletedNum());
             userInfos.put(jsonObject);
         }
-        List imgURLs = taskService.findImgURLByID(String.valueOf(taskID));
-        Integer totalTagNum = 0;
-        JSONArray jsonArray = new JSONArray();
-        for (Object o1 : imgURLs) {
-            JSONObject object = new JSONObject();
-            String imgURL = (String) o1;
-            String imgName = imgURL.substring(imgURL.lastIndexOf('/') + 1, imgURL.lastIndexOf('.'));
-            object.put(imgName, taskService.findMarkNumByImgNameAndUserAndID(taskID, imgName, newUsers));
-            totalTagNum += taskService.findMarkNumByImgNameAndUserAndID(taskID, imgName, newUsers);
-            jsonArray.put(object);
-        }
-        ret.put("totalTagNum", totalTagNum);
-        ret.put("averageTagNum", totalTagNum / imgURLs.size());
-        ret.put("totalImgTagNum", jsonArray);
-        ret.put("workerInfo", userInfos);
+        ret.put(stdName.TOTALTAGNUM, totalTagNum);
+        ret.put(stdName.WORKERINFO, userInfos);
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -364,12 +359,12 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.POST, value = "/dealReport")
     public void dealReport(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        String reportTime = jsonObject.getString("reportTime");
-        String description = jsonObject.getString("description");
-        Integer type = jsonObject.getInt("Type");
+        String reportTime = jsonObject.getString(stdName.REPORTTIME);
+        String description = jsonObject.getString(stdName.DESCRIPTION);
+        Integer type = jsonObject.getInt(stdName.TYPE);
 
         JSONObject ret = new JSONObject();
-        ret.put(globalMes, reportService.dealReport(reportTime, type, description));
+        ret.put(stdName.MES, reportService.dealReport(reportTime, type, description));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -381,15 +376,15 @@ public class TaskController {
     @RequestMapping(value = "/checkImages", method = RequestMethod.GET)
     public void checkImages(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
-        Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
+        Integer taskID = Integer.valueOf(map.get(stdName.TASKID)[0]);
         JSONObject ret = new JSONObject();
         JSONArray array = new JSONArray();
-        List list = taskService.findImgURLByID(String.valueOf(taskID));
-        for (Object o : list) {
-            String imgURL = (String) o;
-            array.put(imgURL);
+        TaskEntity taskEntity = (TaskEntity) taskService.findByID(taskID);
+        List<ImageEntity> imageEntities = taskEntity.getImageEntityList();
+        for (ImageEntity imageEntity : imageEntities) {
+            array.put(imageEntity.getUrl());
         }
-        ret.put("imgURLs", array);
+        ret.put(stdName.IMGURLS, array);
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -397,9 +392,18 @@ public class TaskController {
     public void checkWorkerProgress(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
         String userName = SecurityUtils.getSubject().getPrincipal().toString();
-        Integer taskID = Integer.valueOf(map.get(globalTaskID)[0]);
+        Integer taskID = Integer.valueOf(map.get(stdName.TASKID)[0]);
         JSONObject ret = new JSONObject();
-        ret.put("progress", taskService.checkTaskProgress(taskID, userName));
+        TaskEntity taskEntity = (TaskEntity) taskService.findByID(taskID);
+        List<WorkersForTheTaskEntity> workersForTheTaskEntities = taskEntity.getWorkersForTheTaskEntityList();
+        for (WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities) {
+            if (workersForTheTaskEntity.getWorker().getUsername().equals(userName)) {
+                ret.put(stdName.PROGRESS, workersForTheTaskEntity.getCompletedNum() / taskEntity.getImageNum());
+                JsonHelper.jsonToResponse(response, ret);
+                return;
+            }
+        }
+        ret.put(stdName.MES, stdName.ERROR);
         JsonHelper.jsonToResponse(response, ret);
     }
 

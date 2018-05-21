@@ -1,5 +1,7 @@
 package cn.joker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -39,6 +41,7 @@ public class AbilityEntity implements Serializable {
     }
 
     @ManyToMany(mappedBy = "abilityEntityList", cascade = CascadeType.PERSIST)
+    @JsonIgnore
     public List<UserEntity> getUserEntityList() {
         return userEntityList;
     }

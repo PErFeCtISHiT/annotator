@@ -52,6 +52,17 @@ public class stdName {
     public static final String FILENAME = "FILENAME";
     public static final String FILE = "file";
     public static final String UTILCLASS = "Utility class";
+    public static final String TOTALPROGRESS = "totalProgress";
+    public static final String PROGRESS = "progress";
+    public static final String RESPONDENT = "respondent";
+    public static final String REPORTER = "reporter";
+    public static final String TYPE = "type";
+    public static final String ACCEPTNUM = "acceptNum";
+    public static final String TOTALTAGNUM = "totalTagNum";
+    public static final String WORKERINFO = "workerInfo";
+    public static final String REPORTTIME = "reportTime";
+    public static final String IMGURLS = "imgURLs";
+    public static final String ERROR = "error";
 
     private stdName() {
         throw new IllegalStateException("namespace class");

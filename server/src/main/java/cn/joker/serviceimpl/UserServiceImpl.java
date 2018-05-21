@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Service
 public class UserServiceImpl extends PubServiceImpl implements UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {

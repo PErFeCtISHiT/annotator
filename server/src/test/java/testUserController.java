@@ -23,7 +23,7 @@ public class testUserController {
         requestHeaders.set("Accept", "application/json");
         requestHeaders.set("Content-Type", "application/json");
 
-        String jsonStr = "{\"username\":\"yaphet\",\"passwr\":\"123\",\"nickname\":\"test\"}";
+        String jsonStr = "{\"username\":\"pis\",\"passwr\":\"123\",\"nickname\":\"test\"}";
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> httpEntity = new HttpEntity<String>(jsonStr, requestHeaders);
         String jsonData = restTemplate.postForObject(url, httpEntity, String.class);

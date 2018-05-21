@@ -1,5 +1,6 @@
 package cn.joker.controller.usercontrollers;
 
+import cn.joker.dao.UserRepository;
 import cn.joker.entity.BonusHistoryEntity;
 import cn.joker.entity.SysRoleEntity;
 import cn.joker.entity.TaskEntity;
@@ -9,6 +10,7 @@ import cn.joker.sevice.*;
 import cn.joker.util.JsonHelper;
 import cn.joker.util.PasswordHelper;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,6 +39,8 @@ public class MessageController {
     private TaskService taskService;
     @Resource
     private BonusHistoryService bonusHistoryService;
+    @Autowired
+    private UserRepository userRepository;
 
 
     /**
@@ -56,6 +60,7 @@ public class MessageController {
         userEntity.setState(1);
         userEntity.setBonus(0);
         JSONObject ret = new JSONObject();
+        userRepository.saveAndFlush(userEntity);
         ret.put(stdName.MES, userService.add(userEntity));
         JsonHelper.jsonToResponse(response, ret);
     }
