@@ -215,7 +215,7 @@ public class TaskEntity implements Serializable{
     }
 
     public Double getTotalProgress(){
-        return (double) (completedNumber / expectedNumber);
+        return  ((double)completedNumber / (double)expectedNumber);
     }
 
     public void setTotalProgress(Double totalProgress) {

@@ -15,12 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class SysPermissionServiceImpl extends PubServiceImpl implements SysPermissionService {
-    private final SysPermissionRepository sysPermissionRepository;
 
     @Autowired
     public SysPermissionServiceImpl(SysPermissionRepository sysPermissionRepository) {
         this.repository = sysPermissionRepository;
-        this.sysPermissionRepository = sysPermissionRepository;
     }
 
 }

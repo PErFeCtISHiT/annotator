@@ -48,7 +48,7 @@ public class SysRoleEntity implements Serializable {
         return description;
     }
 
-    @ManyToMany(mappedBy = "roleEntityList",cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "roleEntityList",cascade = CascadeType.MERGE)
     @JsonIgnore
     public List<UserEntity> getUserEntityList() {
         return userEntityList;

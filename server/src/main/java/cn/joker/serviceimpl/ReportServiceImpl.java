@@ -2,6 +2,7 @@ package cn.joker.serviceimpl;
 
 import cn.joker.entity.ReportmessageEntity;
 import cn.joker.sevice.ReportService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
  * @description: good good study
  * @date: create in 18:39 2018/5/21
  */
+@Service
 public class ReportServiceImpl extends PubServiceImpl implements ReportService{
 
     @Override

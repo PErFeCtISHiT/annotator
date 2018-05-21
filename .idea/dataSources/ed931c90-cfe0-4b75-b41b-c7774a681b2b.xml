@@ -1762,32 +1762,37 @@
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="401" parent="243" name="workers_for_the_task_id_uindex">
+    <column id="401" parent="243" name="is_finished">
+      <Position>7</Position>
+      <DataType>int(11)|0</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="402" parent="243" name="workers_for_the_task_id_uindex">
       <ColNames>id</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="402" parent="243" name="FK8awyxlcj3jonrvvkh0kvvnne4">
+    <index id="403" parent="243" name="FK8awyxlcj3jonrvvkh0kvvnne4">
       <ColNames>user_id</ColNames>
     </index>
-    <index id="403" parent="243" name="FKj1mbgfj6e695lmdwc14uswjus">
+    <index id="404" parent="243" name="FKj1mbgfj6e695lmdwc14uswjus">
       <ColNames>task_id</ColNames>
     </index>
-    <key id="404" parent="243" name="PRIMARY">
+    <key id="405" parent="243" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="405" parent="243" name="workers_for_the_task_id_uindex">
+    <key id="406" parent="243" name="workers_for_the_task_id_uindex">
       <ColNames>id</ColNames>
       <UnderlyingIndexName>workers_for_the_task_id_uindex</UnderlyingIndexName>
     </key>
-    <foreign-key id="406" parent="243" name="FK8awyxlcj3jonrvvkh0kvvnne4">
+    <foreign-key id="407" parent="243" name="FK8awyxlcj3jonrvvkh0kvvnne4">
       <ColNames>user_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="407" parent="243" name="FKj1mbgfj6e695lmdwc14uswjus">
+    <foreign-key id="408" parent="243" name="FKj1mbgfj6e695lmdwc14uswjus">
       <ColNames>task_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>task</RefTableName>

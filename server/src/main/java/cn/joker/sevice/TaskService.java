@@ -23,10 +23,6 @@ public interface TaskService extends PubService {
 
     boolean acceptTask(Integer taskID, String workerName);
 
-
-    //查看某个工人的进度
-    Double checkTaskProgress(Integer taskID, String workerName);
-
     boolean postMark(UserEntity userEntity, TaskEntity taskEntity);
 
     List<TaskEntity> findAll();

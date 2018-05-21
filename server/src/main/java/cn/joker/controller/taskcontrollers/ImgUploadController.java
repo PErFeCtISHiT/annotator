@@ -6,7 +6,6 @@ import cn.joker.sevice.TaskService;
 import cn.joker.util.FileHelper;
 import cn.joker.util.JsonHelper;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -52,10 +51,11 @@ public class ImgUploadController {
     public void imagesUpload(@RequestParam(stdName.FILE) MultipartFile file, @RequestParam(stdName.TASKID) Integer taskID, HttpServletResponse response) {
         TaskEntity taskEntity = (TaskEntity) taskService.findByID(taskID);
         JSONObject ret = new JSONObject();
+        FileHelper fileHelper = new FileHelper();
         if (taskEntity == null) {
             ret.put(stdName.MES, stdName.NULL);
         } else {
-            taskEntity.setImageNum(FileHelper.saveFiles(taskID, file));
+            taskEntity.setImageNum(fileHelper.saveFiles(taskID, file));
             ret.put(stdName.MES, taskService.modify(taskEntity));
         }
         JsonHelper.jsonToResponse(response, ret);

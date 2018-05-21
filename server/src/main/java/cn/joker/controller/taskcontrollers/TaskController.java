@@ -70,6 +70,8 @@ public class TaskController {
         task.setImageNum(0);
         task.setTaskName(jsonObject.getString(stdName.TASKNAME));
         task.setWorkerLevel(jsonObject.getInt(stdName.WORKERLEVEL));
+        task.setState(1);
+        task.setCompletedNumber(0);
         JSONObject ret = new JSONObject();
 
         ret.put(stdName.MES, userService.modify(userEntity));
@@ -133,7 +135,13 @@ public class TaskController {
             taskObject.put(stdName.STARTDATE, DateHelper.convertDateToString(task.getStartDate()));
             taskObject.put(stdName.ENDDATE, DateHelper.convertDateToString(task.getEndDate()));
             if (userRole.equals(4)) {
-                Double progress = taskService.checkTaskProgress(task.getId(), username);
+                Double progress = -1.0;
+                List<WorkersForTheTaskEntity> workersForTheTaskEntities = task.getWorkersForTheTaskEntityList();
+                for (WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities) {
+                    if (workersForTheTaskEntity.getWorker().getUsername().equals(username)) {
+                        progress = ((double) workersForTheTaskEntity.getCompletedNum() / (double) task.getImageNum());
+                    }
+                }
                 if (progress != -1.0) {
                     taskObject.put(stdName.PROGRESS, progress);
                     taskArray.put(taskObject);
@@ -149,11 +157,10 @@ public class TaskController {
     /**
      * 查看当前所有任务以及搜索任务
      *
-     * @param request  http
-     * @param response http
+     * @param request http
      */
     @RequestMapping(method = RequestMethod.POST, value = "/allTasks")
-    public List<TaskEntity> search(HttpServletRequest request, HttpServletResponse response) {
+    public List<TaskEntity> search(HttpServletRequest request) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
         Integer userRole = jsonObject.getInt(stdName.USERROLE);
         String tag = jsonObject.getString(stdName.TAG);

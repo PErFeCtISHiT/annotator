@@ -19,6 +19,7 @@ public class WorkersForTheTaskEntity implements Serializable{
     private Integer markedNum;
     private TaskEntity workers_task;
     private Integer completedNum;
+    private Integer isFinished;
 
 
     @ManyToOne(cascade = CascadeType.PERSIST)
@@ -72,6 +73,16 @@ public class WorkersForTheTaskEntity implements Serializable{
 
     public void setCompletedNum(Integer completedNum) {
         this.completedNum = completedNum;
+    }
+
+    @Basic
+    @Column(name = "isFinished", nullable = true)
+    public Integer getIsFinished() {
+        return isFinished;
+    }
+
+    public void setIsFinished(Integer isFinished) {
+        this.isFinished = isFinished;
     }
 
     @Override

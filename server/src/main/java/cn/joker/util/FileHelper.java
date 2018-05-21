@@ -1,17 +1,22 @@
 package cn.joker.util;
 
-import cn.joker.namespace.stdName;
+import cn.joker.entity.ImageEntity;
+import cn.joker.entity.TaskEntity;
+import cn.joker.sevice.TaskService;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Expand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -21,10 +26,8 @@ import java.util.Objects;
  * @date: create in 10:14 2018/4/17
  */
 public class FileHelper {
-
-    private FileHelper() {
-        throw new IllegalStateException(stdName.UTILCLASS);
-    }
+    @Resource
+    private TaskService taskService;
 
     private static Logger logger = LoggerFactory.getLogger(JsonHelper.class);
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
@@ -79,7 +82,7 @@ public class FileHelper {
         return true;
     }
 
-    public static Integer saveFiles(Integer taskID, MultipartFile file) {
+    public Integer saveFiles(Integer taskID, MultipartFile file) {
         if (file.isEmpty())
             return 0;
         String path = DIR + "task/" + String.valueOf(taskID) + "/images/";
@@ -114,6 +117,18 @@ public class FileHelper {
         } catch (IOException e) {
             logger.error(globalException);
         }
+
+        TaskEntity taskEntity = (TaskEntity) taskService.findByID(taskID);
+        ImageEntity imageEntity = new ImageEntity();
+        imageEntity.setImg_task(taskEntity);
+        imageEntity.setName(fileName.substring(fileName.lastIndexOf('/') + 1, fileName.lastIndexOf('.')));
+        imageEntity.setUrl("task/" + String.valueOf(taskID) + "/images/" + fileName);
+        List<ImageEntity> imageEntities = taskEntity.getImageEntityList();
+        if (imageEntities == null)
+            imageEntities = new ArrayList<>();
+        imageEntities.add(imageEntity);
+        taskEntity.setImageEntityList(imageEntities);
+        taskService.modify(taskEntity);
         return Objects.requireNonNull(dest.getParentFile().list()).length;
     }
 }

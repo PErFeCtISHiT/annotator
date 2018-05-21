@@ -130,7 +130,7 @@ public class UserEntity implements Serializable{
         this.email = email;
     }
 
-    @ManyToMany(cascade=CascadeType.PERSIST)
+    @ManyToMany(cascade=CascadeType.MERGE)
     @JoinTable(name="user_role", joinColumns={@JoinColumn(referencedColumnName="ID")}
             , inverseJoinColumns={@JoinColumn(referencedColumnName="ID")})
     @JsonIgnore

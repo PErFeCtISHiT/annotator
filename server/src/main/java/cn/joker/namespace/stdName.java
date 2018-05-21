@@ -8,16 +8,13 @@ package cn.joker.namespace;
 public class stdName {
     public static final String USERNAME = "username";
     public static final String POINTS = "points";
-    public static final String ROLELIST = "roleList";
     public static final String WORKERNAME = "workerName";
     public static final String WORKERNUM = "workerNum";
     public static final String ADMINNUM = "adminNum";
-    public static final String PASSWORD = "password";
     public static final String MES = "mes";
     public static final String NICKNAME = "nickname";
     public static final String LEVEL = "level";
     public static final String NULL = "null";
-    public static final String RET = "ret";
     public static final String TASKID = "taskID";
     public static final String SPONSORNAME = "sponsorName";
     public static final String SPONSORNUM = "sponsorNum";
@@ -33,8 +30,6 @@ public class stdName {
     public static final String STATUS = "status";
     public static final String TASKS = "tasks";
     public static final String IMGNUM = "imgNum";
-    public static final String REPORTLIST = "reportList";
-    public static final String SECONDLEVELS = "secondlevels";
     public static final String EXISTED = "existed";
     public static final String TASKNUM = "taskNum";
     public static final String PRODUCING = "producing";

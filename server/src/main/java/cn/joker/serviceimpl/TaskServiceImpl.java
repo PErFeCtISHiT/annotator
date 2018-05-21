@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,11 +42,10 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
 
     @Override
     public List<TaskEntity> checkMyTask(String userName, Integer status, Integer userRole, String tag) {
-        UserEntity userEntity = userService.findByUsername(userName);
         List<TaskEntity> ret = new ArrayList<>();
         List<TaskEntity> taskEntities = taskRepository.findAll();
         for (TaskEntity taskEntity : taskEntities) {
-            if (taskEntity.getState().equals(status)) {
+            if (taskEntity.getState().equals(status) || status == 0) {
                 if (userRole == 2 && taskEntity.getSponsor().getUsername().equals(userName)) {
                     if (tag.length() == 0)
                         ret.add(taskEntity);
@@ -84,37 +84,86 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
 
     @Override
     public List<TaskEntity> search(int userRole, String tag, Integer status) {
-        return null;
+        List<TaskEntity> ret = new ArrayList<>();
+        List<TaskEntity> taskEntities = taskRepository.findAll();
+        for (TaskEntity taskEntity : taskEntities) {
+            if (taskEntity.getState().equals(status) || status == 0) {
+                List<TagEntity> tagEntities = taskEntity.getTagEntityList();
+                for (TagEntity tagEntity : tagEntities) {
+                    if (tagEntity.getTag().equals(tag)) {
+                        ret.add(taskEntity);
+                        break;
+                    }
+                }
+            }
+        }
+        return ret;
     }
 
     @Override
     public boolean endTask(Integer taskID) {
-        return false;
+        TaskEntity taskEntity = (TaskEntity) this.findByID(taskID);
+        taskEntity.setState(2);
+        taskEntity.setEndDate((Date) new java.util.Date());
+        return this.modify(taskEntity);
     }
 
     @Override
     public boolean deleteTask(Integer taskID) {
-        return false;
+        TaskEntity taskEntity = (TaskEntity) findByID(taskID);
+        return delete(taskEntity);
     }
 
     @Override
     public boolean completeTask(Integer taskID, String workerName) {
-        return false;
+        TaskEntity taskEntity = (TaskEntity) findByID(taskID);
+        List<WorkersForTheTaskEntity> workersForTheTaskEntities = taskEntity.getWorkersForTheTaskEntityList();
+        if (workersForTheTaskEntities == null)
+            workersForTheTaskEntities = new ArrayList<>();
+        for (WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities) {
+            if (workersForTheTaskEntity.getWorker().getUsername().equals(workerName)) {
+                workersForTheTaskEntity.setCompletedNum(workersForTheTaskEntity.getCompletedNum() + 1);
+                workersForTheTaskEntity.setIsFinished(1);
+                break;
+            }
+        }
+        taskEntity.setCompletedNumber(taskEntity.getCompletedNumber() + 1);
+        taskEntity.setWorkersForTheTaskEntityList(workersForTheTaskEntities);
+        return modify(taskEntity);
     }
 
     @Override
     public boolean abortTask(Integer taskID, String workerName) {
-        return false;
+        TaskEntity taskEntity = (TaskEntity) findByID(taskID);
+        List<WorkersForTheTaskEntity> workersForTheTaskEntities = taskEntity.getWorkersForTheTaskEntityList();
+        if (workersForTheTaskEntities == null)
+            workersForTheTaskEntities = new ArrayList<>();
+        for (WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities) {
+            if (workersForTheTaskEntity.getWorker().getUsername().equals(workerName)) {
+                workersForTheTaskEntities.remove(workersForTheTaskEntity);
+                break;
+            }
+        }
+        taskEntity.setWorkersForTheTaskEntityList(workersForTheTaskEntities);
+        return modify(taskEntity);
     }
 
     @Override
     public boolean acceptTask(Integer taskID, String workerName) {
-        return false;
-    }
-
-    @Override
-    public Double checkTaskProgress(Integer taskID, String workerName) {
-        return null;
+        TaskEntity taskEntity = (TaskEntity) findByID(taskID);
+        List<WorkersForTheTaskEntity> workersForTheTaskEntities = taskEntity.getWorkersForTheTaskEntityList();
+        if (workersForTheTaskEntities == null)
+            workersForTheTaskEntities = new ArrayList<>();
+        UserEntity userEntity = userService.findByUsername(workerName);
+        WorkersForTheTaskEntity workersForTheTaskEntity = new WorkersForTheTaskEntity();
+        workersForTheTaskEntity.setIsFinished(0);
+        workersForTheTaskEntity.setCompletedNum(0);
+        workersForTheTaskEntity.setMarkedNum(0);
+        workersForTheTaskEntity.setWorkers_task(taskEntity);
+        workersForTheTaskEntity.setWorker(userEntity);
+        workersForTheTaskEntities.add(workersForTheTaskEntity);
+        taskEntity.setWorkersForTheTaskEntityList(workersForTheTaskEntities);
+        return modify(taskEntity);
     }
 
     @Override

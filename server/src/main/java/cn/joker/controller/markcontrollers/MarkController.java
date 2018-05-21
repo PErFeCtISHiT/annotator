@@ -77,7 +77,7 @@ public class MarkController {
             String username = (String) o;
             UserEntity userEntity = userService.findByUsername(username);
             ImgMarkEntity imgMarkEntity = imgMarkService.findByImage_imgMarkAndImgMark_taskAndWorker(imageEntity, taskEntity, userEntity);
-            if (imageEntity != null) {
+            if (imgMarkEntity != null) {
                 JSONObject mark = new JSONObject();
                 mark.put(stdName.IMGURL, imageEntity.getUrl());
                 mark.put(stdName.WORKERNAME, userEntity.getUsername());
