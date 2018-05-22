@@ -1,7 +1,8 @@
-#/annotator/.idea/
-#/annotator/node_modules/
-#/annotator/dist/
-#/.idea/
+/annotator/.idea/
+/annotator/node_modules/
+/annotator/dist/
+/annotator/task/
+/.idea/
 #
-#/server/target/
-##/server/src/main/resources/application.properties
+/server/target/
+/server/src/main/resources/application.properties
