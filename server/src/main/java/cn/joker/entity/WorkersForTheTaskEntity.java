@@ -22,7 +22,7 @@ public class WorkersForTheTaskEntity implements Serializable{
     private Integer isFinished;
 
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "task_id")
     @JsonIgnore
     public TaskEntity getWorkers_task() {
@@ -44,7 +44,7 @@ public class WorkersForTheTaskEntity implements Serializable{
         this.id = id;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id")
     @JsonIgnore
     public UserEntity getWorker() {

@@ -37,7 +37,7 @@ public class TaskEntity implements Serializable{
     private Double totalProgress;
 
 
-    @ManyToMany(cascade=CascadeType.PERSIST)
+    @ManyToMany(cascade=CascadeType.MERGE)
     @JoinTable(name="task_tag", joinColumns={@JoinColumn(referencedColumnName="ID")}
             , inverseJoinColumns={@JoinColumn(referencedColumnName="ID")})
     @JsonIgnore
@@ -49,7 +49,7 @@ public class TaskEntity implements Serializable{
         this.tagEntityList = tagEntityList;
     }
 
-    @OneToMany(mappedBy = "workers_task",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "workers_task",cascade = CascadeType.MERGE)
     @JsonIgnore
     public List<WorkersForTheTaskEntity> getWorkersForTheTaskEntityList() {
         return workersForTheTaskEntityList;
@@ -59,7 +59,7 @@ public class TaskEntity implements Serializable{
         this.workersForTheTaskEntityList = workersForTheTaskEntityList;
     }
 
-    @OneToMany(mappedBy = "imgMark_task",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "imgMark_task",cascade = CascadeType.MERGE)
     @JsonIgnore
     public List<ImgMarkEntity> getImgMarkEntityList() {
         return imgMarkEntityList;
@@ -69,7 +69,7 @@ public class TaskEntity implements Serializable{
         this.imgMarkEntityList = imgMarkEntityList;
     }
 
-    @OneToMany(mappedBy = "img_task",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "img_task",cascade = CascadeType.MERGE)
     @JsonIgnore
     public List<ImageEntity> getImageEntityList() {
         return imageEntityList;
@@ -81,7 +81,7 @@ public class TaskEntity implements Serializable{
 
 
 
-    @OneToMany(mappedBy = "bonusHistory_task",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "bonusHistory_task",cascade = CascadeType.MERGE)
     @JsonIgnore
     public List<BonusHistoryEntity> getBonusHistoryEntityList() {
         return bonusHistoryEntityList;
@@ -103,7 +103,7 @@ public class TaskEntity implements Serializable{
         this.id = id;
     }
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id")
     @JsonIgnore
     public UserEntity getSponsor() {

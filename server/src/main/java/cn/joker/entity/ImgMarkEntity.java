@@ -24,7 +24,7 @@ public class ImgMarkEntity implements Serializable {
 
 
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "image_id")
     @JsonIgnore
     public ImageEntity getImage_imgMark() {
@@ -36,7 +36,7 @@ public class ImgMarkEntity implements Serializable {
     }
 
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "task_id")
     @JsonIgnore
     public TaskEntity getImgMark_task() {

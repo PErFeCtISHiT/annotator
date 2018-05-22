@@ -40,7 +40,7 @@ public class AbilityEntity implements Serializable {
         this.totalPoints = totalPoints;
     }
 
-    @ManyToMany(mappedBy = "abilityEntityList", cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "abilityEntityList", cascade = CascadeType.MERGE)
     @JsonIgnore
     public List<UserEntity> getUserEntityList() {
         return userEntityList;

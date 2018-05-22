@@ -36,7 +36,7 @@ public class ReportmessageEntity implements Serializable {
     }
 
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "respondent_id")
     @JsonIgnore
     public UserEntity getRespondent() {
@@ -47,7 +47,7 @@ public class ReportmessageEntity implements Serializable {
         this.respondent = respondent;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "reporter_id")
     @JsonIgnore
     public UserEntity getReporter() {
@@ -58,7 +58,7 @@ public class ReportmessageEntity implements Serializable {
         this.reporter = reporter;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "task_id")
     @JsonIgnore
     public TaskEntity getTask() {

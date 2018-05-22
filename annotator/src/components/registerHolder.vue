@@ -150,7 +150,7 @@
             this.$http.post('/user/signUp', {
               username: this.registerForm.userName,
               name: this.registerForm.name,
-              password: this.registerForm.pass,
+              passwr: this.registerForm.pass,
               roleList: this.$refs.checkBox.getResult(),
             })
               .then(function (response) {

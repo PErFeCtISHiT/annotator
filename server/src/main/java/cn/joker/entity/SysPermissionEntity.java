@@ -40,7 +40,7 @@ public class SysPermissionEntity implements Serializable {
         this.permission = permission;
     }
 
-    @ManyToMany(mappedBy = "sysPermissionEntityList",cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "sysPermissionEntityList",cascade = CascadeType.MERGE)
     @JsonIgnore
     public List<SysRoleEntity> getSysRoleEntityList() {
         return sysRoleEntityList;

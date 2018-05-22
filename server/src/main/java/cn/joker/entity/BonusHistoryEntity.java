@@ -32,7 +32,7 @@ public class BonusHistoryEntity implements Serializable{
     }
 
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "task_id")
     @JsonIgnore
     public TaskEntity getBonusHistory_task() {
@@ -53,7 +53,7 @@ public class BonusHistoryEntity implements Serializable{
         this.points = points;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id")
     @JsonIgnore
     public UserEntity getBonusHistory_user() {

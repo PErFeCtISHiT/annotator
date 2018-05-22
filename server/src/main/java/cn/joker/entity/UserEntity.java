@@ -144,7 +144,7 @@ public class UserEntity implements Serializable{
 
 
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name="user_ability",joinColumns = {@JoinColumn(referencedColumnName = "ID")},
             inverseJoinColumns = {@JoinColumn(referencedColumnName = "ID")})
 
@@ -157,7 +157,7 @@ public class UserEntity implements Serializable{
         this.abilityEntityList = abilityEntityList;
     }
 
-    @OneToMany(mappedBy = "bonusHistory_user",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "bonusHistory_user",cascade = CascadeType.MERGE)
     @JsonIgnore
     public List<BonusHistoryEntity> getBonusHistoryEntityList() {
         return bonusHistoryEntityList;

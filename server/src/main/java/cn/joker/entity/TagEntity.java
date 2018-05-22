@@ -20,7 +20,7 @@ public class TagEntity implements Serializable {
     private String description;
     private List<TaskEntity> taskEntityList;
 
-    @ManyToMany(cascade = CascadeType.PERSIST,mappedBy = "tagEntityList")
+    @ManyToMany(cascade = CascadeType.MERGE,mappedBy = "tagEntityList")
     @JsonIgnore
     public List<TaskEntity> getTaskEntityList() {
         return taskEntityList;

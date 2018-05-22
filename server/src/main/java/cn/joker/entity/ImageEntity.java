@@ -30,7 +30,7 @@ public class ImageEntity implements Serializable {
         this.imgName = imgName;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "task_id")
     @JsonIgnore
     public TaskEntity getImg_task() {

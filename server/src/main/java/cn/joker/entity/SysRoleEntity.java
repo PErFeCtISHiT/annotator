@@ -58,7 +58,7 @@ public class SysRoleEntity implements Serializable {
         this.userEntityList = userEntityList;
     }
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name="role_permission", joinColumns={@JoinColumn(referencedColumnName="ID")}
             , inverseJoinColumns={@JoinColumn(referencedColumnName="ID")})
     @JsonIgnore
