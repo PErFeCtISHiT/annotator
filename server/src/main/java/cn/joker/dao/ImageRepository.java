@@ -16,5 +16,5 @@ import javax.persistence.Table;
 public interface ImageRepository extends JpaRepository<ImageEntity, Integer> {
     ImageEntity findByUrl(String url);
 
-    ImageEntity findByName(String name);
+    ImageEntity findByImgName(String imgName);
 }

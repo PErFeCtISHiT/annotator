@@ -50,7 +50,7 @@ public class TaskController {
     public void releaseTask(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
         TaskEntity task = new TaskEntity();
-
+        task.setTaskName(jsonObject.getString(stdName.TASKNAME));
         task.setDescription(jsonObject.getString(stdName.DESCRIPTION));
         String endDate = jsonObject.getString(stdName.ENDDATE);
         String startDate = jsonObject.getString(stdName.STARTDATE);
@@ -58,7 +58,7 @@ public class TaskController {
         task.setEndDate(DateHelper.convertStringToDate(endDate));
         task.setExpectedNumber(jsonObject.getInt(stdName.EXCEPTEDNUMBER));
         task.setPoints(jsonObject.getInt(stdName.POINTS));
-        UserEntity userEntity = userService.findByUsername(stdName.SPONSORNAME);
+        UserEntity userEntity = userService.findByUsername(jsonObject.getString(stdName.SPONSORNAME));
         task.setSponsor(userEntity);
         userEntity.setPoints(userEntity.getPoints() - task.getPoints() * task.getExpectedNumber());
 
@@ -217,6 +217,7 @@ public class TaskController {
         UserEntity userInfo = userService.findByUsername(username);
         userInfo.setPoints(userInfo.getPoints() + taskEntity.getPoints());
         userInfo.setBonus(userInfo.getBonus() + taskEntity.getPoints());
+        userInfo.setLev((int) (Math.log(userInfo.getBonus() + 1) / Math.log(10)) + 1);
         JSONObject ret = new JSONObject();
         ret.put(stdName.MES, taskService.completeTask(taskID, username) && userService.modify(userInfo));
         JsonHelper.jsonToResponse(response, ret);

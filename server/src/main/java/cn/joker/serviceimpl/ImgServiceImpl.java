@@ -28,6 +28,6 @@ public class ImgServiceImpl extends PubServiceImpl implements ImgService {
 
     @Override
     public ImageEntity findByName(String name) {
-        return imageRepository.findByName(name);
+        return imageRepository.findByImgName(name);
     }
 }

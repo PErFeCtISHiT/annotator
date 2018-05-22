@@ -33,7 +33,7 @@ public class DateHelper {
         try {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-            return (Date) dateFormat.parse(dateInString);
+            return new java.sql.Date(dateFormat.parse(dateInString).getTime());
         } catch (ParseException e) {
             return null;
         }

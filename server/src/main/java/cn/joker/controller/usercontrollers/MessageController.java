@@ -1,6 +1,5 @@
 package cn.joker.controller.usercontrollers;
 
-import cn.joker.dao.UserRepository;
 import cn.joker.entity.BonusHistoryEntity;
 import cn.joker.entity.SysRoleEntity;
 import cn.joker.entity.TaskEntity;
@@ -13,7 +12,6 @@ import cn.joker.sevice.UserService;
 import cn.joker.util.JsonHelper;
 import cn.joker.util.PasswordHelper;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,8 +40,6 @@ public class MessageController {
     private TaskService taskService;
     @Resource
     private BonusHistoryService bonusHistoryService;
-    @Autowired
-    private UserRepository userRepository;
 
 
     /**
@@ -63,7 +59,6 @@ public class MessageController {
         userEntity.setState(1);
         userEntity.setBonus(0);
         JSONObject ret = new JSONObject();
-        userRepository.saveAndFlush(userEntity);
         ret.put(stdName.MES, userService.add(userEntity));
         JsonHelper.jsonToResponse(response, ret);
     }
@@ -195,7 +190,7 @@ public class MessageController {
             bonusHistory.setBonusHistory_user(userEntity);
             userEntity.setPoints(userEntity.getPoints() + bonusHistory.getPoints());
             userEntity.setBonus(userEntity.getBonus() + bonusHistory.getPoints());
-
+            userEntity.setLev((int) (Math.log(userEntity.getBonus() + 1) / Math.log(10)) + 1);
             ret.put(stdName.MES, bonusHistoryService.add(bonusHistory) && userService.modify(userEntity));
         } else
             ret.put(stdName.MES, stdName.NULL);

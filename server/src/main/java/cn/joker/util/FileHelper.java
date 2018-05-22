@@ -2,6 +2,7 @@ package cn.joker.util;
 
 import cn.joker.entity.ImageEntity;
 import cn.joker.entity.TaskEntity;
+import cn.joker.namespace.stdName;
 import cn.joker.sevice.TaskService;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Expand;
@@ -26,8 +27,11 @@ import java.util.Objects;
  * @date: create in 10:14 2018/4/17
  */
 public class FileHelper {
-    @Resource
-    private TaskService taskService;
+    private FileHelper() {
+        throw new IllegalStateException(stdName.UTILCLASS);
+    }
+
+
 
     private static Logger logger = LoggerFactory.getLogger(JsonHelper.class);
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
@@ -82,10 +86,10 @@ public class FileHelper {
         return true;
     }
 
-    public Integer saveFiles(Integer taskID, MultipartFile file) {
+    public static Integer saveFiles(TaskEntity taskEntity, MultipartFile file) {
         if (file.isEmpty())
             return 0;
-        String path = DIR + "task/" + String.valueOf(taskID) + "/images/";
+        String path = DIR + "task/" + String.valueOf(taskEntity.getId()) + "/images/";
         String fileName = file.getOriginalFilename();
         fileName = FileHelper.getRealFilePath(fileName);
         fileName = fileName.substring(fileName.lastIndexOf(FILE_SEPARATOR) + 1);
@@ -118,17 +122,13 @@ public class FileHelper {
             logger.error(globalException);
         }
 
-        TaskEntity taskEntity = (TaskEntity) taskService.findByID(taskID);
         ImageEntity imageEntity = new ImageEntity();
         imageEntity.setImg_task(taskEntity);
-        imageEntity.setName(fileName.substring(fileName.lastIndexOf('/') + 1, fileName.lastIndexOf('.')));
-        imageEntity.setUrl("task/" + String.valueOf(taskID) + "/images/" + fileName);
+        imageEntity.setImgName(fileName.substring(fileName.lastIndexOf('/') + 1, fileName.lastIndexOf('.')));
+        System.out.println(imageEntity.getImgName());
+        imageEntity.setUrl("task/" + String.valueOf(taskEntity.getId()) + "/images/" + fileName);
         List<ImageEntity> imageEntities = taskEntity.getImageEntityList();
-        if (imageEntities == null)
-            imageEntities = new ArrayList<>();
         imageEntities.add(imageEntity);
-        taskEntity.setImageEntityList(imageEntities);
-        taskService.modify(taskEntity);
         return Objects.requireNonNull(dest.getParentFile().list()).length;
     }
 }

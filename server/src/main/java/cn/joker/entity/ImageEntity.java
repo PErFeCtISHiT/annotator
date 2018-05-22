@@ -17,17 +17,17 @@ public class ImageEntity implements Serializable {
     private Integer id;
     private String url;
     private TaskEntity img_task;
-    private String name;
+    private String imgName;
 
 
     @Basic
-    @Column(name = "name",nullable = false,length = 200)
-    public String getName() {
-        return name;
+    @Column(name = "imgName",nullable = false,length = 200)
+    public String getImgName() {
+        return imgName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setImgName(String imgName) {
+        this.imgName = imgName;
     }
 
     @ManyToOne(cascade = CascadeType.PERSIST)

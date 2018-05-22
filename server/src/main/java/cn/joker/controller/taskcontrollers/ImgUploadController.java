@@ -51,11 +51,11 @@ public class ImgUploadController {
     public void imagesUpload(@RequestParam(stdName.FILE) MultipartFile file, @RequestParam(stdName.TASKID) Integer taskID, HttpServletResponse response) {
         TaskEntity taskEntity = (TaskEntity) taskService.findByID(taskID);
         JSONObject ret = new JSONObject();
-        FileHelper fileHelper = new FileHelper();
         if (taskEntity == null) {
             ret.put(stdName.MES, stdName.NULL);
         } else {
-            taskEntity.setImageNum(fileHelper.saveFiles(taskID, file));
+            taskEntity.setImageNum(FileHelper.saveFiles(taskEntity, file));
+            System.out.println(taskEntity.getImageEntityList().get(0).getImgName());
             ret.put(stdName.MES, taskService.modify(taskEntity));
         }
         JsonHelper.jsonToResponse(response, ret);
