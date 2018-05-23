@@ -11,6 +11,7 @@ import cn.joker.sevice.TaskService;
 import cn.joker.sevice.UserService;
 import cn.joker.util.JsonHelper;
 import cn.joker.util.PasswordHelper;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,20 +49,31 @@ public class MessageController {
      * @date: 14:10 2018/4/8
      */
     @RequestMapping(value = "/signUp", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public void signUp(@RequestBody UserEntity userEntity, HttpServletResponse response) {
-        List<SysRoleEntity> sysRoleEntities = new ArrayList<>();
-        sysRoleEntities.add((SysRoleEntity) sysRoleService.findByID(3));
-        sysRoleEntities.add((SysRoleEntity) sysRoleService.findByID(4));
-        userEntity.setRoleEntityList(sysRoleEntities);
-        userEntity.setPoints(100);
-        PasswordHelper.encryptPassword(userEntity);
-        userEntity.setLev(1);
-        userEntity.setState(1);
-        userEntity.setBonus(0);
+    public void signUp(HttpServletRequest request, HttpServletResponse response) {
+        JSONObject jsonObject = JsonHelper.requestToJson(request);
+        UserEntity userInfo = new UserEntity();
+        userInfo.setPoints(100);
+        userInfo.setUsername((String) jsonObject.get(stdName.USERNAME));
+
+        JSONArray jsonArray = jsonObject.getJSONArray(stdName.ROLELIST);
+        List<SysRoleEntity> roleList = new ArrayList<>();
+        for (Object obj : jsonArray) {
+            Integer srid = (Integer) obj;
+            roleList.add((SysRoleEntity) sysRoleService.findByID(srid));
+        }
+        userInfo.setRoleEntityList(roleList);
+        userInfo.setPasswr((String) jsonObject.get(stdName.PASSWORD));
+        PasswordHelper.encryptPassword(userInfo);
+        userInfo.setLev(1);
+        userInfo.setNickname((String) jsonObject.get(stdName.NICKNAME));
+        userInfo.setState(1);
+        userInfo.setBonus(0);
         JSONObject ret = new JSONObject();
-        ret.put(stdName.MES, userService.add(userEntity));
+
+        ret.put(stdName.MES, userService.add(userInfo));
         JsonHelper.jsonToResponse(response, ret);
     }
+
 
     /**
      * @author:pis

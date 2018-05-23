@@ -63,7 +63,16 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
                         }
                     }
                 } else if (userRole == 4) {
+                    int flag = 0;
                     List<WorkersForTheTaskEntity> workersForTheTaskEntities = taskEntity.getWorkersForTheTaskEntityList();
+                    for (WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities) {
+                        if (workersForTheTaskEntity.getWorker().getUsername().equals(userName) && workersForTheTaskEntity.getIsFinished() == 1) {
+                            flag = 1;
+                        }
+                    }
+                    if (flag == 1)
+                        continue;
+                    workersForTheTaskEntities = taskEntity.getWorkersForTheTaskEntityList();
                     for (WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities) {
                         if (workersForTheTaskEntity.getWorker().getUsername().equals(userName)) {
                             if (tag.length() == 0) {
@@ -88,19 +97,27 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
 
     @Override
     public List<TaskEntity> search(int userRole, String tag, Integer status) {
+        System.out.println(userRole);
+        System.out.println(tag);
+        System.out.println(status);
         List<TaskEntity> ret = new ArrayList<>();
         List<TaskEntity> taskEntities = taskRepository.findAll();
         for (TaskEntity taskEntity : taskEntities) {
             if (taskEntity.getState().equals(status) || status == 0) {
-                List<TagEntity> tagEntities = taskEntity.getTagEntityList();
-                for (TagEntity tagEntity : tagEntities) {
-                    if (tagEntity.getTag().equals(tag)) {
-                        ret.add(taskEntity);
-                        break;
+                if (tag.length() == 0) {
+                    ret.add(taskEntity);
+                } else {
+                    List<TagEntity> tagEntities = taskEntity.getTagEntityList();
+                    for (TagEntity tagEntity : tagEntities) {
+                        if (tagEntity.getTag().equals(tag)) {
+                            ret.add(taskEntity);
+                            break;
+                        }
                     }
                 }
             }
         }
+        System.out.println(ret.size());
         return ret;
     }
 
@@ -168,19 +185,6 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
         workersForTheTaskEntities.add(workersForTheTaskEntity);
         taskEntity.setWorkersForTheTaskEntityList(workersForTheTaskEntities);
         return modify(taskEntity);
-    }
-
-    @Override
-    public boolean postMark(UserEntity userEntity, TaskEntity taskEntity) {
-        List<WorkersForTheTaskEntity> workersForTheTaskEntities = taskEntity.getWorkersForTheTaskEntityList();
-        for (WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities) {
-            if (workersForTheTaskEntity.getWorker().getUsername().equals(userEntity.getUsername())) {
-                workersForTheTaskEntity.setMarkedNum(workersForTheTaskEntity.getMarkedNum() + 1);
-                break;
-            }
-        }
-        taskEntity.setWorkersForTheTaskEntityList(workersForTheTaskEntities);
-        return this.modify(taskEntity);
     }
 
     @Override

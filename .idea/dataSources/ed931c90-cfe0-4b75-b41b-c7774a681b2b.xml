@@ -7,7 +7,7 @@
     <schema id="2" parent="1" name="imgannotator">
       <Current>1</Current>
       <Visible>1</Visible>
-      <Collation>latin1_swedish_ci</Collation>
+      <Collation>utf8_general_ci</Collation>
     </schema>
     <schema id="3" parent="1" name="information_schema">
       <Collation>utf8_general_ci</Collation>
@@ -911,48 +911,62 @@
     </collation>
     <table id="229" parent="2" name="ability">
       <Engine>InnoDB</Engine>
+      <Collation>latin1_swedish_ci</Collation>
     </table>
     <table id="230" parent="2" name="bonus_history">
       <Engine>InnoDB</Engine>
+      <Collation>latin1_swedish_ci</Collation>
     </table>
     <table id="231" parent="2" name="image">
       <Engine>InnoDB</Engine>
+      <Collation>latin1_swedish_ci</Collation>
     </table>
     <table id="232" parent="2" name="img_mark">
       <Engine>InnoDB</Engine>
+      <Collation>latin1_swedish_ci</Collation>
     </table>
     <table id="233" parent="2" name="reportmessage">
       <Engine>InnoDB</Engine>
+      <Collation>latin1_swedish_ci</Collation>
     </table>
     <table id="234" parent="2" name="role_permission">
       <Engine>InnoDB</Engine>
+      <Collation>latin1_swedish_ci</Collation>
     </table>
     <table id="235" parent="2" name="sys_permission">
       <Engine>InnoDB</Engine>
+      <Collation>latin1_swedish_ci</Collation>
     </table>
     <table id="236" parent="2" name="sys_role">
       <Engine>InnoDB</Engine>
+      <Collation>latin1_swedish_ci</Collation>
     </table>
     <table id="237" parent="2" name="tag">
       <Engine>InnoDB</Engine>
     </table>
     <table id="238" parent="2" name="task">
       <Engine>InnoDB</Engine>
+      <Collation>latin1_swedish_ci</Collation>
     </table>
     <table id="239" parent="2" name="task_tag">
       <Engine>InnoDB</Engine>
+      <Collation>latin1_swedish_ci</Collation>
     </table>
     <table id="240" parent="2" name="user">
       <Engine>InnoDB</Engine>
+      <Collation>latin1_swedish_ci</Collation>
     </table>
     <table id="241" parent="2" name="user_ability">
       <Engine>InnoDB</Engine>
+      <Collation>latin1_swedish_ci</Collation>
     </table>
     <table id="242" parent="2" name="user_role">
       <Engine>InnoDB</Engine>
+      <Collation>latin1_swedish_ci</Collation>
     </table>
     <table id="243" parent="2" name="workers_for_the_task">
       <Engine>InnoDB</Engine>
+      <Collation>latin1_swedish_ci</Collation>
     </table>
     <column id="244" parent="229" name="id">
       <Position>1</Position>
@@ -1347,11 +1361,13 @@
       <DataType>varchar(200)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
+      <Collation>latin1_swedish_ci</Collation>
     </column>
     <column id="323" parent="237" name="description">
       <Position>3</Position>
       <DataType>text|0</DataType>
       <ColumnKind>normal</ColumnKind>
+      <Collation>latin1_swedish_ci</Collation>
     </column>
     <index id="324" parent="237" name="tag_id_uindex">
       <ColNames>id</ColNames>
@@ -1640,58 +1656,52 @@
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="380" parent="243" name="workerid">
+    <column id="380" parent="243" name="user_id">
       <Position>3</Position>
       <DataType>int(11)|0</DataType>
-      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="381" parent="243" name="user_id">
+    <column id="381" parent="243" name="task_id">
       <Position>4</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="382" parent="243" name="task_id">
+    <column id="382" parent="243" name="completed_num">
       <Position>5</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="383" parent="243" name="completed_num">
+    <column id="383" parent="243" name="is_finished">
       <Position>6</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="384" parent="243" name="is_finished">
-      <Position>7</Position>
-      <DataType>int(11)|0</DataType>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <index id="385" parent="243" name="workers_for_the_task_id_uindex">
+    <index id="384" parent="243" name="workers_for_the_task_id_uindex">
       <ColNames>id</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="386" parent="243" name="FK8awyxlcj3jonrvvkh0kvvnne4">
+    <index id="385" parent="243" name="FK8awyxlcj3jonrvvkh0kvvnne4">
       <ColNames>user_id</ColNames>
     </index>
-    <index id="387" parent="243" name="FKj1mbgfj6e695lmdwc14uswjus">
+    <index id="386" parent="243" name="FKj1mbgfj6e695lmdwc14uswjus">
       <ColNames>task_id</ColNames>
     </index>
-    <key id="388" parent="243" name="PRIMARY">
+    <key id="387" parent="243" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="389" parent="243" name="workers_for_the_task_id_uindex">
+    <key id="388" parent="243" name="workers_for_the_task_id_uindex">
       <ColNames>id</ColNames>
       <UnderlyingIndexName>workers_for_the_task_id_uindex</UnderlyingIndexName>
     </key>
-    <foreign-key id="390" parent="243" name="FK8awyxlcj3jonrvvkh0kvvnne4">
+    <foreign-key id="389" parent="243" name="FK8awyxlcj3jonrvvkh0kvvnne4">
       <ColNames>user_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="391" parent="243" name="FKj1mbgfj6e695lmdwc14uswjus">
+    <foreign-key id="390" parent="243" name="FKj1mbgfj6e695lmdwc14uswjus">
       <ColNames>task_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>task</RefTableName>

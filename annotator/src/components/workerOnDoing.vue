@@ -2,6 +2,7 @@
   <div>
     <ul>
       <li
+        style="margin-top: 10px; margin-bottom: 10px"
         is="task-item"
         v-for="(todo, index) in onDoing"
         :key="todo.taskID"
@@ -60,58 +61,7 @@
     },
 
     data() {
-      let temp = [
-        {
-          imgNum: 8,
-          taskID: 123,
-          taskName: "标出所有人物",
-          description: "请标出图片中的所有人物",
-          sponsorName: "蔡蔚霖",
-          startDate: "2017-4-22",
-          endDate: "2017-5-1",
-          progress: 0.6
-        },
-        {
-          imgNum: 12,
-          taskID: 222,
-          taskName: "标出所有羊",
-          description: "请标出图片中的所有羊",
-          sponsorName: "曹嘉玮",
-          startDate: "2017-4-22",
-          endDate: "2017-5-1",
-          progress: 0.8
-        },
-        {
-          imgNum: 12,
-          taskID: 155,
-          taskName: "标出所有羊",
-          description: "请标出图片中的所有羊",
-          sponsorName: "曹嘉玮",
-          startDate: "2017-4-22",
-          endDate: "2017-5-1",
-          progress: 0.8
-        },
-        {
-          imgNum: 12,
-          taskID: 179,
-          taskName: "标出所有羊",
-          description: "请标出图片中的所有羊",
-          sponsorName: "曹嘉玮",
-          startDate: "2017-4-22",
-          endDate: "2017-5-1",
-          progress: 0.8
-        },
-        {
-          imgNum: 12,
-          taskID: 444,
-          taskName: "标出所有羊",
-          description: "请标出图片中的所有羊",
-          sponsorName: "曹嘉玮",
-          startDate: "2017-4-22",
-          endDate: "2017-5-1",
-          progress: 0.8
-        },
-      ];
+      let temp = [];
 
       return {
         onDoing: temp,

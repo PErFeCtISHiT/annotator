@@ -23,7 +23,7 @@
             排名:&nbsp&nbsp&nbsp&nbsp
           </span>
           <span class="label-all" style="font-weight: bolder">
-            {{rank!==0?rank:'error'}}
+            {{trueRank!==0?trueRank:'error'}}
           </span>
         </div>
       </el-card>
@@ -71,7 +71,12 @@
         rankMsg: []
       }
     },
-    mounted() {
+    computed: {
+      trueRank(){
+        return this.rank;
+      }
+    },
+    created() {
       let that = this;
 
       that.$http.get('/statistic/checkBonus', {
@@ -80,6 +85,8 @@
         }
       })
         .then(function (response) {
+          console.log('积分历史：');
+          console.log(response.data.mes);
           that.messages = response.data.mes;
         })
         .catch(function (error) {
@@ -96,6 +103,7 @@
           that.rankMsg = response.data.workers;
           console.log(that.rankMsg);
           that.refreshRank();
+          console.log(that.rank + '1');
         })
         .catch(function (error) {
           console.log(error);
@@ -110,9 +118,12 @@
 
       refreshRank() {
         let that = this;
+        console.log(that.rankMsg);
         for (let i = 0; i < that.rankMsg.length; i++ ) {
-          if (that.rankMsg[i].username === this.$store.state.user.userInfo.username) {
-            this.rank = that.rankMsg[i].rank;
+          if (that.rankMsg[i].username === that.$store.state.user.userInfo.username) {
+            console.log(that.rankMsg[i].rank);
+            that.rank = that.rankMsg[i].rank;
+            console.log(that.rank + '2');
             return;
           }
         }

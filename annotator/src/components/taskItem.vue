@@ -28,7 +28,7 @@
         </el-row>
 
         <el-row>
-          <el-progress :stroke-width="14" :percentage="myMsg.progress*100"> </el-progress>
+          <el-progress :stroke-width="14" :status = "myMsg.progress===1?'success':''" :percentage="myMsg.progress.toFixed(2)*100"> </el-progress>
         </el-row>
       </el-col>
 

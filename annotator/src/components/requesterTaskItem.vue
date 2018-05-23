@@ -78,7 +78,7 @@
                   <span>任务进度:</span>
                 </el-col>
                 <el-col :span="12" class="label-all">
-                  <el-progress :text-inside="true" :stroke-width="18" :percentage="taskMsg.totalProgress * 100"></el-progress>
+                  <el-progress :text-inside="true" :stroke-width="18" :percentage="taskMsg.totalProgress.toFixed(2) * 100" :status="taskMsg.totalProgress===1?'success':''"></el-progress>
                 </el-col>
               </div>
             </div>

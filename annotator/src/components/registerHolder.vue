@@ -124,7 +124,7 @@
           pass: '',
           checkPass: '',
           userName: '',
-          name: ''
+          nickname: ''
         },
         rules2: {
           pass: [
@@ -136,7 +136,7 @@
           userName: [
             {validator: checkUserName, trigger: 'blur'}
           ],
-          name: [
+          nickname: [
             {validator: checkName, trigger: 'blur'}
           ],
         }
@@ -149,7 +149,7 @@
           if (valid) {
             this.$http.post('/user/signUp', {
               username: this.registerForm.userName,
-              name: this.registerForm.name,
+              nickname: this.registerForm.nickname,
               passwr: this.registerForm.pass,
               roleList: this.$refs.checkBox.getResult(),
             })

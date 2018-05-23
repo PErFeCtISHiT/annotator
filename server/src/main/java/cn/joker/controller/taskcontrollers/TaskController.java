@@ -166,13 +166,35 @@ public class TaskController {
      * @param request http
      */
     @RequestMapping(method = RequestMethod.POST, value = "/allTasks")
-    public List<TaskEntity> search(HttpServletRequest request) {
+    public void search(HttpServletRequest request,HttpServletResponse response) {
         System.out.println("all");
         JSONObject jsonObject = JsonHelper.requestToJson(request);
         Integer userRole = jsonObject.getInt(stdName.USERROLE);
         String tag = jsonObject.getString(stdName.TAG);
         Integer status = jsonObject.getInt(stdName.STATUS);
-        return taskService.search(userRole, tag, status);
+        List<TaskEntity> tasks = taskService.search(userRole, tag, status);
+        JSONObject ret = new JSONObject();
+        JSONArray taskArray = new JSONArray();
+        for (TaskEntity task : tasks) {
+            JSONObject taskObject = new JSONObject();
+            taskObject.put(stdName.TASKID, task.getId());
+            taskObject.put(stdName.TASKNAME, task.getTaskName());
+            taskObject.put(stdName.DESCRIPTION, task.getDescription());
+            taskObject.put(stdName.IMGNUM, task.getImageNum());
+            taskObject.put(stdName.SPONSORNAME, task.getSponsor().getUsername());
+            JSONArray tags = new JSONArray();
+            List<TagEntity> tagEntities = task.getTagEntityList();
+            for (TagEntity tagEntity : tagEntities) {
+                tags.put(tagEntity.getTag());
+            }
+            taskObject.put(stdName.TAG, tags);
+            taskObject.put(stdName.TOTALPROGRESS, task.getTotalProgress());
+            taskObject.put(stdName.STARTDATE, DateHelper.convertDateToString(task.getStartDate()));
+            taskObject.put(stdName.ENDDATE, DateHelper.convertDateToString(task.getEndDate()));
+            taskArray.put(taskObject);
+        }
+        ret.put(stdName.TASKS, taskArray);
+        JsonHelper.jsonToResponse(response, ret);
 
     }
 
@@ -344,25 +366,52 @@ public class TaskController {
     public void checkTaskDetail(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
         Integer taskID = Integer.valueOf(map.get(stdName.TASKID)[0]);
-        TaskEntity taskEntity = (TaskEntity) taskService.findByID(taskID);
-        JSONObject ret = new JSONObject(taskEntity);
-        List<WorkersForTheTaskEntity> workersForTheTaskEntities = taskEntity.getWorkersForTheTaskEntityList();
-        ret.put(stdName.ACCEPTNUM, workersForTheTaskEntities.size());
+        TaskEntity task = (TaskEntity) taskService.findByID(taskID);
+        JSONObject jsonObject = new JSONObject();
+
+        jsonObject.put(stdName.TASKID, task.getId());
+
+        jsonObject.put(stdName.SPONSORNAME, task.getSponsor());
+        jsonObject.put(stdName.TASKNAME, task.getTaskName());
+        jsonObject.put(stdName.DESCRIPTION, task.getDescription());
+        JSONArray tags = new JSONArray();
+        List<TagEntity> tagEntities = task.getTagEntityList();
+        for (TagEntity tagEntity : tagEntities) {
+            tags.put(tagEntity.getTag());
+        }
+        jsonObject.put(stdName.TAG, tags);
+        jsonObject.put(stdName.LEVEL, task.getWorkerLevel());
+        jsonObject.put(stdName.POINTS, task.getPoints());
+        jsonObject.put(stdName.EXCEPTEDNUMBER, task.getExpectedNumber());
+
+        jsonObject.put(stdName.COMPLETEDNUMBER, task.getCompletedNumber());
+
+        jsonObject.put(stdName.STARTDATE, DateHelper.convertDateToString(task.getStartDate()));
+        jsonObject.put(stdName.ENDDATE, DateHelper.convertDateToString(task.getEndDate()));
+        jsonObject.put(stdName.IMGNUM, task.getImageNum());
+        List<WorkersForTheTaskEntity> workersForTheTaskEntities = task.getWorkersForTheTaskEntityList();
+        jsonObject.put(stdName.ACCEPTNUM, workersForTheTaskEntities.size());
+        jsonObject.put(stdName.TOTALPROGRESS,task.getTotalProgress());
+
         Integer totalTagNum = 0;
         JSONArray userInfos = new JSONArray();
+        JSONArray usernames = new JSONArray();
         for (WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities) {
+            usernames.put(workersForTheTaskEntity.getWorker().getUsername());
             totalTagNum += workersForTheTaskEntity.getMarkedNum();
-            JSONObject jsonObject = new JSONObject();
+            JSONObject jsonObject1 = new JSONObject();
 
             UserEntity userEntity = workersForTheTaskEntity.getWorker();
-            jsonObject.put(stdName.USERNAME, userEntity.getUsername());
-            jsonObject.put(stdName.LEVEL, userEntity.getLev());
-            jsonObject.put(stdName.COMPLETEDNUMBER, workersForTheTaskEntity.getCompletedNum());
-            userInfos.put(jsonObject);
+            jsonObject1.put(stdName.USERNAME, userEntity.getUsername());
+            jsonObject1.put(stdName.LEVEL, userEntity.getLev());
+            jsonObject1.put(stdName.COMPLETEDNUMBER, workersForTheTaskEntity.getCompletedNum());
+            userInfos.put(jsonObject1);
         }
-        ret.put(stdName.TOTALTAGNUM, totalTagNum);
-        ret.put(stdName.WORKERINFO, userInfos);
-        JsonHelper.jsonToResponse(response, ret);
+        jsonObject.put(stdName.USERNAME,usernames);
+        jsonObject.put(stdName.TOTALTAGNUM, totalTagNum);
+        jsonObject.put(stdName.AVERAGETAGNUM,totalTagNum / task.getImageNum());
+        jsonObject.put(stdName.WORKERINFO, userInfos);
+        JsonHelper.jsonToResponse(response, jsonObject);
     }
 
     /**
@@ -412,7 +461,9 @@ public class TaskController {
         TaskEntity taskEntity = (TaskEntity) taskService.findByID(taskID);
         List<WorkersForTheTaskEntity> workersForTheTaskEntities = taskEntity.getWorkersForTheTaskEntityList();
         for (WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities) {
+            System.out.println(userName);
             if (workersForTheTaskEntity.getWorker().getUsername().equals(userName)) {
+                System.out.println(workersForTheTaskEntity.getCompletedNum() / taskEntity.getImageNum());
                 ret.put(stdName.PROGRESS, workersForTheTaskEntity.getCompletedNum() / taskEntity.getImageNum());
                 JsonHelper.jsonToResponse(response, ret);
                 return;

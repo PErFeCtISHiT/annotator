@@ -191,6 +191,7 @@
           .then(function (response) {
             let result = response.data;
             // result['password'] = that.loginForm.password;
+            console.log(result.roleList)
             that.logIn(result);
             that.$message({
               message: '登录成功',

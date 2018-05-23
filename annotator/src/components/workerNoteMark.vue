@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <el-col :span="24">
+    <el-col :span="24" id = "pics">
 
       <!--任务详情-->
       <el-col :span="7">
@@ -23,7 +23,7 @@
               <span>我的进度：</span>
             </el-col>
             <el-col :span="18" style="margin-top: 10px">
-              <el-progress :stroke-width="14"  :status="progress===1?'success':''" :percentage="progress*100"> </el-progress>
+              <el-progress :stroke-width="14"  :status="progress===1?'success':''" :percentage="progress.toFixed(2)*100"> </el-progress>
             </el-col>
             <el-col :span="2">
               <el-button :disabled="progress < 1" @click="completeTask">完成</el-button>
@@ -32,7 +32,7 @@
         </div>
 
         <div class="block" style="width:800px; height:600px; margin:auto">
-          <el-carousel height="400px">
+          <el-carousel height="400px" :autoplay="false">
             <el-carousel-item v-for="item in imgURLs" :key="item">
               <img :src="item" height="600" width="800" @click="handleDrawing(item)"/>
             </el-carousel-item>
@@ -58,6 +58,7 @@
     props: ['taskID'],
 
     mounted() {
+      window.refreshSelfProgress = this.refreshSelfProgress;
       this.refreshTaskData();
       this.refreshSelfProgress();
       this.refreshImgURL();
@@ -69,17 +70,7 @@
         myTaskID: this.taskID,
         taskData: {},
         progress: 0,
-        // sponsorName: '',
-        // taskName: '',
-        // description: '',
-        // imgNum: '',
-        // startDate: '',
-        // endDate: '',
-        // points: '',
-        // acceptNum: '',
-        // completedNum: '',
-        // totalProgress: 0,
-        imgURLs: ['../../src/testDrawImage/1.jpg', '../../src/testDrawImage/2.jpg', '../../src/testDrawImage/3.jpg', '../../src/testDrawImage/4.jpg']
+        imgURLs: []
       }
     },
     methods: {
@@ -96,18 +87,7 @@
           .then(function (response) {
             let data = response.data;
             that.sponsorName = data.sponsorName;
-            // that.taskName = data.taskName;
-            // that.description = data.description;
-            // that.imgNum = data.imgNum;
-            // that.startDate = data.startDate;
-            // that.endDate = data.endDate;
-            // that.points = data.points;
-            // that.acceptNum = data.acceptNum;
-            // that.completedNum = data.completedNum;
-            // that.totalProgress = data.totalProgress;
-
             that.taskData = response.data;
-
             console.log("写入store的sponsorName:" + that.sponsorName);
             that.updateCurrentSponsor(that.sponsorName);
             console.log(that.$store.state.workerTask.currentSponsor);

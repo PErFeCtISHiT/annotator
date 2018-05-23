@@ -19,7 +19,11 @@ import requesterWannaSee from '../components/requestorWannaSee'
 export default new VueRouter({
   routes: [
     /**
-     * 这前两个是一样的*/
+     * 前三个是一样的*/
+    {
+      path: "/",
+      component: firstPart
+    },
     {
       path: "/0",
       component: firstPart
@@ -55,7 +59,7 @@ export default new VueRouter({
       path: "/3-1",
       component: recharge
     },
-    
+
     {
       path: "/requesterLike/:taskID/:workerName",
       name: 'forTest',

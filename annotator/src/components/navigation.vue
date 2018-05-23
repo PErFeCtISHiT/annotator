@@ -9,20 +9,22 @@
 
       <el-menu-item index="/0">首页</el-menu-item>
 
-      <el-submenu index="1">
+      <el-menu-item v-if="$store.state.user.isAdmin" index="/admin">系统信息</el-menu-item>
+
+      <el-submenu index="1" v-if="!$store.state.user.isAdmin">
         <template slot="title" :disabled="!$store.state.user.isRequester">发布者</template>
         <el-menu-item index="/1-1">我发布的任务</el-menu-item>
         <el-menu-item index="/1-2">发布新任务</el-menu-item>
       </el-submenu>
 
-      <el-submenu index="2" :disabled="!$store.state.user.isWorker">
+      <el-submenu index="2" :disabled="!$store.state.user.isWorker" v-if="!$store.state.user.isAdmin">
         <template slot="title">工人</template>
         <el-menu-item index="/2-1">查看与获取任务</el-menu-item>
         <el-menu-item index="/2-2">进行中的任务</el-menu-item>
         <el-menu-item index="/2-3">积分历史与排名</el-menu-item>
       </el-submenu>
 
-      <el-submenu index="3">
+      <el-submenu index="3" v-if="!$store.state.user.isAdmin">
         <template slot="title">
           <i class="el-icon-plus"></i>
           <span>{{ $store.state.user.userInfo.points }}</span>
@@ -31,7 +33,8 @@
         <el-menu-item index="/3-2">提现</el-menu-item>
 
       </el-submenu>
-      <el-menu-item index="/4">个人信息</el-menu-item>
+      <el-menu-item index="/4" v-if="false">个人信息</el-menu-item>
+
       &nbsp;
       <el-button class="navigation-button" @click="handleLogOut">登出</el-button>
     </el-menu>
@@ -50,14 +53,12 @@
     //   console.log(this.$store.state.user.isWorker);
     // },
 
-    data () {
-      return {
-
-      }
+    data() {
+      return {}
     },
 
     computed: {
-      amount () {
+      amount() {
         return this.$store.state.user.userInfo.points;
       }
     },
@@ -65,14 +66,14 @@
     methods: {
       ...mapActions(['logOut']),
 
-      handleLogOut(){
-        if(this.$store.state.user.userInfo.username==='admin'){
+      handleLogOut() {
+        if (this.$store.state.user.userInfo.username === 'admin') {
           this.logOut();
-        }else{
+        } else {
           let that = this;
           this.$http.get('/user/logout')
             .then(function (response) {
-              console.log(response);
+              //console.log(response);
               that.$message({       //回调函数要用that
                 message: '登出成功',
                 type: 'success'
@@ -89,12 +90,12 @@
         }
       },
 
-      checkContains(arr,obj){
-        if(!arr.length){
+      checkContains(arr, obj) {
+        if (!arr.length) {
           return false;
         }
-        for(let i = 0; i < arr.length;i++){
-          if(arr[i]===obj){
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i] === obj) {
             return true;
           }
         }

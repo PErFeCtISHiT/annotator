@@ -23,7 +23,5 @@ public interface TaskService extends PubService {
 
     boolean acceptTask(Integer taskID, String workerName);
 
-    boolean postMark(UserEntity userEntity, TaskEntity taskEntity);
-
     List<TaskEntity> findAll();
 }

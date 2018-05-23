@@ -28,7 +28,7 @@
 
             <el-form-item label="任务类型标签" prop="checkedTags">
               <el-checkbox-group v-model="newTask.checkedTags">
-                <el-checkbox v-for="tag in tags" :label="tag" :key="tag">{{ tag }}</el-checkbox>
+                <el-checkbox v-for="tag in $store.state.tags.tagMsg" :label="tag" :key="tag">{{ tag }}</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
 
@@ -122,14 +122,25 @@
       };
 
       let checkPoints = (rule, value, callback) => {
-        if (value * this.newTask.expectedNumber > this.$store.state.user.userInfo.points)
+        if (value === "") return callback(new Error("请填写奖励积分"));
+        else if (value === 0) return callback(new Error("请填写奖励积分"));
+        else if (value * this.newTask.expectedNumber > this.$store.state.user.userInfo.points)
           return callback(new Error("超出现有金额"));
         else
           callback();
       };
 
+      let checkExpectedNumber = (rule, value, callback) => {
+        if (value <= 0)
+          return callback(new Error("请选择合适的人数"));
+        else{
+          callback();
+        }
+
+      };
+
       let checkLevel = (rule, value, callback) => {
-        if (value < 1)
+        if (value === null || value < 1 )
           return callback(new Error("请选择最低等级"));
         else
           callback();
@@ -185,11 +196,12 @@
             {type: 'date', required: true, message: '请选择日期', trigger: 'change'}
           ],
           expectedNumber: [
+            {validator: checkExpectedNumber, trigger: "blur"},
             {required: true, message: '预期参与人数不能为空'},
             {type: 'number', message: '预期参与人数必须为数字值'}
           ],
           level: [
-            {validator: checkLevel, trigger: 'blur'},
+            {validator: checkLevel, trigger: 'change'},
           ],
           points: [
             {required: true, message: '奖励积分不能为空'},
@@ -219,7 +231,7 @@
         //表单验证全部通过就发ajax请求
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            console.log()
+
             this.$http.post('/task/releaseTask', {
               sponsorName: that.$store.state.user.userInfo.username,
               taskName: that.newTask.taskName,
@@ -248,6 +260,16 @@
                   setTimeout(function () {
                     that.$refs.upload.clearFiles();
                   }, 1200);
+
+                  that.$confirm('文件成功上传, 继续留在本页面发布任务?', '提示', {
+                    confirmButtonText: '留在此页',
+                    cancelButtonText: '查看其他',
+                    type: 'warning'
+                  }).then(() => {
+                    //nothing to do
+                  }).catch(() => {
+                    that.$router.push('1-1');
+                  });
                 }
 
                 else {
