@@ -114,6 +114,7 @@ public class TaskController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "/myTasks")
     public void checkMyTask(HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("mytask");
         JSONObject jsonObject = JsonHelper.requestToJson(request);
         String username = jsonObject.getString(stdName.USERNAME);
         String tag = jsonObject.getString(stdName.TAG);
@@ -130,7 +131,12 @@ public class TaskController {
             taskObject.put(stdName.DESCRIPTION, task.getDescription());
             taskObject.put(stdName.IMGNUM, task.getImageNum());
             taskObject.put(stdName.SPONSORNAME, task.getSponsor().getUsername());
-            taskObject.put(stdName.TAG, task.getTagEntityList());
+            JSONArray tags = new JSONArray();
+            List<TagEntity> tagEntities = task.getTagEntityList();
+            for (TagEntity tagEntity : tagEntities) {
+                tags.put(tagEntity.getTag());
+            }
+            taskObject.put(stdName.TAG, tags);
             taskObject.put(stdName.TOTALPROGRESS, new Double(task.getCompletedNumber() / task.getExpectedNumber()));
             taskObject.put(stdName.STARTDATE, DateHelper.convertDateToString(task.getStartDate()));
             taskObject.put(stdName.ENDDATE, DateHelper.convertDateToString(task.getEndDate()));
@@ -161,6 +167,7 @@ public class TaskController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "/allTasks")
     public List<TaskEntity> search(HttpServletRequest request) {
+        System.out.println("all");
         JSONObject jsonObject = JsonHelper.requestToJson(request);
         Integer userRole = jsonObject.getInt(stdName.USERROLE);
         String tag = jsonObject.getString(stdName.TAG);

@@ -35,9 +35,9 @@ export default {
       // console.log(state.userInfo.roleList);
 
       if (state.userInfo.roleList) {
-        state.isRequester = checkContains(state.userInfo.roleList, 2);
+        state.isRequester = checkContains(state.userInfo.roleList, 3);
         localStorage.setItem('isRequester', JSON.stringify({isRequester: state.isRequester}));
-        state.isWorker = checkContains(state.userInfo.roleList, 3);
+        state.isWorker = checkContains(state.userInfo.roleList, 4);
         localStorage.setItem('isWorker', JSON.stringify({isWorker:state.isWorker}));
         // console.log(localStorage.getItem('isRequester'));
         // console.log(localStorage.getItem('isWorker'));

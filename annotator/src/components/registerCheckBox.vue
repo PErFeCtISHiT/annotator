@@ -19,9 +19,9 @@
       },
       mapNum: function (str) {
         if(str==='发起者'){
-          return 2;
-        }else if(str==='工人'){
           return 3;
+        }else if(str==='工人'){
+          return 4;
         }
       }
     }

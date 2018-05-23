@@ -158,7 +158,7 @@
 
       //4
       this.$http.post('/task/allTasks', {
-        userRole: 1,
+        userRole: 2,
         tag: "",
         status: 0
       })
@@ -182,9 +182,9 @@
 
     methods: {
       myShift(oneRole) {
-        if (oneRole === 1) return "管理员";
-        else if (oneRole === 2) return "发起者";
-        else if (oneRole === 3) return "工人";
+        if (oneRole === 2) return "管理员";
+        else if (oneRole === 3) return "发起者";
+        else if (oneRole === 4) return "工人";
       },
 
       dealDelete(index, row) {

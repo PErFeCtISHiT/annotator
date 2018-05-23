@@ -129,7 +129,7 @@
           username: this.$store.state.user.userInfo.username,
           status: status,
           tag: tab,
-          userRole: 2
+          userRole: 3
         })
           .then(function (response) {
             let data = response.data.tasks;

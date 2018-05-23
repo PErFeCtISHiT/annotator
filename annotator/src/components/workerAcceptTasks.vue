@@ -112,7 +112,7 @@
         this.tabName = tabName;
 
         //检查类型
-        let status = 1, that = this, tab = "", userRole = 3; //3是工人
+        let status = 1, that = this, tab = "", userRole = 4; //4是工人
         if (tabName === 'already') {
           status = 2;
         } else if (tabName === 'undergoing') {
