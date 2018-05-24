@@ -27,8 +27,8 @@ public class MyShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        UserEntity UserEntity = (UserEntity) principals.getPrimaryPrincipal();
-        for (SysRoleEntity role : UserEntity.getRoleEntityList()) {
+        UserEntity userEntity = (UserEntity) principals.getPrimaryPrincipal();
+        for (SysRoleEntity role : userEntity.getRoleEntityList()) {
             authorizationInfo.addRole(role.getRole());
             for (SysPermissionEntity p : role.getSysPermissionEntityList()) {
                 authorizationInfo.addStringPermission(p.getPermission());
@@ -44,14 +44,14 @@ public class MyShiroRealm extends AuthorizingRealm {
         String username = (String) token.getPrincipal();
         //通过username从database中查找 User对象，如果找到，没找到.
         //实际项目中，这里可以根据实际情况做缓存，如果不做，Shiro自己也是有时间间隔机制，2分钟内不会重复执行该方法
-        UserEntity UserEntity = userRepository.findByUsername(username);
-        if (UserEntity == null) {
+        UserEntity userEntity = userRepository.findByUsername(username);
+        if (userEntity == null) {
             return null;
         }
         return new SimpleAuthenticationInfo(
-                UserEntity.getUsername(), //用户名
-                UserEntity.getPasswr(), //密码
-                ByteSource.Util.bytes(UserEntity.getUsername() + UserEntity.getSalt()),//salt=username+salt
+                userEntity.getUsername(), //用户名
+                userEntity.getPasswr(), //密码
+                ByteSource.Util.bytes(userEntity.getUsername() + userEntity.getSalt()),//salt=username+salt
                 getName()  //realm name
         );
     }

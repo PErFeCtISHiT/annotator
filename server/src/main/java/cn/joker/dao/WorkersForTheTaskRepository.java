@@ -13,5 +13,5 @@ import javax.persistence.Table;
  */
 @Repository
 @Table(name = "workers_for_the_task")
-public interface WorkersForTheTaskRepository extends JpaRepository<WorkersForTheTaskEntity,Integer>{
+public interface WorkersForTheTaskRepository extends JpaRepository<WorkersForTheTaskEntity, Integer> {
 }

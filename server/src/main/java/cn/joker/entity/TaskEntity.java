@@ -15,7 +15,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "task", schema = "imgannotator", catalog = "")
-public class TaskEntity implements Serializable{
+public class TaskEntity implements Serializable {
     private Integer id;
     private UserEntity sponsor;
     private String taskName;
@@ -37,9 +37,9 @@ public class TaskEntity implements Serializable{
     private Double totalProgress;
 
 
-    @ManyToMany(cascade=CascadeType.MERGE)
-    @JoinTable(name="task_tag", joinColumns={@JoinColumn(referencedColumnName="ID")}
-            , inverseJoinColumns={@JoinColumn(referencedColumnName="ID")})
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "task_tag", joinColumns = {@JoinColumn(referencedColumnName = "ID")}
+            , inverseJoinColumns = {@JoinColumn(referencedColumnName = "ID")})
     @JsonIgnore
     public List<TagEntity> getTagEntityList() {
         return tagEntityList;
@@ -49,7 +49,7 @@ public class TaskEntity implements Serializable{
         this.tagEntityList = tagEntityList;
     }
 
-    @OneToMany(mappedBy = "workers_task",cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "workers_task", cascade = CascadeType.MERGE)
     @JsonIgnore
     public List<WorkersForTheTaskEntity> getWorkersForTheTaskEntityList() {
         return workersForTheTaskEntityList;
@@ -59,7 +59,7 @@ public class TaskEntity implements Serializable{
         this.workersForTheTaskEntityList = workersForTheTaskEntityList;
     }
 
-    @OneToMany(mappedBy = "imgMark_task",cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "imgMark_task", cascade = CascadeType.MERGE)
     @JsonIgnore
     public List<ImgMarkEntity> getImgMarkEntityList() {
         return imgMarkEntityList;
@@ -69,7 +69,7 @@ public class TaskEntity implements Serializable{
         this.imgMarkEntityList = imgMarkEntityList;
     }
 
-    @OneToMany(mappedBy = "img_task",cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "img_task", cascade = CascadeType.MERGE)
     @JsonIgnore
     public List<ImageEntity> getImageEntityList() {
         return imageEntityList;
@@ -80,8 +80,7 @@ public class TaskEntity implements Serializable{
     }
 
 
-
-    @OneToMany(mappedBy = "bonusHistory_task",cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "bonusHistory_task", cascade = CascadeType.MERGE)
     @JsonIgnore
     public List<BonusHistoryEntity> getBonusHistoryEntityList() {
         return bonusHistoryEntityList;
@@ -214,8 +213,8 @@ public class TaskEntity implements Serializable{
         this.imageNum = imageNum;
     }
 
-    public Double getTotalProgress(){
-        return  ((double)completedNumber / (double)expectedNumber);
+    public Double getTotalProgress() {
+        return ((double) completedNumber / (double) expectedNumber);
     }
 
     public void setTotalProgress(Double totalProgress) {

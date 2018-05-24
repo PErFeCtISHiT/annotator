@@ -7,7 +7,8 @@ import cn.joker.entity.ImageEntity;
  * @description: good good study
  * @date: create in 13:22 2018/5/20
  */
-public interface ImgService extends PubService{
+public interface ImgService extends PubService {
     ImageEntity findByUrl(String url);
+
     ImageEntity findByName(String name);
 }

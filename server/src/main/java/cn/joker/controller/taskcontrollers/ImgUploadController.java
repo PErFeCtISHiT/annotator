@@ -55,7 +55,6 @@ public class ImgUploadController {
             ret.put(stdName.MES, stdName.NULL);
         } else {
             taskEntity.setImageNum(FileHelper.saveFiles(taskEntity, file));
-            System.out.println(taskEntity.getImageEntityList().get(0).getImgName());
             ret.put(stdName.MES, taskService.modify(taskEntity));
         }
         JsonHelper.jsonToResponse(response, ret);

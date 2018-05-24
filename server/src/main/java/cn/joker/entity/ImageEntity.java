@@ -21,7 +21,7 @@ public class ImageEntity implements Serializable {
 
 
     @Basic
-    @Column(name = "imgName",nullable = false,length = 200)
+    @Column(name = "imgName", nullable = false, length = 200)
     public String getImgName() {
         return imgName;
     }

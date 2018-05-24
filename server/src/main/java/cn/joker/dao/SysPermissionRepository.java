@@ -13,5 +13,5 @@ import javax.persistence.Table;
  */
 @Repository
 @Table(name = "sys_permission")
-public interface SysPermissionRepository extends JpaRepository<SysPermissionEntity,Integer> {
+public interface SysPermissionRepository extends JpaRepository<SysPermissionEntity, Integer> {
 }

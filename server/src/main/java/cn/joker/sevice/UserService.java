@@ -4,7 +4,8 @@ import cn.joker.entity.UserEntity;
 
 import java.util.List;
 
-public interface UserService extends PubService{
+public interface UserService extends PubService {
     UserEntity findByUsername(String username);
+
     List<UserEntity> findAll();
 }

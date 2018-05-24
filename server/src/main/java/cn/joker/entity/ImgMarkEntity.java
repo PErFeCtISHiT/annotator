@@ -23,7 +23,6 @@ public class ImgMarkEntity implements Serializable {
     private TaskEntity imgMark_task;
 
 
-
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "image_id")
     @JsonIgnore

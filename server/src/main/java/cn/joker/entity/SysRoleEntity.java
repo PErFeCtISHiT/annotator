@@ -48,7 +48,7 @@ public class SysRoleEntity implements Serializable {
         return description;
     }
 
-    @ManyToMany(mappedBy = "roleEntityList",cascade = CascadeType.MERGE)
+    @ManyToMany(mappedBy = "roleEntityList", cascade = CascadeType.MERGE)
     @JsonIgnore
     public List<UserEntity> getUserEntityList() {
         return userEntityList;
@@ -59,8 +59,8 @@ public class SysRoleEntity implements Serializable {
     }
 
     @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name="role_permission", joinColumns={@JoinColumn(referencedColumnName="ID")}
-            , inverseJoinColumns={@JoinColumn(referencedColumnName="ID")})
+    @JoinTable(name = "role_permission", joinColumns = {@JoinColumn(referencedColumnName = "ID")}
+            , inverseJoinColumns = {@JoinColumn(referencedColumnName = "ID")})
     @JsonIgnore
     public List<SysPermissionEntity> getSysPermissionEntityList() {
         return sysPermissionEntityList;

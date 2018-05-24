@@ -4,10 +4,7 @@ import cn.joker.dao.BonusHistoryRepository;
 import cn.joker.entity.BonusHistoryEntity;
 import cn.joker.sevice.BonusHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;

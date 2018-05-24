@@ -9,7 +9,7 @@ import java.util.List;
  * @description: good good study
  * @date: create in 15:52 2018/4/13
  */
-public interface BonusHistoryService extends PubService{
+public interface BonusHistoryService extends PubService {
 
     List<BonusHistoryEntity> findByName(String username);
 }

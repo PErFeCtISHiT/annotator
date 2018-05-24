@@ -13,6 +13,6 @@ import javax.persistence.Table;
  */
 @Repository
 @Table(name = "user")
-public interface UserRepository extends JpaRepository<UserEntity,Integer>{
+public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     UserEntity findByUsername(String username);
 }

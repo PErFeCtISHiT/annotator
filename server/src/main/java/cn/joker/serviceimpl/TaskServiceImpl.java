@@ -44,10 +44,6 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
     public List<TaskEntity> checkMyTask(String userName, Integer status, Integer userRole, String tag) {
         List<TaskEntity> ret = new ArrayList<>();
         List<TaskEntity> taskEntities = taskRepository.findAll();
-        System.out.println(userName);
-        System.out.println(status);
-        System.out.println(userRole);
-        System.out.println(tag);
         for (TaskEntity taskEntity : taskEntities) {
             if (taskEntity.getState().equals(status) || status == 0) {
                 if (userRole == 3 && taskEntity.getSponsor().getUsername().equals(userName)) {
@@ -97,9 +93,6 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
 
     @Override
     public List<TaskEntity> search(int userRole, String tag, Integer status) {
-        System.out.println(userRole);
-        System.out.println(tag);
-        System.out.println(status);
         List<TaskEntity> ret = new ArrayList<>();
         List<TaskEntity> taskEntities = taskRepository.findAll();
         for (TaskEntity taskEntity : taskEntities) {
@@ -117,7 +110,6 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
                 }
             }
         }
-        System.out.println(ret.size());
         return ret;
     }
 

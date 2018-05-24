@@ -34,13 +34,7 @@ public class ImgMarkServiceImpl extends PubServiceImpl implements ImgMarkService
     @Override
     public ImgMarkEntity findByImage_imgMarkAndImgMark_taskAndWorker(ImageEntity imageEntity, TaskEntity taskEntity, UserEntity userEntity) {
         List<ImgMarkEntity> imgMarkEntities = findAll();
-        System.out.println(imageEntity);
-        System.out.println(taskEntity);
-        System.out.println(userEntity);
         for (ImgMarkEntity imgMarkEntity : imgMarkEntities) {
-            System.out.println(imgMarkEntity.getImgMark_task());
-            System.out.println(imgMarkEntity.getImage_imgMark());
-            System.out.println(imgMarkEntity.getWorker());
             if (imgMarkEntity.getWorker().getUsername().equals(userEntity.getUsername()) &&
                     imgMarkEntity.getImgMark_task().getId().equals(taskEntity.getId()) &&
                     imgMarkEntity.getImage_imgMark().getId().equals(imageEntity.getId()))

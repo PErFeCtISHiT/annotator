@@ -31,7 +31,6 @@ public class ShiroConfig extends WebMvcConfigurerAdapter {
         //拦截器.
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         // 配置不会被拦截的链接 顺序判断
-        //shiroFilterFactoryBean.setLoginUrl("http://localhost:8080/");
         //filterChainDefinitionMap.put("/","anon");
         filterChainDefinitionMap.put("/user/logout", "logout");
         //<!-- 过滤链定义，从上向下顺序执行

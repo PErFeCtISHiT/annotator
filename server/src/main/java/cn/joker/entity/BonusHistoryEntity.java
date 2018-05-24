@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -14,7 +13,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "bonus_history", schema = "imgannotator", catalog = "")
-public class BonusHistoryEntity implements Serializable{
+public class BonusHistoryEntity implements Serializable {
     private Integer id;
     private TaskEntity bonusHistory_task;
     private Integer points;

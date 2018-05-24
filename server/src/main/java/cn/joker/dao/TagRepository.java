@@ -13,6 +13,6 @@ import javax.persistence.Table;
  */
 @Repository
 @Table(name = "tag")
-public interface TagRepository extends JpaRepository<TagEntity,Integer>{
+public interface TagRepository extends JpaRepository<TagEntity, Integer> {
     TagEntity findByTag(String tag);
 }

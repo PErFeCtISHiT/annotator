@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Table;
+import java.util.List;
 
 /**
  * @author: pis
@@ -13,5 +14,6 @@ import javax.persistence.Table;
  */
 @Repository
 @Table(name = "reportmessage")
-public interface ReportmessageRepository extends JpaRepository<ReportmessageEntity,Integer> {
+public interface ReportmessageRepository extends JpaRepository<ReportmessageEntity, Integer> {
+    public List<ReportmessageEntity> findByType(Integer type);
 }

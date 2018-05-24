@@ -7,6 +7,6 @@ import cn.joker.entity.TagEntity;
  * @description: good good study
  * @date: create in 21:07 2018/5/20
  */
-public interface TagService extends PubService{
+public interface TagService extends PubService {
     TagEntity findByTag(String tag);
 }

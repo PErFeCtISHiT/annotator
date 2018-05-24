@@ -47,17 +47,16 @@ public class MarkController {
         imgMark.setWorker(userService.findByUsername(jsonObject.getString(stdName.WORKERNAME)));
         imgMark.setImage_imgMark(imgService.findByUrl(jsonObject.getString(stdName.IMGURL)));
         imgMark.setImgMark_task((TaskEntity) taskService.findByID(jsonObject.getInt(stdName.TASKID)));
-        imgMark.setNotePolygon( jsonObject.get(stdName.NOTEPOLYGON).toString());
-        imgMark.setNoteRectangle( jsonObject.get(stdName.NOTERECTANGLE).toString());
-        imgMark.setNoteTotal( jsonObject.get(stdName.NOTETOTAL).toString());
+        imgMark.setNotePolygon(jsonObject.get(stdName.NOTEPOLYGON).toString());
+        imgMark.setNoteRectangle(jsonObject.get(stdName.NOTERECTANGLE).toString());
+        imgMark.setNoteTotal(jsonObject.get(stdName.NOTETOTAL).toString());
         TaskEntity taskEntity = imgMark.getImgMark_task();
         UserEntity userEntity = imgMark.getWorker();
-        System.out.println(jsonObject.getBoolean(stdName.ISMODIFYED));
         List<WorkersForTheTaskEntity> workersForTheTaskEntities = taskEntity.getWorkersForTheTaskEntityList();
         for (WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities) {
             if (workersForTheTaskEntity.getWorker().getUsername().equals(userEntity.getUsername())) {
                 workersForTheTaskEntity.setMarkedNum(workersForTheTaskEntity.getMarkedNum() + 1);
-                if (!jsonObject.getBoolean(stdName.ISMODIFYED)){
+                if (!jsonObject.getBoolean(stdName.ISMODIFYED)) {
                     workersForTheTaskEntity.setCompletedNum(workersForTheTaskEntity.getCompletedNum() + 1);
                 }
                 break;
@@ -78,8 +77,7 @@ public class MarkController {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
         TaskEntity taskEntity = (TaskEntity) taskService.findByID(jsonObject.getInt(stdName.TASKID));
         String imgName = jsonObject.getString(stdName.IMGNAME);
-        System.out.println(imgName.substring(0,imgName.lastIndexOf(".")));
-        ImageEntity imageEntity = imgService.findByName(imgName.substring(0,imgName.lastIndexOf(".")));
+        ImageEntity imageEntity = imgService.findByName(imgName.substring(0, imgName.lastIndexOf('.')));
         JSONArray userArray = jsonObject.getJSONArray(stdName.USERS);
         JSONArray marksArray = new JSONArray();
         for (Object o : userArray) {
@@ -104,7 +102,6 @@ public class MarkController {
         }
         JSONObject ret = new JSONObject();
         ret.put(stdName.MARKS, marksArray);
-        System.out.println(ret.toString());
         JsonHelper.jsonToResponse(response, ret);
     }
 }

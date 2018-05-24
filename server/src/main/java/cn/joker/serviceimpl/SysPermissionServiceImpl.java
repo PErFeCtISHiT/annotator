@@ -3,10 +3,7 @@ package cn.joker.serviceimpl;
 import cn.joker.dao.SysPermissionRepository;
 import cn.joker.sevice.SysPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author: pis

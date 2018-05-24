@@ -114,7 +114,6 @@ public class TaskController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "/myTasks")
     public void checkMyTask(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("mytask");
         JSONObject jsonObject = JsonHelper.requestToJson(request);
         String username = jsonObject.getString(stdName.USERNAME);
         String tag = jsonObject.getString(stdName.TAG);
@@ -166,8 +165,7 @@ public class TaskController {
      * @param request http
      */
     @RequestMapping(method = RequestMethod.POST, value = "/allTasks")
-    public void search(HttpServletRequest request,HttpServletResponse response) {
-        System.out.println("all");
+    public void search(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
         Integer userRole = jsonObject.getInt(stdName.USERROLE);
         String tag = jsonObject.getString(stdName.TAG);
@@ -391,7 +389,7 @@ public class TaskController {
         jsonObject.put(stdName.IMGNUM, task.getImageNum());
         List<WorkersForTheTaskEntity> workersForTheTaskEntities = task.getWorkersForTheTaskEntityList();
         jsonObject.put(stdName.ACCEPTNUM, workersForTheTaskEntities.size());
-        jsonObject.put(stdName.TOTALPROGRESS,task.getTotalProgress());
+        jsonObject.put(stdName.TOTALPROGRESS, task.getTotalProgress());
 
         Integer totalTagNum = 0;
         JSONArray userInfos = new JSONArray();
@@ -407,9 +405,9 @@ public class TaskController {
             jsonObject1.put(stdName.COMPLETEDNUMBER, workersForTheTaskEntity.getCompletedNum());
             userInfos.put(jsonObject1);
         }
-        jsonObject.put(stdName.USERNAME,usernames);
+        jsonObject.put(stdName.USERNAME, usernames);
         jsonObject.put(stdName.TOTALTAGNUM, totalTagNum);
-        jsonObject.put(stdName.AVERAGETAGNUM,totalTagNum / task.getImageNum());
+        jsonObject.put(stdName.AVERAGETAGNUM, totalTagNum / task.getImageNum());
         jsonObject.put(stdName.WORKERINFO, userInfos);
         JsonHelper.jsonToResponse(response, jsonObject);
     }
@@ -461,9 +459,7 @@ public class TaskController {
         TaskEntity taskEntity = (TaskEntity) taskService.findByID(taskID);
         List<WorkersForTheTaskEntity> workersForTheTaskEntities = taskEntity.getWorkersForTheTaskEntityList();
         for (WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities) {
-            System.out.println(userName);
             if (workersForTheTaskEntity.getWorker().getUsername().equals(userName)) {
-                System.out.println(workersForTheTaskEntity.getCompletedNum() / taskEntity.getImageNum());
                 ret.put(stdName.PROGRESS, workersForTheTaskEntity.getCompletedNum() / taskEntity.getImageNum());
                 JsonHelper.jsonToResponse(response, ret);
                 return;

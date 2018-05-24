@@ -13,5 +13,5 @@ import javax.persistence.Table;
  */
 @Repository
 @Table(name = "task")
-public interface TaskRepository extends JpaRepository<TaskEntity,Integer>{
+public interface TaskRepository extends JpaRepository<TaskEntity, Integer> {
 }

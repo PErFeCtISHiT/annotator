@@ -3,20 +3,17 @@ package cn.joker.util;
 import cn.joker.entity.ImageEntity;
 import cn.joker.entity.TaskEntity;
 import cn.joker.namespace.stdName;
-import cn.joker.sevice.TaskService;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Expand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,7 +27,6 @@ public class FileHelper {
     private FileHelper() {
         throw new IllegalStateException(stdName.UTILCLASS);
     }
-
 
 
     private static Logger logger = LoggerFactory.getLogger(JsonHelper.class);

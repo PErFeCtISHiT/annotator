@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,7 +14,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "user", schema = "imgannotator", catalog = "")
-public class UserEntity implements Serializable{
+public class UserEntity implements Serializable {
     private Integer id;
     private String username;
     private String passwr;
@@ -131,9 +130,9 @@ public class UserEntity implements Serializable{
         this.email = email;
     }
 
-    @ManyToMany(cascade=CascadeType.MERGE)
-    @JoinTable(name="user_role", joinColumns={@JoinColumn(referencedColumnName="ID")}
-            , inverseJoinColumns={@JoinColumn(referencedColumnName="ID")})
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "user_role", joinColumns = {@JoinColumn(referencedColumnName = "ID")}
+            , inverseJoinColumns = {@JoinColumn(referencedColumnName = "ID")})
     @JsonIgnore
     public List<SysRoleEntity> getRoleEntityList() {
         return roleEntityList;
@@ -144,9 +143,8 @@ public class UserEntity implements Serializable{
     }
 
 
-
     @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name="user_ability",joinColumns = {@JoinColumn(referencedColumnName = "ID")},
+    @JoinTable(name = "user_ability", joinColumns = {@JoinColumn(referencedColumnName = "ID")},
             inverseJoinColumns = {@JoinColumn(referencedColumnName = "ID")})
 
     @JsonIgnore
@@ -158,7 +156,7 @@ public class UserEntity implements Serializable{
         this.abilityEntityList = abilityEntityList;
     }
 
-    @OneToMany(mappedBy = "bonusHistory_user",cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "bonusHistory_user", cascade = CascadeType.MERGE)
     @JsonIgnore
     public List<BonusHistoryEntity> getBonusHistoryEntityList() {
         return bonusHistoryEntityList;

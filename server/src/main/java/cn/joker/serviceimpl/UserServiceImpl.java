@@ -4,10 +4,7 @@ import cn.joker.dao.UserRepository;
 import cn.joker.entity.UserEntity;
 import cn.joker.sevice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

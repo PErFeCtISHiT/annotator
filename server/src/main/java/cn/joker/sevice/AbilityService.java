@@ -5,5 +5,5 @@ package cn.joker.sevice;
  * @description: good good study
  * @date: create in 15:41 2018/5/6
  */
-public interface AbilityService extends PubService{
+public interface AbilityService extends PubService {
 }

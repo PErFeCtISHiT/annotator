@@ -13,6 +13,6 @@ import javax.persistence.Table;
  */
 @Repository
 @Table(name = "bonus_history")
-public interface BonusHistoryRepository extends JpaRepository<BonusHistoryEntity,Integer>{
+public interface BonusHistoryRepository extends JpaRepository<BonusHistoryEntity, Integer> {
 
 }

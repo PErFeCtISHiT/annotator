@@ -13,7 +13,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "workers_for_the_task", schema = "imgannotator", catalog = "")
-public class WorkersForTheTaskEntity implements Serializable{
+public class WorkersForTheTaskEntity implements Serializable {
     private Integer id;
     private UserEntity worker;
     private Integer markedNum;

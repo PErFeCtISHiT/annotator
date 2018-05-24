@@ -4,7 +4,6 @@ import cn.joker.entity.ImageEntity;
 import cn.joker.entity.ImgMarkEntity;
 import cn.joker.entity.TaskEntity;
 import cn.joker.entity.UserEntity;
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ import java.util.List;
  * @description: good good study
  * @date: create in 9:11 2018/4/14
  */
-public interface ImgMarkService extends PubService{
+public interface ImgMarkService extends PubService {
 
     List<ImgMarkEntity> findAll();
 
