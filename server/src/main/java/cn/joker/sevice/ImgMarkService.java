@@ -17,4 +17,6 @@ public interface ImgMarkService extends PubService {
     List<ImgMarkEntity> findAll();
 
     ImgMarkEntity findByImage_imgMarkAndImgMark_taskAndWorker(ImageEntity imageEntity, TaskEntity taskEntity, UserEntity userEntity);
+
+    List<ImgMarkEntity> findByImageAndTask(ImageEntity imageEntity,TaskEntity taskEntity);
 }
