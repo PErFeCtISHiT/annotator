@@ -3,14 +3,17 @@ package cn.joker.statisticalMethod;
 import cn.joker.entity.ImageEntity;
 import cn.joker.entity.ImgMarkEntity;
 import cn.joker.entity.TaskEntity;
+import cn.joker.namespace.stdName;
 import cn.joker.sevice.ImgMarkService;
 import cn.joker.vo.RecNode;
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-
+@Component
 public class NaiveBayesianClassification {
     @Resource
     private ImgMarkService imgMarkService;
@@ -32,9 +35,9 @@ public class NaiveBayesianClassification {
         ArrayList<RecNode> markList = new ArrayList<>(); //把重复标注的结果单独取出来
 
         ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setId(5);
+        imageEntity.setId(9);
         TaskEntity taskEntity = new TaskEntity();
-        taskEntity.setId(10);
+        taskEntity.setId(12);
         //List<ImgMarkEntity> imgMarkEntityList = imgMarkService.findByImageAndTask(imageEntity, taskEntity);
         List<ImgMarkEntity> imgMarkEntityList = imgMarkService.findAll();
 
@@ -42,10 +45,19 @@ public class NaiveBayesianClassification {
 
         for (ImgMarkEntity aImageEntity: imgMarkEntityList) {
             String nodeRec = aImageEntity.getNoteRectangle();
-            JSONObject jsonObject = (JSONObject) JSONObject.stringToValue(nodeRec);
-            System.out.println(jsonObject);
+            System.out.println(nodeRec);
+            JSONArray jsonArray = new JSONArray(nodeRec);
+            for(Object o : jsonArray){
+                JSONObject jsonObject = (JSONObject) o;
+                RecNode recNode = new RecNode(jsonObject.getDouble(stdName.TOP),jsonObject.getDouble(stdName.LEFT),
+                        jsonObject.getDouble(stdName.HEIGHT),jsonObject.getDouble(stdName.WIDTH),jsonObject.getString(stdName.MARK));
+                markList.add(recNode);
+
+            }
+
         }
 
+        markList = getRecMarkByClass(markList);
         return markList;
     }
 
@@ -57,7 +69,7 @@ public class NaiveBayesianClassification {
         ArrayList<RecNode> recNodeArrayList = new ArrayList<>(); //整合之后的结果
         ArrayList<Integer> frequency = new ArrayList<>(); // 单独的频率数组，方便后期按权重调整相应数据
 
-        for(int i = 1; i < markList.size(); i++){
+        for(int i = 0; i < markList.size(); i++){
             if(recNodeArrayList.size() == 0){ // 对于第一个标注结果，默认直接加进分类中
                 recNodeArrayList.add(markList.get(i));
                 frequency.add(1);
@@ -73,6 +85,7 @@ public class NaiveBayesianClassification {
                     offset += Math.abs(markList.get(i).getWidth() - recNodeArrayList.get(j).getWidth()) / recNodeArrayList.get(j).getWidth();
                     offset += Math.abs(markList.get(i).getHeight() - recNodeArrayList.get(j).getHeight()) / recNodeArrayList.get(j).getHeight();
 
+                    System.out.println(offset);
                     if(offset < minOffset){ //选择
                         minOffset = offset;
                         classIndex = j;

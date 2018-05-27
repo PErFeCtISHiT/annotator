@@ -61,6 +61,11 @@ public class stdName {
     public static final String ROLELIST = "roleList";
     public static final String PASSWORD = "passwr";
     public static final String AVERAGETAGNUM = "averageTagNum";
+    public static final String TOP = "top";
+    public static final String LEFT = "left";
+    public static final String HEIGHT = "height";
+    public static final String WIDTH = "width";
+    public static final String MARK = "mark";
 
     private stdName() {
         throw new IllegalStateException("namespace class");
