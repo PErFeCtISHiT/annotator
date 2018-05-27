@@ -1,12 +1,11 @@
 package cn.joker.serviceimpl;
 
 import cn.joker.dao.TaskRepository;
-import cn.joker.entity.TagEntity;
-import cn.joker.entity.TaskEntity;
-import cn.joker.entity.UserEntity;
-import cn.joker.entity.WorkersForTheTaskEntity;
+import cn.joker.entity.*;
 import cn.joker.sevice.TaskService;
 import cn.joker.sevice.UserService;
+import cn.joker.statisticalMethod.NaiveBayesianClassification;
+import cn.joker.vo.RecNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -183,4 +182,14 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
     public List<TaskEntity> findAll() {
         return taskRepository.findAll();
     }
+
+    @Override
+    public ImgMarkEntity markIntegration(Integer taskID) {
+        NaiveBayesianClassification naiveBayesianClassification = new NaiveBayesianClassification();
+        List<RecNode> recNodes = naiveBayesianClassification.getAllRecNode();
+
+    }
+
+
+
 }

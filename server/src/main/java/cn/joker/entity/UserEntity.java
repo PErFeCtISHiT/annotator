@@ -28,6 +28,11 @@ public class UserEntity implements Serializable {
     private List<SysRoleEntity> roleEntityList;
     private List<AbilityEntity> abilityEntityList;
     private List<BonusHistoryEntity> bonusHistoryEntityList;
+    private WorkerMatrixEntity aMatrix;
+    private WorkerMatrixEntity bMatrix;
+    private WorkerMatrixEntity cMatrix;
+    private WorkerMatrixEntity dMatrix;
+    private WorkerMatrixEntity eMatrix;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -164,6 +169,56 @@ public class UserEntity implements Serializable {
 
     public void setBonusHistoryEntityList(List<BonusHistoryEntity> bonusHistoryEntityList) {
         this.bonusHistoryEntityList = bonusHistoryEntityList;
+    }
+
+    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.MERGE)
+    @JsonIgnore
+    public WorkerMatrixEntity getaMatrix() {
+        return aMatrix;
+    }
+
+    public void setaMatrix(WorkerMatrixEntity aMatrix) {
+        this.aMatrix = aMatrix;
+    }
+
+    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.MERGE)
+    @JsonIgnore
+    public WorkerMatrixEntity getbMatrix() {
+        return bMatrix;
+    }
+
+    public void setbMatrix(WorkerMatrixEntity bMatrix) {
+        this.bMatrix = bMatrix;
+    }
+
+    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.MERGE)
+    @JsonIgnore
+    public WorkerMatrixEntity getcMatrix() {
+        return cMatrix;
+    }
+
+    public void setcMatrix(WorkerMatrixEntity cMatrix) {
+        this.cMatrix = cMatrix;
+    }
+
+    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.MERGE)
+    @JsonIgnore
+    public WorkerMatrixEntity getdMatrix() {
+        return dMatrix;
+    }
+
+    public void setdMatrix(WorkerMatrixEntity dMatrix) {
+        this.dMatrix = dMatrix;
+    }
+
+    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.MERGE)
+    @JsonIgnore
+    public WorkerMatrixEntity geteMatrix() {
+        return eMatrix;
+    }
+
+    public void seteMatrix(WorkerMatrixEntity eMatrix) {
+        this.eMatrix = eMatrix;
     }
 
     @Override

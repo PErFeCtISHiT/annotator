@@ -1,9 +1,6 @@
 package cn.joker.controller.usercontrollers;
 
-import cn.joker.entity.BonusHistoryEntity;
-import cn.joker.entity.SysRoleEntity;
-import cn.joker.entity.TaskEntity;
-import cn.joker.entity.UserEntity;
+import cn.joker.entity.*;
 import cn.joker.namespace.stdName;
 import cn.joker.sevice.BonusHistoryService;
 import cn.joker.sevice.SysRoleService;
@@ -60,6 +57,13 @@ public class MessageController {
         for (Object obj : jsonArray) {
             Integer srid = (Integer) obj;
             roleList.add((SysRoleEntity) sysRoleService.findByID(srid));
+            if(srid == 4){
+                userInfo.setaMatrix(new WorkerMatrixEntity());
+                userInfo.setbMatrix(new WorkerMatrixEntity());
+                userInfo.setcMatrix(new WorkerMatrixEntity());
+                userInfo.setdMatrix(new WorkerMatrixEntity());
+                userInfo.seteMatrix(new WorkerMatrixEntity());
+            }
         }
         userInfo.setRoleEntityList(roleList);
         userInfo.setPasswr((String) jsonObject.get(stdName.PASSWORD));
