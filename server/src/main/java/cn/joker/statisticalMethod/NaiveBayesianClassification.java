@@ -75,8 +75,8 @@ public class NaiveBayesianClassification {
                 frequency.add(1);
             }
             else {
-                double minOffset = 0;
-                int classIndex = 0;
+                double minOffset = 1000; // 初始化的时候要把最小值变到极大，否则每次比较都不满足
+                int classIndex = 0; // 记录最小偏移量对应的值对应在recNodeArrayList中的位置
                 for(int j = 0; j < recNodeArrayList.size(); j++){
                     // 计算和每个具体分类的差异，用差异来表示概率，差异越大，表明在此分类中的概率越小
                     double offset = 0.0;
@@ -85,7 +85,7 @@ public class NaiveBayesianClassification {
                     offset += Math.abs(markList.get(i).getWidth() - recNodeArrayList.get(j).getWidth()) / recNodeArrayList.get(j).getWidth();
                     offset += Math.abs(markList.get(i).getHeight() - recNodeArrayList.get(j).getHeight()) / recNodeArrayList.get(j).getHeight();
 
-                    System.out.println(offset);
+                    //System.out.println(offset);
                     if(offset < minOffset){ //选择
                         minOffset = offset;
                         classIndex = j;
@@ -95,15 +95,15 @@ public class NaiveBayesianClassification {
                 // 得到差异最小的数据之后进行差异量和偏移范围的比较
                 // 如果假设成立，在偏移范围之内就把该结果放入相应分类中，调整该分类中的数据
                 // 如果假设不成立，就单独建立一个新的类
-                if(minOffset < 0.05){ // 假设成立
+                if(minOffset < 1){ // 假设成立
                     RecNode node = new RecNode(recNodeArrayList.get(classIndex).getTop(), recNodeArrayList.get(classIndex).getLeft(),
                             recNodeArrayList.get(classIndex).getHeight(), recNodeArrayList.get(classIndex).getWidth(),
                             recNodeArrayList.get(classIndex).getMark());
                     // 加权调整数据
-                    node.setTop((node.getTop() * frequency.get(classIndex) + markList.get(i).getTop() / (frequency.get(classIndex) + 1)));
-                    node.setLeft((node.getLeft() * frequency.get(classIndex) + markList.get(i).getLeft() / (frequency.get(classIndex) + 1)));
-                    node.setHeight((node.getTop() * frequency.get(classIndex) + markList.get(i).getHeight() / (frequency.get(classIndex) + 1)));
-                    node.setWidth((node.getTop() * frequency.get(classIndex) + markList.get(i).getWidth() / (frequency.get(classIndex) + 1)));
+                    node.setTop(((node.getTop() * frequency.get(classIndex) + markList.get(i).getTop()) / (frequency.get(classIndex) + 1)));
+                    node.setLeft(((node.getLeft() * frequency.get(classIndex) + markList.get(i).getLeft()) / (frequency.get(classIndex) + 1)));
+                    node.setHeight(((node.getTop() * frequency.get(classIndex) + markList.get(i).getHeight()) / (frequency.get(classIndex) + 1)));
+                    node.setWidth(((node.getTop() * frequency.get(classIndex) + markList.get(i).getWidth()) / (frequency.get(classIndex) + 1)));
 
                     recNodeArrayList.set(classIndex, node);
 
