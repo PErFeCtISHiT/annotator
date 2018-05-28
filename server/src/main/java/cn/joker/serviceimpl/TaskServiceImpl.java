@@ -189,7 +189,7 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
     @Override
     public ImgMarkEntity markIntegration(Integer taskID) {
         NaiveBayesianClassification naiveBayesianClassification = new NaiveBayesianClassification();
-        List<RecNodeList> recNodeLists = naiveBayesianClassification.getAllRecNode();
+        List<RecNodeList> recNodeLists = naiveBayesianClassification.integration(null);
         TaskEntity taskEntity = taskRepository.findOne(taskID);
         List<TagEntity> tagEntities = taskEntity.getTagEntityList();
         for (RecNodeList recNodeList : recNodeLists) {
@@ -198,6 +198,7 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
             *todo: workerAnswers
             */
             QuestionModel questionModel = new QuestionModel();
+            assert workerAnswers != null;
             for(WorkerAnswer workerAnswer : workerAnswers){
                 UserEntity worker = workerAnswer.getUserEntity();
                 for(TagEntity tagEntity: tagEntities){

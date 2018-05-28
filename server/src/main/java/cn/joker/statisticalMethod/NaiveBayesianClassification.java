@@ -1,57 +1,29 @@
 package cn.joker.statisticalMethod;
 
-import cn.joker.entity.ImageEntity;
 import cn.joker.entity.ImgMarkEntity;
-import cn.joker.entity.TaskEntity;
 import cn.joker.namespace.stdName;
-import cn.joker.sevice.ImgMarkService;
 import cn.joker.vo.RecNode;
 import cn.joker.vo.RecNodeList;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-@Component
+
+
 public class NaiveBayesianClassification {
-    @Resource
-    private ImgMarkService imgMarkService;
 
-    /*
-    public static void main(String args[]){
-        SpringApplication.run(ImgAnnotatorServer.class, args);
-
-        System.out.println("start");
-        List<RecNode> markList = new ArrayList<>();
-        ArrayList<RecNode> result = getRecMarkByClass(markList);
-        for (RecNode aResult : result) {
-            System.out.println(aResult.getTop() + " " + aResult.getLeft());
-        }
-        getAllRecNode();
-    }*/
-
-    public List<RecNodeList> getAllRecNode(){
+    public static List<RecNodeList> integration(List<ImgMarkEntity> imgMarkEntityList) {
         ArrayList<RecNode> markList = new ArrayList<>(); //把重复标注的结果单独取出来
 
-        ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setId(9);
-        TaskEntity taskEntity = new TaskEntity();
-        taskEntity.setId(12);
-        //List<ImgMarkEntity> imgMarkEntityList = imgMarkService.findByImageAndTask(imageEntity, taskEntity);
-        List<ImgMarkEntity> imgMarkEntityList = imgMarkService.findAll();
-
-        System.out.println("start");
-
-        for (ImgMarkEntity aImageEntity: imgMarkEntityList) {
+        for (ImgMarkEntity aImageEntity : imgMarkEntityList) {
             String nodeRec = aImageEntity.getNoteRectangle();
             System.out.println(nodeRec);
             JSONArray jsonArray = new JSONArray(nodeRec);
-            for(Object o : jsonArray){
+            for (Object o : jsonArray) {
                 JSONObject jsonObject = (JSONObject) o;
-                RecNode recNode = new RecNode(jsonObject.getDouble(stdName.TOP),jsonObject.getDouble(stdName.LEFT),
-                        jsonObject.getDouble(stdName.HEIGHT),jsonObject.getDouble(stdName.WIDTH),jsonObject.getString(stdName.MARK),aImageEntity.getWorker());
+                RecNode recNode = new RecNode(jsonObject.getDouble(stdName.TOP), jsonObject.getDouble(stdName.LEFT),
+                        jsonObject.getDouble(stdName.HEIGHT), jsonObject.getDouble(stdName.WIDTH), jsonObject.getString(stdName.MARK), aImageEntity.getWorker());
                 markList.add(recNode);
 
             }
@@ -65,7 +37,7 @@ public class NaiveBayesianClassification {
      * @param markList 对于某张图片所有的长方形标注数据
      * @return 整合之后的对单张图片的所有标注信息
      */
-    private static ArrayList<RecNodeList> getRecMarkByClass(List<RecNode> markList){
+    private static ArrayList<RecNodeList> getRecMarkByClass(List<RecNode> markList) {
         ArrayList<RecNodeList> recNodeArrayList = new ArrayList<>(); //整合之后的结果
         ArrayList<Integer> frequency = new ArrayList<>(); // 单独的频率数组，方便后期按权重调整相应数据
 
@@ -100,7 +72,7 @@ public class NaiveBayesianClassification {
                 if (minOffset < 1) { // 假设成立
                     RecNode node = new RecNode(recNodeArrayList.get(classIndex).getRecNode().getTop(), recNodeArrayList.get(classIndex).getRecNode().getLeft(),
                             recNodeArrayList.get(classIndex).getRecNode().getHeight(), recNodeArrayList.get(classIndex).getRecNode().getWidth(),
-                            recNodeArrayList.get(classIndex).getRecNode().getMark(),null);
+                            recNodeArrayList.get(classIndex).getRecNode().getMark(), null);
                     // 加权调整数据
                     node.setTop(((node.getTop() * frequency.get(classIndex) + aMarkList.getTop()) / (frequency.get(classIndex) + 1)));
                     node.setLeft(((node.getLeft() * frequency.get(classIndex) + aMarkList.getLeft()) / (frequency.get(classIndex) + 1)));

@@ -16,12 +16,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/test")
 public class Classification {
-    @Resource
-    NaiveBayesianClassification naiveBayesianClassification;
 
     @RequestMapping(value = "/1", method = RequestMethod.GET)
     public void get(HttpServletResponse response) {
-        List<RecNode> recNodes = naiveBayesianClassification.getAllRecNode().get(0).recNodes;
+        List<RecNode> recNodes = NaiveBayesianClassification.integration(null).get(0).getRecNodes();
         for(RecNode recNode : recNodes){
             System.out.println(recNode.getTop());
             System.out.println(recNode.getLeft());

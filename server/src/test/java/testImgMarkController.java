@@ -54,4 +54,24 @@ public class testImgMarkController {
 
         System.out.println(jsonData);
     }
+
+    /**
+    *@author:pis
+    *@description: 测试整合
+    *@date: 20:14 2018/5/28
+    */
+    @Test
+    public void testImageIntegration(){
+        String url = "http://localhost:8080/mark/checkImageIntegration";
+        HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.set("Accept", "text/plain");
+        requestHeaders.set("Content-Type", "application/json");
+
+        String jsonStr = "{\"taskID\":13,\"imgName\":\"magazine-unlock-01-2.3.962-_ee4b7571430d457ea642d.jpg\"}";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<String> httpEntity = new HttpEntity<String>(jsonStr, requestHeaders);
+        String jsonData = restTemplate.postForObject(url, httpEntity, String.class);
+
+        System.out.println(jsonData);
+    }
 }

@@ -1,5 +1,6 @@
 package cn.joker.vo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,9 +9,9 @@ import java.util.List;
  * @date: create in 19:40 2018/5/27
  */
 public class RecNodeList {
-    public List<RecNode> recNodes;
+    private List<RecNode> recNodes = new ArrayList<>();
 
-    public RecNode recNode;
+    private RecNode recNode;
 
     public RecNode getRecNode() {
         return recNode;

@@ -66,6 +66,8 @@ public class stdName {
     public static final String HEIGHT = "height";
     public static final String WIDTH = "width";
     public static final String MARK = "mark";
+    public static final String AUTHOR = "author";
+    public static final String ID = "id";
 
     private stdName() {
         throw new IllegalStateException("namespace class");
