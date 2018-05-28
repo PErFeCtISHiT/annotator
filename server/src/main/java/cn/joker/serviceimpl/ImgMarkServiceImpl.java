@@ -9,6 +9,7 @@ import cn.joker.sevice.ImgMarkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,5 +42,17 @@ public class ImgMarkServiceImpl extends PubServiceImpl implements ImgMarkService
                 return imgMarkEntity;
         }
         return null;
+    }
+
+    @Override
+    public List<ImgMarkEntity> findByImageAndTask(ImageEntity imageEntity, TaskEntity taskEntity) {
+        List<ImgMarkEntity> imgMarkEntities = findAll();
+        List<ImgMarkEntity> ret = new ArrayList<>();
+        for(ImgMarkEntity imgMarkEntity : imgMarkEntities){
+            if(imgMarkEntity.getImgMark_task().getId().equals(taskEntity.getId()) &&
+                    imgMarkEntity.getImage_imgMark().getId().equals(imageEntity.getId()))
+                ret.add(imgMarkEntity);
+        }
+        return ret;
     }
 }
