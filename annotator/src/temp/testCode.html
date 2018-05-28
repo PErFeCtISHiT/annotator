@@ -1,0 +1,18 @@
+<script>
+  console.log('called');
+  let temp1 = 600 * Math.random();
+  let temp2 = 400 * Math.random();
+  let id = new Date().getTime();
+  console.log($('#canvas2').length);
+  $('#canvas2').drawPolygon({
+    draggable: true,
+    click:function () {
+      console.log('clicked');
+    },
+    strokeStyle: "#6c3",
+    x: temp1, y: temp2,
+    radius: 50, sides: 5,
+    layer: true,
+    name: id,
+  });
+</script>

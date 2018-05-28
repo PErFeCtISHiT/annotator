@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div id>
     <!--<p>{{title}}</p>-->
-    <!--<canvas id="canvas" width= 600 height=400 style="border: 1px solid #000;"></canvas>-->
+    <canvas id="canvas2" width= 600 height=400 style="border: 1px solid #000;"></canvas>
     <div id="test"></div>
     <button @click="handleCanvas">再次测试</button>
     <button @click="handleChange">区块替换</button>
@@ -9,6 +9,7 @@
     <br>
     <br>
     <br>
+    <div id = "test3"></div>
     <task-item :task-msg="obj"></task-item>
   </div>
 </template>
@@ -33,9 +34,12 @@
       return {
         title: "我是画图测试页",
         obj: obj,
+        canvasTarget: null
       }
     },
-
+    // mounted(){
+    //   this.handleCanvas();
+    // },
     // mounted(){
     //   this.$http({
     //     method:'post',
@@ -48,23 +52,27 @@
     // },
     methods: {
       handleCanvas() {
-        $("#test").append('<canvas id="canvas" width= 600 height=400 style="border: 1px solid #000;"></canvas>');
-        var temp1 = 600 * Math.random();
-        var temp2 = 400 * Math.random();
-        var id = new Date().getTime();
-        $("#canvas").drawPolygon({
+        // $("#test").append('<canvas id="canvas" width= 600 height=400 style="border: 1px solid #000;"></canvas>');
+        // var temp1 = 600 * Math.random();
+        // var temp2 = 400 * Math.random();
+        // var id = new Date().getTime();
+        $('#canvas2').drawRect({
+          click(){
+            console.log('counted');
+          },
+          layer:true,
           draggable: true,
-          strokeStyle: "#6c3",
-          x: temp1, y: temp2,
-          radius: 50, sides: 5,
-          layer: true,
-          name: id,
+          fillStyle: '#000',
+          x: 150, y: 100,
+          width: 200,
+          height: 100
         });
+        // $("#test3").load('../../src/temp/testCode.html');
       },
-      handleChange() {
-        $("#test").empty();
-        $("#test").load('../../src/temp/markLocality.html');
-      }
+      // handleChange() {
+      //   $("#test").empty();
+      //   $("#test").load('../../src/temp/test.html');
+      // }
     }
   }
 </script>

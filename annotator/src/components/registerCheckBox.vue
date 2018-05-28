@@ -15,6 +15,7 @@
     },
     methods:{
       getResult: function () {
+        console.log(this.checkList.map(this.mapNum));
         return this.checkList.map(this.mapNum);
       },
       mapNum: function (str) {

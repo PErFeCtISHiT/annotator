@@ -1,6 +1,5 @@
 <template>
   <div id="navigation-bar">
-
     <el-menu
       :default-active="$route.path" class="el-menu-demo" mode="horizontal"
       router text-color="#fff" background-color="#222C62" active-text-color="#ffd04b"
@@ -11,8 +10,8 @@
 
       <el-menu-item v-if="$store.state.user.isAdmin" index="/admin">系统信息</el-menu-item>
 
-      <el-submenu index="1" v-if="!$store.state.user.isAdmin">
-        <template slot="title" :disabled="!$store.state.user.isRequester">发布者</template>
+      <el-submenu index="1" :disabled="!$store.state.user.isRequester" v-if="!$store.state.user.isAdmin">
+        <template slot="title">发布者</template>
         <el-menu-item index="/1-1">我发布的任务</el-menu-item>
         <el-menu-item index="/1-2">发布新任务</el-menu-item>
       </el-submenu>
@@ -35,7 +34,6 @@
       </el-submenu>
       <el-menu-item index="/4" v-if="false">个人信息</el-menu-item>
 
-      &nbsp;
       <el-button class="navigation-button" @click="handleLogOut">登出</el-button>
     </el-menu>
 
@@ -118,6 +116,7 @@
     padding-top: 10px;
     padding-bottom: 10px;
     margin-top: 12px;
+    margin-left: 12px;
   }
 
   .el-menu-demo {
