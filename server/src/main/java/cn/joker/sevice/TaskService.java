@@ -24,6 +24,4 @@ public interface TaskService extends PubService {
     boolean acceptTask(Integer taskID, String workerName);
 
     List<TaskEntity> findAll();
-
-    ImgMarkEntity markIntegration(Integer taskID);
 }

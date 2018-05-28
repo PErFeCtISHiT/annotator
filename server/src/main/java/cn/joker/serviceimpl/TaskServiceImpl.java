@@ -120,7 +120,7 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
         TaskEntity taskEntity = (TaskEntity) this.findByID(taskID);
         taskEntity.setState(2);
         taskEntity.setEndDate((Date) new java.util.Date());
-        return this.modify(taskEntity);
+        return this.modify(taskEntity) && this.markIntegration(taskEntity);
     }
 
     @Override
@@ -186,11 +186,10 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
         return taskRepository.findAll();
     }
 
-    @Override
-    public ImgMarkEntity markIntegration(Integer taskID) {
-        NaiveBayesianClassification naiveBayesianClassification = new NaiveBayesianClassification();
-        List<RecNodeList> recNodeLists = naiveBayesianClassification.integration(null);
-        TaskEntity taskEntity = taskRepository.findOne(taskID);
+    private boolean markIntegration(TaskEntity taskEntity) {
+        boolean ret = true;
+        List<ImgMarkEntity> imgMarkEntities = taskEntity.getImgMarkEntityList();
+        List<RecNodeList> recNodeLists = NaiveBayesianClassification.integration(imgMarkEntities);
         List<TagEntity> tagEntities = taskEntity.getTagEntityList();
         for (RecNodeList recNodeList : recNodeLists) {
             List<WorkerAnswer> workerAnswers = null;
@@ -223,10 +222,10 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
                         workerMatrixEntity.setC01(workerMatrixEntity.getC01() + questionModel.getP0());
                     }
                 }
-                userService.modify(worker);
+                ret = ret && userService.modify(worker);
             }
         }
-        return null;
+        return ret;
     }
 
 }
