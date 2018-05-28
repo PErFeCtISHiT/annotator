@@ -21,7 +21,7 @@ public class Classification {
 
     @RequestMapping(value = "/1", method = RequestMethod.GET)
     public void get(HttpServletResponse response) {
-        List<RecNode> recNodes = naiveBayesianClassification.getAllRecNode();
+        List<RecNode> recNodes = naiveBayesianClassification.getAllRecNode().get(0).recNodes;
         for(RecNode recNode : recNodes){
             System.out.println(recNode.getTop());
             System.out.println(recNode.getLeft());

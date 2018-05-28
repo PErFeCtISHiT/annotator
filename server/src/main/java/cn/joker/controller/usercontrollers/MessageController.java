@@ -2,10 +2,7 @@ package cn.joker.controller.usercontrollers;
 
 import cn.joker.entity.*;
 import cn.joker.namespace.stdName;
-import cn.joker.sevice.BonusHistoryService;
-import cn.joker.sevice.SysRoleService;
-import cn.joker.sevice.TaskService;
-import cn.joker.sevice.UserService;
+import cn.joker.sevice.*;
 import cn.joker.util.JsonHelper;
 import cn.joker.util.PasswordHelper;
 import org.json.JSONArray;
@@ -38,6 +35,8 @@ public class MessageController {
     private TaskService taskService;
     @Resource
     private BonusHistoryService bonusHistoryService;
+    @Resource
+    private WorkerMatrixService workerMatrixService;
 
 
     /**
@@ -57,13 +56,6 @@ public class MessageController {
         for (Object obj : jsonArray) {
             Integer srid = (Integer) obj;
             roleList.add((SysRoleEntity) sysRoleService.findByID(srid));
-            if(srid == 4){
-                userInfo.setaMatrix(new WorkerMatrixEntity());
-                userInfo.setbMatrix(new WorkerMatrixEntity());
-                userInfo.setcMatrix(new WorkerMatrixEntity());
-                userInfo.setdMatrix(new WorkerMatrixEntity());
-                userInfo.seteMatrix(new WorkerMatrixEntity());
-            }
         }
         userInfo.setRoleEntityList(roleList);
         userInfo.setPasswr((String) jsonObject.get(stdName.PASSWORD));
@@ -73,8 +65,23 @@ public class MessageController {
         userInfo.setState(1);
         userInfo.setBonus(0);
         JSONObject ret = new JSONObject();
-
         ret.put(stdName.MES, userService.add(userInfo));
+        userInfo.setWorkerMatrixEntities(new ArrayList<>());
+        WorkerMatrixEntity workerMatrixEntity = new WorkerMatrixEntity(userInfo);
+        workerMatrixService.add(workerMatrixEntity);
+        userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
+        workerMatrixEntity = new WorkerMatrixEntity(userInfo);
+        workerMatrixService.add(workerMatrixEntity);
+        userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
+        workerMatrixEntity = new WorkerMatrixEntity(userInfo);
+        workerMatrixService.add(workerMatrixEntity);
+        userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
+        workerMatrixEntity = new WorkerMatrixEntity(userInfo);
+        workerMatrixService.add(workerMatrixEntity);
+        userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
+        workerMatrixEntity = new WorkerMatrixEntity(userInfo);
+        workerMatrixService.add(workerMatrixEntity);
+        userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
         JsonHelper.jsonToResponse(response, ret);
     }
 

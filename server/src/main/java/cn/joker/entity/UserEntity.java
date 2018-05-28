@@ -28,11 +28,7 @@ public class UserEntity implements Serializable {
     private List<SysRoleEntity> roleEntityList;
     private List<AbilityEntity> abilityEntityList;
     private List<BonusHistoryEntity> bonusHistoryEntityList;
-    private WorkerMatrixEntity aMatrix;
-    private WorkerMatrixEntity bMatrix;
-    private WorkerMatrixEntity cMatrix;
-    private WorkerMatrixEntity dMatrix;
-    private WorkerMatrixEntity eMatrix;
+    private List<WorkerMatrixEntity> workerMatrixEntities;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -170,56 +166,17 @@ public class UserEntity implements Serializable {
     public void setBonusHistoryEntityList(List<BonusHistoryEntity> bonusHistoryEntityList) {
         this.bonusHistoryEntityList = bonusHistoryEntityList;
     }
-
-    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "user_matrix", cascade = CascadeType.MERGE)
     @JsonIgnore
-    public WorkerMatrixEntity getaMatrix() {
-        return aMatrix;
+    public List<WorkerMatrixEntity> getWorkerMatrixEntities() {
+        return workerMatrixEntities;
     }
 
-    public void setaMatrix(WorkerMatrixEntity aMatrix) {
-        this.aMatrix = aMatrix;
+    public void setWorkerMatrixEntities(List<WorkerMatrixEntity> workerMatrixEntities) {
+        this.workerMatrixEntities = workerMatrixEntities;
     }
 
-    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.MERGE)
-    @JsonIgnore
-    public WorkerMatrixEntity getbMatrix() {
-        return bMatrix;
-    }
 
-    public void setbMatrix(WorkerMatrixEntity bMatrix) {
-        this.bMatrix = bMatrix;
-    }
-
-    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.MERGE)
-    @JsonIgnore
-    public WorkerMatrixEntity getcMatrix() {
-        return cMatrix;
-    }
-
-    public void setcMatrix(WorkerMatrixEntity cMatrix) {
-        this.cMatrix = cMatrix;
-    }
-
-    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.MERGE)
-    @JsonIgnore
-    public WorkerMatrixEntity getdMatrix() {
-        return dMatrix;
-    }
-
-    public void setdMatrix(WorkerMatrixEntity dMatrix) {
-        this.dMatrix = dMatrix;
-    }
-
-    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.MERGE)
-    @JsonIgnore
-    public WorkerMatrixEntity geteMatrix() {
-        return eMatrix;
-    }
-
-    public void seteMatrix(WorkerMatrixEntity eMatrix) {
-        this.eMatrix = eMatrix;
-    }
 
     @Override
     public boolean equals(Object o) {

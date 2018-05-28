@@ -21,7 +21,7 @@ public abstract class PubServiceImpl implements PubService {
     @Override
     public boolean add(Object o) {
         try {
-            repository.save(o);
+            repository.saveAndFlush(o);
             return true;
         } catch (Exception e) {
             return false;

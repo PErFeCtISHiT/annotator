@@ -201,7 +201,7 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
             for(WorkerAnswer workerAnswer : workerAnswers){
                 UserEntity worker = workerAnswer.getUserEntity();
                 for(TagEntity tagEntity: tagEntities){
-                    WorkerMatrixEntity workerMatrixEntity = wrapMatrix(tagEntity.getId(),worker);
+                    WorkerMatrixEntity workerMatrixEntity = worker.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
                     Double gamma = (workerMatrixEntity.getC00() + workerMatrixEntity.getC11())
                             / (workerMatrixEntity.getC11() + workerMatrixEntity.getC00() + workerMatrixEntity.getC01() + workerMatrixEntity.getC10());
                     questionModel.psUpdate(gamma,workerAnswer.getAnswer());
@@ -210,7 +210,7 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
             for(WorkerAnswer workerAnswer : workerAnswers){
                 UserEntity worker = workerAnswer.getUserEntity();
                 for(TagEntity tagEntity : tagEntities) {
-                    WorkerMatrixEntity workerMatrixEntity = wrapMatrix(tagEntity.getId(),worker);
+                    WorkerMatrixEntity workerMatrixEntity = worker.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
                     assert workerMatrixEntity != null;
                     if (workerAnswer.getAnswer()) {
                         workerMatrixEntity.setC10(workerMatrixEntity.getC10() + questionModel.getP1());
@@ -226,27 +226,6 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
             }
         }
         return null;
-    }
-    private WorkerMatrixEntity wrapMatrix(Integer id,UserEntity worker){
-        WorkerMatrixEntity workerMatrixEntity = null;
-        switch (id){
-            case 1:
-                workerMatrixEntity = worker.getaMatrix();
-                break;
-            case 2:
-                workerMatrixEntity = worker.getbMatrix();
-                break;
-            case 3:
-                workerMatrixEntity = worker.getcMatrix();
-                break;
-            case 4:
-                workerMatrixEntity = worker.getdMatrix();
-                break;
-            case 5:
-                workerMatrixEntity = worker.geteMatrix();
-        }
-        assert workerMatrixEntity != null;
-        return workerMatrixEntity;
     }
 
 }
