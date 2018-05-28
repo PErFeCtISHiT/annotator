@@ -964,744 +964,799 @@
       <Engine>InnoDB</Engine>
       <Collation>latin1_swedish_ci</Collation>
     </table>
-    <table id="243" parent="2" name="workers_for_the_task">
+    <table id="243" parent="2" name="worker_matrix">
+      <Engine>InnoDB</Engine>
+    </table>
+    <table id="244" parent="2" name="workers_for_the_task">
       <Engine>InnoDB</Engine>
       <Collation>latin1_swedish_ci</Collation>
     </table>
-    <column id="244" parent="229" name="id">
+    <column id="245" parent="229" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="245" parent="229" name="total_points">
+    <column id="246" parent="229" name="total_points">
       <Position>2</Position>
       <DataType>double|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="246" parent="229" name="ability_id_uindex">
+    <index id="247" parent="229" name="ability_id_uindex">
       <ColNames>id</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="247" parent="229" name="PRIMARY">
+    <key id="248" parent="229" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="248" parent="229" name="ability_id_uindex">
+    <key id="249" parent="229" name="ability_id_uindex">
       <ColNames>id</ColNames>
       <UnderlyingIndexName>ability_id_uindex</UnderlyingIndexName>
     </key>
-    <column id="249" parent="230" name="id">
+    <column id="250" parent="230" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="250" parent="230" name="points">
+    <column id="251" parent="230" name="points">
       <Position>2</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="251" parent="230" name="taskid">
+    <column id="252" parent="230" name="taskid">
       <Position>3</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="252" parent="230" name="task_id">
+    <column id="253" parent="230" name="task_id">
       <Position>4</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="253" parent="230" name="user_id">
+    <column id="254" parent="230" name="user_id">
       <Position>5</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="254" parent="230" name="bonus_history_id_uindex">
+    <index id="255" parent="230" name="bonus_history_id_uindex">
       <ColNames>id</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="255" parent="230" name="FK7kcp0gihv1gl2292wtqkm45u4">
+    <index id="256" parent="230" name="FK7kcp0gihv1gl2292wtqkm45u4">
       <ColNames>task_id</ColNames>
     </index>
-    <index id="256" parent="230" name="FK1svu46sgkyvfw1fv9clhleimh">
+    <index id="257" parent="230" name="FK1svu46sgkyvfw1fv9clhleimh">
       <ColNames>user_id</ColNames>
     </index>
-    <key id="257" parent="230" name="PRIMARY">
+    <key id="258" parent="230" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="258" parent="230" name="bonus_history_id_uindex">
+    <key id="259" parent="230" name="bonus_history_id_uindex">
       <ColNames>id</ColNames>
       <UnderlyingIndexName>bonus_history_id_uindex</UnderlyingIndexName>
     </key>
-    <foreign-key id="259" parent="230" name="FK7kcp0gihv1gl2292wtqkm45u4">
+    <foreign-key id="260" parent="230" name="FK7kcp0gihv1gl2292wtqkm45u4">
       <ColNames>task_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>task</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="260" parent="230" name="FK1svu46sgkyvfw1fv9clhleimh">
+    <foreign-key id="261" parent="230" name="FK1svu46sgkyvfw1fv9clhleimh">
       <ColNames>user_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="261" parent="231" name="id">
+    <column id="262" parent="231" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="262" parent="231" name="url">
+    <column id="263" parent="231" name="url">
       <Position>2</Position>
       <DataType>varchar(200)|0</DataType>
       <ColumnKind>normal</ColumnKind>
+      <Collation>utf8_general_ci</Collation>
     </column>
-    <column id="263" parent="231" name="task_id">
+    <column id="264" parent="231" name="task_id">
       <Position>3</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="264" parent="231" name="img_name">
+    <column id="265" parent="231" name="img_name">
       <Position>4</Position>
       <DataType>varchar(200)|0</DataType>
       <ColumnKind>normal</ColumnKind>
+      <Collation>utf8_general_ci</Collation>
     </column>
-    <index id="265" parent="231" name="image_id_uindex">
+    <index id="266" parent="231" name="image_id_uindex">
       <ColNames>id</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="266" parent="231" name="FK9wonh46cl73qu3hlx1vm00aoj">
+    <index id="267" parent="231" name="FK9wonh46cl73qu3hlx1vm00aoj">
       <ColNames>task_id</ColNames>
     </index>
-    <key id="267" parent="231" name="PRIMARY">
+    <key id="268" parent="231" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="268" parent="231" name="image_id_uindex">
+    <key id="269" parent="231" name="image_id_uindex">
       <ColNames>id</ColNames>
       <UnderlyingIndexName>image_id_uindex</UnderlyingIndexName>
     </key>
-    <foreign-key id="269" parent="231" name="FK9wonh46cl73qu3hlx1vm00aoj">
+    <foreign-key id="270" parent="231" name="FK9wonh46cl73qu3hlx1vm00aoj">
       <ColNames>task_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>task</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="270" parent="232" name="id">
+    <column id="271" parent="232" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="271" parent="232" name="note_polygon">
+    <column id="272" parent="232" name="note_polygon">
       <Position>2</Position>
       <DataType>text|0</DataType>
       <ColumnKind>normal</ColumnKind>
+      <Collation>utf8_general_ci</Collation>
     </column>
-    <column id="272" parent="232" name="note_rectangle">
+    <column id="273" parent="232" name="note_rectangle">
       <Position>3</Position>
       <DataType>text|0</DataType>
       <ColumnKind>normal</ColumnKind>
+      <Collation>utf8_general_ci</Collation>
     </column>
-    <column id="273" parent="232" name="note_total">
+    <column id="274" parent="232" name="note_total">
       <Position>4</Position>
       <DataType>varchar(200)|0</DataType>
       <ColumnKind>normal</ColumnKind>
+      <Collation>utf8_general_ci</Collation>
     </column>
-    <column id="274" parent="232" name="image_id">
+    <column id="275" parent="232" name="image_id">
       <Position>5</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="275" parent="232" name="task_id">
+    <column id="276" parent="232" name="task_id">
       <Position>6</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="276" parent="232" name="user_id">
+    <column id="277" parent="232" name="user_id">
       <Position>7</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="277" parent="232" name="img_mark_id_uindex">
+    <index id="278" parent="232" name="img_mark_id_uindex">
       <ColNames>id</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="278" parent="232" name="FKmwoel7s8ctru50vgd7dq8aqu7">
+    <index id="279" parent="232" name="FKmwoel7s8ctru50vgd7dq8aqu7">
       <ColNames>image_id</ColNames>
     </index>
-    <index id="279" parent="232" name="FKlq8fqtwnywyfrwmb6ocmpj7k">
+    <index id="280" parent="232" name="FKlq8fqtwnywyfrwmb6ocmpj7k">
       <ColNames>task_id</ColNames>
     </index>
-    <index id="280" parent="232" name="FK1ap4ogfvcymrvy45g9usseb54">
+    <index id="281" parent="232" name="FK1ap4ogfvcymrvy45g9usseb54">
       <ColNames>user_id</ColNames>
     </index>
-    <key id="281" parent="232" name="PRIMARY">
+    <key id="282" parent="232" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="282" parent="232" name="img_mark_id_uindex">
+    <key id="283" parent="232" name="img_mark_id_uindex">
       <ColNames>id</ColNames>
       <UnderlyingIndexName>img_mark_id_uindex</UnderlyingIndexName>
     </key>
-    <foreign-key id="283" parent="232" name="FKmwoel7s8ctru50vgd7dq8aqu7">
+    <foreign-key id="284" parent="232" name="FKmwoel7s8ctru50vgd7dq8aqu7">
       <ColNames>image_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>image</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="284" parent="232" name="FKlq8fqtwnywyfrwmb6ocmpj7k">
+    <foreign-key id="285" parent="232" name="FKlq8fqtwnywyfrwmb6ocmpj7k">
       <ColNames>task_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>task</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="285" parent="232" name="FK1ap4ogfvcymrvy45g9usseb54">
+    <foreign-key id="286" parent="232" name="FK1ap4ogfvcymrvy45g9usseb54">
       <ColNames>user_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="286" parent="233" name="id">
+    <column id="287" parent="233" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="287" parent="233" name="description">
+    <column id="288" parent="233" name="description">
       <Position>2</Position>
       <DataType>text|0</DataType>
       <ColumnKind>normal</ColumnKind>
+      <Collation>utf8_general_ci</Collation>
     </column>
-    <column id="288" parent="233" name="type">
+    <column id="289" parent="233" name="type">
       <Position>3</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="289" parent="233" name="is_dealt">
+    <column id="290" parent="233" name="is_dealt">
       <Position>4</Position>
       <DataType>tinyint(4)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="290" parent="233" name="report_time">
+    <column id="291" parent="233" name="report_time">
       <Position>5</Position>
       <DataType>date|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="291" parent="233" name="task_name">
+    <column id="292" parent="233" name="task_name">
       <Position>6</Position>
       <DataType>varchar(200)|0</DataType>
-      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
+      <Collation>utf8_general_ci</Collation>
     </column>
-    <column id="292" parent="233" name="reporter_id">
+    <column id="293" parent="233" name="reporter_id">
       <Position>7</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="293" parent="233" name="respondent_id">
+    <column id="294" parent="233" name="respondent_id">
       <Position>8</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="294" parent="233" name="task_id">
+    <column id="295" parent="233" name="task_id">
       <Position>9</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="295" parent="233" name="reportmessage_id_uindex">
+    <index id="296" parent="233" name="reportmessage_id_uindex">
       <ColNames>id</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="296" parent="233" name="FKancqoehcbghrogfsr2skiadfc">
+    <index id="297" parent="233" name="FKancqoehcbghrogfsr2skiadfc">
       <ColNames>reporter_id</ColNames>
     </index>
-    <index id="297" parent="233" name="FK37prd0hjm2prierahvje3dlci">
+    <index id="298" parent="233" name="FK37prd0hjm2prierahvje3dlci">
       <ColNames>respondent_id</ColNames>
     </index>
-    <index id="298" parent="233" name="FKl2rtb8ra8fax5rrp78ln90h2x">
+    <index id="299" parent="233" name="FKl2rtb8ra8fax5rrp78ln90h2x">
       <ColNames>task_id</ColNames>
     </index>
-    <key id="299" parent="233" name="PRIMARY">
+    <key id="300" parent="233" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="300" parent="233" name="reportmessage_id_uindex">
+    <key id="301" parent="233" name="reportmessage_id_uindex">
       <ColNames>id</ColNames>
       <UnderlyingIndexName>reportmessage_id_uindex</UnderlyingIndexName>
     </key>
-    <foreign-key id="301" parent="233" name="FKancqoehcbghrogfsr2skiadfc">
+    <foreign-key id="302" parent="233" name="FKancqoehcbghrogfsr2skiadfc">
       <ColNames>reporter_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="302" parent="233" name="FK37prd0hjm2prierahvje3dlci">
+    <foreign-key id="303" parent="233" name="FK37prd0hjm2prierahvje3dlci">
       <ColNames>respondent_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="303" parent="233" name="FKl2rtb8ra8fax5rrp78ln90h2x">
+    <foreign-key id="304" parent="233" name="FKl2rtb8ra8fax5rrp78ln90h2x">
       <ColNames>task_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>task</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="304" parent="234" name="sys_role_entity_list_id">
+    <column id="305" parent="234" name="sys_role_entity_list_id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="305" parent="234" name="sys_permission_entity_list_id">
+    <column id="306" parent="234" name="sys_permission_entity_list_id">
       <Position>2</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="306" parent="234" name="FKapl4cgkwdg6cfo11jgpti6j5a">
+    <index id="307" parent="234" name="FKapl4cgkwdg6cfo11jgpti6j5a">
       <ColNames>sys_role_entity_list_id</ColNames>
     </index>
-    <index id="307" parent="234" name="FKi56u9x16ax8idhmel48nfduhu">
+    <index id="308" parent="234" name="FKi56u9x16ax8idhmel48nfduhu">
       <ColNames>sys_permission_entity_list_id</ColNames>
     </index>
-    <foreign-key id="308" parent="234" name="FKapl4cgkwdg6cfo11jgpti6j5a">
+    <foreign-key id="309" parent="234" name="FKapl4cgkwdg6cfo11jgpti6j5a">
       <ColNames>sys_role_entity_list_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>sys_role</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="309" parent="234" name="FKi56u9x16ax8idhmel48nfduhu">
+    <foreign-key id="310" parent="234" name="FKi56u9x16ax8idhmel48nfduhu">
       <ColNames>sys_permission_entity_list_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>sys_permission</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="310" parent="235" name="id">
+    <column id="311" parent="235" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="311" parent="235" name="permission">
+    <column id="312" parent="235" name="permission">
       <Position>2</Position>
       <DataType>varchar(200)|0</DataType>
-      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
+      <Collation>utf8_general_ci</Collation>
     </column>
-    <index id="312" parent="235" name="sys_permission_id_uindex">
+    <index id="313" parent="235" name="sys_permission_id_uindex">
       <ColNames>id</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="313" parent="235" name="PRIMARY">
+    <key id="314" parent="235" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="314" parent="235" name="sys_permission_id_uindex">
+    <key id="315" parent="235" name="sys_permission_id_uindex">
       <ColNames>id</ColNames>
       <UnderlyingIndexName>sys_permission_id_uindex</UnderlyingIndexName>
     </key>
-    <column id="315" parent="236" name="id">
+    <column id="316" parent="236" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="316" parent="236" name="description">
+    <column id="317" parent="236" name="description">
       <Position>2</Position>
       <DataType>text|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="317" parent="236" name="role">
+    <column id="318" parent="236" name="role">
       <Position>3</Position>
       <DataType>varchar(200)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="318" parent="236" name="sys_role_id_uindex">
+    <index id="319" parent="236" name="sys_role_id_uindex">
       <ColNames>id</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="319" parent="236" name="PRIMARY">
+    <key id="320" parent="236" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="320" parent="236" name="sys_role_id_uindex">
+    <key id="321" parent="236" name="sys_role_id_uindex">
       <ColNames>id</ColNames>
       <UnderlyingIndexName>sys_role_id_uindex</UnderlyingIndexName>
     </key>
-    <column id="321" parent="237" name="id">
+    <column id="322" parent="237" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="322" parent="237" name="tag">
+    <column id="323" parent="237" name="tag">
       <Position>2</Position>
       <DataType>varchar(200)|0</DataType>
-      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
-      <Collation>latin1_swedish_ci</Collation>
     </column>
-    <column id="323" parent="237" name="description">
+    <column id="324" parent="237" name="description">
       <Position>3</Position>
-      <DataType>text|0</DataType>
+      <DataType>varchar(200)|0</DataType>
       <ColumnKind>normal</ColumnKind>
-      <Collation>latin1_swedish_ci</Collation>
     </column>
-    <index id="324" parent="237" name="tag_id_uindex">
+    <index id="325" parent="237" name="tag_id_uindex">
       <ColNames>id</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="325" parent="237" name="PRIMARY">
+    <key id="326" parent="237" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="326" parent="237" name="tag_id_uindex">
+    <key id="327" parent="237" name="tag_id_uindex">
       <ColNames>id</ColNames>
       <UnderlyingIndexName>tag_id_uindex</UnderlyingIndexName>
     </key>
-    <column id="327" parent="238" name="id">
+    <column id="328" parent="238" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="328" parent="238" name="description">
+    <column id="329" parent="238" name="description">
       <Position>2</Position>
       <DataType>text|0</DataType>
       <ColumnKind>normal</ColumnKind>
+      <Collation>utf8_general_ci</Collation>
     </column>
-    <column id="329" parent="238" name="points">
+    <column id="330" parent="238" name="points">
       <Position>3</Position>
       <DataType>int(11)|0</DataType>
       <DefaultExpression>&apos;0&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="330" parent="238" name="state">
+    <column id="331" parent="238" name="state">
       <Position>4</Position>
       <DataType>int(11)|0</DataType>
       <DefaultExpression>&apos;0&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="331" parent="238" name="completed_number">
+    <column id="332" parent="238" name="completed_number">
       <Position>5</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="332" parent="238" name="end_date">
+    <column id="333" parent="238" name="end_date">
       <Position>6</Position>
       <DataType>date|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="333" parent="238" name="expected_number">
+    <column id="334" parent="238" name="expected_number">
       <Position>7</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="334" parent="238" name="image_num">
+    <column id="335" parent="238" name="image_num">
       <Position>8</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="335" parent="238" name="start_date">
+    <column id="336" parent="238" name="start_date">
       <Position>9</Position>
       <DataType>date|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="336" parent="238" name="task_name">
+    <column id="337" parent="238" name="task_name">
       <Position>10</Position>
       <DataType>varchar(200)|0</DataType>
-      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
+      <Collation>utf8_general_ci</Collation>
     </column>
-    <column id="337" parent="238" name="worker_level">
+    <column id="338" parent="238" name="worker_level">
       <Position>11</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="338" parent="238" name="user_id">
+    <column id="339" parent="238" name="user_id">
       <Position>12</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="339" parent="238" name="total_progress">
+    <column id="340" parent="238" name="total_progress">
       <Position>13</Position>
       <DataType>double|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="340" parent="238" name="task_id_uindex">
+    <index id="341" parent="238" name="task_id_uindex">
       <ColNames>id</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="341" parent="238" name="FK2hsytmxysatfvt0p1992cw449">
+    <index id="342" parent="238" name="FK2hsytmxysatfvt0p1992cw449">
       <ColNames>user_id</ColNames>
     </index>
-    <key id="342" parent="238" name="PRIMARY">
+    <key id="343" parent="238" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="343" parent="238" name="task_id_uindex">
+    <key id="344" parent="238" name="task_id_uindex">
       <ColNames>id</ColNames>
       <UnderlyingIndexName>task_id_uindex</UnderlyingIndexName>
     </key>
-    <foreign-key id="344" parent="238" name="FK2hsytmxysatfvt0p1992cw449">
+    <foreign-key id="345" parent="238" name="FK2hsytmxysatfvt0p1992cw449">
       <ColNames>user_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="345" parent="239" name="task_entity_list_id">
+    <column id="346" parent="239" name="task_entity_list_id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="346" parent="239" name="tag_entity_list_id">
+    <column id="347" parent="239" name="tag_entity_list_id">
       <Position>2</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="347" parent="239" name="FKic1hrvxgkgt67vmwowx9u5dct">
+    <index id="348" parent="239" name="FKic1hrvxgkgt67vmwowx9u5dct">
       <ColNames>task_entity_list_id</ColNames>
     </index>
-    <index id="348" parent="239" name="FKjj5yovktq3o8odp2aggcs28k1">
+    <index id="349" parent="239" name="FKjj5yovktq3o8odp2aggcs28k1">
       <ColNames>tag_entity_list_id</ColNames>
     </index>
-    <foreign-key id="349" parent="239" name="FKic1hrvxgkgt67vmwowx9u5dct">
+    <foreign-key id="350" parent="239" name="FKic1hrvxgkgt67vmwowx9u5dct">
       <ColNames>task_entity_list_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>task</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="350" parent="239" name="FKjj5yovktq3o8odp2aggcs28k1">
+    <foreign-key id="351" parent="239" name="FKjj5yovktq3o8odp2aggcs28k1">
       <ColNames>tag_entity_list_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>tag</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="351" parent="240" name="id">
+    <column id="352" parent="240" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="352" parent="240" name="username">
+    <column id="353" parent="240" name="username">
       <Position>2</Position>
       <DataType>varchar(200)|0</DataType>
-      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
+      <Collation>utf8_general_ci</Collation>
     </column>
-    <column id="353" parent="240" name="passwr">
+    <column id="354" parent="240" name="passwr">
       <Position>3</Position>
       <DataType>varchar(200)|0</DataType>
-      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
+      <Collation>utf8_general_ci</Collation>
     </column>
-    <column id="354" parent="240" name="salt">
+    <column id="355" parent="240" name="salt">
       <Position>4</Position>
       <DataType>varchar(200)|0</DataType>
-      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
+      <Collation>utf8_general_ci</Collation>
     </column>
-    <column id="355" parent="240" name="bonus">
+    <column id="356" parent="240" name="bonus">
       <Position>5</Position>
       <DataType>int(11)|0</DataType>
       <DefaultExpression>&apos;0&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="356" parent="240" name="nickname">
+    <column id="357" parent="240" name="nickname">
       <Position>6</Position>
       <DataType>varchar(200)|0</DataType>
       <ColumnKind>normal</ColumnKind>
+      <Collation>utf8_general_ci</Collation>
     </column>
-    <column id="357" parent="240" name="lev">
+    <column id="358" parent="240" name="lev">
       <Position>7</Position>
       <DataType>int(11)|0</DataType>
       <DefaultExpression>&apos;0&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="358" parent="240" name="points">
+    <column id="359" parent="240" name="points">
       <Position>8</Position>
       <DataType>int(11)|0</DataType>
       <DefaultExpression>&apos;0&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="359" parent="240" name="state">
+    <column id="360" parent="240" name="state">
       <Position>9</Position>
       <DataType>int(11)|0</DataType>
       <DefaultExpression>&apos;1&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="360" parent="240" name="email">
+    <column id="361" parent="240" name="email">
       <Position>10</Position>
       <DataType>varchar(200)|0</DataType>
       <ColumnKind>normal</ColumnKind>
+      <Collation>utf8_general_ci</Collation>
     </column>
-    <index id="361" parent="240" name="ia_user_uid_uindex">
+    <index id="362" parent="240" name="ia_user_uid_uindex">
       <ColNames>id</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="362" parent="240" name="ia_user_username_uindex">
+    <index id="363" parent="240" name="ia_user_username_uindex">
       <ColNames>username</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="363" parent="240" name="PRIMARY">
+    <key id="364" parent="240" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="364" parent="240" name="ia_user_uid_uindex">
+    <key id="365" parent="240" name="ia_user_uid_uindex">
       <ColNames>id</ColNames>
       <UnderlyingIndexName>ia_user_uid_uindex</UnderlyingIndexName>
     </key>
-    <key id="365" parent="240" name="ia_user_username_uindex">
+    <key id="366" parent="240" name="ia_user_username_uindex">
       <ColNames>username</ColNames>
       <UnderlyingIndexName>ia_user_username_uindex</UnderlyingIndexName>
     </key>
-    <column id="366" parent="241" name="user_entity_list_id">
+    <column id="367" parent="241" name="user_entity_list_id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="367" parent="241" name="ability_entity_list_id">
+    <column id="368" parent="241" name="ability_entity_list_id">
       <Position>2</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="368" parent="241" name="FKrskcyiymk83an203x4l6360t7">
+    <index id="369" parent="241" name="FKrskcyiymk83an203x4l6360t7">
       <ColNames>user_entity_list_id</ColNames>
     </index>
-    <index id="369" parent="241" name="FK3exdwj1n0wwwhk2bmqaob93jc">
+    <index id="370" parent="241" name="FK3exdwj1n0wwwhk2bmqaob93jc">
       <ColNames>ability_entity_list_id</ColNames>
     </index>
-    <foreign-key id="370" parent="241" name="FKrskcyiymk83an203x4l6360t7">
+    <foreign-key id="371" parent="241" name="FKrskcyiymk83an203x4l6360t7">
       <ColNames>user_entity_list_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="371" parent="241" name="FK3exdwj1n0wwwhk2bmqaob93jc">
+    <foreign-key id="372" parent="241" name="FK3exdwj1n0wwwhk2bmqaob93jc">
       <ColNames>ability_entity_list_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>ability</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="372" parent="242" name="user_entity_list_id">
+    <column id="373" parent="242" name="user_entity_list_id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="373" parent="242" name="role_entity_list_id">
+    <column id="374" parent="242" name="role_entity_list_id">
       <Position>2</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="374" parent="242" name="FKqoiittscjpgbpor9tgm6no9u5">
+    <index id="375" parent="242" name="FKqoiittscjpgbpor9tgm6no9u5">
       <ColNames>user_entity_list_id</ColNames>
     </index>
-    <index id="375" parent="242" name="FK3pitj00gydc6gghpbfuxrc124">
+    <index id="376" parent="242" name="FK3pitj00gydc6gghpbfuxrc124">
       <ColNames>role_entity_list_id</ColNames>
     </index>
-    <foreign-key id="376" parent="242" name="FKqoiittscjpgbpor9tgm6no9u5">
+    <foreign-key id="377" parent="242" name="FKqoiittscjpgbpor9tgm6no9u5">
       <ColNames>user_entity_list_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="377" parent="242" name="FK3pitj00gydc6gghpbfuxrc124">
+    <foreign-key id="378" parent="242" name="FK3pitj00gydc6gghpbfuxrc124">
       <ColNames>role_entity_list_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>sys_role</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="378" parent="243" name="id">
+    <column id="379" parent="243" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="379" parent="243" name="marked_num">
+    <column id="380" parent="243" name="c00">
       <Position>2</Position>
-      <DataType>int(11)|0</DataType>
+      <DataType>double|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="380" parent="243" name="user_id">
+    <column id="381" parent="243" name="c01">
       <Position>3</Position>
-      <DataType>int(11)|0</DataType>
+      <DataType>double|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="381" parent="243" name="task_id">
+    <column id="382" parent="243" name="c10">
       <Position>4</Position>
-      <DataType>int(11)|0</DataType>
+      <DataType>double|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="382" parent="243" name="completed_num">
+    <column id="383" parent="243" name="c11">
       <Position>5</Position>
-      <DataType>int(11)|0</DataType>
+      <DataType>double|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="383" parent="243" name="is_finished">
+    <column id="384" parent="243" name="user_id">
       <Position>6</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="384" parent="243" name="workers_for_the_task_id_uindex">
-      <ColNames>id</ColNames>
-      <Unique>1</Unique>
-    </index>
-    <index id="385" parent="243" name="FK8awyxlcj3jonrvvkh0kvvnne4">
+    <index id="385" parent="243" name="FK7yc0aq8e6k03mopj4p294umd2">
       <ColNames>user_id</ColNames>
     </index>
-    <index id="386" parent="243" name="FKj1mbgfj6e695lmdwc14uswjus">
-      <ColNames>task_id</ColNames>
-    </index>
-    <key id="387" parent="243" name="PRIMARY">
+    <key id="386" parent="243" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="388" parent="243" name="workers_for_the_task_id_uindex">
-      <ColNames>id</ColNames>
-      <UnderlyingIndexName>workers_for_the_task_id_uindex</UnderlyingIndexName>
-    </key>
-    <foreign-key id="389" parent="243" name="FK8awyxlcj3jonrvvkh0kvvnne4">
+    <foreign-key id="387" parent="243" name="FK7yc0aq8e6k03mopj4p294umd2">
       <ColNames>user_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="390" parent="243" name="FKj1mbgfj6e695lmdwc14uswjus">
+    <column id="388" parent="244" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="389" parent="244" name="marked_num">
+      <Position>2</Position>
+      <DataType>int(11)|0</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="390" parent="244" name="user_id">
+      <Position>3</Position>
+      <DataType>int(11)|0</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="391" parent="244" name="task_id">
+      <Position>4</Position>
+      <DataType>int(11)|0</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="392" parent="244" name="completed_num">
+      <Position>5</Position>
+      <DataType>int(11)|0</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="393" parent="244" name="is_finished">
+      <Position>6</Position>
+      <DataType>int(11)|0</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="394" parent="244" name="workers_for_the_task_id_uindex">
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="395" parent="244" name="FK8awyxlcj3jonrvvkh0kvvnne4">
+      <ColNames>user_id</ColNames>
+    </index>
+    <index id="396" parent="244" name="FKj1mbgfj6e695lmdwc14uswjus">
+      <ColNames>task_id</ColNames>
+    </index>
+    <key id="397" parent="244" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="398" parent="244" name="workers_for_the_task_id_uindex">
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>workers_for_the_task_id_uindex</UnderlyingIndexName>
+    </key>
+    <foreign-key id="399" parent="244" name="FK8awyxlcj3jonrvvkh0kvvnne4">
+      <ColNames>user_id</ColNames>
+      <RefSchemaName>imgannotator</RefSchemaName>
+      <RefTableName>user</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <foreign-key id="400" parent="244" name="FKj1mbgfj6e695lmdwc14uswjus">
       <ColNames>task_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>task</RefTableName>
