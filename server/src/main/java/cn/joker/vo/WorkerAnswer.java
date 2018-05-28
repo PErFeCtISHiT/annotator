@@ -8,6 +8,22 @@ import cn.joker.entity.UserEntity;
  * @date: create in 19:27 2018/5/27
  */
 public class WorkerAnswer {
-    public UserEntity userEntity;
-    public Boolean answer;
+    private UserEntity userEntity;
+    private Boolean answer;
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
+    }
+
+    public Boolean getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(Boolean answer) {
+        this.answer = answer;
+    }
 }
