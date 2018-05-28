@@ -1,18 +1,22 @@
 package cn.joker.vo;
 
+import cn.joker.entity.UserEntity;
+
 public class RecNode {
     private double top;
     private double left;
     private double height;
     private double width;
     private String mark;
+    private UserEntity worker;
 
-    public RecNode(double top, double left, double height, double width, String mark){
+    public RecNode(double top, double left, double height, double width, String mark,UserEntity worker){
         this.top = top;
         this.left = left;
         this.height = height;
         this.width = width;
         this.mark = mark;
+        this.worker = worker;
     }
 
     public double getTop() {

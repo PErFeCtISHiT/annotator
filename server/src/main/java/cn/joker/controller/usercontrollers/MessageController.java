@@ -1,14 +1,8 @@
 package cn.joker.controller.usercontrollers;
 
-import cn.joker.entity.BonusHistoryEntity;
-import cn.joker.entity.SysRoleEntity;
-import cn.joker.entity.TaskEntity;
-import cn.joker.entity.UserEntity;
+import cn.joker.entity.*;
 import cn.joker.namespace.stdName;
-import cn.joker.sevice.BonusHistoryService;
-import cn.joker.sevice.SysRoleService;
-import cn.joker.sevice.TaskService;
-import cn.joker.sevice.UserService;
+import cn.joker.sevice.*;
 import cn.joker.util.JsonHelper;
 import cn.joker.util.PasswordHelper;
 import org.json.JSONArray;
@@ -41,6 +35,8 @@ public class MessageController {
     private TaskService taskService;
     @Resource
     private BonusHistoryService bonusHistoryService;
+    @Resource
+    private WorkerMatrixService workerMatrixService;
 
 
     /**
@@ -69,8 +65,23 @@ public class MessageController {
         userInfo.setState(1);
         userInfo.setBonus(0);
         JSONObject ret = new JSONObject();
-
         ret.put(stdName.MES, userService.add(userInfo));
+        userInfo.setWorkerMatrixEntities(new ArrayList<>());
+        WorkerMatrixEntity workerMatrixEntity = new WorkerMatrixEntity(userInfo);
+        workerMatrixService.add(workerMatrixEntity);
+        userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
+        workerMatrixEntity = new WorkerMatrixEntity(userInfo);
+        workerMatrixService.add(workerMatrixEntity);
+        userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
+        workerMatrixEntity = new WorkerMatrixEntity(userInfo);
+        workerMatrixService.add(workerMatrixEntity);
+        userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
+        workerMatrixEntity = new WorkerMatrixEntity(userInfo);
+        workerMatrixService.add(workerMatrixEntity);
+        userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
+        workerMatrixEntity = new WorkerMatrixEntity(userInfo);
+        workerMatrixService.add(workerMatrixEntity);
+        userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
         JsonHelper.jsonToResponse(response, ret);
     }
 

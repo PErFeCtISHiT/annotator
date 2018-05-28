@@ -28,6 +28,7 @@ public class UserEntity implements Serializable {
     private List<SysRoleEntity> roleEntityList;
     private List<AbilityEntity> abilityEntityList;
     private List<BonusHistoryEntity> bonusHistoryEntityList;
+    private List<WorkerMatrixEntity> workerMatrixEntities;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -165,6 +166,17 @@ public class UserEntity implements Serializable {
     public void setBonusHistoryEntityList(List<BonusHistoryEntity> bonusHistoryEntityList) {
         this.bonusHistoryEntityList = bonusHistoryEntityList;
     }
+    @OneToMany(mappedBy = "user_matrix", cascade = CascadeType.MERGE)
+    @JsonIgnore
+    public List<WorkerMatrixEntity> getWorkerMatrixEntities() {
+        return workerMatrixEntities;
+    }
+
+    public void setWorkerMatrixEntities(List<WorkerMatrixEntity> workerMatrixEntities) {
+        this.workerMatrixEntities = workerMatrixEntities;
+    }
+
+
 
     @Override
     public boolean equals(Object o) {

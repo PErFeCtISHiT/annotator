@@ -1,12 +1,14 @@
 package cn.joker.serviceimpl;
 
 import cn.joker.dao.TaskRepository;
-import cn.joker.entity.TagEntity;
-import cn.joker.entity.TaskEntity;
-import cn.joker.entity.UserEntity;
-import cn.joker.entity.WorkersForTheTaskEntity;
+import cn.joker.entity.*;
 import cn.joker.sevice.TaskService;
 import cn.joker.sevice.UserService;
+import cn.joker.statisticalMethod.NaiveBayesianClassification;
+import cn.joker.statisticalMethod.QuestionModel;
+import cn.joker.vo.RecNode;
+import cn.joker.vo.RecNodeList;
+import cn.joker.vo.WorkerAnswer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -183,4 +185,47 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
     public List<TaskEntity> findAll() {
         return taskRepository.findAll();
     }
+
+    @Override
+    public ImgMarkEntity markIntegration(Integer taskID) {
+        NaiveBayesianClassification naiveBayesianClassification = new NaiveBayesianClassification();
+        List<RecNodeList> recNodeLists = naiveBayesianClassification.getAllRecNode();
+        TaskEntity taskEntity = taskRepository.findOne(taskID);
+        List<TagEntity> tagEntities = taskEntity.getTagEntityList();
+        for (RecNodeList recNodeList : recNodeLists) {
+            List<WorkerAnswer> workerAnswers = null;
+            /**
+            *todo: workerAnswers
+            */
+            QuestionModel questionModel = new QuestionModel();
+            for(WorkerAnswer workerAnswer : workerAnswers){
+                UserEntity worker = workerAnswer.getUserEntity();
+                for(TagEntity tagEntity: tagEntities){
+                    WorkerMatrixEntity workerMatrixEntity = worker.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
+                    Double gamma = (workerMatrixEntity.getC00() + workerMatrixEntity.getC11())
+                            / (workerMatrixEntity.getC11() + workerMatrixEntity.getC00() + workerMatrixEntity.getC01() + workerMatrixEntity.getC10());
+                    questionModel.psUpdate(gamma,workerAnswer.getAnswer());
+                }
+            }
+            for(WorkerAnswer workerAnswer : workerAnswers){
+                UserEntity worker = workerAnswer.getUserEntity();
+                for(TagEntity tagEntity : tagEntities) {
+                    WorkerMatrixEntity workerMatrixEntity = worker.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
+                    assert workerMatrixEntity != null;
+                    if (workerAnswer.getAnswer()) {
+                        workerMatrixEntity.setC10(workerMatrixEntity.getC10() + questionModel.getP1());
+                        workerMatrixEntity.setC11(workerMatrixEntity.getC11() + questionModel.getP0());
+
+                    }
+                    else{
+                        workerMatrixEntity.setC00(workerMatrixEntity.getC00() + questionModel.getP1());
+                        workerMatrixEntity.setC01(workerMatrixEntity.getC01() + questionModel.getP0());
+                    }
+                }
+                userService.modify(worker);
+            }
+        }
+        return null;
+    }
+
 }

@@ -1,5 +1,6 @@
 package cn.joker.sevice;
 
+import cn.joker.entity.ImgMarkEntity;
 import cn.joker.entity.TaskEntity;
 
 import java.util.List;
@@ -23,4 +24,6 @@ public interface TaskService extends PubService {
     boolean acceptTask(Integer taskID, String workerName);
 
     List<TaskEntity> findAll();
+
+    ImgMarkEntity markIntegration(Integer taskID);
 }
