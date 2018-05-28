@@ -70,8 +70,8 @@
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    -webkit-box-shadow: 0px 3px 16px -5px #070707;
-    box-shadow: 0px 3px 16px -5px #070707
+    -webkit-box-shadow: 0 3px 16px -5px #070707;
+    box-shadow: 0 3px 16px -5px #070707
   }
 
   .log-close {
@@ -128,6 +128,7 @@
 
   .log-bg {
     background: url(../images/login-bg.jpg);
+    background-size:100% 100%;
     width: 100%;
     height: 312px;
     overflow: hidden;
@@ -137,13 +138,13 @@
     height: 80px;
     margin: 120px auto 25px;
     text-align: center;
-    color: #1fcab3;
+    color: #222C62;
     font-weight: bold;
     font-size: 40px;
   }
 
   .log-text {
-    color: #57d4c3;
+    color: #22326c;
     font-size: 13px;
     text-align: center;
     margin: 0 auto;
