@@ -7,9 +7,11 @@ import cn.joker.sevice.ImgService;
 import cn.joker.sevice.TaskService;
 import cn.joker.sevice.UserService;
 import cn.joker.statisticalMethod.NaiveBayesianClassification;
+import cn.joker.statisticalMethod.Segmentation;
 import cn.joker.util.JsonHelper;
 import cn.joker.vo.RecNode;
 import cn.joker.vo.RecNodeList;
+import cn.joker.vo.WorkerAnswer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -139,6 +141,11 @@ public class MarkController {
         int count = 0;
         for (RecNodeList recNodeList : recNodeLists) {
             JSONObject recNodeObj = new JSONObject();
+            Segmentation segmentation = new Segmentation();
+            List<WorkerAnswer> workerAnswers = segmentation.segment(recNodeList);
+            if(workerAnswers != null && workerAnswers.size() != 0){
+                recNodeObj.put(stdName.MARK,segmentation.getStrmax1());
+            }
             RecNode recNode = recNodeList.getRecNode();
             recNodeObj.put(stdName.TOP, recNode.getTop());
             recNodeObj.put(stdName.LEFT, recNode.getLeft());

@@ -472,9 +472,7 @@ public class TaskController {
     private void addTag(JSONArray tagArray, List<TagEntity> tagEntities) {
         for (Object o : tagArray) {
             String str = (String) o;
-            System.out.println(str);
             TagEntity tagEntity = tagService.findByTag(str);
-            System.out.println(tagEntity);
             if (tagEntity != null)
                 tagEntities.add(tagEntity);
         }
