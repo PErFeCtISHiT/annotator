@@ -1,6 +1,5 @@
 package cn.joker.sevice;
 
-import cn.joker.entity.ImgMarkEntity;
 import cn.joker.entity.TaskEntity;
 
 import java.util.List;

@@ -69,7 +69,7 @@ public class NaiveBayesianClassification {
                 // 得到差异最小的数据之后进行差异量和偏移范围的比较
                 // 如果假设成立，在偏移范围之内就把该结果放入相应分类中，调整该分类中的数据
                 // 如果假设不成立，就单独建立一个新的类
-                if (minOffset < 1) { // 假设成立
+                if (minOffset < 1.2) { // 假设成立
                     RecNode node = new RecNode(recNodeArrayList.get(classIndex).getRecNode().getTop(), recNodeArrayList.get(classIndex).getRecNode().getLeft(),
                             recNodeArrayList.get(classIndex).getRecNode().getHeight(), recNodeArrayList.get(classIndex).getRecNode().getWidth(),
                             recNodeArrayList.get(classIndex).getRecNode().getMark(), null);

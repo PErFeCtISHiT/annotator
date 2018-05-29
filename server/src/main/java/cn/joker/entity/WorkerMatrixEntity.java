@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "worker_matrix", schema = "imgannotator", catalog = "")
-public class WorkerMatrixEntity implements Serializable{
+public class WorkerMatrixEntity implements Serializable {
     private Double C00;
     private Double C01;
     private Double C10;
@@ -20,10 +20,15 @@ public class WorkerMatrixEntity implements Serializable{
     private UserEntity user_matrix;
     private Integer id;
 
+    public WorkerMatrixEntity(){
+
+    }
+
     public WorkerMatrixEntity(UserEntity userEntity) {
         C00 = C01 = C10 = C11 = 1.0;
         this.user_matrix = userEntity;
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
@@ -44,6 +49,7 @@ public class WorkerMatrixEntity implements Serializable{
     public void setC00(Double c00) {
         C00 = c00;
     }
+
     @Basic
     @Column(name = "c01")
     public Double getC01() {
@@ -53,6 +59,7 @@ public class WorkerMatrixEntity implements Serializable{
     public void setC01(Double c01) {
         C01 = c01;
     }
+
     @Basic
     @Column(name = "c10")
     public Double getC10() {
@@ -62,6 +69,7 @@ public class WorkerMatrixEntity implements Serializable{
     public void setC10(Double c10) {
         C10 = c10;
     }
+
     @Basic
     @Column(name = "c11")
     public Double getC11() {

@@ -6,7 +6,7 @@ import cn.joker.sevice.TaskService;
 import cn.joker.sevice.UserService;
 import cn.joker.statisticalMethod.NaiveBayesianClassification;
 import cn.joker.statisticalMethod.QuestionModel;
-import cn.joker.vo.RecNode;
+import cn.joker.statisticalMethod.Segmentation;
 import cn.joker.vo.RecNodeList;
 import cn.joker.vo.WorkerAnswer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,7 +119,7 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
     public boolean endTask(Integer taskID) {
         TaskEntity taskEntity = (TaskEntity) this.findByID(taskID);
         taskEntity.setState(2);
-        taskEntity.setEndDate((Date) new java.util.Date());
+        taskEntity.setEndDate(new Date(System.currentTimeMillis()));
         return this.modify(taskEntity) && this.markIntegration(taskEntity);
     }
 
@@ -188,39 +188,46 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
 
     private boolean markIntegration(TaskEntity taskEntity) {
         boolean ret = true;
+        Segmentation segmentation = new Segmentation();
         List<ImgMarkEntity> imgMarkEntities = taskEntity.getImgMarkEntityList();
         List<RecNodeList> recNodeLists = NaiveBayesianClassification.integration(imgMarkEntities);
         List<TagEntity> tagEntities = taskEntity.getTagEntityList();
+        System.out.println("listsize" + recNodeLists.size());
         for (RecNodeList recNodeList : recNodeLists) {
-            List<WorkerAnswer> workerAnswers = null;
-            /**
-            *todo: workerAnswers
-            */
+            List<WorkerAnswer> workerAnswers = segmentation.segment(recNodeList);
+            System.out.println("size" + workerAnswers.size());
             QuestionModel questionModel = new QuestionModel();
-            assert workerAnswers != null;
-            for(WorkerAnswer workerAnswer : workerAnswers){
+            for (WorkerAnswer workerAnswer : workerAnswers) {
+                System.out.println(workerAnswer.getAnswer());
                 UserEntity worker = workerAnswer.getUserEntity();
-                for(TagEntity tagEntity: tagEntities){
+                System.out.println(tagEntities.size());
+                for (TagEntity tagEntity : tagEntities) {
                     WorkerMatrixEntity workerMatrixEntity = worker.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
                     Double gamma = (workerMatrixEntity.getC00() + workerMatrixEntity.getC11())
                             / (workerMatrixEntity.getC11() + workerMatrixEntity.getC00() + workerMatrixEntity.getC01() + workerMatrixEntity.getC10());
-                    questionModel.psUpdate(gamma,workerAnswer.getAnswer());
+                    questionModel.psUpdate(gamma, workerAnswer.getAnswer());
                 }
             }
-            for(WorkerAnswer workerAnswer : workerAnswers){
+            for (WorkerAnswer workerAnswer : workerAnswers) {
                 UserEntity worker = workerAnswer.getUserEntity();
-                for(TagEntity tagEntity : tagEntities) {
+                for (TagEntity tagEntity : tagEntities) {
+                    System.out.println(tagEntity.getTag());
+                    System.out.println(tagEntity.getId());
                     WorkerMatrixEntity workerMatrixEntity = worker.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
+                    System.out.println(worker.getWorkerMatrixEntities().size());
                     assert workerMatrixEntity != null;
                     if (workerAnswer.getAnswer()) {
                         workerMatrixEntity.setC10(workerMatrixEntity.getC10() + questionModel.getP1());
                         workerMatrixEntity.setC11(workerMatrixEntity.getC11() + questionModel.getP0());
 
-                    }
-                    else{
+                    } else {
                         workerMatrixEntity.setC00(workerMatrixEntity.getC00() + questionModel.getP1());
                         workerMatrixEntity.setC01(workerMatrixEntity.getC01() + questionModel.getP0());
                     }
+                    System.out.println("c00: " + workerMatrixEntity.getC00());
+                    System.out.println("c01: " + workerMatrixEntity.getC01());
+                    System.out.println("c10: " + workerMatrixEntity.getC10());
+                    System.out.println("c11: " + workerMatrixEntity.getC11());
                 }
                 ret = ret && userService.modify(worker);
             }

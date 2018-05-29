@@ -299,7 +299,7 @@ public class TaskController {
         UserEntity reporter = userService.findByUsername(jsonObject.getString(stdName.REPORTER));
         ReportmessageEntity reportmessageEntity = new ReportmessageEntity();
         JSONObject ret = new JSONObject();
-        reportmessageEntity.setReportTime((java.sql.Date) new Date());
+        reportmessageEntity.setReportTime(new java.sql.Date(System.currentTimeMillis()));
         reportmessageEntity.setDescription(jsonObject.getString(stdName.DESCRIPTION));
         reportmessageEntity.setIsDealt((byte) 0);
         reportmessageEntity.setReporter(reporter);
@@ -472,7 +472,9 @@ public class TaskController {
     private void addTag(JSONArray tagArray, List<TagEntity> tagEntities) {
         for (Object o : tagArray) {
             String str = (String) o;
+            System.out.println(str);
             TagEntity tagEntity = tagService.findByTag(str);
+            System.out.println(tagEntity);
             if (tagEntity != null)
                 tagEntities.add(tagEntity);
         }

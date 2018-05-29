@@ -67,10 +67,14 @@ public class Segmentation {
         for (RecNode recNode : recNodes) {
             WorkerAnswer workerAnswer = new WorkerAnswer();
             workerAnswer.setUserEntity(recNode.getWorker());
-            if(recNode.getMark().contains(strmax1))
+            if(recNode.getMark().contains(strmax1)) {
                 workerAnswer.setAnswer(true);
-            else if(recNode.getMark().contains(strmax2))
+                workerAnswers.add(workerAnswer);
+            }
+            else if(recNode.getMark().contains(strmax2)) {
                 workerAnswer.setAnswer(false);
+                workerAnswers.add(workerAnswer);
+            }
         }
 
         return workerAnswers;

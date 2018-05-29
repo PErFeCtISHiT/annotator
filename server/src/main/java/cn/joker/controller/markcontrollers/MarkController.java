@@ -62,8 +62,7 @@ public class MarkController {
                 workersForTheTaskEntity.setMarkedNum(workersForTheTaskEntity.getMarkedNum() + 1);
                 if (!jsonObject.getBoolean(stdName.ISMODIFYED)) {
                     workersForTheTaskEntity.setCompletedNum(workersForTheTaskEntity.getCompletedNum() + 1);
-                }
-                else {
+                } else {
                     ImgMarkEntity imgMarkEntity = imgMarkService.findByImage_imgMarkAndImgMark_taskAndWorker(imageEntity, taskEntity, userEntity);
                     imgMarkService.delete(imgMarkEntity);
 
