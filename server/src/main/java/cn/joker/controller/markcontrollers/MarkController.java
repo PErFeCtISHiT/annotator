@@ -90,6 +90,14 @@ public class MarkController {
         ImageEntity imageEntity = imgService.findByName(imgName.substring(0, imgName.lastIndexOf('.')));
         JSONArray userArray = jsonObject.getJSONArray(stdName.USERS);
         JSONArray marksArray = new JSONArray();
+        if(userArray.toList().size() == 0){
+            List<WorkersForTheTaskEntity> workersForTheTaskEntities = taskEntity.getWorkersForTheTaskEntityList();
+            for(WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities){
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put(stdName.USERNAME,workersForTheTaskEntity.getWorker().getUsername());
+                userArray.put(jsonObject1);
+            }
+        }
         for (Object o : userArray) {
             JSONObject obj = (JSONObject) o;
             String username = obj.getString(stdName.USERNAME);
