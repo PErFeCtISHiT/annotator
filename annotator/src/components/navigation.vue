@@ -113,8 +113,8 @@
     background-color: #22326c;
     color: aliceblue;
     vertical-align: center;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     margin-top: 12px;
     margin-left: 12px;
   }
