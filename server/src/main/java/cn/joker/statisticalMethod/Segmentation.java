@@ -6,6 +6,9 @@ import cn.joker.vo.WorkerAnswer;
 import org.apdplat.word.WordSegmenter;
 import org.apdplat.word.segmentation.Word;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 public class Segmentation {
@@ -31,7 +34,21 @@ public class Segmentation {
             }
         }
 
-        // 同义词的合并
+        // 合并同义词，把同义词直接用我们的近义词替换掉
+        List<String> synDictionary = loadFile();
+        for (String syn : synDictionary) {
+            for (int i = 0; i < words.size(); i++) {
+                for (int m = 1; m < syn.split(" ").length; m++) {
+                    if (words.get(i).equals(syn.split(" ")[m])) {
+                        for (RecNode recNode : recNodes) {
+                            if (recNode.getMark().contains(words.get(i))) {
+                                words.set(i, syn.split(" ")[0]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         // 统计各个词出现的频率
         countFrequency();
@@ -57,9 +74,9 @@ public class Segmentation {
                     countmax2 = frequency.get(key);
                 }
             }
-            System.out.println("over");
-            System.out.println(strmax1 + " " + countmax1);
-            System.out.println(strmax2 + " " + countmax2);
+            //System.out.println("over");
+            //System.out.println(strmax1 + " " + countmax1);
+            //System.out.println(strmax2 + " " + countmax2);
         }
 
         // 判断词频出现最高的词汇有没有出现在原始标注中
@@ -87,5 +104,22 @@ public class Segmentation {
             else
                 frequency.put(str, frequency.get(str) + 1);
         }
+    }
+
+    private List<String> loadFile() {
+        List<String> synDictionary = new ArrayList<>();
+        String filename = "./src/main/java/cn/joker/statisticalMethod/synonym.txt";
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(filename));
+
+            String tmp;
+            while ((tmp = br.readLine()) != null) {
+                synDictionary.add(tmp);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return synDictionary;
     }
 }
