@@ -58,4 +58,12 @@ public class RecNode {
     public void setMark(String mark) {
         this.mark = mark;
     }
+
+    public UserEntity getWorker() {
+        return worker;
+    }
+
+    public void setWorker(UserEntity worker) {
+        this.worker = worker;
+    }
 }

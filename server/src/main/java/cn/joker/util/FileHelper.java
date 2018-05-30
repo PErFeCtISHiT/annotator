@@ -87,6 +87,7 @@ public class FileHelper {
             return 0;
         String path = DIR + "task/" + String.valueOf(taskEntity.getId()) + "/images/";
         String fileName = taskEntity.getId().toString() + "-" + file.getOriginalFilename();
+        System.out.println(fileName);
         fileName = FileHelper.getRealFilePath(fileName);
         fileName = fileName.substring(fileName.lastIndexOf(FILE_SEPARATOR) + 1);
         File dest = new File(path + fileName);

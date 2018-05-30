@@ -6,7 +6,12 @@ import cn.joker.sevice.ImgMarkService;
 import cn.joker.sevice.ImgService;
 import cn.joker.sevice.TaskService;
 import cn.joker.sevice.UserService;
+import cn.joker.statisticalMethod.NaiveBayesianClassification;
+import cn.joker.statisticalMethod.Segmentation;
 import cn.joker.util.JsonHelper;
+import cn.joker.vo.RecNode;
+import cn.joker.vo.RecNodeList;
+import cn.joker.vo.WorkerAnswer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,12 +57,17 @@ public class MarkController {
         imgMark.setNoteTotal(jsonObject.get(stdName.NOTETOTAL).toString());
         TaskEntity taskEntity = imgMark.getImgMark_task();
         UserEntity userEntity = imgMark.getWorker();
+        ImageEntity imageEntity = imgMark.getImage_imgMark();
         List<WorkersForTheTaskEntity> workersForTheTaskEntities = taskEntity.getWorkersForTheTaskEntityList();
         for (WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities) {
             if (workersForTheTaskEntity.getWorker().getUsername().equals(userEntity.getUsername())) {
                 workersForTheTaskEntity.setMarkedNum(workersForTheTaskEntity.getMarkedNum() + 1);
                 if (!jsonObject.getBoolean(stdName.ISMODIFYED)) {
                     workersForTheTaskEntity.setCompletedNum(workersForTheTaskEntity.getCompletedNum() + 1);
+                } else {
+                    ImgMarkEntity imgMarkEntity = imgMarkService.findByImage_imgMarkAndImgMark_taskAndWorker(imageEntity, taskEntity, userEntity);
+                    imgMarkService.delete(imgMarkEntity);
+
                 }
                 break;
             }
@@ -104,4 +114,57 @@ public class MarkController {
         ret.put(stdName.MARKS, marksArray);
         JsonHelper.jsonToResponse(response, ret);
     }
+
+    /**
+     * @author:pis
+     * @description: 查看整合结果
+     * @date: 19:29 2018/5/28
+     */
+    @RequestMapping(value = "/checkImageIntegration", method = RequestMethod.POST)
+    public void checkImageIntegration(HttpServletRequest request, HttpServletResponse response) {
+        JSONObject jsonObject = JsonHelper.requestToJson(request);
+        TaskEntity taskEntity = (TaskEntity) taskService.findByID(jsonObject.getInt(stdName.TASKID));
+        String imgName = jsonObject.getString(stdName.IMGNAME);
+        ImageEntity imageEntity = imgService.findByName(imgName.substring(0, imgName.lastIndexOf('.')));
+        JSONArray marksArray = new JSONArray();
+
+
+        List<ImgMarkEntity> imgMarkEntities = imgMarkService.findByImageAndTask(imageEntity, taskEntity);
+        List<RecNodeList> recNodeLists = NaiveBayesianClassification.integration(imgMarkEntities);
+        JSONObject mark = new JSONObject();
+        mark.put(stdName.IMGURL, imageEntity.getUrl());
+        mark.put(stdName.SPONSORNAME, taskEntity.getSponsor().getUsername());
+        mark.put(stdName.TASKID, taskEntity.getId());
+        JSONArray jsonArray = new JSONArray();
+        mark.put(stdName.NOTEPOLYGON, jsonArray);
+        jsonArray = new JSONArray();
+        int count = 0;
+        for (RecNodeList recNodeList : recNodeLists) {
+            JSONObject recNodeObj = new JSONObject();
+            Segmentation segmentation = new Segmentation();
+            List<WorkerAnswer> workerAnswers = segmentation.segment(recNodeList);
+            if(workerAnswers != null && workerAnswers.size() != 0){
+                recNodeObj.put(stdName.MARK,segmentation.getStrmax1());
+            }
+            RecNode recNode = recNodeList.getRecNode();
+            recNodeObj.put(stdName.TOP, recNode.getTop());
+            recNodeObj.put(stdName.LEFT, recNode.getLeft());
+            recNodeObj.put(stdName.HEIGHT, recNode.getHeight());
+            recNodeObj.put(stdName.WIDTH, recNode.getWidth());
+            recNodeObj.put(stdName.AUTHOR, stdName.NULL);
+            recNodeObj.put(stdName.ID, count);
+            recNodeObj.put(stdName.MARK, stdName.NULL);
+            jsonArray.put(recNodeObj);
+            count++;
+        }
+        mark.put(stdName.NOTERECTANGLE, jsonArray);
+        jsonArray = new JSONArray();
+        mark.put(stdName.NOTETOTAL, jsonArray);
+        marksArray.put(mark);
+
+        JSONObject ret = new JSONObject();
+        ret.put(stdName.MARKS, marksArray);
+        JsonHelper.jsonToResponse(response, ret);
+    }
+
 }

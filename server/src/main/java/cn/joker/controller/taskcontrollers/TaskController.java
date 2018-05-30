@@ -299,7 +299,7 @@ public class TaskController {
         UserEntity reporter = userService.findByUsername(jsonObject.getString(stdName.REPORTER));
         ReportmessageEntity reportmessageEntity = new ReportmessageEntity();
         JSONObject ret = new JSONObject();
-        reportmessageEntity.setReportTime((java.sql.Date) new Date());
+        reportmessageEntity.setReportTime(new java.sql.Date(System.currentTimeMillis()));
         reportmessageEntity.setDescription(jsonObject.getString(stdName.DESCRIPTION));
         reportmessageEntity.setIsDealt((byte) 0);
         reportmessageEntity.setReporter(reporter);
