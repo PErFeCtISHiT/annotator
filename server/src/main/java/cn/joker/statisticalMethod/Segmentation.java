@@ -16,6 +16,7 @@ public class Segmentation {
     private Map<String, Integer> frequency;
     private String strmax1 = "";
     private String strmax2 = "";
+    private final String DIR = System.getProperty("user.dir") + "/annotator/";
 
     public Segmentation(){
         words = new ArrayList<>();
@@ -108,7 +109,7 @@ public class Segmentation {
 
     private List<String> loadFile() {
         List<String> synDictionary = new ArrayList<>();
-        String filename = "./src/main/java/cn/joker/statisticalMethod/synonym.txt";
+        String filename = DIR + "resources/synonym.txt";
         BufferedReader br;
         try {
             br = new BufferedReader(new FileReader(filename));

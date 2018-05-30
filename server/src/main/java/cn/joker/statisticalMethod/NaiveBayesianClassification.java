@@ -18,7 +18,6 @@ public class NaiveBayesianClassification {
 
         for (ImgMarkEntity aImageEntity : imgMarkEntityList) {
             String nodeRec = aImageEntity.getNoteRectangle();
-            System.out.println(nodeRec);
             JSONArray jsonArray = new JSONArray(nodeRec);
             for (Object o : jsonArray) {
                 JSONObject jsonObject = (JSONObject) o;

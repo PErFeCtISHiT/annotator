@@ -9,6 +9,7 @@ import cn.joker.statisticalMethod.QuestionModel;
 import cn.joker.statisticalMethod.Segmentation;
 import cn.joker.vo.RecNodeList;
 import cn.joker.vo.WorkerAnswer;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -187,20 +188,21 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
     }
 
     private boolean markIntegration(TaskEntity taskEntity) {
+        Logger logger = Logger.getLogger(TaskServiceImpl.class);
         boolean ret = true;
         Segmentation segmentation = new Segmentation();
         List<ImgMarkEntity> imgMarkEntities = taskEntity.getImgMarkEntityList();
         List<RecNodeList> recNodeLists = NaiveBayesianClassification.integration(imgMarkEntities);
         List<TagEntity> tagEntities = taskEntity.getTagEntityList();
-        System.out.println("listsize" + recNodeLists.size());
+        logger.info("clause size:" + recNodeLists.size());
         for (RecNodeList recNodeList : recNodeLists) {
             List<WorkerAnswer> workerAnswers = segmentation.segment(recNodeList);
-            System.out.println("size" + workerAnswers.size());
+            logger.info("workers size:" + workerAnswers.size());
             QuestionModel questionModel = new QuestionModel();
             for (WorkerAnswer workerAnswer : workerAnswers) {
-                System.out.println(workerAnswer.getAnswer());
+                logger.info("answer:" + workerAnswer.getAnswer());
                 UserEntity worker = workerAnswer.getUserEntity();
-                System.out.println(tagEntities.size());
+                logger.info("tagsize:" + tagEntities.size());
                 for (TagEntity tagEntity : tagEntities) {
                     WorkerMatrixEntity workerMatrixEntity = worker.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
                     Double gamma = (workerMatrixEntity.getC00() + workerMatrixEntity.getC11())
@@ -211,10 +213,8 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
             for (WorkerAnswer workerAnswer : workerAnswers) {
                 UserEntity worker = workerAnswer.getUserEntity();
                 for (TagEntity tagEntity : tagEntities) {
-                    System.out.println(tagEntity.getTag());
-                    System.out.println(tagEntity.getId());
+                    logger.info(tagEntity.getTag());
                     WorkerMatrixEntity workerMatrixEntity = worker.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
-                    System.out.println(worker.getWorkerMatrixEntities().size());
                     assert workerMatrixEntity != null;
                     if (workerAnswer.getAnswer()) {
                         workerMatrixEntity.setC10(workerMatrixEntity.getC10() + questionModel.getP1());
@@ -224,10 +224,12 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
                         workerMatrixEntity.setC00(workerMatrixEntity.getC00() + questionModel.getP1());
                         workerMatrixEntity.setC01(workerMatrixEntity.getC01() + questionModel.getP0());
                     }
-                    System.out.println("c00: " + workerMatrixEntity.getC00());
-                    System.out.println("c01: " + workerMatrixEntity.getC01());
-                    System.out.println("c10: " + workerMatrixEntity.getC10());
-                    System.out.println("c11: " + workerMatrixEntity.getC11());
+                    logger.info("c00: " + workerMatrixEntity.getC00());
+                    logger.info("c01: " + workerMatrixEntity.getC01());
+                    logger.info("c10: " + workerMatrixEntity.getC10());
+                    logger.info("c11: " + workerMatrixEntity.getC11());
+                    logger.info("rate:" + (workerMatrixEntity.getC00() + workerMatrixEntity.getC11())
+                            / (workerMatrixEntity.getC11() + workerMatrixEntity.getC00() + workerMatrixEntity.getC01() + workerMatrixEntity.getC10()));
                 }
                 ret = ret && userService.modify(worker);
             }
