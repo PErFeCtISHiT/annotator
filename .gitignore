@@ -1,7 +1,6 @@
 /annotator/.idea/
 /annotator/node_modules/
 /annotator/dist/
-/annotator/task/
 /.idea/
 #
 /server/target/
