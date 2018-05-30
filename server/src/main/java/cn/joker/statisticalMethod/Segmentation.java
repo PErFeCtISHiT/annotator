@@ -14,6 +14,8 @@ import java.util.*;
 public class Segmentation {
     private List<String> words;
     private Map<String, Integer> frequency;
+    private String strmax1 = "";
+    private String strmax2 = "";
 
     public Segmentation(){
         words = new ArrayList<>();
@@ -54,8 +56,6 @@ public class Segmentation {
         countFrequency();
 
         // 频率最高的是正确答案，第二高的就判为错误答案
-        String strmax1 = "";
-        String strmax2 = "";
         int countmax1 = 0;
         int countmax2 = 0;
         // 得到词频最高的两个词
@@ -121,5 +121,13 @@ public class Segmentation {
             e.printStackTrace();
         }
         return synDictionary;
+    }
+
+    public String getStrmax1() {
+        return strmax1;
+    }
+
+    public String getStrmax2() {
+        return strmax2;
     }
 }
