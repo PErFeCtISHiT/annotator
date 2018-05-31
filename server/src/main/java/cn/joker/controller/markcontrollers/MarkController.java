@@ -154,6 +154,8 @@ public class MarkController {
             if(workerAnswers != null && workerAnswers.size() != 0){
                 recNodeObj.put(stdName.MARK,segmentation.getStrmax1());
             }
+            else
+                recNodeObj.put(stdName.MARK, stdName.NULL);
             RecNode recNode = recNodeList.getRecNode();
             recNodeObj.put(stdName.TOP, recNode.getTop());
             recNodeObj.put(stdName.LEFT, recNode.getLeft());
@@ -161,7 +163,6 @@ public class MarkController {
             recNodeObj.put(stdName.WIDTH, recNode.getWidth());
             recNodeObj.put(stdName.AUTHOR, stdName.NULL);
             recNodeObj.put(stdName.ID, count);
-            recNodeObj.put(stdName.MARK, stdName.NULL);
             jsonArray.put(recNodeObj);
             count++;
         }

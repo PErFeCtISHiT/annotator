@@ -18,11 +18,6 @@
       <el-col :span="17">
 
         <div class="block" style="width:800px; height:50px; margin:3% auto">
-          <el-row :gutter="15">
-            <el-col :span="24" style="margin-top: 10px">
-              <span style="font-weight: bold; margin: auto">工人【 {{workerName}} 】的标注结果：请点击下方的图片即可查看结果</span>
-            </el-col>
-          </el-row>
         </div>
 
         <div class="block" style="width:800px; height:600px; margin:auto">
@@ -53,9 +48,9 @@
 
   export default {
     components: {OneTask},
-    name: "requestor-wanna-see",
+    name: "requestor-Total",
 
-    props: ['workerName', 'taskID'],
+    props: ['taskID'],
 
     mounted() {
       this.refreshTaskData();
@@ -63,6 +58,8 @@
       this.refreshImgURL();
       this.updateCurrentTaskID(this.taskID);
       this.updateCurrentUserName(this.workerName);
+
+      window.handleMix = this.handleMix;
     },
 
     data() {
@@ -215,7 +212,13 @@
 
         let drawingArea = $("#drawingArea");
         drawingArea.empty();
-        drawingArea.load('../../src/temp/forRequester.html');
+        drawingArea.load('../../src/temp/forReTotal.html');
+      },
+
+      handleMix(){
+        let drawingArea = $("#drawingArea");
+        drawingArea.empty();
+        drawingArea.load('../../src/temp/forReMixed.html');
       }
     }
   }
@@ -238,3 +241,4 @@
     background-color: #d3dce6;
   }
 </style>
+

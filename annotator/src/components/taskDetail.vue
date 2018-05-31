@@ -77,6 +77,12 @@
           </template>
         </el-table-column>
       </el-table>
+
+      <div class="block" style="width:800px; height:200px; margin:auto">
+        <el-button @click = "handleTotal(taskID)">查看整体标注结果</el-button>
+        <!--<el-button :disabled="response.totalProgress!==1" @click="handleMixed">查看矩形整合结果</el-button>-->
+      </div>
+
     </el-col>
 
   </el-col>
@@ -189,7 +195,16 @@
             done();
           })
           .catch(() => {});
-      }
+      },
+
+      handleTotal(taskID){
+        this.$router.push({
+          name: 'forReTotal',
+          params: {
+            taskID: taskID,
+          }
+        });
+      },
     }//所有方法结束
 
   }
