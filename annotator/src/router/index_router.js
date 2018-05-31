@@ -15,6 +15,7 @@ import workerNoteMark from '../components/workerNoteMark'
 import taskDetail from '../components/taskDetail'
 import firstPart from '../components/firstPart'
 import requesterWannaSee from '../components/requestorWannaSee'
+import ech from '../components/testEchart/echart'
 
 export default new VueRouter({
   routes: [
@@ -59,6 +60,11 @@ export default new VueRouter({
       path: "/3-1",
       component: recharge
     },
+    {
+      path: '/3-2',
+      component: ech
+    },
+
 
     {
       path: "/requesterLike/:taskID/:workerName",
