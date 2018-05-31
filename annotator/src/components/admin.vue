@@ -38,9 +38,9 @@
             <el-table-column label="等级" width="220">
               <template slot-scope="scope">
                 <el-popover trigger="click" placement="top">
-                  <p>等级为: {{ scope.row.level }}</p>
+                  <p>等级为: {{ scope.row.lev }}</p>
                   <div slot="reference" class="name-wrapper">
-                    <el-rate v-model="scope.row.level" disabled></el-rate>
+                    <el-rate v-model="scope.row.lev" disabled></el-rate>
                   </div>
                 </el-popover>
               </template>

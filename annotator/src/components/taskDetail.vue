@@ -32,9 +32,9 @@
           width="200">
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
-              <p>等级: {{ scope.row.level }}</p>
+              <p>等级: {{ scope.row.lev }}</p>
               <div slot="reference" class="name-wrapper">
-                <el-rate v-model="scope.row.level" disabled></el-rate>
+                <el-rate v-model="scope.row.lev" disabled></el-rate>
               </div>
             </el-popover>
           </template>
