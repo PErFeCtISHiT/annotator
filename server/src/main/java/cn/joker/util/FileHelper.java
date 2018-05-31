@@ -3,17 +3,21 @@ package cn.joker.util;
 import cn.joker.entity.ImageEntity;
 import cn.joker.entity.TaskEntity;
 import cn.joker.namespace.stdName;
+import cn.joker.serviceimpl.ImgServiceImpl;
+import cn.joker.sevice.ImgService;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Expand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -82,12 +86,11 @@ public class FileHelper {
         return true;
     }
 
-    public static Integer saveFiles(TaskEntity taskEntity, MultipartFile file) {
+    public static Integer saveFiles(TaskEntity taskEntity, MultipartFile file,ImgService imgService) {
         if (file.isEmpty())
             return 0;
         String path = DIR + "task/" + String.valueOf(taskEntity.getId()) + "/images/";
         String fileName = taskEntity.getId().toString() + "-" + file.getOriginalFilename();
-        System.out.println(fileName);
         fileName = FileHelper.getRealFilePath(fileName);
         fileName = fileName.substring(fileName.lastIndexOf(FILE_SEPARATOR) + 1);
         File dest = new File(path + fileName);
@@ -122,8 +125,12 @@ public class FileHelper {
         ImageEntity imageEntity = new ImageEntity();
         imageEntity.setImg_task(taskEntity);
         imageEntity.setImgName(fileName.substring(fileName.lastIndexOf('/') + 1, fileName.lastIndexOf('.')));
-        System.out.println(imageEntity.getImgName());
         imageEntity.setUrl("task/" + String.valueOf(taskEntity.getId()) + "/images/" + fileName);
+        imgService.add(imageEntity);
+        if(taskEntity.getImageEntityList() == null) {
+            List<ImageEntity> imageEntities = new ArrayList<>();
+            taskEntity.setImageEntityList(imageEntities);
+        }
         List<ImageEntity> imageEntities = taskEntity.getImageEntityList();
         imageEntities.add(imageEntity);
         return Objects.requireNonNull(dest.getParentFile().list()).length;
