@@ -27,10 +27,10 @@
       <el-table-column label="工人等级要求" width="250">
         <template slot-scope="scope">
           <el-popover trigger="click" placement="top">
-            <p>工人等级要求为: {{ scope.row.level }}级</p>
+            <p>工人等级要求为: {{ scope.row.lev }}级</p>
 
             <div slot="reference" class="name-wrapper">
-              <el-rate v-model="scope.row.level" disabled></el-rate>
+              <el-rate v-model="scope.row.lev" disabled></el-rate>
             </div>
           </el-popover>
         </template>
