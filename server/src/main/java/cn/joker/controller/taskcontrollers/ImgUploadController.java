@@ -2,6 +2,7 @@ package cn.joker.controller.taskcontrollers;
 
 import cn.joker.entity.TaskEntity;
 import cn.joker.namespace.stdName;
+import cn.joker.sevice.ImgService;
 import cn.joker.sevice.TaskService;
 import cn.joker.util.FileHelper;
 import cn.joker.util.JsonHelper;
@@ -27,6 +28,8 @@ import javax.servlet.http.HttpServletResponse;
 public class ImgUploadController {
     @Resource
     private TaskService taskService;
+    @Resource
+    ImgService imgService;
 
     /**
      * @author:pis
@@ -54,7 +57,7 @@ public class ImgUploadController {
         if (taskEntity == null) {
             ret.put(stdName.MES, stdName.NULL);
         } else {
-            taskEntity.setImageNum(FileHelper.saveFiles(taskEntity, file));
+            taskEntity.setImageNum(FileHelper.saveFiles(taskEntity, file,imgService));
             ret.put(stdName.MES, taskService.modify(taskEntity));
         }
         JsonHelper.jsonToResponse(response, ret);

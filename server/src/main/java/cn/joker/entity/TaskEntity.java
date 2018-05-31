@@ -49,7 +49,7 @@ public class TaskEntity implements Serializable {
         this.tagEntityList = tagEntityList;
     }
 
-    @OneToMany(mappedBy = "workers_task", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "workers_task", cascade = CascadeType.ALL)
     @JsonIgnore
     public List<WorkersForTheTaskEntity> getWorkersForTheTaskEntityList() {
         return workersForTheTaskEntityList;
@@ -59,7 +59,7 @@ public class TaskEntity implements Serializable {
         this.workersForTheTaskEntityList = workersForTheTaskEntityList;
     }
 
-    @OneToMany(mappedBy = "imgMark_task", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "imgMark_task", cascade = CascadeType.ALL)
     @JsonIgnore
     public List<ImgMarkEntity> getImgMarkEntityList() {
         return imgMarkEntityList;
@@ -69,7 +69,7 @@ public class TaskEntity implements Serializable {
         this.imgMarkEntityList = imgMarkEntityList;
     }
 
-    @OneToMany(mappedBy = "img_task", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "img_task", cascade = CascadeType.ALL)
     @JsonIgnore
     public List<ImageEntity> getImageEntityList() {
         return imageEntityList;
@@ -80,7 +80,7 @@ public class TaskEntity implements Serializable {
     }
 
 
-    @OneToMany(mappedBy = "bonusHistory_task", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "bonusHistory_task", cascade = CascadeType.ALL)
     @JsonIgnore
     public List<BonusHistoryEntity> getBonusHistoryEntityList() {
         return bonusHistoryEntityList;

@@ -144,7 +144,7 @@ public class UserEntity implements Serializable {
     }
 
 
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_ability", joinColumns = {@JoinColumn(referencedColumnName = "ID")},
             inverseJoinColumns = {@JoinColumn(referencedColumnName = "ID")})
 
@@ -157,7 +157,7 @@ public class UserEntity implements Serializable {
         this.abilityEntityList = abilityEntityList;
     }
 
-    @OneToMany(mappedBy = "bonusHistory_user", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "bonusHistory_user", cascade = CascadeType.ALL)
     @JsonIgnore
     public List<BonusHistoryEntity> getBonusHistoryEntityList() {
         return bonusHistoryEntityList;
@@ -166,7 +166,7 @@ public class UserEntity implements Serializable {
     public void setBonusHistoryEntityList(List<BonusHistoryEntity> bonusHistoryEntityList) {
         this.bonusHistoryEntityList = bonusHistoryEntityList;
     }
-    @OneToMany(mappedBy = "user_matrix", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "user_matrix", cascade = CascadeType.ALL)
     @JsonIgnore
     public List<WorkerMatrixEntity> getWorkerMatrixEntities() {
         return workerMatrixEntities;
