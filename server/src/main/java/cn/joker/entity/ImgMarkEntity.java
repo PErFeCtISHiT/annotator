@@ -20,7 +20,6 @@ public class ImgMarkEntity implements Serializable {
     private String noteRectangle;
     private String notePolygon;
     private String noteTotal;
-    private TaskEntity imgMark_task;
 
 
     @ManyToOne(cascade = CascadeType.MERGE)
@@ -32,18 +31,6 @@ public class ImgMarkEntity implements Serializable {
 
     public void setImage_imgMark(ImageEntity image_imgMark) {
         this.image_imgMark = image_imgMark;
-    }
-
-
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "task_id")
-    @JsonIgnore
-    public TaskEntity getImgMark_task() {
-        return imgMark_task;
-    }
-
-    public void setImgMark_task(TaskEntity imgMark_task) {
-        this.imgMark_task = imgMark_task;
     }
 
 
@@ -110,13 +97,12 @@ public class ImgMarkEntity implements Serializable {
                 Objects.equals(worker, that.worker) &&
                 Objects.equals(noteRectangle, that.noteRectangle) &&
                 Objects.equals(notePolygon, that.notePolygon) &&
-                Objects.equals(noteTotal, that.noteTotal) &&
-                Objects.equals(imgMark_task, that.imgMark_task);
+                Objects.equals(noteTotal, that.noteTotal);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, image_imgMark, worker, noteRectangle, notePolygon, noteTotal, imgMark_task);
+        return Objects.hash(id, image_imgMark, worker, noteRectangle, notePolygon, noteTotal);
     }
 }
