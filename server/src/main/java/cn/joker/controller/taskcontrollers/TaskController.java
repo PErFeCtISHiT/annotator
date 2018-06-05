@@ -280,7 +280,7 @@ public class TaskController {
 
         jsonObject.put(stdName.TASKID, task.getId());
 
-        jsonObject.put(stdName.SPONSORNAME, task.getSponsor());
+        jsonObject.put(stdName.SPONSORNAME, task.getSponsor().getUsername());
         jsonObject.put(stdName.TASKNAME, task.getTaskName());
         jsonObject.put(stdName.DESCRIPTION, task.getDescription());
         JSONArray tags = new JSONArray();

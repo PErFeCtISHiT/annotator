@@ -32,6 +32,7 @@
             </el-carousel-item>
           </el-carousel>
         </div>
+
       </el-col>
 
     </el-col>

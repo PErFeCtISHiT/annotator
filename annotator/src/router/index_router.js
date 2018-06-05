@@ -15,6 +15,7 @@ import workerNoteMark from '../components/workerNoteMark'
 import taskDetail from '../components/taskDetail'
 import firstPart from '../components/firstPart'
 import requesterWannaSee from '../components/requestorWannaSee'
+import requestorTotal from '../components/requestorTotal'
 
 export default new VueRouter({
   routes: [
@@ -66,6 +67,14 @@ export default new VueRouter({
       component: requesterWannaSee,
       props: true
     },
+
+    {
+      path: "/requesterLike/:taskID",
+      name: 'forReTotal',
+      component: requestorTotal,
+      props: true
+    },
+    
     {
       path: "/taskDetail/:taskID",
       name: 'taskDetail',

@@ -55,7 +55,7 @@
 
             <el-form-item label="奖励积分" prop="points">
               <el-input type="text" v-model.number="newTask.points" auto-complete="false"
-                        placeholder="发布任务扣除积分为此栏积分数与人数的乘积" clearable style="width: 500px"></el-input>
+                        placeholder="发布任务扣除积分为此栏积分数与人数的乘积" clearable style="width: 500px"> </el-input>
             </el-form-item>
 
             <el-form-item>
@@ -259,7 +259,7 @@
                   that.resetForm('newTask');
                   setTimeout(function () {
                     that.$refs.upload.clearFiles();
-                  }, 1200);
+                  }, 2000);
 
                   that.$confirm('文件成功上传, 继续留在本页面发布任务?', '提示', {
                     confirmButtonText: '留在此页',
@@ -273,15 +273,15 @@
                 }
 
                 else {
-                  that.$message.warning('上传失败');
+                  //that.$message.warning('上传失败');
                   //console.log('2')
                 }
               })
               .catch(function (error) {
-                that.$message({
-                  message: '上传失败' + error,
-                  type: 'warning'
-                });
+                // that.$message({
+                //   message: '上传失败' + error,
+                //   type: 'warning'
+                // });
                 //console.log('1');
               })
 
