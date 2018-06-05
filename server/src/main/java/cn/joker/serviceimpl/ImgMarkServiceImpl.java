@@ -3,8 +3,6 @@ package cn.joker.serviceimpl;
 import cn.joker.dao.ImgMarkRepository;
 import cn.joker.entity.ImageEntity;
 import cn.joker.entity.ImgMarkEntity;
-import cn.joker.entity.TaskEntity;
-import cn.joker.entity.UserEntity;
 import cn.joker.sevice.ImgMarkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,24 +31,11 @@ public class ImgMarkServiceImpl extends PubServiceImpl implements ImgMarkService
     }
 
     @Override
-    public ImgMarkEntity findByImage_imgMarkAndImgMark_taskAndWorker(ImageEntity imageEntity, TaskEntity taskEntity, UserEntity userEntity) {
-        List<ImgMarkEntity> imgMarkEntities = findAll();
-        for (ImgMarkEntity imgMarkEntity : imgMarkEntities) {
-            if (imgMarkEntity.getWorker().getUsername().equals(userEntity.getUsername()) &&
-                    imgMarkEntity.getImgMark_task().getId().equals(taskEntity.getId()) &&
-                    imgMarkEntity.getImage_imgMark().getId().equals(imageEntity.getId()))
-                return imgMarkEntity;
-        }
-        return null;
-    }
-
-    @Override
-    public List<ImgMarkEntity> findByImageAndTask(ImageEntity imageEntity, TaskEntity taskEntity) {
+    public List<ImgMarkEntity> findByImage(ImageEntity imageEntity) {
         List<ImgMarkEntity> imgMarkEntities = findAll();
         List<ImgMarkEntity> ret = new ArrayList<>();
-        for(ImgMarkEntity imgMarkEntity : imgMarkEntities){
-            if(imgMarkEntity.getImgMark_task().getId().equals(taskEntity.getId()) &&
-                    imgMarkEntity.getImage_imgMark().getId().equals(imageEntity.getId()))
+        for (ImgMarkEntity imgMarkEntity : imgMarkEntities) {
+            if (imgMarkEntity.getImage_imgMark().getId().equals(imageEntity.getId()))
                 ret.add(imgMarkEntity);
         }
         return ret;

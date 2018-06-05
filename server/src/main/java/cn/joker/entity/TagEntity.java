@@ -19,6 +19,21 @@ public class TagEntity implements Serializable {
     private String tag;
     private String description;
     private List<TaskEntity> taskEntityList;
+    private List<ImageEntity> testImageList;
+
+
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "image_tag", joinColumns = {@JoinColumn(referencedColumnName = "ID")}
+            , inverseJoinColumns = {@JoinColumn(referencedColumnName = "ID")})
+    @JsonIgnore
+    public List<ImageEntity> getTestImageList() {
+        return testImageList;
+    }
+
+    public void setTestImageList(List<ImageEntity> testImageList) {
+        this.testImageList = testImageList;
+    }
+
 
     @ManyToMany(cascade = CascadeType.MERGE, mappedBy = "tagEntityList")
     @JsonIgnore

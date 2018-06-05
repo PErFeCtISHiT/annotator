@@ -27,7 +27,6 @@ public class UserEntity implements Serializable {
     private String email;
     private List<SysRoleEntity> roleEntityList;
     private List<AbilityEntity> abilityEntityList;
-    private List<BonusHistoryEntity> bonusHistoryEntityList;
     private List<WorkerMatrixEntity> workerMatrixEntities;
 
     @Id
@@ -157,15 +156,6 @@ public class UserEntity implements Serializable {
         this.abilityEntityList = abilityEntityList;
     }
 
-    @OneToMany(mappedBy = "bonusHistory_user", cascade = CascadeType.ALL)
-    @JsonIgnore
-    public List<BonusHistoryEntity> getBonusHistoryEntityList() {
-        return bonusHistoryEntityList;
-    }
-
-    public void setBonusHistoryEntityList(List<BonusHistoryEntity> bonusHistoryEntityList) {
-        this.bonusHistoryEntityList = bonusHistoryEntityList;
-    }
     @OneToMany(mappedBy = "user_matrix", cascade = CascadeType.ALL)
     @JsonIgnore
     public List<WorkerMatrixEntity> getWorkerMatrixEntities() {
@@ -175,7 +165,6 @@ public class UserEntity implements Serializable {
     public void setWorkerMatrixEntities(List<WorkerMatrixEntity> workerMatrixEntities) {
         this.workerMatrixEntities = workerMatrixEntities;
     }
-
 
 
     @Override
@@ -194,13 +183,12 @@ public class UserEntity implements Serializable {
                 Objects.equals(state, that.state) &&
                 Objects.equals(email, that.email) &&
                 Objects.equals(roleEntityList, that.roleEntityList) &&
-                Objects.equals(abilityEntityList, that.abilityEntityList) &&
-                Objects.equals(bonusHistoryEntityList, that.bonusHistoryEntityList);
+                Objects.equals(abilityEntityList, that.abilityEntityList);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, username, passwr, salt, bonus, nickname, lev, points, state, email, roleEntityList, abilityEntityList, bonusHistoryEntityList);
+        return Objects.hash(id, username, passwr, salt, bonus, nickname, lev, points, state, email, roleEntityList, abilityEntityList);
     }
 }

@@ -8,9 +8,10 @@ import cn.joker.sevice.TaskService;
 import cn.joker.sevice.UserService;
 import cn.joker.util.DateHelper;
 import cn.joker.util.JsonHelper;
-import org.apache.shiro.SecurityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -56,11 +57,9 @@ public class TaskController {
         String startDate = jsonObject.getString(stdName.STARTDATE);
         task.setStartDate(DateHelper.convertStringToDate(startDate));
         task.setEndDate(DateHelper.convertStringToDate(endDate));
-        task.setExpectedNumber(jsonObject.getInt(stdName.EXCEPTEDNUMBER));
-        task.setPoints(jsonObject.getInt(stdName.POINTS));
         UserEntity userEntity = userService.findByUsername(jsonObject.getString(stdName.SPONSORNAME));
         task.setSponsor(userEntity);
-        userEntity.setPoints(userEntity.getPoints() - task.getPoints() * task.getExpectedNumber());
+        userEntity.setPoints(userEntity.getPoints() - task.getImageNum());
 
         JSONArray tagArray = jsonObject.getJSONArray(stdName.TAG);
         List<TagEntity> tagEntities = new ArrayList<>();
@@ -71,7 +70,6 @@ public class TaskController {
         task.setTaskName(jsonObject.getString(stdName.TASKNAME));
         task.setWorkerLevel(jsonObject.getInt(stdName.WORKERLEVEL));
         task.setState(1);
-        task.setCompletedNumber(0);
         JSONObject ret = new JSONObject();
 
         ret.put(stdName.MES, userService.modify(userEntity));
@@ -97,9 +95,7 @@ public class TaskController {
 
         addTag(tagArray, tagEntities);
         task.setTagEntityList(tagEntities);
-        task.setExpectedNumber(jsonObject.getInt(stdName.EXCEPTEDNUMBER));
         task.setTaskName(jsonObject.getString(stdName.TASKNAME));
-        task.setPoints(jsonObject.getInt(stdName.POINTS));
         JSONObject ret = new JSONObject();
         ret.put(stdName.MES, taskService.modify(task));
         JsonHelper.jsonToResponse(response, ret);
@@ -123,38 +119,7 @@ public class TaskController {
 
         List<TaskEntity> tasks = taskService.checkMyTask(username, status, userRole, tag);
         JSONArray taskArray = new JSONArray();
-        for (TaskEntity task : tasks) {
-            JSONObject taskObject = new JSONObject();
-            taskObject.put(stdName.TASKID, task.getId());
-            taskObject.put(stdName.TASKNAME, task.getTaskName());
-            taskObject.put(stdName.DESCRIPTION, task.getDescription());
-            taskObject.put(stdName.IMGNUM, task.getImageNum());
-            taskObject.put(stdName.SPONSORNAME, task.getSponsor().getUsername());
-            JSONArray tags = new JSONArray();
-            List<TagEntity> tagEntities = task.getTagEntityList();
-            for (TagEntity tagEntity : tagEntities) {
-                tags.put(tagEntity.getTag());
-            }
-            taskObject.put(stdName.TAG, tags);
-            taskObject.put(stdName.TOTALPROGRESS, new Double(task.getCompletedNumber() / task.getExpectedNumber()));
-            taskObject.put(stdName.STARTDATE, DateHelper.convertDateToString(task.getStartDate()));
-            taskObject.put(stdName.ENDDATE, DateHelper.convertDateToString(task.getEndDate()));
-            if (userRole.equals(4)) {
-                Double progress = -1.0;
-                List<WorkersForTheTaskEntity> workersForTheTaskEntities = task.getWorkersForTheTaskEntityList();
-                for (WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities) {
-                    if (workersForTheTaskEntity.getWorker().getUsername().equals(username)) {
-                        progress = ((double) workersForTheTaskEntity.getCompletedNum() / (double) task.getImageNum());
-                    }
-                }
-                if (progress != -1.0) {
-                    taskObject.put(stdName.PROGRESS, progress);
-                    taskArray.put(taskObject);
-                }
-            } else {
-                taskArray.put(taskObject);
-            }
-        }
+        getTasks(tasks, taskArray);
         ret.put(stdName.TASKS, taskArray);
         JsonHelper.jsonToResponse(response, ret);
     }
@@ -173,6 +138,13 @@ public class TaskController {
         List<TaskEntity> tasks = taskService.search(userRole, tag, status);
         JSONObject ret = new JSONObject();
         JSONArray taskArray = new JSONArray();
+        getTasks(tasks, taskArray);
+        ret.put(stdName.TASKS, taskArray);
+        JsonHelper.jsonToResponse(response, ret);
+
+    }
+
+    private void getTasks(List<TaskEntity> tasks, JSONArray taskArray) {
         for (TaskEntity task : tasks) {
             JSONObject taskObject = new JSONObject();
             taskObject.put(stdName.TASKID, task.getId());
@@ -186,14 +158,10 @@ public class TaskController {
                 tags.put(tagEntity.getTag());
             }
             taskObject.put(stdName.TAG, tags);
-            taskObject.put(stdName.TOTALPROGRESS, task.getTotalProgress());
             taskObject.put(stdName.STARTDATE, DateHelper.convertDateToString(task.getStartDate()));
             taskObject.put(stdName.ENDDATE, DateHelper.convertDateToString(task.getEndDate()));
             taskArray.put(taskObject);
         }
-        ret.put(stdName.TASKS, taskArray);
-        JsonHelper.jsonToResponse(response, ret);
-
     }
 
     /**
@@ -228,61 +196,6 @@ public class TaskController {
         JsonHelper.jsonToResponse(response, ret);
     }
 
-    /**
-     * 完成任务,增加对应积分
-     *
-     * @param request 任务ID 工人用户名
-     * @return 是否成功
-     */
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, value = "/completeTask")
-    public void completeTask(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, String[]> map = request.getParameterMap();
-        Integer taskID = Integer.valueOf(map.get(stdName.TASKID)[0]);
-        TaskEntity taskEntity = (TaskEntity) taskService.findByID(taskID);
-        String username = map.get(stdName.USERNAME)[0];
-        UserEntity userInfo = userService.findByUsername(username);
-        userInfo.setPoints(userInfo.getPoints() + taskEntity.getPoints());
-        userInfo.setBonus(userInfo.getBonus() + taskEntity.getPoints());
-        userInfo.setLev((int) (Math.log(userInfo.getBonus() + 1) / Math.log(10)) + 1);
-        JSONObject ret = new JSONObject();
-        ret.put(stdName.MES, taskService.completeTask(taskID, username) && userService.modify(userInfo));
-        JsonHelper.jsonToResponse(response, ret);
-    }
-
-    /**
-     * 放弃任务
-     *
-     * @param request 任务ID 工人用户名
-     * @return 是否成功
-     */
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, value = "/abortTask")
-    public void abortTask(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, String[]> map = request.getParameterMap();
-        Integer taskID = Integer.valueOf(map.get(stdName.TASKID)[0]);
-        String username = map.get(stdName.USERNAME)[0];
-        JSONObject ret = new JSONObject();
-        ret.put(stdName.MES, taskService.abortTask(taskID, username));
-        JsonHelper.jsonToResponse(response, ret);
-    }
-
-    /**
-     * 接受任务
-     *
-     * @param request 任务ID 工人用户名
-     * @return 是否接受成功
-     */
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, value = "/acceptTask")
-    public void acceptTask(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, String[]> map = request.getParameterMap();
-        Integer taskID = Integer.valueOf(map.get(stdName.TASKID)[0]);
-        String username = map.get(stdName.USERNAME)[0];
-        JSONObject ret = new JSONObject();
-        ret.put(stdName.MES, taskService.acceptTask(taskID, username));
-        JsonHelper.jsonToResponse(response, ret);
-    }
 
     /**
      * 举报任务
@@ -313,7 +226,7 @@ public class TaskController {
     /**
      * 举报工人
      *
-     * @param
+     * @param request
      * @return boolean 成功与否
      */
     @ResponseBody
@@ -346,8 +259,6 @@ public class TaskController {
 
     /**
      * 管理员查看任务被举报的所有信息
-     *
-     * @param
      */
     @RequestMapping(method = RequestMethod.GET, value = "/checkTaskReport")
     public List<ReportmessageEntity> checkTaskReport() {
@@ -379,33 +290,13 @@ public class TaskController {
         }
         jsonObject.put(stdName.TAG, tags);
         jsonObject.put(stdName.LEVEL, task.getWorkerLevel());
-        jsonObject.put(stdName.POINTS, task.getPoints());
-        jsonObject.put(stdName.EXCEPTEDNUMBER, task.getExpectedNumber());
-
-        jsonObject.put(stdName.COMPLETEDNUMBER, task.getCompletedNumber());
 
         jsonObject.put(stdName.STARTDATE, DateHelper.convertDateToString(task.getStartDate()));
         jsonObject.put(stdName.ENDDATE, DateHelper.convertDateToString(task.getEndDate()));
         jsonObject.put(stdName.IMGNUM, task.getImageNum());
-        List<WorkersForTheTaskEntity> workersForTheTaskEntities = task.getWorkersForTheTaskEntityList();
-        jsonObject.put(stdName.ACCEPTNUM, workersForTheTaskEntities.size());
-        jsonObject.put(stdName.TOTALPROGRESS, task.getTotalProgress());
 
         Integer totalTagNum = 0;
         JSONArray userInfos = new JSONArray();
-        JSONArray usernames = new JSONArray();
-        for (WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities) {
-            usernames.put(workersForTheTaskEntity.getWorker().getUsername());
-            totalTagNum += workersForTheTaskEntity.getMarkedNum();
-            JSONObject jsonObject1 = new JSONObject();
-
-            UserEntity userEntity = workersForTheTaskEntity.getWorker();
-            jsonObject1.put(stdName.USERNAME, userEntity.getUsername());
-            jsonObject1.put(stdName.LEVEL, userEntity.getLev());
-            jsonObject1.put(stdName.COMPLETEDNUMBER, workersForTheTaskEntity.getCompletedNum());
-            userInfos.put(jsonObject1);
-        }
-        jsonObject.put(stdName.USERNAME, usernames);
         jsonObject.put(stdName.TOTALTAGNUM, totalTagNum);
         jsonObject.put(stdName.AVERAGETAGNUM, totalTagNum / task.getImageNum());
         jsonObject.put(stdName.WORKERINFO, userInfos);
@@ -450,23 +341,17 @@ public class TaskController {
         JsonHelper.jsonToResponse(response, ret);
     }
 
-    @RequestMapping(value = "/checkWorkerProgress", method = RequestMethod.GET)
-    public void checkWorkerProgress(HttpServletRequest request, HttpServletResponse response) {
+    /**
+     * @author:pis
+     * @description: 发起者下载任务标注的数据集
+     * @date: 14:30 2018/6/5
+     */
+    @RequestMapping(value = "getDataSet", method = RequestMethod.GET)
+    public ResponseEntity<FileSystemResource> getDataSet(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
-        String userName = SecurityUtils.getSubject().getPrincipal().toString();
         Integer taskID = Integer.valueOf(map.get(stdName.TASKID)[0]);
-        JSONObject ret = new JSONObject();
         TaskEntity taskEntity = (TaskEntity) taskService.findByID(taskID);
-        List<WorkersForTheTaskEntity> workersForTheTaskEntities = taskEntity.getWorkersForTheTaskEntityList();
-        for (WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities) {
-            if (workersForTheTaskEntity.getWorker().getUsername().equals(userName)) {
-                ret.put(stdName.PROGRESS, workersForTheTaskEntity.getCompletedNum() / taskEntity.getImageNum());
-                JsonHelper.jsonToResponse(response, ret);
-                return;
-            }
-        }
-        ret.put(stdName.MES, stdName.ERROR);
-        JsonHelper.jsonToResponse(response, ret);
+        return taskService.getDataSet(taskEntity);
     }
 
     private void addTag(JSONArray tagArray, List<TagEntity> tagEntities) {

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -18,7 +19,28 @@ public class ImageEntity implements Serializable {
     private String url;
     private TaskEntity img_task;
     private String imgName;
+    private Boolean isMarked = false;
+    private List<ImgMarkEntity> imgMarkEntityList;
 
+    @OneToMany(mappedBy = "image_imgMark", cascade = CascadeType.MERGE)
+    @JsonIgnore
+    public List<ImgMarkEntity> getImgMarkEntityList() {
+        return imgMarkEntityList;
+    }
+
+    public void setImgMarkEntityList(List<ImgMarkEntity> imgMarkEntityList) {
+        this.imgMarkEntityList = imgMarkEntityList;
+    }
+
+    @Basic
+    @Column(name = "isMarked", nullable = false)
+    public Boolean getMarked() {
+        return isMarked;
+    }
+
+    public void setMarked(Boolean marked) {
+        isMarked = marked;
+    }
 
     @Basic
     @Column(name = "imgName", nullable = false, length = 200)
