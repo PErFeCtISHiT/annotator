@@ -2,10 +2,7 @@ package cn.joker.controller.markcontrollers;
 
 import cn.joker.entity.*;
 import cn.joker.namespace.stdName;
-import cn.joker.sevice.ImgMarkService;
-import cn.joker.sevice.ImgService;
-import cn.joker.sevice.TaskService;
-import cn.joker.sevice.UserService;
+import cn.joker.sevice.*;
 import cn.joker.statisticalMethod.NaiveBayesianClassification;
 import cn.joker.statisticalMethod.Segmentation;
 import cn.joker.util.JsonHelper;
@@ -22,6 +19,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: pis
@@ -39,6 +37,8 @@ public class MarkController {
     private ImgService imgService;
     @Resource
     private UserService userService;
+    @Resource
+    private TagService tagService;
 
     /**
      * @author:pis
@@ -51,29 +51,16 @@ public class MarkController {
         ImgMarkEntity imgMark = new ImgMarkEntity();
         imgMark.setWorker(userService.findByUsername(jsonObject.getString(stdName.WORKERNAME)));
         imgMark.setImage_imgMark(imgService.findByUrl(jsonObject.getString(stdName.IMGURL)));
-        imgMark.setImgMark_task((TaskEntity) taskService.findByID(jsonObject.getInt(stdName.TASKID)));
         imgMark.setNotePolygon(jsonObject.get(stdName.NOTEPOLYGON).toString());
         imgMark.setNoteRectangle(jsonObject.get(stdName.NOTERECTANGLE).toString());
         imgMark.setNoteTotal(jsonObject.get(stdName.NOTETOTAL).toString());
-        TaskEntity taskEntity = imgMark.getImgMark_task();
         UserEntity userEntity = imgMark.getWorker();
         ImageEntity imageEntity = imgMark.getImage_imgMark();
-        List<WorkersForTheTaskEntity> workersForTheTaskEntities = taskEntity.getWorkersForTheTaskEntityList();
-        for (WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities) {
-            if (workersForTheTaskEntity.getWorker().getUsername().equals(userEntity.getUsername())) {
-                workersForTheTaskEntity.setMarkedNum(workersForTheTaskEntity.getMarkedNum() + 1);
-                if (!jsonObject.getBoolean(stdName.ISMODIFYED)) {
-                    workersForTheTaskEntity.setCompletedNum(workersForTheTaskEntity.getCompletedNum() + 1);
-                } else {
-                    ImgMarkEntity imgMarkEntity = imgMarkService.findByImage_imgMarkAndImgMark_taskAndWorker(imageEntity, taskEntity, userEntity);
-                    imgMarkService.delete(imgMarkEntity);
-
-                }
-                break;
-            }
-        }
+        imageEntity.getImgMarkEntityList().add(imgMark);
+        userEntity.setPoints(userEntity.getPoints() + 1);
+        imageEntity.setMarked(true);
         JSONObject ret = new JSONObject();
-        ret.put(stdName.MES, imgMarkService.add(imgMark));
+        ret.put(stdName.MES, userService.modify(userEntity) && imgService.modify(imageEntity) && imgMarkService.add(imgMark));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -85,38 +72,20 @@ public class MarkController {
     @RequestMapping(value = "/checkImage", method = RequestMethod.POST)
     public void checkMark(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        TaskEntity taskEntity = (TaskEntity) taskService.findByID(jsonObject.getInt(stdName.TASKID));
         String imgName = jsonObject.getString(stdName.IMGNAME);
         ImageEntity imageEntity = imgService.findByName(imgName.substring(0, imgName.lastIndexOf('.')));
-        JSONArray userArray = jsonObject.getJSONArray(stdName.USERS);
+        List<ImgMarkEntity> imgMarkEntities = imgMarkService.findByImage(imageEntity);
         JSONArray marksArray = new JSONArray();
-        if(userArray.toList().size() == 0){
-            List<WorkersForTheTaskEntity> workersForTheTaskEntities = taskEntity.getWorkersForTheTaskEntityList();
-            for(WorkersForTheTaskEntity workersForTheTaskEntity : workersForTheTaskEntities){
-                JSONObject jsonObject1 = new JSONObject();
-                jsonObject1.put(stdName.USERNAME,workersForTheTaskEntity.getWorker().getUsername());
-                userArray.put(jsonObject1);
-            }
-        }
-        for (Object o : userArray) {
-            JSONObject obj = (JSONObject) o;
-            String username = obj.getString(stdName.USERNAME);
-            UserEntity userEntity = userService.findByUsername(username);
-            ImgMarkEntity imgMarkEntity = imgMarkService.findByImage_imgMarkAndImgMark_taskAndWorker(imageEntity, taskEntity, userEntity);
-            if (imgMarkEntity != null) {
-                JSONObject mark = new JSONObject();
-                mark.put(stdName.IMGURL, imageEntity.getUrl());
-                mark.put(stdName.WORKERNAME, userEntity.getUsername());
-                mark.put(stdName.SPONSORNAME, taskEntity.getSponsor());
-                mark.put(stdName.TASKID, taskEntity.getId());
-                JSONArray jsonArray = new JSONArray(imgMarkEntity.getNotePolygon());
-                mark.put(stdName.NOTEPOLYGON, jsonArray);
-                jsonArray = new JSONArray(imgMarkEntity.getNoteRectangle());
-                mark.put(stdName.NOTERECTANGLE, jsonArray);
-                jsonArray = new JSONArray(imgMarkEntity.getNoteTotal());
-                mark.put(stdName.NOTETOTAL, jsonArray);
-                marksArray.put(mark);
-            }
+        for (ImgMarkEntity imgMarkEntity : imgMarkEntities) {
+            JSONObject mark = new JSONObject();
+            mark.put(stdName.IMGURL, imageEntity.getUrl());
+            JSONArray jsonArray = new JSONArray(imgMarkEntity.getNotePolygon());
+            mark.put(stdName.NOTEPOLYGON, jsonArray);
+            jsonArray = new JSONArray(imgMarkEntity.getNoteRectangle());
+            mark.put(stdName.NOTERECTANGLE, jsonArray);
+            jsonArray = new JSONArray(imgMarkEntity.getNoteTotal());
+            mark.put(stdName.NOTETOTAL, jsonArray);
+            marksArray.put(mark);
         }
         JSONObject ret = new JSONObject();
         ret.put(stdName.MARKS, marksArray);
@@ -137,7 +106,7 @@ public class MarkController {
         JSONArray marksArray = new JSONArray();
 
 
-        List<ImgMarkEntity> imgMarkEntities = imgMarkService.findByImageAndTask(imageEntity, taskEntity);
+        List<ImgMarkEntity> imgMarkEntities = imgMarkService.findByImage(imageEntity);
         List<RecNodeList> recNodeLists = NaiveBayesianClassification.integration(imgMarkEntities);
         JSONObject mark = new JSONObject();
         mark.put(stdName.IMGURL, imageEntity.getUrl());
@@ -151,8 +120,8 @@ public class MarkController {
             JSONObject recNodeObj = new JSONObject();
             Segmentation segmentation = new Segmentation();
             List<WorkerAnswer> workerAnswers = segmentation.segment(recNodeList);
-            if(workerAnswers != null && workerAnswers.size() != 0){
-                recNodeObj.put(stdName.MARK,segmentation.getStrmax1());
+            if (workerAnswers != null && workerAnswers.size() != 0) {
+                recNodeObj.put(stdName.MARK, segmentation.getStrmax1());
             }
             else
                 recNodeObj.put(stdName.MARK, stdName.NULL);
@@ -173,6 +142,74 @@ public class MarkController {
 
         JSONObject ret = new JSONObject();
         ret.put(stdName.MARKS, marksArray);
+        JsonHelper.jsonToResponse(response, ret);
+    }
+
+    /**
+     * @author:pis
+     * @description: 工人测试标注
+     * @date: 15:22 2018/6/4
+     */
+    @RequestMapping(value = "/markTest", method = RequestMethod.GET)
+    public void markTest(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String[]> map = request.getParameterMap();
+        TagEntity tagEntity = tagService.findByTag(map.get(stdName.TAG)[0]);
+        JSONArray imgArray = new JSONArray();
+        List<ImageEntity> imageEntities = tagEntity.getTestImageList();
+        for (ImageEntity imageEntity : imageEntities) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(stdName.IMGURL, imageEntity.getUrl());
+            jsonObject.put(stdName.DESCRIPTION, imageEntity.getImg_task().getDescription());
+            imgArray.put(jsonObject);
+        }
+        JSONObject ret = new JSONObject();
+        ret.put(stdName.IMGS, imgArray);
+        JsonHelper.jsonToResponse(response, ret);
+    }
+
+    /**
+     * @author:pis
+     * @description: 工人测试
+     * @date: 12:14 2018/6/5
+     */
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public void test(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String[]> map = request.getParameterMap();
+        UserEntity userEntity = userService.findByUsername(map.get(stdName.USERNAME)[0]);
+        TagEntity tagEntity = tagService.findByTag(map.get(stdName.TAG)[0]);
+        JSONObject ret = new JSONObject();
+        boolean b = tagService.markIntegration(tagEntity);
+        if (!b || userEntity.getWorkerMatrixEntities().get(tagEntity.getId() - 1).getCorrect() < 0.7) {
+            ret.put(stdName.MES, false);
+        } else {
+            ret.put(stdName.MES, true);
+        }
+        JsonHelper.jsonToResponse(response, ret);
+    }
+
+    /**
+     * @author:pis
+     * @description: 工人得到一张图
+     * @date: 14:22 2018/6/5
+     */
+    @RequestMapping(value = "/markOne", method = RequestMethod.GET)
+    public void markOne(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String[]> map = request.getParameterMap();
+        TagEntity tagEntity = tagService.findByTag(map.get(stdName.TAG)[0]);
+        List<TaskEntity> taskEntities = tagEntity.getTaskEntityList();
+        JSONObject ret = new JSONObject();
+        for (TaskEntity taskEntity : taskEntities) {
+            List<ImageEntity> imageEntities = taskEntity.getImageEntityList();
+            for (ImageEntity imageEntity : imageEntities) {
+                if (!imageEntity.getMarked()) {
+                    ret.put(stdName.IMGURL, imageEntity.getUrl());
+                    ret.put(stdName.DESCRIPTION, taskEntity.getDescription());
+                    JsonHelper.jsonToResponse(response, ret);
+                    return;
+                }
+            }
+        }
+        ret.put(stdName.MES, stdName.NULL);
         JsonHelper.jsonToResponse(response, ret);
     }
 

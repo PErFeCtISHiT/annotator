@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
  * @date: create in 18:08 2018/5/28
  */
 @Service
-public class WorkerMatrixServiceImpl extends PubServiceImpl implements WorkerMatrixService{
-    private final WorkerMatrixRepository workerMatrixRepository;
+public class WorkerMatrixServiceImpl extends PubServiceImpl implements WorkerMatrixService {
+    private WorkerMatrixRepository workerMatrixRepository;
 
     @Autowired
     public WorkerMatrixServiceImpl(WorkerMatrixRepository workerMatrixRepository) {

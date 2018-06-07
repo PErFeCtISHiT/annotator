@@ -19,8 +19,18 @@ public class WorkerMatrixEntity implements Serializable {
     private Double C11;
     private UserEntity user_matrix;
     private Integer id;
+    @Transient
+    private Double correct;
 
-    public WorkerMatrixEntity(){
+    public Double getCorrect() {
+        return (C00 + C01) / (C00 + C01 + C10 + C11);
+    }
+
+    public void setCorrect(Double correct) {
+        this.correct = correct;
+    }
+
+    public WorkerMatrixEntity() {
 
     }
 

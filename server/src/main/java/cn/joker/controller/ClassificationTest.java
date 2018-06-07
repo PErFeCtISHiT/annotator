@@ -16,23 +16,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/test")
-public class Classification {
+public class ClassificationTest {
     @Resource
     private TaskService taskService;
 
     @RequestMapping(value = "/1", method = RequestMethod.GET)
     public void get(HttpServletResponse response) {
         TaskEntity taskEntity = (TaskEntity) taskService.findByID(16);
-        List<ImgMarkEntity> imgMarkEntities = taskEntity.getImgMarkEntityList();
+        List<ImgMarkEntity> imgMarkEntities = new ArrayList<>();
         List<RecNode> recNodes = NaiveBayesianClassification.integration(imgMarkEntities).get(0).getRecNodes();
         Logger logger = Logger.getLogger(TaskServiceImpl.class);
         logger.info("clause size:" + NaiveBayesianClassification.integration(imgMarkEntities).size());
         logger.info("clause1 size:" + recNodes.size());
-        for(RecNode recNode : recNodes){
+        for (RecNode recNode : recNodes) {
             logger.info(recNode.getTop());
             logger.info(recNode.getLeft());
             logger.info(recNode.getHeight());

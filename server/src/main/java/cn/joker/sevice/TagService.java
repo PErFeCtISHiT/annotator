@@ -2,6 +2,8 @@ package cn.joker.sevice;
 
 import cn.joker.entity.TagEntity;
 
+import java.util.List;
+
 /**
  * @author: pis
  * @description: good good study
@@ -9,4 +11,10 @@ import cn.joker.entity.TagEntity;
  */
 public interface TagService extends PubService {
     TagEntity findByTag(String tag);
+
+    boolean refreshTest(TagEntity tagEntity);
+
+    boolean markIntegration(TagEntity tagEntity);
+
+    List<TagEntity> findAll();
 }
