@@ -2,6 +2,19 @@
 
   let picsArea = 'pics';
 
+  function getOffset(obj)   //获取任意元素的offsetLeft/offsetTop值
+  {
+    let offsetTop = 0;
+    let offsetLeft = 0;
+    while(obj!==window.document.body&&obj!==null)
+    {
+      offsetLeft+=obj.offsetLeft;
+      offsetTop+=obj.offsetTop;
+      obj=obj.offsetParent;
+    }
+    return {offsetTop,offsetLeft};
+  }
+
   let getAbsolute = function (reference, target) {
     //因为我们会将目标元素的边框纳入递归公式中，这里先减去对应的值
     let result = {

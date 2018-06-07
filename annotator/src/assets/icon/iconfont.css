@@ -9,7 +9,7 @@
 
 .fontFamily {
   font-family:"fontFamily" !important;
-  font-size:16px;
+  font-size:12px;
   font-style:normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -18,7 +18,7 @@
 [class^="el-icon-whisky"], [class*=" el-icon-whisky"] {
   font-family:"fontFamily" !important;
   /* 以下内容参照第三方图标库本身的规则 */
-  font-size: 18px;
+  font-size: 12px;
   font-style:normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

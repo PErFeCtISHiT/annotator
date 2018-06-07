@@ -8,7 +8,6 @@
 <script>
   import incomingMain from './components/incomingMain.vue';
   import homePage from './components/homePage.vue';
-  import './assets/icon/iconfont.css'
 
   export default {
     created(){
