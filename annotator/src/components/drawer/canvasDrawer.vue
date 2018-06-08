@@ -141,7 +141,7 @@
               </template>
 
               <el-row type="flex" justify="center" align="middle">
-                <el-radio-group v-model="drawingType" size="small">
+                <el-radio-group v-model="drawingType" size="small" @change="handleDrawingTypeChange">
                   <el-tooltip class="item" effect="dark" content="进行矩形标注" placement="bottom-start">
                     <el-radio-button label="rect">
                       <slot><i class="el-icon-whisky-rect"></i></slot>
@@ -174,7 +174,8 @@
                 </el-checkbox>
 
                 <el-checkbox-group v-model="checkedShowModes" @change="handleCheckedModesChange">
-                  <el-checkbox v-for="showMode in showModes" :label="showMode" :key="showMode">
+                  <el-checkbox v-for="showMode in showModes" :label="showMode" :key="showMode"
+                               @change="checked=>handleSingleChange(checked,showMode)">
                     {{getModeName(showMode)}}
                   </el-checkbox>
                 </el-checkbox-group>
@@ -234,10 +235,10 @@
             :style="`background-color:${getHoverColor(getCanvasTarget().getLayer(key).data.strokeColor)};${borderMsg}`"
             v-for="(value,key) in marks"
             :key="key"
-            @mousedown.native="layerMouseDownFunc(getCanvasTarget().getLayer(key))"
+            @mousedown.native="layerMouseDownFunc(getCanvasTarget().getLayer(key),true)"
             @mouseup.native="labelUp(getCanvasTarget().getLayer(key))"
-            @mouseover.native="layerMouseOverFunc(getCanvasTarget().getLayer(key))"
-            @mouseout.native="layerMouseOutFunc(getCanvasTarget().getLayer(key))"
+            @mouseover.native="layerMouseOverFunc(getCanvasTarget().getLayer(key),true)"
+            @mouseout.native="layerMouseOutFunc(getCanvasTarget().getLayer(key),true)"
             style="margin: 5px 5px 5px 5px; cursor: pointer"
             shadow="hover">
             <!--要加上.native保证拿到，否则拿不到-->
@@ -252,8 +253,22 @@
 <script>
   import ElRow from "element-ui/packages/row/src/row";
   import '../../assets/icon/iconfont.css'      //在要用的页面引入icon
-  const showOptions = ['rect', 'poly'];
-  import {getOffset, getAbsolute, getIDByTime, getRandomIntInclusive} from '../functions/referFunctions'
+  const rectMode = 'rect';
+  const polyMode = 'poly';
+  const moveMode = 'move';
+  const rectLayer = 'rectangle';
+  const polyLayer = 'line';
+  const showOptions = [rectMode, polyMode];
+  const closeDelta = 14;
+  import {
+    getOffset,
+    getAbsolute,
+    getIDByTime,
+    getRandomIntInclusive,
+    testIfCloseEnough,
+    getPolygonAreaCenter,
+    getMinAndMaxXY
+  } from '../functions/referFunctions'
 
   class NoteRectangle {
     constructor(author, left, top, width, height, mark, id, strokeColor, strokeWidth) {
@@ -266,6 +281,24 @@
       this.id = id;
       this.strokeColor = strokeColor;
       this.strokeWidth = strokeWidth;
+    }
+  }
+
+  class NotePolygon {
+    constructor(author, points, mark, id, strokeColor, strokeWidth) {
+      this.author = author;
+      this.points = points;
+      this.mark = mark;
+      this.id = id;
+      this.strokeColor = strokeColor;
+      this.strokeWidth = strokeWidth;
+    }
+  }
+
+  class Point {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
     }
   }
 
@@ -316,7 +349,7 @@
         currentLayer: null,
 
         activeMode: 'drawing',
-        drawingType: 'rect',
+        drawingType: rectMode,
 
         predefineColors: [
           'rgba(255, 69, 0, 1)',
@@ -331,9 +364,9 @@
           'rgba(120, 40, 94, 0.5)',
         ],
 
-        isIndeterminate: true,             //给多选器用的
-        checkAll: false,
-        checkedShowModes: ['rect', 'poly'],
+        isIndeterminate: false,             //给多选器用的
+        checkAll: true,
+        checkedShowModes: [rectMode, polyMode],
         showModes: showOptions,
         totalDescription: '',
 
@@ -349,6 +382,13 @@
         markInputMsg: '',
         lastX: 0,
         lastY: 0,
+
+        firstPoint: true,
+        secondPoint: false,
+
+        polyObj: {},
+
+        points: [],
       }
     },
 
@@ -360,6 +400,93 @@
 
     methods: {
 
+      poly_handleMouseEvent(e) {
+        if (this.firstPoint && !this.secondPoint) {
+          // console.log('first point');
+          this.initPoly();
+          this.setCurrentLayerNameByTime();
+          this.polyObj.name = this.currentLayerName;
+
+          this.points.push(new Point(this.getLocXInCanvas(e), this.getLocYInCanvas(e)));
+          this.points.push(new Point(this.getLocXInCanvas(e), this.getLocYInCanvas(e)));
+          //重复两次，两点才有办法画线
+
+          // draw a dot
+          this.drawLines();
+
+          this.firstPoint = false;
+          this.secondPoint = true;
+        } else if (!this.firstPoint && this.secondPoint) {
+          // console.log('second point');
+
+          this.points[1] = new Point(this.getLocXInCanvas(e), this.getLocYInCanvas(e));
+          this.drawLines();
+          this.secondPoint = false;
+        } else {
+          if (testIfCloseEnough(this.getLocXInCanvas(e), this.points[0].x, closeDelta) && testIfCloseEnough(this.getLocYInCanvas(e), this.points[0].y, closeDelta) && (e.type === 'mouseup' || !e.type)) {
+            //(e.type==='mouseup'||!e.type)表示鼠标抬起或者这是一个手机上的触摸事件
+            // console.log('close_enough,last one');
+            this.polyObj['closed'] = true;
+
+            this.polyObj['mouseover'] = this.layerMouseOverFunc;
+            this.polyObj['mouseout'] = this.layerMouseOutFunc;
+            this.polyObj['mousedown'] = this.layerMouseDownFunc;
+            this.polyObj['mouseup'] = this.layerMouseUpFunc;
+
+
+            let tempPoints = [];
+            for (let i = 0; i < this.points.length; i++) {
+              tempPoints.push(new Point(this.points[i].x * this.globalRate, this.points[i].y * this.globalRate));
+            }
+
+            //把note注入图层的data中
+            this.polyObj['data'] = new NotePolygon(this.currentWorkerName, tempPoints, '', this.currentLayerName, this.strokeNormalColor, this.strokeWidth);
+
+            this.drawLines();
+
+            this.getCanvasTarget().getLayer(this.currentLayerName).type = polyLayer;
+
+            this.lastX = e.eventX;
+            this.lastY = e.eventY;
+
+            this.handleAfterDrawingOneNoteFinished();
+            this.initPoly();
+          } else {
+            //这里是中间状态
+            // console.log('meanWhile');
+            this.points.push(new Point(this.getLocXInCanvas(e), this.getLocYInCanvas(e)));
+            //redraw the lines
+            this.drawLines();
+          }
+        }
+      },
+
+      initPoly() {
+        this.firstPoint = true;
+        this.secondPoint = false;
+
+        this.points = [];
+
+        this.polyObj = {
+          strokeStyle: this.strokeNormalColor,
+          strokeWidth: this.getActualStrokeWidth(),
+          rounded: true,
+          layer: true,
+          name: '',
+          type: 'line'
+        };
+      },
+
+      drawLines() {
+        let jqTemp = this.getCanvasTarget();
+        jqTemp.removeLayer(this.currentLayerName);
+        for (let p = 0; p < this.points.length; p += 1) {
+          this.polyObj['x' + (p + 1)] = this.points[p].x;
+          this.polyObj['y' + (p + 1)] = this.points[p].y;
+        }
+        jqTemp.drawLine(this.polyObj);
+      },
+
       doFocus() {
         if (this.$refs[this.inputRef]) { //惰性渲染一开始可能没有这个元素
           this.$refs[this.inputRef].handleFocus(); //似乎没有用。。。
@@ -368,16 +495,8 @@
       },
 
       labelUp(layer) {
-        if (this.activeMode === 'drawing') {
-          this.$message({
-            message: '请先关闭绘制模式，或切换到其他模式，再做修改',
-            type: 'warning',
-            duration: 1500,
-          });
-        } else {
-          this.setCenterPosition(layer);
-          this.layerMouseUpFunc(layer);
-        }
+        this.setCenterPosition(layer);
+        this.layerMouseUpFunc(layer, true);
       },
 
       setCenterPosition(layer) {
@@ -420,10 +539,10 @@
         this.setCurrentLayerUnlocked();
         if (this.activeMode === 'drawing' && !this.isMoving() && this[this.drawingType + 'DownHandler']) {
           this.isDown = true;
-          if (this.drawingType === 'rect') {
+          if (this.drawingType === rectMode) {
             this.rectDownHandler(this.getWrappedEvent(e));
           }
-          if (this.drawingType === 'poly') {
+          if (this.drawingType === polyMode) {
             this.polyDownHandler(this.getWrappedEvent(e));
           }
         }
@@ -432,10 +551,10 @@
       handleCanvasUpDistribute(e) {
         // console.log('callUp');
         if (this.activeMode === 'drawing' && !this.isMoving() && this[this.drawingType + 'UpHandler']) {
-          if (this.drawingType === 'rect') {
+          if (this.drawingType === rectMode) {
             this.rectUpHandler(this.getWrappedEvent(e));
           }
-          if (this.drawingType === 'poly') {
+          if (this.drawingType === polyMode) {
             this.polyUpHandler(this.getWrappedEvent(e));
           }
           this.isDown = false;
@@ -449,17 +568,17 @@
           if (this.isNearlyOutOfBorder(event)) {
             this.handleCanvasUpDistribute(event);
           } else {
-            if (this.drawingType === 'rect') {
+            if (this.drawingType === rectMode) {
               this.rectMoveHandler(this.getWrappedEvent(e));
             }
-            if (this.drawingType === 'poly') {
+            if (this.drawingType === polyMode) {
               this.polyMoveHandler(this.getWrappedEvent(e));
             }
           }
         }
       },
 
-      handleAfterDrawingFinished() {
+      handleAfterDrawingOneNoteFinished() {
         this.addOrReviseMark(this.currentLayerName);
         if (this.strokeNormalColorAutoChange) {
           this.changeStrokeColor();
@@ -482,7 +601,7 @@
 
         let that = this;
         canvas.addLayer({
-          type: 'rectangle',
+          type: rectLayer,
           strokeStyle: that.strokeNormalColor,
           strokeWidth: that.getActualStrokeWidth(),
           name: that.currentLayerName,
@@ -508,7 +627,7 @@
 
         canvas.removeLayer(that.currentLayerName);
         canvas.addLayer({
-          type: 'rectangle',
+          type: rectLayer,
           strokeStyle: that.strokeNormalColor,
           strokeWidth: that.getActualStrokeWidth(),
           name: that.currentLayerName,
@@ -531,40 +650,46 @@
         let width = x - this.currentRectX;
         let height = y - this.currentRectY;
 
-        let dataObj = new NoteRectangle(this.currentWorkerName, this.currentRectX * this.globalRate,
-          this.currentRectY * this.globalRate, width * this.globalRate, height * this.globalRate, '',
-          this.currentLayerName, this.strokeNormalColor, this.strokeWidth);
+        canvas.removeLayer(this.currentLayerName);
 
-        let that = this;
-        canvas.removeLayer(that.currentLayerName);
-        canvas.addLayer({
-          type: 'rectangle',
-          strokeStyle: that.strokeNormalColor,
-          strokeWidth: that.getActualStrokeWidth(),
-          name: that.currentLayerName,
-          fromCenter: false,
-          x: that.currentRectX, y: that.currentRectY,
-          width: width,
-          height: height,
-          data: dataObj,
-          mouseover: that.layerMouseOverFunc,
-          mouseout: that.layerMouseOutFunc,
-          mousedown: that.layerMouseDownFunc,
-          mouseup: that.layerMouseUpFunc,
-        });
-        this.lastX = x;
-        this.lastY = y;
+        if (width >= 5 && height >= 5) {
+          let dataObj = new NoteRectangle(this.currentWorkerName, this.currentRectX * this.globalRate,
+            this.currentRectY * this.globalRate, width * this.globalRate, height * this.globalRate, '',
+            this.currentLayerName, this.strokeNormalColor, this.strokeWidth);
 
-        this.handleAfterDrawingFinished();
+          let that = this;
+          canvas.addLayer({
+            type: rectLayer,
+            strokeStyle: that.strokeNormalColor,
+            strokeWidth: that.getActualStrokeWidth(),
+            name: that.currentLayerName,
+            fromCenter: false,
+            x: that.currentRectX, y: that.currentRectY,
+            width: width,
+            height: height,
+            data: dataObj,
+            mouseover: that.layerMouseOverFunc,
+            mouseout: that.layerMouseOutFunc,
+            mousedown: that.layerMouseDownFunc,
+            mouseup: that.layerMouseUpFunc,
+          });
+          this.lastX = x;
+          this.lastY = y;
+
+          this.handleAfterDrawingOneNoteFinished();
+        }
       },
 
       polyDownHandler(e) {
+
       },
 
       polyMoveHandler(e) {
+        this.poly_handleMouseEvent(e);
       },
 
       polyUpHandler(e) {
+        this.poly_handleMouseEvent(e);
       },
 
       setCurrentLayerNameByTime() {
@@ -678,8 +803,8 @@
         return arr.join(',');
       },
 
-      layerMouseOverFunc(layer) {
-        if (this.activeMode !== 'drawing' && !(this.layerIsLocked && layer.name === this.currentLayerName)) {
+      layerMouseOverFunc(layer, signal = false) {
+        if ((this.activeMode !== 'drawing' || signal || this.isMoving()) && !(this.layerIsLocked && layer.name === this.currentLayerName)) {
           this.handleLayerMouseOver(layer);
           let centerMsg = this.getLayerCenter(layer);
           this.getCanvasTarget().drawText({
@@ -696,11 +821,11 @@
 
       getLayerCenter(layer) {
         let result = {x: 0, y: 0};
-        if (layer.type === 'rectangle') {
+        if (layer.type === rectLayer) {
           result.x = layer.x + layer.width / 2;
           result.y = layer.y + layer.height / 2;
         } else {
-          //TODO 处理矩形几何中心的获取
+          result = getPolygonAreaCenter(layer.data.points);
         }
         return result;
       },
@@ -711,8 +836,8 @@
         }, 100);
       },
 
-      layerMouseOutFunc(layer) {
-        if (this.activeMode !== 'drawing') {
+      layerMouseOutFunc(layer, signal = false) {
+        if (this.activeMode !== 'drawing' || signal || this.isMoving()) {
           this.getCanvasTarget().animateLayer(layer, {
             fillStyle: 'transparent',
             scale: 1
@@ -721,8 +846,8 @@
         }
       },
 
-      layerMouseDownFunc(layer) {
-        if (this.activeMode !== 'drawing') {
+      layerMouseDownFunc(layer, signal = false) {
+        if (this.activeMode !== 'drawing' || signal) {
           this.setCurrentLayerUnlocked();
           this.getCanvasTarget().animateLayer(layer, {
             fillStyle: this.getHoverColor(this.getRevertColor(layer.data.strokeColor)),
@@ -731,8 +856,8 @@
         }
       },
 
-      layerMouseUpFunc(layer) {
-        if (this.activeMode !== 'drawing') {
+      layerMouseUpFunc(layer, signal = false) {
+        if (this.activeMode !== 'drawing' || signal) {
           this.getCanvasTarget().animateLayer(layer, {
             fillStyle: this.getHoverColor(layer.data.strokeColor),
             scale: 1
@@ -743,6 +868,36 @@
             this.openInputDialog(layer);
           }
         }
+
+        if (this.isMoving()) {
+          this.updateDataPosition(layer);
+        }
+      },
+
+      updateDataPosition(layer) {
+        if (layer.type === rectLayer) {
+          let target = layer.data;
+          target.left = layer.x * this.globalRate;
+          target.top = layer.y * this.globalRate;
+          target.width = layer.width * this.globalRate;
+          target.height = layer.height * this.globalRate;
+        }
+        if (layer.type === polyLayer) {
+          layer.data.points = this.getPointsFromLayer(layer);
+        }
+      },
+
+      getPointsFromLayer(layer) {
+        let deltaX = layer.x;
+        let deltaY = layer.y;
+        let length = layer.data.points.length;
+        let tempPoints = [];
+        for (let i = 0; i < length; i++) {
+          let x = layer['x' + (i + 1)] + deltaX;
+          let y = layer['y' + (i + 1)] + deltaY;
+          tempPoints.push(new Point(x, y));
+        }
+        return tempPoints;
       },
 
       setCurrentLayerLocked() {
@@ -899,7 +1054,95 @@
         });
         this.dialogVisible = false;
         this.currentLayerName = '';
+      },
+
+      hideLayer(type) {
+        let canvasJQ = this.getCanvasTarget();
+        canvasJQ.getLayers(function (layer) {
+          if (layer.type === type) {
+            layer.visible = false;
+          }
+          return false; // do not generate the array
+        });
+        canvasJQ.drawLayers();
+      },
+
+      showLayer(type) {
+        let canvasJQ = this.getCanvasTarget();
+        canvasJQ.getLayers(function (layer) {
+          if (layer.type === type) {
+            layer.visible = true;
+          }
+          return false; // do not generate the array
+        });
+        canvasJQ.drawLayers();
+      },
+
+      handleSingleChange(value, mode) {
+        if (mode === rectMode) {
+          value ? this.showLayer(rectLayer) : this.hideLayer(rectLayer);
+        }
+        if (mode === polyMode) {
+          value ? this.showLayer(polyLayer) : this.hideLayer(polyLayer);
+        }
+      },
+
+      makeLayersMovable() {
+        let that = this;
+        let obj = {
+          bringToFront: true,
+          draggable: true,
+          drag: function (layer) {
+            let xLJudgement = false;
+            let xRJudgement = false;
+            let yTJudgement = false;
+            let yBJudgement = false;
+            if (layer.type === rectLayer) {
+              xLJudgement = layer.x <= 0;
+              xRJudgement = layer.x + layer.width >= that.canvasWidth;
+              yTJudgement = layer.y <= 0;
+              yBJudgement = layer.y + layer.height >= that.canvasHeight;
+            }
+            if (layer.type === polyLayer) {
+              let points = that.getPointsFromLayer(layer);
+              let saver = getMinAndMaxXY(points);
+              xLJudgement = saver.xMin <= 0;
+              xRJudgement = saver.xMax >= that.canvasWidth;
+              yTJudgement = saver.yMin <= 0;
+              yBJudgement = saver.yMax >= that.canvasHeight;
+            }
+            if (xLJudgement) {
+              layer.x += 6;
+              layer.restrictDragToAxis = 'y'
+            }
+            if (xRJudgement) {
+              layer.x -= 6;
+              layer.restrictDragToAxis = 'y'
+            }
+            if (yTJudgement) {
+              layer.y += 6;
+              layer.restrictDragToAxis = 'x'
+            }
+            if (yBJudgement) {
+              layer.y -= 6;
+              layer.restrictDragToAxis = 'x'
+            }
+          },
+          dragstop: function (layer) {
+            layer.restrictDragToAxis = null;
+          },
+        };
+        this.getCanvasTarget().setLayers(obj).drawLayers();
+      },
+
+      makeLayersUnmovable() {
+        this.getCanvasTarget().setLayers({draggable: false}).drawLayers();
+      },
+
+      handleDrawingTypeChange(val) {
+        val === moveMode ? (this.setCurrentLayerUnlocked() && false || this.makeLayersMovable()) : this.makeLayersUnmovable();
       }
+
     }
   }
 </script>

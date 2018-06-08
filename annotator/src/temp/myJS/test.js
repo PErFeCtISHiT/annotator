@@ -1190,9 +1190,9 @@
           // offsetLeft = document.body.parentElement.scrollLeft;
           setBtnDisabled(true);
 
-          points.push(new Poly_Point(getLocX(e, canvasLeft) - offsetLeft, getLocY(e, canvasTop) - offSetTop));
+          points.push(new Poly_Point(getLocX(e, canvasLeft), getLocY(e, canvasTop)));
           // console.log('x:'+getLocX(e, canvasLeft)+'y:'+getLocY(e, canvasTop));
-          points.push(new Poly_Point(getLocX(e, canvasLeft) - offsetLeft, getLocY(e, canvasTop) - offSetTop));
+          points.push(new Poly_Point(getLocX(e, canvasLeft), getLocY(e, canvasTop)));
 
           id = getIDByTime();
           refreshLayerMsg(id);
@@ -1204,13 +1204,13 @@
           secondPoint = true;
         } else if (!firstPoint && secondPoint) {
           obj.strokeWidth = penWidth;
-          points[1] = new Poly_Point(getLocX(e, canvasLeft) - offsetLeft, getLocY(e, canvasTop) - offSetTop);
+          points[1] = new Poly_Point(getLocX(e, canvasLeft), getLocY(e, canvasTop));
           // console.log('x:'+getLocX(e, canvasLeft)+'y:'+getLocY(e, canvasTop));
           // draw the line
           drawLines();
           secondPoint = false;
         } else {
-          if (testIfCloseEnough(getLocX(e, canvasLeft) - offsetLeft, points[0].x, 14) && testIfCloseEnough(getLocY(e, canvasTop) - offSetTop, points[0].y, 14) && !inMoving) {
+          if (testIfCloseEnough(getLocX(e, canvasLeft), points[0].x, 14) && testIfCloseEnough(getLocY(e, canvasTop), points[0].y, 14) && !inMoving) {
             // console.log('x:'+getLocX(e, canvasLeft)+'y:'+getLocY(e, canvasTop));
             //close the shape
             obj['closed'] = true;
@@ -1258,7 +1258,7 @@
             setJQObjDisabled(btnPoly, false);
             reInit();
           } else {
-            points.push(new Poly_Point(getLocX(e, canvasLeft) - offsetLeft, getLocY(e, canvasTop) - offSetTop));
+            points.push(new Poly_Point(getLocX(e, canvasLeft), getLocY(e, canvasTop)));
             //redraw the lines
             drawLines();
           }
