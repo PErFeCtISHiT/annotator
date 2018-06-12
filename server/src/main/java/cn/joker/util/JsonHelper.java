@@ -1,6 +1,6 @@
 package cn.joker.util;
 
-import cn.joker.namespace.stdName;
+import cn.joker.namespace.StdName;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.json.JSONObject;
@@ -24,7 +24,7 @@ public class JsonHelper {
 
 
     private JsonHelper() {
-        throw new IllegalStateException(stdName.UTILCLASS);
+        throw new IllegalStateException(StdName.UTILCLASS);
     }
 
     /**

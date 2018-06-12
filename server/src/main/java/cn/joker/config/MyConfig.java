@@ -1,6 +1,5 @@
 package cn.joker.config;
 
-import cn.joker.entity.TagEntity;
 import cn.joker.sevice.TagService;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -16,7 +15,6 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
@@ -46,7 +44,6 @@ public class MyConfig extends WebMvcConfigurerAdapter implements AsyncConfigurer
         //拦截器.
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         // 配置不会被拦截的链接 顺序判断
-        //filterChainDefinitionMap.put("/","anon");
         filterChainDefinitionMap.put("/user/logout", "logout");
         //<!-- 过滤链定义，从上向下顺序执行
         //<!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
@@ -161,14 +158,14 @@ public class MyConfig extends WebMvcConfigurerAdapter implements AsyncConfigurer
     /**
      * 自定义异常处理类
      *
-     * @author hry
+     * @author somnus
      */
     class MyAsyncExceptionHandler implements AsyncUncaughtExceptionHandler {
 
         //手动处理捕获的异常
         @Override
         public void handleUncaughtException(Throwable throwable, Method method, Object... obj) {
-            System.out.println("-------------》》》捕获线程异常信息");
+            log.info("-------------》》》捕获线程异常信息");
             log.info("Exception message - " + throwable.getMessage());
             log.info("Method name - " + method.getName());
             for (Object param : obj) {

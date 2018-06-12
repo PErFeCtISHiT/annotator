@@ -5,7 +5,7 @@ package cn.joker.namespace;
  * @description: good good study
  * @date: create in 18:39 2018/5/4
  */
-public class stdName {
+public class StdName {
     public static final String USERNAME = "username";
     public static final String POINTS = "points";
     public static final String WORKERNAME = "workerName";
@@ -13,7 +13,7 @@ public class stdName {
     public static final String ADMINNUM = "adminNum";
     public static final String MES = "mes";
     public static final String NICKNAME = "nickname";
-    public static final String LEVEL = "level";
+    public static final String LEVEL = "lev";
     public static final String NULL = "null";
     public static final String TASKID = "taskID";
     public static final String SPONSORNAME = "sponsorName";
@@ -59,7 +59,7 @@ public class stdName {
     public static final String IMGURLS = "imgURLs";
     public static final String ERROR = "error";
     public static final String ROLELIST = "roleList";
-    public static final String PASSWORD = "passwr";
+    public static final String PASSWR = "passwr";
     public static final String AVERAGETAGNUM = "averageTagNum";
     public static final String TOP = "top";
     public static final String LEFT = "left";
@@ -73,8 +73,12 @@ public class stdName {
     public static final String TESTS = "tests";
     public static final String RATE = "rate";
     public static final String NUM = "num";
+    public static final String UTF = "utf-8";
+    public static final String EMAIL = "email";
+    public static final String REQUESTOR = "requestor";
+    public static final String WORKER = "worker";
 
-    private stdName() {
+    private StdName() {
         throw new IllegalStateException("namespace class");
     }
 

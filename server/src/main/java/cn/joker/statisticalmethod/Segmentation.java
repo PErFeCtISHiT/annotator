@@ -1,29 +1,34 @@
-package cn.joker.statisticalMethod;
+package cn.joker.statisticalmethod;
 
 import cn.joker.vo.RecNode;
 import cn.joker.vo.RecNodeList;
 import cn.joker.vo.WorkerAnswer;
 import org.apdplat.word.WordSegmenter;
 import org.apdplat.word.segmentation.Word;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Segmentation {
     private List<String> words;
     private Map<String, Integer> frequency;
     private String strmax1 = "";
     private String strmax2 = "";
-    private final String DIR = System.getProperty("user.dir") + "/annotator/";
+    private static final String DIR = System.getProperty("user.dir") + "/annotator/";
 
-    public Segmentation(){
+    public Segmentation() {
         words = new ArrayList<>();
         frequency = new HashMap<>();
     }
 
-    public List<WorkerAnswer> segment(RecNodeList recNodeList){
+    public List<WorkerAnswer> segment(RecNodeList recNodeList) {
         List<WorkerAnswer> workerAnswers = new ArrayList<>();
 
         List<RecNode> recNodes = recNodeList.getRecNodes();
@@ -60,10 +65,9 @@ public class Segmentation {
         int countmax1 = 0;
         int countmax2 = 0;
         // 得到词频最高的两个词
-        if(frequency.keySet().size() == 1){
+        if (frequency.keySet().size() == 1) {
             strmax1 = recNodes.get(0).getMark();
-        }
-        else {
+        } else {
             for (String key : frequency.keySet()) {
                 if (frequency.get(key) > countmax1) {
                     strmax2 = strmax1;
@@ -75,9 +79,6 @@ public class Segmentation {
                     countmax2 = frequency.get(key);
                 }
             }
-            //System.out.println("over");
-            //System.out.println(strmax1 + " " + countmax1);
-            //System.out.println(strmax2 + " " + countmax2);
         }
 
         // 判断词频出现最高的词汇有没有出现在原始标注中
@@ -85,11 +86,10 @@ public class Segmentation {
         for (RecNode recNode : recNodes) {
             WorkerAnswer workerAnswer = new WorkerAnswer();
             workerAnswer.setUserEntity(recNode.getWorker());
-            if(recNode.getMark().contains(strmax1)) {
+            if (recNode.getMark().contains(strmax1)) {
                 workerAnswer.setAnswer(true);
                 workerAnswers.add(workerAnswer);
-            }
-            else if(recNode.getMark().contains(strmax2)) {
+            } else if (recNode.getMark().contains(strmax2)) {
                 workerAnswer.setAnswer(false);
                 workerAnswers.add(workerAnswer);
             }
@@ -98,9 +98,9 @@ public class Segmentation {
         return workerAnswers;
     }
 
-    private void countFrequency(){
-        for (String str: words) {
-            if(!frequency.containsKey(str))
+    private void countFrequency() {
+        for (String str : words) {
+            if (!frequency.containsKey(str))
                 frequency.put(str, 1);
             else
                 frequency.put(str, frequency.get(str) + 1);
@@ -108,18 +108,17 @@ public class Segmentation {
     }
 
     private List<String> loadFile() {
+        Logger logger = LoggerFactory.getLogger(Segmentation.class);
         List<String> synDictionary = new ArrayList<>();
         String filename = DIR + "resources/synonym.txt";
-        BufferedReader br;
-        try {
-            br = new BufferedReader(new FileReader(filename));
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 
             String tmp;
             while ((tmp = br.readLine()) != null) {
                 synDictionary.add(tmp);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return synDictionary;
     }

@@ -3,7 +3,7 @@ package cn.joker.controller.statisticcontrollers;
 import cn.joker.entity.BonusHistoryEntity;
 import cn.joker.entity.SysRoleEntity;
 import cn.joker.entity.UserEntity;
-import cn.joker.namespace.stdName;
+import cn.joker.namespace.StdName;
 import cn.joker.sevice.BonusHistoryService;
 import cn.joker.sevice.UserService;
 import cn.joker.util.JsonHelper;
@@ -42,17 +42,17 @@ public class WorkerController {
     @RequestMapping(value = "/checkBonus", method = RequestMethod.GET)
     public void checkBonus(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
-        String username = map.get(stdName.USERNAME)[0];
+        String username = map.get(StdName.USERNAME)[0];
         List<BonusHistoryEntity> bonusHistories = bonusHistoryService.findByName(username);
         JSONObject ret = new JSONObject();
         JSONArray jsonArray = new JSONArray();
         for (BonusHistoryEntity bonusHistory : bonusHistories) {
             JSONObject bonusObj = new JSONObject();
-            bonusObj.put(stdName.TASKID, bonusHistory.getBonusHistory_task().getId());
-            bonusObj.put(stdName.POINTS, bonusHistory.getPoints());
+            bonusObj.put(StdName.TASKID, bonusHistory.getBonusHistory_task().getId());
+            bonusObj.put(StdName.POINTS, bonusHistory.getPoints());
             jsonArray.put(bonusObj);
         }
-        ret.put(stdName.MES, jsonArray);
+        ret.put(StdName.MES, jsonArray);
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -81,14 +81,14 @@ public class WorkerController {
         for (int i = 0; i < newUserInfos.size(); i++) {
             UserEntity userInfo = newUserInfos.get(i);
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(stdName.USERNAME, userInfo.getUsername());
-            jsonObject.put(stdName.NICKNAME, userInfo.getNickname());
-            jsonObject.put(stdName.RANK, i + 1);
-            jsonObject.put(stdName.POINTS, userInfo.getPoints());
+            jsonObject.put(StdName.USERNAME, userInfo.getUsername());
+            jsonObject.put(StdName.NICKNAME, userInfo.getNickname());
+            jsonObject.put(StdName.RANK, i + 1);
+            jsonObject.put(StdName.POINTS, userInfo.getPoints());
             workersArray.put(jsonObject);
         }
         JSONObject ret = new JSONObject();
-        ret.put(stdName.WORKERS, workersArray);
+        ret.put(StdName.WORKERS, workersArray);
         JsonHelper.jsonToResponse(response, ret);
     }
 }

@@ -5,7 +5,7 @@ import cn.joker.entity.ImageEntity;
 import cn.joker.entity.ImgMarkEntity;
 import cn.joker.entity.TagEntity;
 import cn.joker.entity.TaskEntity;
-import cn.joker.namespace.stdName;
+import cn.joker.namespace.StdName;
 import cn.joker.sevice.TagService;
 import cn.joker.sevice.TaskService;
 import org.apache.log4j.Logger;
@@ -39,6 +39,7 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
 
     @Resource
     private TagService tagService;
+
     @Autowired
     public TaskServiceImpl(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
@@ -58,19 +59,19 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
         List<TaskEntity> ret = new ArrayList<>();
         List<TaskEntity> taskEntities = taskRepository.findAll();
         for (TaskEntity taskEntity : taskEntities) {
-            if (taskEntity.getState().equals(status) || status == 0) {
-                if (userRole == 3 && taskEntity.getSponsor().getUsername().equals(userName)) {
-                    if (tag.length() == 0)
-                        ret.add(taskEntity);
-                    else {
-                        List<TagEntity> tagEntities = taskEntity.getTagEntityList();
-                        for (TagEntity tagEntity : tagEntities) {
-                            if (tagEntity.getTag().equals(tag)) {
-                                ret.add(taskEntity);
-                                break;
-                            }
+            if (taskEntity.getState().equals(status) || status == 0
+                    && userRole == 3 && taskEntity.getSponsor().getUsername().equals(userName)) {
+                if (tag.length() == 0)
+                    ret.add(taskEntity);
+                else {
+                    List<TagEntity> tagEntities = taskEntity.getTagEntityList();
+                    for (TagEntity tagEntity : tagEntities) {
+                        if (tagEntity.getTag().equals(tag)) {
+                            ret.add(taskEntity);
+                            break;
                         }
                     }
+
                 }
             }
         }
@@ -103,7 +104,7 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
     public boolean endTask(Integer taskID) {
         TaskEntity taskEntity = (TaskEntity) this.findByID(taskID);
         List<TagEntity> tagEntities = taskEntity.getTagEntityList();
-        for(TagEntity tagEntity : tagEntities){
+        for (TagEntity tagEntity : tagEntities) {
             tagEntity.getTaskEntityList().remove(taskEntity);
             tagService.modify(tagEntity);
         }
@@ -130,10 +131,8 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
 
     @Override
     public ResponseEntity<FileSystemResource> getDataSet(TaskEntity taskEntity) {
-        try {
-            File file = new File(DIR + "data/" + taskEntity.getId().toString());
-            FileWriter fileWriter = new FileWriter(file);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        File file = new File(DIR + "data/" + taskEntity.getId().toString());
+        try (FileWriter fileWriter = new FileWriter(file); BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
             List<ImageEntity> imageEntities = taskEntity.getImageEntityList();
             for (ImageEntity imageEntity : imageEntities) {
                 List<ImgMarkEntity> imgMarkEntities = imageEntity.getImgMarkEntityList();
@@ -158,7 +157,7 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
 
         } catch (IOException e) {
             Logger logger = Logger.getLogger(TaskServiceImpl.class);
-            logger.error(stdName.IOEXCEPTION);
+            logger.error(StdName.IOEXCEPTION);
             return null;
         }
 
