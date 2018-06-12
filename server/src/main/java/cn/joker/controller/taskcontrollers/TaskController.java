@@ -1,7 +1,7 @@
 package cn.joker.controller.taskcontrollers;
 
 import cn.joker.entity.*;
-import cn.joker.namespace.stdName;
+import cn.joker.namespace.StdName;
 import cn.joker.sevice.ReportService;
 import cn.joker.sevice.TagService;
 import cn.joker.sevice.TaskService;
@@ -51,31 +51,31 @@ public class TaskController {
     public void releaseTask(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
         TaskEntity task = new TaskEntity();
-        task.setTaskName(jsonObject.getString(stdName.TASKNAME));
-        task.setDescription(jsonObject.getString(stdName.DESCRIPTION));
-        String endDate = jsonObject.getString(stdName.ENDDATE);
-        String startDate = jsonObject.getString(stdName.STARTDATE);
+        task.setTaskName(jsonObject.getString(StdName.TASKNAME));
+        task.setDescription(jsonObject.getString(StdName.DESCRIPTION));
+        String endDate = jsonObject.getString(StdName.ENDDATE);
+        String startDate = jsonObject.getString(StdName.STARTDATE);
         task.setStartDate(DateHelper.convertStringToDate(startDate));
         task.setEndDate(DateHelper.convertStringToDate(endDate));
-        task.setType(jsonObject.getInt(stdName.TYPE));
-        UserEntity userEntity = userService.findByUsername(jsonObject.getString(stdName.SPONSORNAME));
+        task.setType(jsonObject.getInt(StdName.TYPE));
+        UserEntity userEntity = userService.findByUsername(jsonObject.getString(StdName.SPONSORNAME));
         task.setSponsor(userEntity);
 
 
 
-        JSONArray tagArray = jsonObject.getJSONArray(stdName.TAG);
+        JSONArray tagArray = jsonObject.getJSONArray(StdName.TAG);
         List<TagEntity> tagEntities = new ArrayList<>();
 
         addTag(tagArray, tagEntities);
         task.setTagEntityList(tagEntities);
         task.setImageNum(0);
-        task.setTaskName(jsonObject.getString(stdName.TASKNAME));
-        task.setWorkerLevel(jsonObject.getInt(stdName.WORKERLEVEL));
+        task.setTaskName(jsonObject.getString(StdName.TASKNAME));
+        task.setWorkerLevel(jsonObject.getInt(StdName.WORKERLEVEL));
         task.setState(1);
         JSONObject ret = new JSONObject();
 
-        ret.put(stdName.MES, userService.modify(userEntity));
-        ret.put(stdName.TASKID, taskService.releaseTask(task));
+        ret.put(StdName.MES, userService.modify(userEntity));
+        ret.put(StdName.TASKID, taskService.releaseTask(task));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -89,17 +89,17 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.POST, value = "/modifyTask")
     public void modifyTask(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        TaskEntity task = (TaskEntity) taskService.findByID(jsonObject.getInt(stdName.TASKID));
-        task.setDescription(jsonObject.getString(stdName.DESCRIPTION));
-        task.setEndDate(DateHelper.convertStringToDate(jsonObject.getString(stdName.ENDDATE)));
-        JSONArray tagArray = jsonObject.getJSONArray(stdName.TAG);
+        TaskEntity task = (TaskEntity) taskService.findByID(jsonObject.getInt(StdName.TASKID));
+        task.setDescription(jsonObject.getString(StdName.DESCRIPTION));
+        task.setEndDate(DateHelper.convertStringToDate(jsonObject.getString(StdName.ENDDATE)));
+        JSONArray tagArray = jsonObject.getJSONArray(StdName.TAG);
         List<TagEntity> tagEntities = new ArrayList<>();
 
         addTag(tagArray, tagEntities);
         task.setTagEntityList(tagEntities);
-        task.setTaskName(jsonObject.getString(stdName.TASKNAME));
+        task.setTaskName(jsonObject.getString(StdName.TASKNAME));
         JSONObject ret = new JSONObject();
-        ret.put(stdName.MES, taskService.modify(task));
+        ret.put(StdName.MES, taskService.modify(task));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -113,16 +113,16 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.POST, value = "/myTasks")
     public void checkMyTask(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        String username = jsonObject.getString(stdName.USERNAME);
-        String tag = jsonObject.getString(stdName.TAG);
-        Integer status = jsonObject.getInt(stdName.STATUS);
-        Integer userRole = jsonObject.getInt(stdName.USERROLE);
+        String username = jsonObject.getString(StdName.USERNAME);
+        String tag = jsonObject.getString(StdName.TAG);
+        Integer status = jsonObject.getInt(StdName.STATUS);
+        Integer userRole = jsonObject.getInt(StdName.USERROLE);
         JSONObject ret = new JSONObject();
 
         List<TaskEntity> tasks = taskService.checkMyTask(username, status, userRole, tag);
         JSONArray taskArray = new JSONArray();
         getTasks(tasks, taskArray);
-        ret.put(stdName.TASKS, taskArray);
+        ret.put(StdName.TASKS, taskArray);
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -134,14 +134,14 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.POST, value = "/allTasks")
     public void search(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        Integer userRole = jsonObject.getInt(stdName.USERROLE);
-        String tag = jsonObject.getString(stdName.TAG);
-        Integer status = jsonObject.getInt(stdName.STATUS);
+        Integer userRole = jsonObject.getInt(StdName.USERROLE);
+        String tag = jsonObject.getString(StdName.TAG);
+        Integer status = jsonObject.getInt(StdName.STATUS);
         List<TaskEntity> tasks = taskService.search(userRole, tag, status);
         JSONObject ret = new JSONObject();
         JSONArray taskArray = new JSONArray();
         getTasks(tasks, taskArray);
-        ret.put(stdName.TASKS, taskArray);
+        ret.put(StdName.TASKS, taskArray);
         JsonHelper.jsonToResponse(response, ret);
 
     }
@@ -149,19 +149,19 @@ public class TaskController {
     private void getTasks(List<TaskEntity> tasks, JSONArray taskArray) {
         for (TaskEntity task : tasks) {
             JSONObject taskObject = new JSONObject();
-            taskObject.put(stdName.TASKID, task.getId());
-            taskObject.put(stdName.TASKNAME, task.getTaskName());
-            taskObject.put(stdName.DESCRIPTION, task.getDescription());
-            taskObject.put(stdName.IMGNUM, task.getImageNum());
-            taskObject.put(stdName.SPONSORNAME, task.getSponsor().getUsername());
+            taskObject.put(StdName.TASKID, task.getId());
+            taskObject.put(StdName.TASKNAME, task.getTaskName());
+            taskObject.put(StdName.DESCRIPTION, task.getDescription());
+            taskObject.put(StdName.IMGNUM, task.getImageNum());
+            taskObject.put(StdName.SPONSORNAME, task.getSponsor().getUsername());
             JSONArray tags = new JSONArray();
             List<TagEntity> tagEntities = task.getTagEntityList();
             for (TagEntity tagEntity : tagEntities) {
                 tags.put(tagEntity.getTag());
             }
-            taskObject.put(stdName.TAG, tags);
-            taskObject.put(stdName.STARTDATE, DateHelper.convertDateToString(task.getStartDate()));
-            taskObject.put(stdName.ENDDATE, DateHelper.convertDateToString(task.getEndDate()));
+            taskObject.put(StdName.TAG, tags);
+            taskObject.put(StdName.STARTDATE, DateHelper.convertDateToString(task.getStartDate()));
+            taskObject.put(StdName.ENDDATE, DateHelper.convertDateToString(task.getEndDate()));
             taskArray.put(taskObject);
         }
     }
@@ -176,9 +176,9 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.GET, value = "/endTask")
     public void endTask(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
-        Integer taskID = Integer.valueOf(map.get(stdName.TASKID)[0]);
+        Integer taskID = Integer.valueOf(map.get(StdName.TASKID)[0]);
         JSONObject ret = new JSONObject();
-        ret.put(stdName.MES, taskService.endTask(taskID));
+        ret.put(StdName.MES, taskService.endTask(taskID));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -192,9 +192,9 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.GET, value = "/deleteTask")
     public void deleteTask(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
-        Integer taskID = Integer.valueOf(map.get(stdName.TASKID)[0]);
+        Integer taskID = Integer.valueOf(map.get(StdName.TASKID)[0]);
         JSONObject ret = new JSONObject();
-        ret.put(stdName.MES, taskService.deleteTask(taskID));
+        ret.put(StdName.MES, taskService.deleteTask(taskID));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -209,19 +209,19 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.POST, value = "/reportTask")
     public void reportTask(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        TaskEntity taskEntity = (TaskEntity) taskService.findByID(jsonObject.getInt(stdName.TASKID));
-        UserEntity respondent = userService.findByUsername(jsonObject.getString(stdName.RESPONDENT));
-        UserEntity reporter = userService.findByUsername(jsonObject.getString(stdName.REPORTER));
+        TaskEntity taskEntity = (TaskEntity) taskService.findByID(jsonObject.getInt(StdName.TASKID));
+        UserEntity respondent = userService.findByUsername(jsonObject.getString(StdName.RESPONDENT));
+        UserEntity reporter = userService.findByUsername(jsonObject.getString(StdName.REPORTER));
         ReportmessageEntity reportmessageEntity = new ReportmessageEntity();
         JSONObject ret = new JSONObject();
         reportmessageEntity.setReportTime(new java.sql.Date(System.currentTimeMillis()));
-        reportmessageEntity.setDescription(jsonObject.getString(stdName.DESCRIPTION));
+        reportmessageEntity.setDescription(jsonObject.getString(StdName.DESCRIPTION));
         reportmessageEntity.setIsDealt((byte) 0);
         reportmessageEntity.setReporter(reporter);
         reportmessageEntity.setRespondent(respondent);
         reportmessageEntity.setTask(taskEntity);
         reportmessageEntity.setType(0);
-        ret.put(stdName.MES, reportService.add(reportmessageEntity));
+        ret.put(StdName.MES, reportService.add(reportmessageEntity));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -235,19 +235,19 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.POST, value = "/reportWorker")
     public void reportWorker(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        TaskEntity taskEntity = (TaskEntity) taskService.findByID(jsonObject.getInt(stdName.TASKID));
-        UserEntity respondent = userService.findByUsername(jsonObject.getString(stdName.RESPONDENT));
-        UserEntity reporter = userService.findByUsername(jsonObject.getString(stdName.REPORTER));
+        TaskEntity taskEntity = (TaskEntity) taskService.findByID(jsonObject.getInt(StdName.TASKID));
+        UserEntity respondent = userService.findByUsername(jsonObject.getString(StdName.RESPONDENT));
+        UserEntity reporter = userService.findByUsername(jsonObject.getString(StdName.REPORTER));
         ReportmessageEntity reportmessageEntity = new ReportmessageEntity();
         JSONObject ret = new JSONObject();
         reportmessageEntity.setReportTime((java.sql.Date) new Date());
-        reportmessageEntity.setDescription(jsonObject.getString(stdName.DESCRIPTION));
+        reportmessageEntity.setDescription(jsonObject.getString(StdName.DESCRIPTION));
         reportmessageEntity.setIsDealt((byte) 0);
         reportmessageEntity.setReporter(reporter);
         reportmessageEntity.setRespondent(respondent);
         reportmessageEntity.setTask(taskEntity);
         reportmessageEntity.setType(1);
-        ret.put(stdName.MES, reportService.add(reportmessageEntity));
+        ret.put(StdName.MES, reportService.add(reportmessageEntity));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -276,32 +276,32 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.GET, value = "/checkTaskDetail")
     public void checkTaskDetail(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
-        Integer taskID = Integer.valueOf(map.get(stdName.TASKID)[0]);
+        Integer taskID = Integer.valueOf(map.get(StdName.TASKID)[0]);
         TaskEntity task = (TaskEntity) taskService.findByID(taskID);
         JSONObject jsonObject = new JSONObject();
 
-        jsonObject.put(stdName.TASKID, task.getId());
+        jsonObject.put(StdName.TASKID, task.getId());
 
-        jsonObject.put(stdName.SPONSORNAME, task.getSponsor().getUsername());
-        jsonObject.put(stdName.TASKNAME, task.getTaskName());
-        jsonObject.put(stdName.DESCRIPTION, task.getDescription());
+        jsonObject.put(StdName.SPONSORNAME, task.getSponsor().getUsername());
+        jsonObject.put(StdName.TASKNAME, task.getTaskName());
+        jsonObject.put(StdName.DESCRIPTION, task.getDescription());
         JSONArray tags = new JSONArray();
         List<TagEntity> tagEntities = task.getTagEntityList();
         for (TagEntity tagEntity : tagEntities) {
             tags.put(tagEntity.getTag());
         }
-        jsonObject.put(stdName.TAG, tags);
-        jsonObject.put(stdName.LEVEL, task.getWorkerLevel());
+        jsonObject.put(StdName.TAG, tags);
+        jsonObject.put(StdName.LEVEL, task.getWorkerLevel());
 
-        jsonObject.put(stdName.STARTDATE, DateHelper.convertDateToString(task.getStartDate()));
-        jsonObject.put(stdName.ENDDATE, DateHelper.convertDateToString(task.getEndDate()));
-        jsonObject.put(stdName.IMGNUM, task.getImageNum());
+        jsonObject.put(StdName.STARTDATE, DateHelper.convertDateToString(task.getStartDate()));
+        jsonObject.put(StdName.ENDDATE, DateHelper.convertDateToString(task.getEndDate()));
+        jsonObject.put(StdName.IMGNUM, task.getImageNum());
 
         Integer totalTagNum = 0;
         JSONArray userInfos = new JSONArray();
-        jsonObject.put(stdName.TOTALTAGNUM, totalTagNum);
-        jsonObject.put(stdName.AVERAGETAGNUM, totalTagNum / task.getImageNum());
-        jsonObject.put(stdName.WORKERINFO, userInfos);
+        jsonObject.put(StdName.TOTALTAGNUM, totalTagNum);
+        jsonObject.put(StdName.AVERAGETAGNUM, totalTagNum / task.getImageNum());
+        jsonObject.put(StdName.WORKERINFO, userInfos);
         JsonHelper.jsonToResponse(response, jsonObject);
     }
 
@@ -314,12 +314,12 @@ public class TaskController {
     @RequestMapping(method = RequestMethod.POST, value = "/dealReport")
     public void dealReport(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        String reportTime = jsonObject.getString(stdName.REPORTTIME);
-        String description = jsonObject.getString(stdName.DESCRIPTION);
-        Integer type = jsonObject.getInt(stdName.TYPE);
+        String reportTime = jsonObject.getString(StdName.REPORTTIME);
+        String description = jsonObject.getString(StdName.DESCRIPTION);
+        Integer type = jsonObject.getInt(StdName.TYPE);
 
         JSONObject ret = new JSONObject();
-        ret.put(stdName.MES, reportService.dealReport(reportTime, type, description));
+        ret.put(StdName.MES, reportService.dealReport(reportTime, type, description));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -331,7 +331,7 @@ public class TaskController {
     @RequestMapping(value = "/checkImages", method = RequestMethod.GET)
     public void checkImages(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
-        Integer taskID = Integer.valueOf(map.get(stdName.TASKID)[0]);
+        Integer taskID = Integer.valueOf(map.get(StdName.TASKID)[0]);
         JSONObject ret = new JSONObject();
         JSONArray array = new JSONArray();
         TaskEntity taskEntity = (TaskEntity) taskService.findByID(taskID);
@@ -339,7 +339,7 @@ public class TaskController {
         for (ImageEntity imageEntity : imageEntities) {
             array.put(imageEntity.getUrl());
         }
-        ret.put(stdName.IMGURLS, array);
+        ret.put(StdName.IMGURLS, array);
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -351,7 +351,7 @@ public class TaskController {
     @RequestMapping(value = "getDataSet", method = RequestMethod.GET)
     public ResponseEntity<FileSystemResource> getDataSet(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
-        Integer taskID = Integer.valueOf(map.get(stdName.TASKID)[0]);
+        Integer taskID = Integer.valueOf(map.get(StdName.TASKID)[0]);
         TaskEntity taskEntity = (TaskEntity) taskService.findByID(taskID);
         return taskService.getDataSet(taskEntity);
     }

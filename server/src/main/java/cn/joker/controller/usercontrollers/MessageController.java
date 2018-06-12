@@ -1,7 +1,7 @@
 package cn.joker.controller.usercontrollers;
 
 import cn.joker.entity.*;
-import cn.joker.namespace.stdName;
+import cn.joker.namespace.StdName;
 import cn.joker.sevice.*;
 import cn.joker.util.JsonHelper;
 import cn.joker.util.PasswordHelper;
@@ -51,40 +51,32 @@ public class MessageController {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
         UserEntity userInfo = new UserEntity();
         userInfo.setPoints(100);
-        userInfo.setUsername((String) jsonObject.get(stdName.USERNAME));
+        userInfo.setUsername((String) jsonObject.get(StdName.USERNAME));
         userInfo.setWorkerMatrixEntities(new ArrayList<>());
-        JSONArray jsonArray = jsonObject.getJSONArray(stdName.ROLELIST);
+        JSONArray jsonArray = jsonObject.getJSONArray(StdName.ROLELIST);
         List<SysRoleEntity> roleList = new ArrayList<>();
         for (Object obj : jsonArray) {
             Integer srid = (Integer) obj;
             roleList.add((SysRoleEntity) sysRoleService.findByID(srid));
-            if(srid == 4){
-                WorkerMatrixEntity workerMatrixEntity = new WorkerMatrixEntity(userInfo,jsonObject.getDouble(stdName.RATE),jsonObject.getInt(stdName.NUM));
-                workerMatrixService.add(workerMatrixEntity);
-                userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
-                workerMatrixEntity = new WorkerMatrixEntity(userInfo,jsonObject.getDouble(stdName.RATE),jsonObject.getInt(stdName.NUM));
-                workerMatrixService.add(workerMatrixEntity);
-                userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
-                workerMatrixEntity = new WorkerMatrixEntity(userInfo,jsonObject.getDouble(stdName.RATE),jsonObject.getInt(stdName.NUM));
-                workerMatrixService.add(workerMatrixEntity);
-                userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
-                workerMatrixEntity = new WorkerMatrixEntity(userInfo,jsonObject.getDouble(stdName.RATE),jsonObject.getInt(stdName.NUM));
-                workerMatrixService.add(workerMatrixEntity);
-                userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
-                workerMatrixEntity = new WorkerMatrixEntity(userInfo,jsonObject.getDouble(stdName.RATE),jsonObject.getInt(stdName.NUM));
-                workerMatrixService.add(workerMatrixEntity);
-                userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
+            if (srid == 4) {
+                WorkerMatrixEntity workerMatrixEntity;
+                for (int i = 0; i < 5; i++) {
+                    workerMatrixEntity = new WorkerMatrixEntity(userInfo, jsonObject.getDouble(StdName.RATE), jsonObject.getInt(StdName.NUM));
+                    workerMatrixService.add(workerMatrixEntity);
+                    userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
+                }
             }
         }
         userInfo.setRoleEntityList(roleList);
-        userInfo.setPasswr((String) jsonObject.get(stdName.PASSWORD));
+        userInfo.setEmail(jsonObject.getString(StdName.EMAIL));
+        userInfo.setPasswr((String) jsonObject.get(StdName.PASSWR));
         PasswordHelper.encryptPassword(userInfo);
         userInfo.setLev(1);
-        userInfo.setNickname((String) jsonObject.get(stdName.NICKNAME));
+        userInfo.setNickname((String) jsonObject.get(StdName.NICKNAME));
         userInfo.setState(1);
         userInfo.setBonus(0);
         JSONObject ret = new JSONObject();
-        ret.put(stdName.MES, userService.add(userInfo));
+        ret.put(StdName.MES, userService.add(userInfo));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -102,7 +94,7 @@ public class MessageController {
         newEntity.setPasswr(userEntity.getPasswr());
         newEntity.setEmail(userEntity.getEmail());
         PasswordHelper.encryptPassword(newEntity);
-        ret.put(stdName.MES, userService.modify(newEntity));
+        ret.put(StdName.MES, userService.modify(newEntity));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -114,14 +106,14 @@ public class MessageController {
     @RequestMapping(value = "/findUser", method = RequestMethod.GET)
     public void findUser(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
-        String username = map.get(stdName.USERNAME)[0];
+        String username = map.get(StdName.USERNAME)[0];
 
         JSONObject ret = new JSONObject();
         if (userService.findByUsername(username) != null) {
-            ret.put(stdName.EXISTED, true);
+            ret.put(StdName.EXISTED, true);
 
         } else {
-            ret.put(stdName.EXISTED, false);
+            ret.put(StdName.EXISTED, false);
         }
         JsonHelper.jsonToResponse(response, ret);
     }
@@ -148,10 +140,10 @@ public class MessageController {
     @RequestMapping(value = "/deleteUser", method = RequestMethod.GET)
     public void deleteUser(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
-        String username = map.get(stdName.USERNAME)[0];
+        String username = map.get(StdName.USERNAME)[0];
         JSONObject ret = new JSONObject();
         UserEntity userEntity = userService.findByUsername(username);
-        ret.put(stdName.MES, userService.delete(userEntity));
+        ret.put(StdName.MES, userService.delete(userEntity));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -164,15 +156,15 @@ public class MessageController {
     @RequestMapping(value = "/changePoints", method = RequestMethod.POST)
     public void changePoints(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        String username = jsonObject.getString(stdName.USERNAME);
-        Integer points = jsonObject.getInt(stdName.POINTS);
+        String username = jsonObject.getString(StdName.USERNAME);
+        Integer points = jsonObject.getInt(StdName.POINTS);
         UserEntity userEntity = userService.findByUsername(username);
         JSONObject ret = new JSONObject();
         if (userEntity != null) {
             userEntity.setPoints(userEntity.getPoints() + points);
-            ret.put(stdName.MES, userService.modify(userEntity));
+            ret.put(StdName.MES, userService.modify(userEntity));
         } else
-            ret.put(stdName.MES, stdName.NULL);
+            ret.put(StdName.MES, StdName.NULL);
         JsonHelper.jsonToResponse(response, ret);
 
     }
@@ -186,15 +178,15 @@ public class MessageController {
     @RequestMapping(value = "/managePoints", method = RequestMethod.POST)
     public void managePoints(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        String username = jsonObject.getString(stdName.USERNAME);
-        Integer points = jsonObject.getInt(stdName.POINTS);
+        String username = jsonObject.getString(StdName.USERNAME);
+        Integer points = jsonObject.getInt(StdName.POINTS);
         UserEntity userEntity = userService.findByUsername(username);
         JSONObject ret = new JSONObject();
         if (userEntity != null) {
             userEntity.setPoints(points);
-            ret.put(stdName.MES, userService.modify(userEntity));
+            ret.put(StdName.MES, userService.modify(userEntity));
         } else
-            ret.put(stdName.MES, stdName.NULL);
+            ret.put(StdName.MES, StdName.NULL);
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -208,35 +200,36 @@ public class MessageController {
     public void bonus(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
         BonusHistoryEntity bonusHistory = new BonusHistoryEntity();
-        bonusHistory.setPoints(jsonObject.getInt(stdName.POINTS));
-        bonusHistory.setBonusHistory_task((TaskEntity) taskService.findByID(jsonObject.getInt(stdName.TASKID)));
-        UserEntity userEntity = userService.findByUsername(jsonObject.getString(stdName.WORKERNAME));
+        bonusHistory.setPoints(jsonObject.getInt(StdName.POINTS));
+        bonusHistory.setBonusHistory_task((TaskEntity) taskService.findByID(jsonObject.getInt(StdName.TASKID)));
+        UserEntity userEntity = userService.findByUsername(jsonObject.getString(StdName.WORKERNAME));
         JSONObject ret = new JSONObject();
         if (userEntity != null) {
             bonusHistory.setBonusHistory_user(userEntity);
             userEntity.setPoints(userEntity.getPoints() + bonusHistory.getPoints());
             userEntity.setBonus(userEntity.getBonus() + bonusHistory.getPoints());
-            userEntity.setLev((int) (Math.log(userEntity.getBonus() + 1) / Math.log(10)) + 1);
-            ret.put(stdName.MES, bonusHistoryService.add(bonusHistory) && userService.modify(userEntity));
+            userEntity.setLev((int) (Math.log(userEntity.getBonus() + 1.0) / Math.log(10)) + 1);
+            ret.put(StdName.MES, bonusHistoryService.add(bonusHistory) && userService.modify(userEntity));
         } else
-            ret.put(stdName.MES, stdName.NULL);
+            ret.put(StdName.MES, StdName.NULL);
         JsonHelper.jsonToResponse(response, ret);
 
     }
+
     /**
-     *@author:pis
-     *@description: 工人注册测试
-     *@date: 13:33 2018/6/12
+     * @author:pis
+     * @description: 工人注册测试
+     * @date: 13:33 2018/6/12
      */
     @RequestMapping(value = "/signTest", method = RequestMethod.GET)
     public void signTest(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        JSONArray jsonArray = jsonObject.getJSONArray(stdName.TESTS);
+        JSONArray jsonArray = jsonObject.getJSONArray(StdName.TESTS);
         List tests = (List) jsonArray;
         Double correctRate = tagService.mapTestTable(tests);
         JSONObject ret = new JSONObject();
-        ret.put(stdName.MES,correctRate >= 0.7);
-        ret.put(stdName.RATE,correctRate);
+        ret.put(StdName.MES, correctRate >= 0.7);
+        ret.put(StdName.RATE, correctRate);
         JsonHelper.jsonToResponse(response, ret);
     }
 }

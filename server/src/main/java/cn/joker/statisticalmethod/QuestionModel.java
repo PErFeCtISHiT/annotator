@@ -1,4 +1,4 @@
-package cn.joker.statisticalMethod;
+package cn.joker.statisticalmethod;
 
 /**
  * @author: pis

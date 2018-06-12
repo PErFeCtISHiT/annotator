@@ -3,7 +3,7 @@ package cn.joker.controller.statisticcontrollers;
 import cn.joker.entity.SysRoleEntity;
 import cn.joker.entity.TaskEntity;
 import cn.joker.entity.UserEntity;
-import cn.joker.namespace.stdName;
+import cn.joker.namespace.StdName;
 import cn.joker.sevice.TaskService;
 import cn.joker.sevice.UserService;
 import cn.joker.util.JsonHelper;
@@ -47,9 +47,9 @@ public class AdminController {
                     sponsorNum++;
             }
         }
-        ret.put(stdName.SPONSORNUM, sponsorNum);
-        ret.put(stdName.WORKERNUM, workerNum);
-        ret.put(stdName.ADMINNUM, adminNum);
+        ret.put(StdName.SPONSORNUM, sponsorNum);
+        ret.put(StdName.WORKERNUM, workerNum);
+        ret.put(StdName.ADMINNUM, adminNum);
         JsonHelper.jsonToResponse(response, ret);
 
     }
@@ -68,9 +68,9 @@ public class AdminController {
             else
                 finished++;
         }
-        ret.put(stdName.TASKNUM, taskNum);
-        ret.put(stdName.PRODUCING, producing);
-        ret.put(stdName.FINISHED, finished);
+        ret.put(StdName.TASKNUM, taskNum);
+        ret.put(StdName.PRODUCING, producing);
+        ret.put(StdName.FINISHED, finished);
         JsonHelper.jsonToResponse(response, ret);
     }
 }

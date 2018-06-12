@@ -1,6 +1,6 @@
 package cn.joker.util;
 
-import cn.joker.namespace.stdName;
+import cn.joker.namespace.StdName;
 
 import java.sql.Date;
 import java.text.DateFormat;
@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 public class DateHelper {
 
     private DateHelper() {
-        throw new IllegalStateException(stdName.UTILCLASS);
+        throw new IllegalStateException(StdName.UTILCLASS);
     }
 
 

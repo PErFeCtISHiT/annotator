@@ -2,7 +2,7 @@ package cn.joker.controller.taskcontrollers;
 
 import cn.joker.entity.TaskEntity;
 import cn.joker.entity.UserEntity;
-import cn.joker.namespace.stdName;
+import cn.joker.namespace.StdName;
 import cn.joker.sevice.ImgService;
 import cn.joker.sevice.TaskService;
 import cn.joker.sevice.UserService;
@@ -42,10 +42,10 @@ public class ImgUploadController {
      */
     @RequestMapping(value = "/zipFileUpload", method = RequestMethod.POST)
     public void zipFileUpload(HttpServletRequest request, HttpServletResponse response) {
-        MultipartFile file = ((MultipartHttpServletRequest) request).getFile(stdName.FILENAME);
-        String taskID = request.getParameter(stdName.TASKID);
+        MultipartFile file = ((MultipartHttpServletRequest) request).getFile(StdName.FILENAME);
+        String taskID = request.getParameter(StdName.TASKID);
         JSONObject ret = new JSONObject();
-        ret.put(stdName.MES, FileHelper.saveZip(taskID, file));
+        ret.put(StdName.MES, FileHelper.saveZip(taskID, file));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -55,19 +55,19 @@ public class ImgUploadController {
      * @date: 15:57 2018/4/17
      */
     @RequestMapping(value = "/imagesUpload", method = RequestMethod.POST)
-    public void imagesUpload(@RequestParam(stdName.FILE) MultipartFile file, @RequestParam(stdName.TASKID) Integer taskID, HttpServletResponse response) {
+    public void imagesUpload(@RequestParam(StdName.FILE) MultipartFile file, @RequestParam(StdName.TASKID) Integer taskID, HttpServletResponse response) {
         TaskEntity taskEntity = (TaskEntity) taskService.findByID(taskID);
         JSONObject ret = new JSONObject();
         if (taskEntity == null) {
-            ret.put(stdName.MES, stdName.NULL);
+            ret.put(StdName.MES, StdName.NULL);
         } else {
             UserEntity userEntity = taskEntity.getSponsor();
             taskEntity.setImageNum(FileHelper.saveFiles(taskEntity, file, imgService));
             userEntity.setPoints(userEntity.getPoints() - taskEntity.getImageNum());
             if (userEntity.getPoints() < 0) {
-                ret.put(stdName.MES, !taskService.delete(taskEntity));
+                ret.put(StdName.MES, !taskService.delete(taskEntity));
             } else
-                ret.put(stdName.MES, taskService.modify(taskEntity) && userService.modify(userEntity));
+                ret.put(StdName.MES, taskService.modify(taskEntity) && userService.modify(userEntity));
         }
         JsonHelper.jsonToResponse(response, ret);
     }

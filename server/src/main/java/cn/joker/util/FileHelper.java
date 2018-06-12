@@ -2,8 +2,7 @@ package cn.joker.util;
 
 import cn.joker.entity.ImageEntity;
 import cn.joker.entity.TaskEntity;
-import cn.joker.namespace.stdName;
-import cn.joker.serviceimpl.ImgServiceImpl;
+import cn.joker.namespace.StdName;
 import cn.joker.sevice.ImgService;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Expand;
@@ -11,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,7 +27,7 @@ import java.util.Objects;
  */
 public class FileHelper {
     private FileHelper() {
-        throw new IllegalStateException(stdName.UTILCLASS);
+        throw new IllegalStateException(StdName.UTILCLASS);
     }
 
 
@@ -86,10 +84,10 @@ public class FileHelper {
         return true;
     }
 
-    public static Integer saveFiles(TaskEntity taskEntity, MultipartFile file,ImgService imgService) {
+    public static Integer saveFiles(TaskEntity taskEntity, MultipartFile file, ImgService imgService) {
         if (file.isEmpty())
             return 0;
-        String path = DIR + "task/" + String.valueOf(taskEntity.getId()) + "/images/";
+        String path = DIR + "task/" + taskEntity.getId() + "/images/";
         String fileName = taskEntity.getId().toString() + "-" + file.getOriginalFilename();
         fileName = FileHelper.getRealFilePath(fileName);
         fileName = fileName.substring(fileName.lastIndexOf(FILE_SEPARATOR) + 1);
@@ -126,9 +124,9 @@ public class FileHelper {
         imageEntity.setImg_task(taskEntity);
         imageEntity.setType(taskEntity.getType());
         imageEntity.setImgName(fileName.substring(fileName.lastIndexOf('/') + 1, fileName.lastIndexOf('.')));
-        imageEntity.setUrl("task/" + String.valueOf(taskEntity.getId()) + "/images/" + fileName);
+        imageEntity.setUrl("task/" + taskEntity.getId() + "/images/" + fileName);
         imgService.add(imageEntity);
-        if(taskEntity.getImageEntityList() == null) {
+        if (taskEntity.getImageEntityList() == null) {
             List<ImageEntity> imageEntities = new ArrayList<>();
             taskEntity.setImageEntityList(imageEntities);
         }

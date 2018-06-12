@@ -1,6 +1,7 @@
 package cn.joker.util;
 
 import cn.joker.entity.PaySaPi;
+import cn.joker.namespace.StdName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +11,9 @@ import java.util.UUID;
 
 
 public class PayUtil {
+    PayUtil(){
+        throw new IllegalStateException(StdName.UTILCLASS);
+    }
 
     private static Logger logger = LoggerFactory.getLogger(JsonHelper.class);
 

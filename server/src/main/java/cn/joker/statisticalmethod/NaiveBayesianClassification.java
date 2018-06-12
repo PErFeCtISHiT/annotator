@@ -1,7 +1,7 @@
-package cn.joker.statisticalMethod;
+package cn.joker.statisticalmethod;
 
 import cn.joker.entity.ImgMarkEntity;
-import cn.joker.namespace.stdName;
+import cn.joker.namespace.StdName;
 import cn.joker.vo.RecNode;
 import cn.joker.vo.RecNodeList;
 import org.json.JSONArray;
@@ -12,6 +12,9 @@ import java.util.List;
 
 
 public class NaiveBayesianClassification {
+    NaiveBayesianClassification(){
+        throw new IllegalStateException(StdName.UTILCLASS);
+    }
 
     public static List<RecNodeList> integration(List<ImgMarkEntity> imgMarkEntityList) {
         ArrayList<RecNode> markList = new ArrayList<>(); //把重复标注的结果单独取出来
@@ -21,8 +24,8 @@ public class NaiveBayesianClassification {
             JSONArray jsonArray = new JSONArray(nodeRec);
             for (Object o : jsonArray) {
                 JSONObject jsonObject = (JSONObject) o;
-                RecNode recNode = new RecNode(jsonObject.getDouble(stdName.TOP), jsonObject.getDouble(stdName.LEFT),
-                        jsonObject.getDouble(stdName.HEIGHT), jsonObject.getDouble(stdName.WIDTH), jsonObject.getString(stdName.MARK), aImageEntity.getWorker());
+                RecNode recNode = new RecNode(jsonObject.getDouble(StdName.TOP), jsonObject.getDouble(StdName.LEFT),
+                        jsonObject.getDouble(StdName.HEIGHT), jsonObject.getDouble(StdName.WIDTH), jsonObject.getString(StdName.MARK), aImageEntity.getWorker());
                 markList.add(recNode);
 
             }
@@ -41,7 +44,7 @@ public class NaiveBayesianClassification {
         ArrayList<Integer> frequency = new ArrayList<>(); // 单独的频率数组，方便后期按权重调整相应数据
 
         for (RecNode aMarkList : markList) {
-            if (recNodeArrayList.size() == 0) { // 对于第一个标注结果，默认直接加进分类中
+            if (recNodeArrayList.isEmpty()) { // 对于第一个标注结果，默认直接加进分类中
                 RecNodeList recNodeList = new RecNodeList();
                 recNodeList.getRecNodes().add(aMarkList);
                 recNodeList.setRecNode(aMarkList);
@@ -58,7 +61,6 @@ public class NaiveBayesianClassification {
                     offset += Math.abs(aMarkList.getWidth() - recNodeArrayList.get(j).getRecNode().getWidth()) / recNodeArrayList.get(j).getRecNode().getWidth();
                     offset += Math.abs(aMarkList.getHeight() - recNodeArrayList.get(j).getRecNode().getHeight()) / recNodeArrayList.get(j).getRecNode().getHeight();
 
-                    //System.out.println(offset);
                     if (offset < minOffset) { //选择
                         minOffset = offset;
                         classIndex = j;

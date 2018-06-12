@@ -1,11 +1,9 @@
 package cn.joker.controller;
 
 import cn.joker.entity.ImgMarkEntity;
-import cn.joker.entity.TaskEntity;
-import cn.joker.namespace.stdName;
+import cn.joker.namespace.StdName;
 import cn.joker.serviceimpl.TaskServiceImpl;
-import cn.joker.sevice.TaskService;
-import cn.joker.statisticalMethod.NaiveBayesianClassification;
+import cn.joker.statisticalmethod.NaiveBayesianClassification;
 import cn.joker.util.JsonHelper;
 import cn.joker.vo.RecNode;
 import org.apache.log4j.Logger;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +19,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/test")
 public class ClassificationTest {
-    @Resource
-    private TaskService taskService;
 
     @RequestMapping(value = "/1", method = RequestMethod.GET)
     public void get(HttpServletResponse response) {
-        TaskEntity taskEntity = (TaskEntity) taskService.findByID(16);
         List<ImgMarkEntity> imgMarkEntities = new ArrayList<>();
         List<RecNode> recNodes = NaiveBayesianClassification.integration(imgMarkEntities).get(0).getRecNodes();
         Logger logger = Logger.getLogger(TaskServiceImpl.class);
@@ -40,7 +34,7 @@ public class ClassificationTest {
             logger.info(recNode.getWidth());
         }
         JSONObject msg = new JSONObject();
-        msg.put(stdName.MES, "success");
+        msg.put(StdName.MES, "success");
         JsonHelper.jsonToResponse(response, msg);
     }
 }

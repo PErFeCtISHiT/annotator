@@ -12,11 +12,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class WorkerMatrixServiceImpl extends PubServiceImpl implements WorkerMatrixService {
-    private WorkerMatrixRepository workerMatrixRepository;
 
     @Autowired
     public WorkerMatrixServiceImpl(WorkerMatrixRepository workerMatrixRepository) {
-        this.workerMatrixRepository = workerMatrixRepository;
         this.repository = workerMatrixRepository;
     }
 }

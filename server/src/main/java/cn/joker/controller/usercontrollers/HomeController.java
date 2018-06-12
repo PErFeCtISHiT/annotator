@@ -2,7 +2,7 @@ package cn.joker.controller.usercontrollers;
 
 import cn.joker.entity.SysRoleEntity;
 import cn.joker.entity.UserEntity;
-import cn.joker.namespace.stdName;
+import cn.joker.namespace.StdName;
 import cn.joker.sevice.UserService;
 import cn.joker.util.JsonHelper;
 import org.apache.shiro.SecurityUtils;
@@ -43,15 +43,15 @@ public class HomeController {
         try {
             subject.login(token);
         } catch (UnknownAccountException e) {
-            msg.put(stdName.MES, "UnknownAccount");
+            msg.put(StdName.MES, "UnknownAccount");
             JsonHelper.jsonToResponse(response, msg);
             return;
         } catch (IncorrectCredentialsException e) {
-            msg.put(stdName.MES, "IncorrectCredentials");
+            msg.put(StdName.MES, "IncorrectCredentials");
             JsonHelper.jsonToResponse(response, msg);
             return;
         }
-        msg.put(stdName.MES, "success");
+        msg.put(StdName.MES, "success");
         JsonHelper.jsonToResponse(response, msg);
     }
 
@@ -66,18 +66,23 @@ public class HomeController {
         UserEntity userInfo = userService.findByUsername(userName);
         JSONObject jsonObject = new JSONObject();
         if (userInfo != null) {
-            jsonObject.put(stdName.USERNAME, userInfo.getUsername());
-            jsonObject.put(stdName.LEVEL, userInfo.getLev());
-            jsonObject.put(stdName.NICKNAME, userInfo.getNickname());
-            jsonObject.put(stdName.POINTS, userInfo.getPoints());
+            jsonObject.put(StdName.USERNAME, userInfo.getUsername());
+            jsonObject.put(StdName.LEVEL, userInfo.getLev());
+            jsonObject.put(StdName.NICKNAME, userInfo.getNickname());
+            jsonObject.put(StdName.POINTS, userInfo.getPoints());
+            jsonObject.put(StdName.EMAIL,userInfo.getEmail());
             JSONArray list1 = new JSONArray();
             List<SysRoleEntity> list = userInfo.getRoleEntityList();
             for (SysRoleEntity sysRole : list) {
                 list1.put(sysRole.getId());
+                if(sysRole.getId().equals(3))
+                    jsonObject.put(StdName.TYPE,StdName.REQUESTOR);
+                else if (sysRole.getId().equals(4))
+                    jsonObject.put(StdName.TYPE,StdName.WORKER);
             }
-            jsonObject.put(stdName.ROLELIST, list1);
+            jsonObject.put(StdName.ROLELIST, list1);
         } else {
-            jsonObject.put(stdName.MES, stdName.NULL);
+            jsonObject.put(StdName.MES, StdName.NULL);
         }
         JsonHelper.jsonToResponse(response, jsonObject);
     }

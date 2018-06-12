@@ -1,7 +1,7 @@
 package cn.joker.util;
 
 import cn.joker.entity.UserEntity;
-import cn.joker.namespace.stdName;
+import cn.joker.namespace.StdName;
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
@@ -14,7 +14,7 @@ import org.apache.shiro.util.ByteSource;
  */
 public class PasswordHelper {
     private PasswordHelper() {
-        throw new IllegalStateException(stdName.UTILCLASS);
+        throw new IllegalStateException(StdName.UTILCLASS);
     }
 
     private static RandomNumberGenerator randomNumberGenerator = new SecureRandomNumberGenerator();
