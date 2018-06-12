@@ -19,6 +19,7 @@ import router from './router/index_router'
 // 引入e-charts组件
 import echarts from 'echarts'
 
+import './jsSourceFile/directive'
 
 //使用element-ui组件
 Vue.use(ElementUI);

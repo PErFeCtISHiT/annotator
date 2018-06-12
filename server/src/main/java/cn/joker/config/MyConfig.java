@@ -1,29 +1,44 @@
 package cn.joker.config;
 
+import cn.joker.entity.TagEntity;
+import cn.joker.sevice.TagService;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.scheduling.annotation.AsyncConfigurer;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.MultipartConfigElement;
+import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 @Configuration
 @EnableTransactionManagement
-public class ShiroConfig extends WebMvcConfigurerAdapter {
+public class MyConfig extends WebMvcConfigurerAdapter implements AsyncConfigurer {
+    private static final Logger log = LoggerFactory.getLogger(MyConfig.class);
+    @Resource
+    private TagService tagService;
+
     @Bean
     public ShiroFilterFactoryBean shirFilter(DefaultWebSecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
@@ -124,5 +139,42 @@ public class ShiroConfig extends WebMvcConfigurerAdapter {
         JpaTransactionManager jpaTransactionManager = new JpaTransactionManager(factory);
         jpaTransactionManager.setGlobalRollbackOnParticipationFailure(false);
         return jpaTransactionManager;
+    }
+
+    //线程配置
+    @Bean
+    @Override
+    public Executor getAsyncExecutor() {
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+        taskExecutor.setCorePoolSize(2);
+        taskExecutor.setMaxPoolSize(10);
+        taskExecutor.setQueueCapacity(25);
+        taskExecutor.initialize();
+        return taskExecutor;
+    }
+
+    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
+
+        return new MyAsyncExceptionHandler();
+    }
+
+    /**
+     * 自定义异常处理类
+     *
+     * @author hry
+     */
+    class MyAsyncExceptionHandler implements AsyncUncaughtExceptionHandler {
+
+        //手动处理捕获的异常
+        @Override
+        public void handleUncaughtException(Throwable throwable, Method method, Object... obj) {
+            System.out.println("-------------》》》捕获线程异常信息");
+            log.info("Exception message - " + throwable.getMessage());
+            log.info("Method name - " + method.getName());
+            for (Object param : obj) {
+                log.info("Parameter value - " + param);
+            }
+        }
+
     }
 }

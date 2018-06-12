@@ -6,7 +6,7 @@
       <el-tab-pane label="全部" name="total"> </el-tab-pane>
       <el-tab-pane
         v-for="tag in $store.state.tags.tagMsg"
-        :label="'标签：'+tag+'(进行中)'" :name="tag"> </el-tab-pane>
+        :label="'标签：'+tag+'(进行中)'" :name="tag" :key="tag"> </el-tab-pane>
     </el-tabs>
     <br>
   </div>

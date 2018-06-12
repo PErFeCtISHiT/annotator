@@ -1,6 +1,8 @@
 package cn.joker.sevice;
 
 import cn.joker.entity.TaskEntity;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -16,11 +18,7 @@ public interface TaskService extends PubService {
 
     boolean deleteTask(Integer taskID);
 
-    boolean completeTask(Integer taskID, String workerName);
-
-    boolean abortTask(Integer taskID, String workerName);
-
-    boolean acceptTask(Integer taskID, String workerName);
-
     List<TaskEntity> findAll();
+
+    ResponseEntity<FileSystemResource> getDataSet(TaskEntity taskEntity);
 }

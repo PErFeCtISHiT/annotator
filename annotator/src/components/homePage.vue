@@ -2,7 +2,7 @@
   <div>
     <el-container>
       <!-- navigation bar  -->
-      <el-header style="position: fixed; top: 0; left:0; right: 0; z-index:10">
+      <el-header style="position: fixed; top: 0; left:0; right: 0; z-index:50">
         <el-row class="navigation-background">
           <el-col :span="1" style="margin-top: 2px; margin-left: 10px">
             <img src="../images/logo.png" style="width: 55px; height: 55px;">

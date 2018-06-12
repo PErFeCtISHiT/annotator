@@ -68,6 +68,8 @@ public class stdName {
     public static final String MARK = "mark";
     public static final String AUTHOR = "author";
     public static final String ID = "id";
+    public static final String IMGS = "imgs";
+    public static final Object IOEXCEPTION = "IOEXCEPTION";
 
     private stdName() {
         throw new IllegalStateException("namespace class");

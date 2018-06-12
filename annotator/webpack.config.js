@@ -28,7 +28,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [path.resolve('src'), path.resolve('test'),path.resolve('./node_modules/element-ui/')]
+        include: [path.resolve('src'), path.resolve('test'),path.resolve('./node_modules/element-ui/')],
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
@@ -45,8 +45,13 @@ module.exports = {
         options: {
           name: '[name].[ext]?[hash]'
         }
-      }
+      },
 
+      //colorPicker需要的新格式
+      {
+        test: /\.scss$/,
+        loaders: ["style", "css", "sass"]
+      },
     ]
   },
   resolve: {

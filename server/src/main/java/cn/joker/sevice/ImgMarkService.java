@@ -2,8 +2,6 @@ package cn.joker.sevice;
 
 import cn.joker.entity.ImageEntity;
 import cn.joker.entity.ImgMarkEntity;
-import cn.joker.entity.TaskEntity;
-import cn.joker.entity.UserEntity;
 
 import java.util.List;
 
@@ -16,7 +14,5 @@ public interface ImgMarkService extends PubService {
 
     List<ImgMarkEntity> findAll();
 
-    ImgMarkEntity findByImage_imgMarkAndImgMark_taskAndWorker(ImageEntity imageEntity, TaskEntity taskEntity, UserEntity userEntity);
-
-    List<ImgMarkEntity> findByImageAndTask(ImageEntity imageEntity,TaskEntity taskEntity);
+    List<ImgMarkEntity> findByImage(ImageEntity imageEntity);
 }
