@@ -32,7 +32,7 @@
         <el-menu-item index="/3-2">提现</el-menu-item>
 
       </el-submenu>
-      <el-menu-item index="/4" v-if="false">个人信息</el-menu-item>
+      <el-menu-item index="/4">个人信息</el-menu-item>
 
       <el-button class="navigation-button" @click="handleLogOut">登出</el-button>
     </el-menu>

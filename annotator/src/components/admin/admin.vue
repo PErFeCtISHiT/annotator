@@ -104,9 +104,9 @@
 </template>
 
 <script>
-  import adminTaskStat from './admin/adminTaskStat'
-  import adminUserStat from './admin/adminUserStat'
-  import adminTaskDetail from './admin/adminTaskDetail'
+  import adminTaskStat from './adminTaskStat'
+  import adminUserStat from './adminUserStat'
+  import adminTaskDetail from './adminTaskDetail'
 
   export default {
     //id
