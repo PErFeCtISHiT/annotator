@@ -6,6 +6,7 @@ import cn.joker.entity.ImgMarkEntity;
 import cn.joker.entity.TagEntity;
 import cn.joker.entity.TaskEntity;
 import cn.joker.namespace.stdName;
+import cn.joker.sevice.TagService;
 import cn.joker.sevice.TaskService;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
@@ -16,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -35,6 +37,8 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
     private static final String DIR = System.getProperty("user.dir") + "/annotator/";
     private final TaskRepository taskRepository;
 
+    @Resource
+    private TagService tagService;
     @Autowired
     public TaskServiceImpl(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
@@ -98,6 +102,11 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
     @Override
     public boolean endTask(Integer taskID) {
         TaskEntity taskEntity = (TaskEntity) this.findByID(taskID);
+        List<TagEntity> tagEntities = taskEntity.getTagEntityList();
+        for(TagEntity tagEntity : tagEntities){
+            tagEntity.getTaskEntityList().remove(taskEntity);
+            tagService.modify(tagEntity);
+        }
         taskEntity.setState(2);
         taskEntity.setEndDate(new Date(System.currentTimeMillis()));
         List<ImageEntity> imageEntities = taskEntity.getImageEntityList();

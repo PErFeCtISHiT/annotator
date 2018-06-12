@@ -1,9 +1,11 @@
 package cn.joker.controller.taskcontrollers;
 
 import cn.joker.entity.TaskEntity;
+import cn.joker.entity.UserEntity;
 import cn.joker.namespace.stdName;
 import cn.joker.sevice.ImgService;
 import cn.joker.sevice.TaskService;
+import cn.joker.sevice.UserService;
 import cn.joker.util.FileHelper;
 import cn.joker.util.JsonHelper;
 import org.json.JSONObject;
@@ -29,7 +31,9 @@ public class ImgUploadController {
     @Resource
     private TaskService taskService;
     @Resource
-    ImgService imgService;
+    private ImgService imgService;
+    @Resource
+    private UserService userService;
 
     /**
      * @author:pis
@@ -57,8 +61,13 @@ public class ImgUploadController {
         if (taskEntity == null) {
             ret.put(stdName.MES, stdName.NULL);
         } else {
+            UserEntity userEntity = taskEntity.getSponsor();
             taskEntity.setImageNum(FileHelper.saveFiles(taskEntity, file, imgService));
-            ret.put(stdName.MES, taskService.modify(taskEntity));
+            userEntity.setPoints(userEntity.getPoints() - taskEntity.getImageNum());
+            if (userEntity.getPoints() < 0) {
+                ret.put(stdName.MES, !taskService.delete(taskEntity));
+            } else
+                ret.put(stdName.MES, taskService.modify(taskEntity) && userService.modify(userEntity));
         }
         JsonHelper.jsonToResponse(response, ret);
     }

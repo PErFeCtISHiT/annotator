@@ -57,9 +57,11 @@ public class TaskController {
         String startDate = jsonObject.getString(stdName.STARTDATE);
         task.setStartDate(DateHelper.convertStringToDate(startDate));
         task.setEndDate(DateHelper.convertStringToDate(endDate));
+        task.setType(jsonObject.getInt(stdName.TYPE));
         UserEntity userEntity = userService.findByUsername(jsonObject.getString(stdName.SPONSORNAME));
         task.setSponsor(userEntity);
-        userEntity.setPoints(userEntity.getPoints() - task.getImageNum());
+
+
 
         JSONArray tagArray = jsonObject.getJSONArray(stdName.TAG);
         List<TagEntity> tagEntities = new ArrayList<>();

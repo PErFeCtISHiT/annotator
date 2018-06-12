@@ -70,6 +70,9 @@ public class stdName {
     public static final String ID = "id";
     public static final String IMGS = "imgs";
     public static final Object IOEXCEPTION = "IOEXCEPTION";
+    public static final String TESTS = "tests";
+    public static final String RATE = "rate";
+    public static final String NUM = "num";
 
     private stdName() {
         throw new IllegalStateException("namespace class");

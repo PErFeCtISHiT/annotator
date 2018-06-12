@@ -1,6 +1,7 @@
 package cn.joker.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.context.annotation.Bean;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -25,6 +26,39 @@ public class TaskEntity implements Serializable {
     private Date startDate;
     private Date endDate;
     private Integer imageNum;
+    private Integer type;
+    private Integer polygonNum;
+    private Integer actNum;
+    @Basic
+    @Column(name = "actNum", nullable = true)
+    public Integer getActNum() {
+        return actNum;
+    }
+
+    public void setActNum(Integer actNum) {
+        this.actNum = actNum;
+    }
+
+    @Basic
+    @Column(name = "polygonNum", nullable = true)
+    public Integer getPolygonNum() {
+        return polygonNum;
+    }
+
+    public void setPolygonNum(Integer polygonNum) {
+        this.polygonNum = polygonNum;
+    }
+
+    @Basic
+    @Column(name = "type", nullable = true)
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     private List<ImageEntity> imageEntityList;
     private List<TagEntity> tagEntityList;
 

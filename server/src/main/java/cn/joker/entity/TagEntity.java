@@ -20,7 +20,19 @@ public class TagEntity implements Serializable {
     private String description;
     private List<TaskEntity> taskEntityList;
     private List<ImageEntity> testImageList;
+    private List<ImageEntity> testImageList1;
 
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "image_tag1", joinColumns = {@JoinColumn(referencedColumnName = "ID")}
+            , inverseJoinColumns = {@JoinColumn(referencedColumnName = "ID")})
+    @JsonIgnore
+    public List<ImageEntity> getTestImageList1() {
+        return testImageList1;
+    }
+
+    public void setTestImageList1(List<ImageEntity> testImageList1) {
+        this.testImageList1 = testImageList1;
+    }
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "image_tag", joinColumns = {@JoinColumn(referencedColumnName = "ID")}

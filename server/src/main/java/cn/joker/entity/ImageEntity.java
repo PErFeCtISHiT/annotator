@@ -20,7 +20,20 @@ public class ImageEntity implements Serializable {
     private TaskEntity img_task;
     private String imgName;
     private Boolean isMarked = false;
+    private Integer type;
     private List<ImgMarkEntity> imgMarkEntityList;
+    private List<UserEntity> workers;
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "image_worker", joinColumns = {@JoinColumn(referencedColumnName = "ID")}
+            , inverseJoinColumns = {@JoinColumn(referencedColumnName = "ID")})
+    @JsonIgnore
+    public List<UserEntity> getWorkers() {
+        return workers;
+    }
+
+    public void setWorkers(List<UserEntity> workers) {
+        this.workers = workers;
+    }
 
     @OneToMany(mappedBy = "image_imgMark", cascade = CascadeType.MERGE)
     @JsonIgnore
@@ -31,8 +44,18 @@ public class ImageEntity implements Serializable {
     public void setImgMarkEntityList(List<ImgMarkEntity> imgMarkEntityList) {
         this.imgMarkEntityList = imgMarkEntityList;
     }
+    @Basic
+    @Column(name = "type", nullable = true)
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
 
     @Basic
+
     @Column(name = "isMarked", nullable = false)
     public Boolean getMarked() {
         return isMarked;

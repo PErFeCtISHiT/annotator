@@ -273,16 +273,16 @@
                 }
 
                 else {
-                  //that.$message.warning('上传失败');
-                  //console.log('2')
+                  that.$message.warning('上传失败');
+                  console.log('2')
                 }
               })
               .catch(function (error) {
-                // that.$message({
-                //   message: '上传失败' + error,
-                //   type: 'warning'
-                // });
-                //console.log('1');
+                that.$message({
+                  message: '上传失败' + error,
+                  type: 'warning'
+                });
+                console.log('1');
               })
 
             /*console.log(this.newTask.taskName + " " + this.newTask.taskDescription);

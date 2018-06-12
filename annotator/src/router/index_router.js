@@ -6,7 +6,7 @@ Vue.use(VueRouter);
 import requesterTasks from '../components/requesterTasks'
 import distributeNewTask from '../components/distributeNewTask'
 import testDraw from '../components/testDraw'
-import admin from '../components/admin'
+import admin from '../components/admin/admin'
 import recharge from '../components/recharge'
 import workerAcceptTasks from '../components/workerAcceptTasks'
 import workerOnDoing from '../components/workerOnDoing'
@@ -16,6 +16,7 @@ import taskDetail from '../components/taskDetail'
 import firstPart from '../components/firstPart'
 import requesterWannaSee from '../components/requestorWannaSee'
 import requestorTotal from '../components/requestorTotal'
+import personalInfoMain from '../components/personal_info/personalInfoMain'
 
 export default new VueRouter({
   routes: [
@@ -60,6 +61,10 @@ export default new VueRouter({
       path: "/3-1",
       component: recharge
     },
+    {
+      path: "/4",
+      component: personalInfoMain
+    },
 
     {
       path: "/requesterLike/:taskID/:workerName",
@@ -74,7 +79,7 @@ export default new VueRouter({
       component: requestorTotal,
       props: true
     },
-    
+
     {
       path: "/taskDetail/:taskID",
       name: 'taskDetail',

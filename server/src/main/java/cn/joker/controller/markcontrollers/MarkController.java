@@ -57,10 +57,15 @@ public class MarkController {
         UserEntity userEntity = imgMark.getWorker();
         ImageEntity imageEntity = imgMark.getImage_imgMark();
         imageEntity.getImgMarkEntityList().add(imgMark);
-        userEntity.setPoints(userEntity.getPoints() + 1);
+        JSONArray jsonArray = new JSONArray(imgMark.getNotePolygon());
+        userEntity.setPoints(userEntity.getPoints() + jsonArray.length());
+        userEntity.setBonus(userEntity.getBonus() + jsonArray.length());
+        userEntity.setLev((int) (Math.log(userEntity.getBonus()) / Math.log(10) + 1));
         imageEntity.setMarked(true);
+        TaskEntity taskEntity = imageEntity.getImg_task();
+        taskEntity.setActNum(taskEntity.getActNum() + 1);
         JSONObject ret = new JSONObject();
-        ret.put(stdName.MES, userService.modify(userEntity) && imgService.modify(imageEntity) && imgMarkService.add(imgMark));
+        ret.put(stdName.MES, userService.modify(userEntity) && imgService.modify(imageEntity) && imgMarkService.add(imgMark) && taskService.modify(taskEntity));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -122,8 +127,7 @@ public class MarkController {
             List<WorkerAnswer> workerAnswers = segmentation.segment(recNodeList);
             if (workerAnswers != null && workerAnswers.size() != 0) {
                 recNodeObj.put(stdName.MARK, segmentation.getStrmax1());
-            }
-            else
+            } else
                 recNodeObj.put(stdName.MARK, stdName.NULL);
             RecNode recNode = recNodeList.getRecNode();
             recNodeObj.put(stdName.TOP, recNode.getTop());
@@ -153,9 +157,14 @@ public class MarkController {
     @RequestMapping(value = "/markTest", method = RequestMethod.GET)
     public void markTest(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
+        Integer type = Integer.valueOf(map.get(stdName.TYPE)[0]);
         TagEntity tagEntity = tagService.findByTag(map.get(stdName.TAG)[0]);
         JSONArray imgArray = new JSONArray();
-        List<ImageEntity> imageEntities = tagEntity.getTestImageList();
+        List<ImageEntity> imageEntities;
+        if (type == 1) {
+            imageEntities = tagEntity.getTestImageList();
+        } else
+            imageEntities = tagEntity.getTestImageList1();
         for (ImageEntity imageEntity : imageEntities) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(stdName.IMGURL, imageEntity.getUrl());
@@ -178,7 +187,7 @@ public class MarkController {
         UserEntity userEntity = userService.findByUsername(map.get(stdName.USERNAME)[0]);
         TagEntity tagEntity = tagService.findByTag(map.get(stdName.TAG)[0]);
         JSONObject ret = new JSONObject();
-        boolean b = tagService.markIntegration(tagEntity);
+        boolean b = tagService.markIntegration(tagEntity, Integer.valueOf(map.get(stdName.TYPE)[0]));
         if (!b || userEntity.getWorkerMatrixEntities().get(tagEntity.getId() - 1).getCorrect() < 0.7) {
             ret.put(stdName.MES, false);
         } else {
@@ -196,16 +205,40 @@ public class MarkController {
     public void markOne(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
         TagEntity tagEntity = tagService.findByTag(map.get(stdName.TAG)[0]);
+        Integer type = Integer.valueOf(map.get(stdName.TYPE)[0]);
+        String username = map.get(stdName.USERNAME)[0];
+        UserEntity user = userService.findByUsername(username);
         List<TaskEntity> taskEntities = tagEntity.getTaskEntityList();
         JSONObject ret = new JSONObject();
         for (TaskEntity taskEntity : taskEntities) {
-            List<ImageEntity> imageEntities = taskEntity.getImageEntityList();
-            for (ImageEntity imageEntity : imageEntities) {
-                if (!imageEntity.getMarked()) {
-                    ret.put(stdName.IMGURL, imageEntity.getUrl());
-                    ret.put(stdName.DESCRIPTION, taskEntity.getDescription());
-                    JsonHelper.jsonToResponse(response, ret);
-                    return;
+            if (taskEntity.getType().equals(type)) {
+                List<ImageEntity> imageEntities = taskEntity.getImageEntityList();
+                for (ImageEntity imageEntity : imageEntities) {
+                    if (user.getLev() >= taskEntity.getWorkerLevel()) {
+                        if (type == 3 && taskEntity.getPolygonNum() < taskEntity.getActNum()) {
+                            int flag = 0;
+                            List<UserEntity> userEntities = imageEntity.getWorkers();
+                            for (UserEntity userEntity : userEntities) {
+                                if (userEntity.getUsername().equals(username)) {
+                                    flag = 1;
+                                    break;
+                                }
+                            }
+                            if (flag == 0) {
+                                userEntities.add(userService.findByUsername(username));
+                                imgService.modify(imageEntity);
+                                ret.put(stdName.IMGURL, imageEntity.getUrl());
+                                ret.put(stdName.DESCRIPTION, taskEntity.getDescription());
+                                JsonHelper.jsonToResponse(response, ret);
+                                return;
+                            }
+                        } else if (!imageEntity.getMarked() && type != 3) {
+                            ret.put(stdName.IMGURL, imageEntity.getUrl());
+                            ret.put(stdName.DESCRIPTION, taskEntity.getDescription());
+                            JsonHelper.jsonToResponse(response, ret);
+                            return;
+                        }
+                    }
                 }
             }
         }

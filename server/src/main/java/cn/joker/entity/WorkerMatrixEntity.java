@@ -34,8 +34,9 @@ public class WorkerMatrixEntity implements Serializable {
 
     }
 
-    public WorkerMatrixEntity(UserEntity userEntity) {
-        C00 = C01 = C10 = C11 = 1.0;
+    public WorkerMatrixEntity(UserEntity userEntity,Double rate,Integer num) {
+        C00 = C11 = rate * num / 2;
+        C01 = C10 = (1 - rate) * num / 2;
         this.user_matrix = userEntity;
     }
 

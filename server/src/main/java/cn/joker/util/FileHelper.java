@@ -124,6 +124,7 @@ public class FileHelper {
 
         ImageEntity imageEntity = new ImageEntity();
         imageEntity.setImg_task(taskEntity);
+        imageEntity.setType(taskEntity.getType());
         imageEntity.setImgName(fileName.substring(fileName.lastIndexOf('/') + 1, fileName.lastIndexOf('.')));
         imageEntity.setUrl("task/" + String.valueOf(taskEntity.getId()) + "/images/" + fileName);
         imgService.add(imageEntity);

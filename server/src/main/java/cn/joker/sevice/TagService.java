@@ -14,7 +14,9 @@ public interface TagService extends PubService {
 
     boolean refreshTest(TagEntity tagEntity);
 
-    boolean markIntegration(TagEntity tagEntity);
+    boolean markIntegration(TagEntity tagEntity,Integer type);
 
     List<TagEntity> findAll();
+
+    Double mapTestTable(List<Boolean> test);
 }

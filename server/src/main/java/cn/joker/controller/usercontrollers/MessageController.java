@@ -37,6 +37,8 @@ public class MessageController {
     private BonusHistoryService bonusHistoryService;
     @Resource
     private WorkerMatrixService workerMatrixService;
+    @Resource
+    private TagService tagService;
 
 
     /**
@@ -50,12 +52,29 @@ public class MessageController {
         UserEntity userInfo = new UserEntity();
         userInfo.setPoints(100);
         userInfo.setUsername((String) jsonObject.get(stdName.USERNAME));
-
+        userInfo.setWorkerMatrixEntities(new ArrayList<>());
         JSONArray jsonArray = jsonObject.getJSONArray(stdName.ROLELIST);
         List<SysRoleEntity> roleList = new ArrayList<>();
         for (Object obj : jsonArray) {
             Integer srid = (Integer) obj;
             roleList.add((SysRoleEntity) sysRoleService.findByID(srid));
+            if(srid == 4){
+                WorkerMatrixEntity workerMatrixEntity = new WorkerMatrixEntity(userInfo,jsonObject.getDouble(stdName.RATE),jsonObject.getInt(stdName.NUM));
+                workerMatrixService.add(workerMatrixEntity);
+                userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
+                workerMatrixEntity = new WorkerMatrixEntity(userInfo,jsonObject.getDouble(stdName.RATE),jsonObject.getInt(stdName.NUM));
+                workerMatrixService.add(workerMatrixEntity);
+                userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
+                workerMatrixEntity = new WorkerMatrixEntity(userInfo,jsonObject.getDouble(stdName.RATE),jsonObject.getInt(stdName.NUM));
+                workerMatrixService.add(workerMatrixEntity);
+                userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
+                workerMatrixEntity = new WorkerMatrixEntity(userInfo,jsonObject.getDouble(stdName.RATE),jsonObject.getInt(stdName.NUM));
+                workerMatrixService.add(workerMatrixEntity);
+                userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
+                workerMatrixEntity = new WorkerMatrixEntity(userInfo,jsonObject.getDouble(stdName.RATE),jsonObject.getInt(stdName.NUM));
+                workerMatrixService.add(workerMatrixEntity);
+                userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
+            }
         }
         userInfo.setRoleEntityList(roleList);
         userInfo.setPasswr((String) jsonObject.get(stdName.PASSWORD));
@@ -66,22 +85,6 @@ public class MessageController {
         userInfo.setBonus(0);
         JSONObject ret = new JSONObject();
         ret.put(stdName.MES, userService.add(userInfo));
-        userInfo.setWorkerMatrixEntities(new ArrayList<>());
-        WorkerMatrixEntity workerMatrixEntity = new WorkerMatrixEntity(userInfo);
-        workerMatrixService.add(workerMatrixEntity);
-        userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
-        workerMatrixEntity = new WorkerMatrixEntity(userInfo);
-        workerMatrixService.add(workerMatrixEntity);
-        userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
-        workerMatrixEntity = new WorkerMatrixEntity(userInfo);
-        workerMatrixService.add(workerMatrixEntity);
-        userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
-        workerMatrixEntity = new WorkerMatrixEntity(userInfo);
-        workerMatrixService.add(workerMatrixEntity);
-        userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
-        workerMatrixEntity = new WorkerMatrixEntity(userInfo);
-        workerMatrixService.add(workerMatrixEntity);
-        userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -219,5 +222,21 @@ public class MessageController {
             ret.put(stdName.MES, stdName.NULL);
         JsonHelper.jsonToResponse(response, ret);
 
+    }
+    /**
+     *@author:pis
+     *@description: 工人注册测试
+     *@date: 13:33 2018/6/12
+     */
+    @RequestMapping(value = "/signTest", method = RequestMethod.GET)
+    public void signTest(HttpServletRequest request, HttpServletResponse response) {
+        JSONObject jsonObject = JsonHelper.requestToJson(request);
+        JSONArray jsonArray = jsonObject.getJSONArray(stdName.TESTS);
+        List tests = (List) jsonArray;
+        Double correctRate = tagService.mapTestTable(tests);
+        JSONObject ret = new JSONObject();
+        ret.put(stdName.MES,correctRate >= 0.7);
+        ret.put(stdName.RATE,correctRate);
+        JsonHelper.jsonToResponse(response, ret);
     }
 }
