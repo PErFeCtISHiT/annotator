@@ -1,7 +1,7 @@
 <template>
   <div id>
     <!--<p>{{title}}</p>-->
-    <el-button type="text" @click="dialogVisible = true">点击打开 Dialog</el-button>
+    <!--<el-button type="text" @click="dialogVisible = true">点击打开 Dialog</el-button>-->
 
     <el-dialog
       v-dialogDrag
@@ -15,27 +15,28 @@
       </span>
     </el-dialog>
 
-    <canvas-drawer>
-    </canvas-drawer>
+    <worker-get-task></worker-get-task>
 
-    <canvas id="canvas2" width=600 height=400 style="border: 1px solid #000;"></canvas>
-    <div id="test"></div>
-    <button @click="handleCanvas">再次测试</button>
-    <router-link :to="'/1-1'" replace>次级跳转测试</router-link>
-    <br>
-    <br>
-    <br>
-    <div id="test3"></div>
-    <task-item :task-msg="obj"></task-item>
+    <!--<canvas id="canvas2" width=600 height=400 style="border: 1px solid #000;"></canvas>-->
+    <!--<div id="test"></div>-->
+    <!--<button @click="handleCanvas">再次测试</button>-->
+    <!--<router-link :to="'/1-1'" replace>次级跳转测试</router-link>-->
+    <!--<br>-->
+    <!--<br>-->
+    <!--<br>-->
+    <!--<div id="test3"></div>-->
+    <!--<task-item :task-msg="obj"></task-item>-->
   </div>
 </template>
 
 <script>
   import TaskItem from "./taskItem";
   import CanvasDrawer from "./drawer/canvasDrawer";
+  import WorkerGetTask from "./worker/WorkerGetTask";
 
   export default {
     components: {
+      WorkerGetTask,
       CanvasDrawer,
       TaskItem
     },

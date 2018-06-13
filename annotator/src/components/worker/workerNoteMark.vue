@@ -49,7 +49,7 @@
 <script>
   import {mapMutations} from 'vuex'
   import {mapActions} from 'vuex'
-  import OneTask from "./oneTask";
+  import OneTask from "../oneTask";
 
   export default {
     components: {OneTask},

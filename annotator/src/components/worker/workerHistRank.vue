@@ -31,7 +31,7 @@
     <el-col :span="16">
       <el-row>
         <el-col :span="2">
-          <img src="../images/history.png" width="60px" style="margin-top: 10px">
+          <img src="../../images/history.png" width="60px" style="margin-top: 10px">
         </el-col>
         <el-col :span="18">
           <div style="margin-top: 20px; color: #545457; font-size: 30px; font-weight: bolder">
