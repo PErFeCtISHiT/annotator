@@ -36,25 +36,27 @@
 
 
       <el-col :span="16">
-        <el-row type="flex" justify="center" align="middle"
-                :style="borderMsg+'; width:100%; height:' + componentHeight + 'px'">
-          <!--对齐方法：用flex模式-->
-          <div v-if="loadCanvas" :style="getSaverStyle">
-            <!--touch事件是给手机端用的-->
-            <canvas
-              v-if="loadCanvas"
-              @mousedown="handleCanvasDownDistribute($event)"
-              @mouseup="handleCanvasUpDistribute($event)"
-              @mousemove="handleCanvasMoveDistribute($event)"
-              @touchstart="handleCanvasDownDistribute($event)"
-              @touchend="handleCanvasUpDistribute($event)"
-              @touchmove="handleCanvasMoveDistribute($event)"
-              :ref="canvasRef"
-              :width="canvasWidth"
-              :height="canvasHeight"
-              :style="borderMsg"></canvas>
-          </div>
-        </el-row>
+        <div :ref="canvasOuterSaver">
+          <el-row type="flex" justify="center" align="middle"
+                  :style="borderMsg+'; width:100%; height:' + componentHeight + 'px'">
+            <!--对齐方法：用flex模式-->
+            <div v-if="loadCanvas" :style="getSaverStyle">
+              <!--touch事件是给手机端用的-->
+              <canvas
+                v-if="loadCanvas"
+                @mousedown="handleCanvasDownDistribute($event)"
+                @mouseup="handleCanvasUpDistribute($event)"
+                @mousemove="handleCanvasMoveDistribute($event)"
+                @touchstart="handleCanvasDownDistribute($event)"
+                @touchend="handleCanvasUpDistribute($event)"
+                @touchmove="handleCanvasMoveDistribute($event)"
+                :ref="canvasRef"
+                :width="canvasWidth"
+                :height="canvasHeight"
+                :style="borderMsg"></canvas>
+            </div>
+          </el-row>
+        </div>
       </el-col>
 
       <el-col :span="4" :style="borderMsg+'; height:100%'">
@@ -202,15 +204,15 @@
                 <el-row type="flex" justify="center" align="middle">
                   <el-button-group>
                     <el-tooltip class="item" effect="dark" content="重新渲染并放大" placement="bottom-start">
-                      <el-button type="primary" size="small" icon="el-icon-zoom-in">
+                      <el-button type="primary" size="small" icon="el-icon-zoom-in" @click="handleSizeUp">
                       </el-button>
                     </el-tooltip>
                     <el-tooltip class="item" effect="dark" content="重新渲染并缩小" placement="bottom-start">
-                      <el-button type="primary" size="small" icon="el-icon-zoom-out">
+                      <el-button type="primary" size="small" icon="el-icon-zoom-out" @click="handleSizeDown">
                       </el-button>
                     </el-tooltip>
                     <el-tooltip class="item" effect="dark" content="重新渲染并回归初始大小" placement="bottom-start">
-                      <el-button type="primary" size="small" icon="el-icon-search">
+                      <el-button type="primary" size="small" icon="el-icon-search" @click="handleSizeBack">
                       </el-button>
                     </el-tooltip>
                   </el-button-group>
@@ -268,6 +270,10 @@
 <script>
   import ElRow from "element-ui/packages/row/src/row";
   import '../../assets/icon/iconfont.css'      //在要用的页面引入icon
+  const canvasMinWidth = 100;
+  const canvasMinHeight = canvasMinWidth;
+  const canvasOuterSaver = 'canvasOuterSaver';
+  const deltaToChange = 40;
   const rectMode = 'rect';
   const polyMode = 'poly';
   const moveMode = 'move';
@@ -364,6 +370,8 @@
 
     data() {
       return {
+        canvasOuterSaver,
+
         checkImages: [],
         lengthFirstToZero: false,
         imgCounter: 1,
@@ -380,7 +388,7 @@
         currentRectX: 0,
         currentRectY: 0,
 
-        taskDescriptionHeight: taskDescriptionHeight,
+        taskDescriptionHeight,
         componentHeight: originalHeight + padding,
         borderMsg: 'border:1px solid #000; box-sizing: border-box;',
 
@@ -390,6 +398,7 @@
         loadCanvas: false,
 
         globalRate: 1,
+        originGlobalRate: 1,
 
         imgSrc: '',
         currentDescription: '请按照给定的要求进行标注',
@@ -465,18 +474,26 @@
         return this.markType === 0;
       },
 
-      markRequireStatus(){            //标记的填写要求 0:一定不填 1：可填可不填 2：必须填
-        switch (this.markType){
-          case 1: return 0;
-          case 2: return 2;
+      markRequireStatus() {            //标记的填写要求 0:一定不填 1：可填可不填 2：必须填
+        switch (this.markType) {
+          case 1:
+            return 0;
+          case 2:
+            return 2;
           case 0:
           case 3:
-          default: return 1;
+          default:
+            return 1;
         }
-      }
+      },
+
     },
 
     methods: {
+      canvasOuterSaverRect() {
+        return this.$refs[this.canvasOuterSaver].getBoundingClientRect();     //不能是vue组件，要绑定在div或其他原生组件上
+      },
+
       shouldShow(mode) {
         if (mode === rectMode) {
           return this.showRect;
@@ -825,6 +842,7 @@
         this.imgSrc = imgSrc;
         this.currentDescription = description;
         this.globalRate = 1;
+        this.originGlobalRate = 1;
         this.currentLayerName = '';
         this.lengthFirstToZero = false;
 
@@ -855,6 +873,7 @@
           that.canvasWidth = width;
           that.canvasHeight = height;
 
+          that.originGlobalRate = that.globalRate;
           that.loadCanvas = true;
         };
 
@@ -1418,25 +1437,77 @@
           });
       },
 
+      handleSizeUp() {
+        let oldWidth = this.canvasWidth;
+        let newWidth = oldWidth + deltaToChange;
+        let changeRate = newWidth / oldWidth;
+        let newHeight = this.canvasHeight * changeRate;
+
+        let maxWidth = this.canvasOuterSaverRect().width;
+        let maxHeight = this.canvasOuterSaverRect().height;
+
+        if (newWidth < maxWidth && newHeight < maxHeight && newWidth > canvasMinWidth && newHeight > canvasMinHeight) {
+          this.canvasWidth = newWidth;
+          this.canvasHeight = newHeight;
+          this.globalRate *= changeRate;
+          this.refreshLayerSize(changeRate);
+        }
+      },
+
+      handleSizeDown() {
+        let oldWidth = this.canvasWidth;
+        let newWidth = oldWidth - deltaToChange;
+        let changeRate = newWidth / oldWidth;
+        let newHeight = this.canvasHeight * changeRate;
+
+        let maxWidth = this.canvasOuterSaverRect().width;
+        let maxHeight = this.canvasOuterSaverRect().height;
+
+        if (newWidth < maxWidth && newHeight < maxHeight && newWidth > canvasMinWidth && newHeight > canvasMinHeight) {
+          this.canvasWidth = newWidth;
+          this.canvasHeight = newHeight;
+          this.globalRate *= changeRate;
+          this.refreshLayerSize(changeRate);
+        }
+      },
+
+      handleSizeBack() {
+        let changeRate = this.originGlobalRate / this.globalRate;
+        this.canvasWidth *= changeRate;
+        this.canvasHeight *= changeRate;
+        this.globalRate = this.originGlobalRate;
+        this.refreshLayerSize(changeRate);
+      },
+
+      refreshLayerSize(changeRate) {
+        let canvasJQ = this.getCanvasTarget();
+        canvasJQ.getLayers(function (layer) {
+          if (layer.type === rectLayer) {
+            layer.x *= changeRate;
+            layer.y *= changeRate;
+            layer.width *= changeRate;
+            layer.height *= changeRate;
+          }
+          if (layer.type === polyLayer) {
+            layer.x *= changeRate;
+            layer.y *= changeRate;
+            for(let i = 0; i < layer.data.points.length; i++){
+              layer['x'+(i+1)] *= changeRate;
+              layer['y'+(i+1)] *= changeRate;
+            }
+          }
+          return false; // do not generate the array
+        });
+        this.getCanvasTarget().drawLayers();
+      },
     },
 
-    beforeDestroy(){
+    beforeDestroy() {
       this.setCurrentLayerUnlocked();
-    }
+    },
   }
 </script>
 
-<style>
-  .el-scrollbar__wrap {
-    overflow-x: hidden;
-  }
+<style scoped>
 
-  textarea.el-textarea__inner {
-    font-family: Microsoft YaHei, serif;
-  }
-
-  .el-card.is-hover-shadow:hover {
-    -webkit-box-shadow: 0 4px 12px 0 rgba(0, 0, 0, .4);
-    box-shadow: 0 4px 12px 0 rgba(0, 0, 0, .4)
-  }
 </style>

@@ -1,43 +1,46 @@
 <template>
-  <div id="navigation-bar">
-    <el-menu
-      :default-active="$route.path" class="el-menu-demo" mode="horizontal"
-      router text-color="#fff" background-color="#222C62" active-text-color="#ffd04b"
-      ref="naviBar"
-    >
+  <el-row>
+    <el-col :span="22">
+      <el-menu
+        :default-active="$route.path" class="el-menu-demo" mode="horizontal"
+        router text-color="#fff" background-color="#222C62" active-text-color="#ffd04b"
+        ref="naviBar">
 
-      <el-menu-item index="/0">首页</el-menu-item>
+        <el-menu-item index="/0">首页</el-menu-item>
 
-      <el-menu-item v-if="$store.state.user.isAdmin" index="/admin">系统信息</el-menu-item>
+        <el-menu-item v-if="$store.state.user.isAdmin" index="/admin">系统信息</el-menu-item>
 
-      <el-submenu index="1" :disabled="!$store.state.user.isRequester" v-if="!$store.state.user.isAdmin">
-        <template slot="title">发布者</template>
-        <el-menu-item index="/1-1">我发布的任务</el-menu-item>
-        <el-menu-item index="/1-2">发布新任务</el-menu-item>
-      </el-submenu>
+        <el-submenu index="1" :disabled="!$store.state.user.isRequester" v-if="!$store.state.user.isAdmin">
+          <template slot="title">发布者</template>
+          <el-menu-item index="/1-1">我发布的任务</el-menu-item>
+          <el-menu-item index="/1-2">发布新任务</el-menu-item>
+        </el-submenu>
 
-      <el-submenu index="2" :disabled="!$store.state.user.isWorker" v-if="!$store.state.user.isAdmin">
-        <template slot="title">工人</template>
-        <el-menu-item index="/2-1">查看与获取任务</el-menu-item>
-        <el-menu-item index="/2-2">进行中的任务</el-menu-item>
-        <el-menu-item index="/2-3">积分历史与排名</el-menu-item>
-      </el-submenu>
+        <el-submenu index="2" :disabled="!$store.state.user.isWorker" v-if="!$store.state.user.isAdmin">
+          <template slot="title">工人</template>
+          <el-menu-item index="/2-1">查看与获取任务</el-menu-item>
+          <el-menu-item index="/2-2">进行中的任务</el-menu-item>
+          <el-menu-item index="/2-3">积分历史与排名</el-menu-item>
+        </el-submenu>
 
-      <el-submenu index="3" v-if="!$store.state.user.isAdmin">
-        <template slot="title">
-          <i class="el-icon-plus"></i>
-          <span>{{ $store.state.user.userInfo.points }}</span>
-        </template>
-        <el-menu-item index="/3-1">充值</el-menu-item>
-        <el-menu-item index="/3-2">提现</el-menu-item>
+        <el-submenu index="3" v-if="!$store.state.user.isAdmin">
+          <template slot="title">
+            <i class="el-icon-plus"></i>
+            <span>{{ $store.state.user.userInfo.points }}</span>
+          </template>
+          <el-menu-item index="/3-1">充值</el-menu-item>
+          <el-menu-item index="/3-2">提现</el-menu-item>
 
-      </el-submenu>
-      <el-menu-item index="/4">个人信息</el-menu-item>
+        </el-submenu>
+        <el-menu-item index="/4">个人信息</el-menu-item>
+      </el-menu>
 
+    </el-col>
+
+    <el-col :span="2">
       <el-button class="navigation-button" @click="handleLogOut">登出</el-button>
-    </el-menu>
-
-  </div>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
@@ -105,25 +108,15 @@
 </script>
 
 <style scoped>
-  #navigation-bar {
-    alignment: right;
-  }
 
   .navigation-button {
     background-color: #22326c;
     color: aliceblue;
     vertical-align: center;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-top: 12px;
-    margin-left: 12px;
+    margin: 10px auto;
   }
 
   .el-menu-demo {
-    padding-right: 20px;
-    /*background-color: #222C62;*/
-    /*text-color: #fff;*/
-    /*active-text-color: #ffd04b;*/
-    border-bottom-width: 0px;
+    border-bottom-width: 0;
   }
 </style>
