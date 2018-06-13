@@ -15,7 +15,8 @@
       </span>
     </el-dialog>
 
-    <worker-get-task></worker-get-task>
+    <worker-get-task>
+    </worker-get-task>
 
     <!--<canvas id="canvas2" width=600 height=400 style="border: 1px solid #000;"></canvas>-->
     <!--<div id="test"></div>-->

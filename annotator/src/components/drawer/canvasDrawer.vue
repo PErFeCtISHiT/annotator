@@ -351,7 +351,7 @@
         if (this.markType === 1) {
           this.markRequireStatus = 0;
         } else {
-          this.markRequireStatus = 1;
+          this.markRequireStatus = 2;
         }
         this.getCheckImgsAndRefreshCanvas();
       }
@@ -431,8 +431,6 @@
         layerIsLocked: false,
         lockIntervalID: 0,
 
-        markRequireStatus: 1,      //标记的填写要求 0:一定不填 1：可填可不填 2：必须填
-
         markInputMsg: '',
         lastX: 0,
         lastY: 0,
@@ -465,6 +463,16 @@
 
       showTotal() {
         return this.markType === 0;
+      },
+
+      markRequireStatus(){            //标记的填写要求 0:一定不填 1：可填可不填 2：必须填
+        switch (this.markType){
+          case 1: return 0;
+          case 2: return 2;
+          case 0:
+          case 3:
+          default: return 1;
+        }
       }
     },
 
@@ -1410,6 +1418,10 @@
           });
       },
 
+    },
+
+    beforeDestroy(){
+      this.setCurrentLayerUnlocked();
     }
   }
 </script>
