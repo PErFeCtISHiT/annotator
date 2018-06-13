@@ -1,252 +1,267 @@
 <template>
-  <div :style="'height:' + componentHeight + 'px'">
+  <div>
 
-    <!--对话框平时是不显示的-->
-    <el-dialog
-      v-dialogDrag="{screenX:eventScreenX,screenY:eventScreenY}"
-      title="标记内容"
-      @open="doFocus"
-      :visible.sync="dialogVisible"
-      :before-close="function(done) {
+    <div :style="borderMsg+`height:${taskDescriptionHeight}px`">
+      <h3 style="margin-left: 12px">{{'· 任务描述：'+currentDescription}}</h3>
+    </div>
+
+    <div :style="'height:' + componentHeight + 'px'">
+
+      <!--对话框平时是不显示的-->
+      <el-dialog
+        v-dialogDrag="{screenX:eventScreenX,screenY:eventScreenY}"
+        title="标记内容"
+        @open="doFocus"
+        :visible.sync="dialogVisible"
+        :before-close="function(done) {
         if(handleClose()){
         done();
         }
       }"
-      width="30%">
-      <el-input
-        :ref="inputRef"
-        placeholder="请输入标记的文本内容"
-        v-model="markInputMsg"
-        @keyup.enter.native="handleRevise"
-        autofocus
-        clearable>
-      </el-input>
-      <span slot="footer" class="dialog-footer">
+        width="30%">
+        <el-input
+          :ref="inputRef"
+          placeholder="请输入标记的文本内容"
+          v-model="markInputMsg"
+          @keyup.enter.native="handleRevise"
+          autofocus
+          clearable>
+        </el-input>
+        <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
         <el-button type="warning" @click="handleDelete">删 除</el-button>
         <el-button type="primary" @click="handleRevise">修 改</el-button>
       </span>
-    </el-dialog>
+      </el-dialog>
 
 
-    <el-col :span="16">
-      <el-row type="flex" justify="center" align="middle"
-              :style="borderMsg+'; width:100%; height:' + componentHeight + 'px'">
-        <!--对齐方法：用flex模式-->
-        <div v-if="loadCanvas" :style="getSaverStyle">
-          <!--touch事件是给手机端用的-->
-          <canvas
-            v-if="loadCanvas"
-            @mousedown="handleCanvasDownDistribute($event)"
-            @mouseup="handleCanvasUpDistribute($event)"
-            @mousemove="handleCanvasMoveDistribute($event)"
-            @touchstart="handleCanvasDownDistribute($event)"
-            @touchend="handleCanvasUpDistribute($event)"
-            @touchmove="handleCanvasMoveDistribute($event)"
-            :ref="canvasRef"
-            :width="canvasWidth"
-            :height="canvasHeight"
-            :style="borderMsg"></canvas>
-        </div>
-      </el-row>
-    </el-col>
+      <el-col :span="16">
+        <el-row type="flex" justify="center" align="middle"
+                :style="borderMsg+'; width:100%; height:' + componentHeight + 'px'">
+          <!--对齐方法：用flex模式-->
+          <div v-if="loadCanvas" :style="getSaverStyle">
+            <!--touch事件是给手机端用的-->
+            <canvas
+              v-if="loadCanvas"
+              @mousedown="handleCanvasDownDistribute($event)"
+              @mouseup="handleCanvasUpDistribute($event)"
+              @mousemove="handleCanvasMoveDistribute($event)"
+              @touchstart="handleCanvasDownDistribute($event)"
+              @touchend="handleCanvasUpDistribute($event)"
+              @touchmove="handleCanvasMoveDistribute($event)"
+              :ref="canvasRef"
+              :width="canvasWidth"
+              :height="canvasHeight"
+              :style="borderMsg"></canvas>
+          </div>
+        </el-row>
+      </el-col>
 
-    <el-col :span="4" :style="borderMsg+'; height:100%'">
-      <el-row :style="borderMsg+'; width:100%; height:20%'">
-        <el-row style="margin-left: 5%"><h4>全局属性：</h4></el-row>
+      <el-col :span="4" :style="borderMsg+'; height:100%'">
+        <el-row :style="borderMsg+'; width:100%; height:20%'">
+          <el-row style="margin-left: 5%"><h4>全局属性：</h4></el-row>
 
-        <el-row style="margin: 0 5% 0 10%">
-          <!--上 右 下 左-->
-          <el-col :span="12" style="margin-top: 1.5%">
-            <el-popover
-              placement="top-start"
-              title="提示"
-              width="200"
-              content="这里设置的颜色将用于表示标记被选中时表现出的颜色"
-              trigger="hover">
-              <span slot="reference" style="cursor: pointer">焦点颜色：</span>
-            </el-popover>
-          </el-col>
+          <el-row style="margin: 0 5% 0 10%">
+            <!--上 右 下 左-->
+            <el-col :span="12" style="margin-top: 1.5%">
+              <el-popover
+                placement="top-start"
+                title="提示"
+                width="200"
+                content="这里设置的颜色将用于表示标记被选中时表现出的颜色"
+                trigger="hover">
+                <span slot="reference" style="cursor: pointer">焦点颜色：</span>
+              </el-popover>
+            </el-col>
 
-          <el-color-picker
-            style="margin-left: 7%"
-            v-model="strokeFocusColor"
-            size="small"
-            show-alpha
-            :predefine="predefineColors">
-          </el-color-picker>
+            <el-color-picker
+              style="margin-left: 7%"
+              v-model="strokeFocusColor"
+              size="small"
+              show-alpha
+              :predefine="predefineColors">
+            </el-color-picker>
+
+          </el-row>
 
         </el-row>
+        <el-row :style="borderMsg+'; width:100%; height:30%'">
+          <el-row style="margin-left: 5%"><h4>标记属性：</h4></el-row>
 
-      </el-row>
-      <el-row :style="borderMsg+'; width:100%; height:30%'">
-        <el-row style="margin-left: 5%"><h4>标记属性：</h4></el-row>
+          <el-row style="margin: 0 5% 0 10%">
+            <!--上 右 下 左-->
+            <el-col :span="12" style="margin-top: 1.5%">
+              <el-popover
+                placement="top-start"
+                title="提示与设置"
+                width="200"
+                trigger="hover">
+                <p>这是下一个标记的笔触颜色，默认会被自动更改</p>
+                <el-checkbox v-model="strokeNormalColorAutoChange">自动更改</el-checkbox>
+                <span slot="reference" style="cursor: pointer">线条颜色：</span>
+              </el-popover>
+            </el-col>
+            <el-color-picker
+              style="margin-left: 7%"
+              v-model="strokeNormalColor"
+              size="small"
+              show-alpha
+              :predefine="predefineColors">
+            </el-color-picker>
+          </el-row>
 
-        <el-row style="margin: 0 5% 0 10%">
-          <!--上 右 下 左-->
-          <el-col :span="12" style="margin-top: 1.5%">
+          <el-row style="margin: 5% 5% 0 10%">
+            <el-col :span="12" style="margin-top: 1%">
+              <el-popover
+                placement="top-start"
+                title="提示"
+                width="200"
+                content="这里设置的线条宽度将决定下一个标记的线宽，默认是2.5"
+                trigger="hover">
+                <span slot="reference" style="cursor: pointer">线条宽度：</span>
+              </el-popover>
+            </el-col>
+
             <el-popover
-              placement="top-start"
-              title="提示与设置"
+              placement="right"
               width="200"
-              trigger="hover">
-              <p>这是下一个标记的笔触颜色，默认会被自动更改</p>
-              <el-checkbox v-model="strokeNormalColorAutoChange">自动更改</el-checkbox>
-              <span slot="reference" style="cursor: pointer">线条颜色：</span>
+              trigger="click">
+
+              <el-slider v-model="strokeWidth" :min="100" :max="400" :format-tooltip="formatTooltip">
+              </el-slider>
+
+              <el-button slot="reference" type="normal" round size="mini">{{(strokeWidth/100).toFixed(2)}}</el-button>
             </el-popover>
-          </el-col>
-          <el-color-picker
-            style="margin-left: 7%"
-            v-model="strokeNormalColor"
-            size="small"
-            show-alpha
-            :predefine="predefineColors">
-          </el-color-picker>
+
+          </el-row>
         </el-row>
+        <el-row :style="borderMsg+'; width:100%; height:50%'">
+          <el-row style="margin-left: 5%"><h4>图像控制：</h4></el-row>
+          <el-scrollbar style="height: 77%; width: 100%; overflow-x: hidden">
+            <el-collapse v-model="activeMode" accordion @change="handleCollapseChange">
+              <el-collapse-item name="drawing">
+                <template slot="title">
+                  <div style="margin-left: 10%">
+                    <el-radio v-model="activeMode" label="drawing">绘制</el-radio>
+                  </div>
+                </template>
 
-        <el-row style="margin: 5% 5% 0 10%">
-          <el-col :span="12" style="margin-top: 1%">
-            <el-popover
-              placement="top-start"
-              title="提示"
-              width="200"
-              content="这里设置的线条宽度将决定下一个标记的线宽，默认是2.5"
-              trigger="hover">
-              <span slot="reference" style="cursor: pointer">线条宽度：</span>
-            </el-popover>
-          </el-col>
+                <el-row type="flex" justify="center" align="middle">
+                  <el-radio-group v-model="drawingType" size="small" @change="handleDrawingTypeChange">
+                    <el-tooltip class="item" effect="dark" content="进行矩形标注" placement="bottom-start">
+                      <el-radio-button v-if="showRect" label="rect">
+                        <slot><i class="el-icon-whisky-rect"></i></slot>
+                      </el-radio-button>
+                    </el-tooltip>
+                    <el-tooltip class="item" effect="dark" content="进行区域划分" placement="bottom-start">
+                      <el-radio-button v-if="showPoly" label="poly">
+                        <slot><i class="el-icon-whisky-poly"></i></slot>
+                      </el-radio-button>
+                    </el-tooltip>
+                    <el-tooltip class="item" effect="dark" content="进行标记移动" placement="bottom-start">
+                      <el-radio-button label="move">
+                        <slot><i class="el-icon-rank"></i></slot>
+                      </el-radio-button>
+                    </el-tooltip>
+                  </el-radio-group>
+                </el-row>
 
-          <el-popover
-            placement="right"
-            width="200"
-            trigger="click">
+              </el-collapse-item>
 
-            <el-slider v-model="strokeWidth" :min="100" :max="400" :format-tooltip="formatTooltip">
-            </el-slider>
+              <el-collapse-item name="showing">
+                <template slot="title">
+                  <div style="margin-left: 10%">
+                    <el-radio v-model="activeMode" label="showing">显示</el-radio>
+                  </div>
+                </template>
 
-            <el-button slot="reference" type="normal" round size="mini">{{(strokeWidth/100).toFixed(2)}}</el-button>
-          </el-popover>
-
-        </el-row>
-      </el-row>
-      <el-row :style="borderMsg+'; width:100%; height:50%'">
-        <el-row style="margin-left: 5%"><h4>图像控制：</h4></el-row>
-        <el-scrollbar style="height: 77%; width: 100%; overflow-x: hidden">
-          <el-collapse v-model="activeMode" accordion @change="handleCollapseChange">
-            <el-collapse-item name="drawing">
-              <template slot="title">
-                <div style="margin-left: 10%">
-                  <el-radio v-model="activeMode" label="drawing">绘制</el-radio>
-                </div>
-              </template>
-
-              <el-row type="flex" justify="center" align="middle">
-                <el-radio-group v-model="drawingType" size="small" @change="handleDrawingTypeChange">
-                  <el-tooltip class="item" effect="dark" content="进行矩形标注" placement="bottom-start">
-                    <el-radio-button label="rect">
-                      <slot><i class="el-icon-whisky-rect"></i></slot>
-                    </el-radio-button>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" content="进行区域划分" placement="bottom-start">
-                    <el-radio-button label="poly">
-                      <slot><i class="el-icon-whisky-poly"></i></slot>
-                    </el-radio-button>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" content="进行标记移动" placement="bottom-start">
-                    <el-radio-button label="move">
-                      <slot><i class="el-icon-rank"></i></slot>
-                    </el-radio-button>
-                  </el-tooltip>
-                </el-radio-group>
-              </el-row>
-
-            </el-collapse-item>
-
-            <el-collapse-item name="showing">
-              <template slot="title">
-                <div style="margin-left: 10%">
-                  <el-radio v-model="activeMode" label="showing">显示</el-radio>
-                </div>
-              </template>
-
-              <div style="margin-left: 15%;">
-                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选
-                </el-checkbox>
-
-                <el-checkbox-group v-model="checkedShowModes" @change="handleCheckedModesChange">
-                  <el-checkbox v-for="showMode in showModes" :label="showMode" :key="showMode"
-                               @change="checked=>handleSingleChange(checked,showMode)">
-                    {{getModeName(showMode)}}
+                <div style="margin-left: 15%;">
+                  <el-checkbox v-if="showCheckAll" :indeterminate="isIndeterminate" v-model="checkAll"
+                               @change="handleCheckAllChange">全选
                   </el-checkbox>
-                </el-checkbox-group>
 
-              </div>
+                  <el-checkbox-group v-model="checkedShowModes" @change="handleCheckedModesChange">
+                    <el-checkbox v-if="shouldShow(showMode)" v-for="showMode in showModes" :label="showMode"
+                                 :key="showMode"
+                                 @change="checked=>handleSingleChange(checked,showMode)">
+                      {{getModeName(showMode)}}
+                    </el-checkbox>
+                  </el-checkbox-group>
 
-            </el-collapse-item>
-
-            <el-collapse-item name="reSizing">
-              <template slot="title">
-                <div style="margin-left: 10%">
-                  <el-radio v-model="activeMode" label="reSizing">缩放</el-radio>
                 </div>
-              </template>
 
-              <el-row type="flex" justify="center" align="middle">
-                <el-button-group>
-                  <el-tooltip class="item" effect="dark" content="重新渲染并放大" placement="bottom-start">
-                    <el-button type="primary" size="small" icon="el-icon-zoom-in">
-                    </el-button>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" content="重新渲染并缩小" placement="bottom-start">
-                    <el-button type="primary" size="small" icon="el-icon-zoom-out">
-                    </el-button>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" content="重新渲染并回归初始大小" placement="bottom-start">
-                    <el-button type="primary" size="small" icon="el-icon-search">
-                    </el-button>
-                  </el-tooltip>
-                </el-button-group>
-              </el-row>
+              </el-collapse-item>
 
-            </el-collapse-item>
+              <el-collapse-item name="reSizing">
+                <template slot="title">
+                  <div style="margin-left: 10%">
+                    <el-radio v-model="activeMode" label="reSizing">缩放</el-radio>
+                  </div>
+                </template>
 
-          </el-collapse>
-        </el-scrollbar>
-      </el-row>
-    </el-col>
+                <el-row type="flex" justify="center" align="middle">
+                  <el-button-group>
+                    <el-tooltip class="item" effect="dark" content="重新渲染并放大" placement="bottom-start">
+                      <el-button type="primary" size="small" icon="el-icon-zoom-in">
+                      </el-button>
+                    </el-tooltip>
+                    <el-tooltip class="item" effect="dark" content="重新渲染并缩小" placement="bottom-start">
+                      <el-button type="primary" size="small" icon="el-icon-zoom-out">
+                      </el-button>
+                    </el-tooltip>
+                    <el-tooltip class="item" effect="dark" content="重新渲染并回归初始大小" placement="bottom-start">
+                      <el-button type="primary" size="small" icon="el-icon-search">
+                      </el-button>
+                    </el-tooltip>
+                  </el-button-group>
+                </el-row>
 
-    <el-col :span="4" :style="borderMsg+'; height:100%'">
-      <el-row :style="borderMsg+'; width:100%; height:30%'">
-        <el-row style="margin-left: 5%"><h4>整体描述：</h4></el-row>
-        <div style="width:80%; height:50%; margin: auto auto">
-          <el-input
-            type="textarea"
-            :rows="3"
-            placeholder="请输入整体描述"
-            v-model="totalDescription">
-          </el-input>
-        </div>
-      </el-row>
+              </el-collapse-item>
 
-      <el-row :style="borderMsg+'; width:100%; height:70%'">
-        <el-row style="margin-left: 5% "><h4>标记汇总：</h4></el-row>
-        <el-scrollbar style="height: 77%; width: 100%; overflow-x: hidden">
-          <el-card
-            :style="`background-color:${getHoverColor(getCanvasTarget().getLayer(key).data.strokeColor)};${borderMsg}`"
-            v-for="(value,key) in marks"
-            :key="key"
-            @mousedown.native="layerMouseDownFunc(getCanvasTarget().getLayer(key),true)"
-            @mouseup.native="labelUp(getCanvasTarget().getLayer(key))"
-            @mouseover.native="layerMouseOverFunc(getCanvasTarget().getLayer(key),true)"
-            @mouseout.native="layerMouseOutFunc(getCanvasTarget().getLayer(key),true)"
-            style="margin: 5px 5px 5px 5px; cursor: pointer"
-            shadow="hover">
-            <!--要加上.native保证拿到，否则拿不到-->
-            <span :style="`color:${value==='未标记'?'#707070':'#000'}`">{{value}}</span>
-          </el-card>
-        </el-scrollbar>
-      </el-row>
-    </el-col>
+            </el-collapse>
+          </el-scrollbar>
+        </el-row>
+      </el-col>
+
+      <el-col :span="4" :style="borderMsg+'; height:100%'">
+        <el-row v-if="showTotal" :style="borderMsg+'; width:100%; height:30%'">
+          <el-row style="margin-left: 5%"><h4>整体描述：</h4></el-row>
+          <div style="width:80%; height:50%; margin: auto auto">
+            <el-input
+              type="textarea"
+              :rows="3"
+              placeholder="请输入整体描述"
+              v-model="totalDescription">
+            </el-input>
+          </div>
+        </el-row>
+
+        <el-row :style="`${borderMsg}; width:100%; height:${showTotal?'58%':'88%'}`">
+          <el-row style="margin-left: 5% "><h4>标记汇总：</h4></el-row>
+          <el-scrollbar style="height: 77%; width: 100%; overflow-x: hidden">
+            <el-card
+              :style="`background-color:${getHoverColor(getCanvasTarget().getLayer(key).data.strokeColor)};${borderMsg}`"
+              v-for="(value,key) in marks"
+              :key="key"
+              @mousedown.native="layerMouseDownFunc(getCanvasTarget().getLayer(key),true)"
+              @mouseup.native="labelUp(getCanvasTarget().getLayer(key))"
+              @mouseover.native="layerMouseOverFunc(getCanvasTarget().getLayer(key),true)"
+              @mouseout.native="layerMouseOutFunc(getCanvasTarget().getLayer(key),true)"
+              style="margin: 5px 5px 5px 5px; cursor: pointer"
+              shadow="hover">
+              <!--要加上.native保证拿到，否则拿不到-->
+              <span :style="`color:${value==='未标记'?'#707070':'#000'}`">{{value}}</span>
+            </el-card>
+          </el-scrollbar>
+        </el-row>
+
+        <el-row :style="borderMsg+'; width:100%; height:12%'" type="flex" justify="center" align="middle">
+          <el-button type="primary" @click="handleSubmit">
+            提交标注结果
+          </el-button>
+        </el-row>
+      </el-col>
+    </div>
   </div>
 </template>
 
@@ -260,6 +275,13 @@
   const polyLayer = 'line';
   const showOptions = [rectMode, polyMode];
   const closeDelta = 14;
+  const originalHeight = 500;
+  const padding = 50;
+  const originalWidth = originalHeight + 2 * padding;
+  const taskDescriptionHeight = 80;
+  const checkCircleNum = 100;
+  const testDrawImages = ['../../../src/testDrawImage/1.jpg', '../../../src/testDrawImage/2.jpg', '../../../src/testDrawImage/3.jpg', '../../../src/testDrawImage/4.jpg'];
+
   import {
     getOffset,
     getAbsolute,
@@ -303,6 +325,17 @@
   }
 
   export default {
+    props: {
+      tagMsg: {
+        type: String,
+        default: '风景'
+      },
+      markType: {
+        type: Number,
+        default: 0       //0测试模式 1 方框不写 2 方框必写 3 多边形可写可不写
+      }
+    },
+
     name: "canvas-drawer",
 
     components: {
@@ -310,13 +343,32 @@
     },
 
     mounted() {
-      this.refreshImgSrcAndSize('../../../src/testDrawImage/1.jpg');
+      if (this.markType === 0) {
+        this.refreshComponent(testDrawImages[0]);
+      }
+
+      if (this.markType === 1 || this.markType === 2) {
+        if (this.markType === 1) {
+          this.markRequireStatus = 0;
+        } else {
+          this.markRequireStatus = 1;
+        }
+        this.getCheckImgsAndRefreshCanvas();
+      }
+
+      if (this.markType === 3) {
+        this.markRequireStatus = 1;
+        this.getNormalImgAndRefreshCanvas();
+      }
     },
 
     data() {
-      let originalNum = 500;
-      let padding = 50;
       return {
+        checkImages: [],
+        lengthFirstToZero: false,
+        imgCounter: 1,
+        recheckCircleNum: checkCircleNum,
+
         inputRef: 'myInput',
 
         eventScreenX: 0,
@@ -328,17 +380,19 @@
         currentRectX: 0,
         currentRectY: 0,
 
-        componentHeight: originalNum + padding,
+        taskDescriptionHeight: taskDescriptionHeight,
+        componentHeight: originalHeight + padding,
         borderMsg: 'border:1px solid #000; box-sizing: border-box;',
 
         canvasRef: 'canvas',
-        canvasWidth: originalNum,       //初值500
-        canvasHeight: originalNum,
+        canvasWidth: originalWidth,       //初值800
+        canvasHeight: originalHeight,     //初值500
         loadCanvas: false,
 
         globalRate: 1,
 
         imgSrc: '',
+        currentDescription: '请按照给定的要求进行标注',
 
         strokeWidth: 250,
         strokeNormalColor: 'rgba(255, 255, 0, 1)',
@@ -349,7 +403,7 @@
         currentLayer: null,
 
         activeMode: 'drawing',
-        drawingType: rectMode,
+        drawingType: this.markType === 3 ? polyMode : rectMode,
 
         predefineColors: [
           'rgba(255, 69, 0, 1)',
@@ -396,9 +450,33 @@
       getSaverStyle() {
         return `width:${this.canvasWidth};height:${this.canvasHeight};background-image:url(${this.imgSrc});background-repeat:no-repeat; background-size:${this.canvasWidth}px ${this.canvasHeight}px;`
       },
+
+      showRect() {
+        return this.markType === 0 || this.markType === 1 || this.markType === 2;
+      },
+
+      showPoly() {
+        return this.markType === 0 || this.markType === 3;
+      },
+
+      showCheckAll() {
+        return this.markType === 0;
+      },
+
+      showTotal() {
+        return this.markType === 0;
+      }
     },
 
     methods: {
+      shouldShow(mode) {
+        if (mode === rectMode) {
+          return this.showRect;
+        }
+        if (mode === polyMode) {
+          return this.showPoly;
+        }
+      },
 
       poly_handleMouseEvent(e) {
         if (this.firstPoint && !this.secondPoint) {
@@ -652,7 +730,7 @@
 
         canvas.removeLayer(this.currentLayerName);
 
-        if (width >= 5 && height >= 5) {
+        if (Math.abs(width) >= 5 && Math.abs(height) >= 5) {
           let dataObj = new NoteRectangle(this.currentWorkerName, this.currentRectX * this.globalRate,
             this.currentRectY * this.globalRate, width * this.globalRate, height * this.globalRate, '',
             this.currentLayerName, this.strokeNormalColor, this.strokeWidth);
@@ -734,8 +812,18 @@
         }
       },
 
-      refreshImgSrcAndSize(imgSrc) {
+      refreshComponent(imgSrc, description = '请按照要求进行标注') {
+        this.loadCanvas = false;
         this.imgSrc = imgSrc;
+        this.currentDescription = description;
+        this.globalRate = 1;
+        this.currentLayerName = '';
+        this.lengthFirstToZero = false;
+
+        this.marks = {};
+        if (this.getCanvasTarget()) {
+          this.getCanvasTarget().removeLayers();
+        }
 
         let that = this;
         let image = new Image();
@@ -746,13 +834,13 @@
           let height = image.height;
 
           if (width > height) {
-            that.globalRate = width / that.canvasWidth;
-            width = that.canvasWidth;
+            that.globalRate = width / originalWidth;
+            width = originalWidth;
             height /= that.globalRate;
           }
           else {
-            that.globalRate = height / that.canvasHeight;
-            height = that.canvasHeight;
+            that.globalRate = height / originalHeight;
+            height = originalHeight;
             width /= that.globalRate;
           }
 
@@ -786,6 +874,13 @@
       handleCheckAllChange(val) {
         this.checkedShowModes = val ? showOptions : [];
         this.isIndeterminate = false;
+        if (val) {
+          this.showLayer(rectLayer);
+          this.showLayer(polyLayer);
+        } else {
+          this.hideLayer(rectLayer);
+          this.hideLayer(polyLayer);
+        }
       },
 
       handleCheckedModesChange(value) {
@@ -1141,7 +1236,179 @@
 
       handleDrawingTypeChange(val) {
         val === moveMode ? (this.setCurrentLayerUnlocked() && false || this.makeLayersMovable()) : this.makeLayersUnmovable();
-      }
+      },
+
+      handleSubmit() {
+        this.setCurrentLayerUnlocked();
+        let that = this;
+        let mark = this.getMark();
+        if (this.markType !== 0) {
+          if (mark.noteRectangle.length > 0 || mark.notePolygon.length > 0 || mark.noteTotal.length > 0) {
+            this.$http.post('/mark/postMark', mark)
+              .then(function () {
+                that.$message({
+                  message: '您本张图片的标注信息已经成功提交',
+                  type: 'success',
+                  duration: 1500
+                });
+                that.handleSubmitAfterSuccess();
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+          } else {
+            this.$message({
+              message: '请不要在未填写任何内容的情况下点击提交',
+              type: 'warning',
+              duration: 1500
+            });
+          }
+        } else {
+          if (mark.noteRectangle.length > 0 || mark.notePolygon.length > 0 || mark.noteTotal.length > 0) {
+            that.handleSubmitAfterSuccess();
+          } else {
+            this.$message({
+              message: '请不要在未填写任何内容的情况下点击提交',
+              type: 'warning',
+              duration: 1500
+            });
+          }
+        }
+      },
+
+      getMark() {
+        let noteRectangle = [];
+        let notePolygon = [];
+        let noteTotal = [];
+
+        this.getCanvasTarget().getLayers(function (layer) {
+          if (layer.type === rectLayer) {
+            noteRectangle.push(layer.data);
+          }
+          if (layer.type === polyLayer) {
+            notePolygon.push(layer.data);
+          }
+          return false; // do not generate the array
+        });
+
+        let description = this.totalDescription;
+        if (description && description != null && description !== '') {
+          noteTotal.push({mark: this.totalDescription, id: this.currentWorkerName + getIDByTime()});
+        }
+
+        return {imgURL: this.imgSrc, workerName: this.currentWorkerName, noteRectangle, notePolygon, noteTotal};
+      },
+
+      handleSubmitAfterSuccess() {
+        if (this.imgCounter % this.recheckCircleNum === 0 && (this.markType === 1 || this.markType === 2)) {              //补充用于测试的图片
+          this.imgCounter %= this.recheckCircleNum;
+          this.recheckCircleNum += getRandomIntInclusive(0, 20);
+          this.getCheckImgsAndRefreshCanvas();
+        }
+
+        if (this.checkImages && this.checkImages.length && this.checkImages.length > 0) {               //有测试用的图片
+          let tempObj = this.checkImages.pop();
+          this.refreshComponent(tempObj.imgURL, tempObj.description);                            //优先进行测试
+          if (this.checkImages.length === 0) {
+            this.lengthFirstToZero = true;
+          }
+        } else {
+          if (this.lengthFirstToZero) {
+            this.lengthFirstToZero = false;
+            this.checkIfGoodJob();
+          } else {
+            this.imgCounter++;                                                                    //否则进行普通测试
+            this.getNormalImgAndRefreshCanvas();
+          }
+        }
+      },
+
+      checkIfGoodJob() {
+        let that = this;
+        this.$http.get('/mark/test', {
+          params: {
+            tag: that.tagMsg,
+            type: that.markType,
+            username: that.currentWorkerName
+          }
+        })
+          .then(function (response) {
+            let isDoingGoodJob = response.data['mes'];
+            if (!isDoingGoodJob) {
+              //TODO 压到做测试的界面
+              that.$message({
+                message: '您似乎有些疲倦了，标注的正确率有所下降',
+                type: 'warning',
+                duration: 1500
+              });
+            }
+          })
+          .catch(function (error) {
+            that.$message({
+              message: '请检查您的网络',
+              type: 'error',
+              duration: 1500
+            });
+            console.log(error);
+          });
+      },
+
+      getCheckImgsAndRefreshCanvas() {
+        let that = this;
+        this.$http.get('/mark/markTest', {
+          params: {
+            tag: that.tagMsg,
+            type: that.markType,
+            username: that.currentWorkerName
+          }
+        })
+          .then(function (response) {
+            that.checkImages = response.data['imgs'];
+            let tempObj = that.checkImages.pop();
+            that.refreshComponent(tempObj.imgURL, tempObj.description);
+          })
+          .catch(function (error) {
+            that.$message({
+              message: '加载图片数据失败',
+              type: 'error',
+              duration: 1500
+            });
+            console.log(error);
+          });
+      },
+
+      getNormalImgAndRefreshCanvas() {
+        let that = this;
+
+        if (this.markType === 0) {
+          this.refreshComponent(testDrawImages[(this.imgCounter - 1) % 4]);
+          this.$message({
+            message: '请注意：您现在处于测试模式',
+            duration: 1800
+          });
+          return;
+        }
+
+        this.$http.get('/mark/markOne', {
+          params: {
+            tag: that.tagMsg,
+            type: that.markType,
+            username: that.currentWorkerName
+          }
+        })
+          .then(function (response) {
+            let ImageMsg = response.data;
+            that.refreshComponent(ImageMsg.imgURL, ImageMsg.description);
+          })
+          .catch(function (error) {
+            that.$message({
+              message: '加载图片数据失败',
+              type: 'error',
+              duration: 1500
+            });
+            console.log(error);
+          });
+      },
 
     }
   }

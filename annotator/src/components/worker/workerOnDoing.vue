@@ -21,7 +21,7 @@
 </template>
 
 <script>
-  import TaskItem from "./taskItem";
+  import TaskItem from "../taskItem";
 
 
   export default {
