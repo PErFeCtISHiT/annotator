@@ -12,11 +12,8 @@ import java.util.List;
 public interface TagService extends PubService {
     TagEntity findByTag(String tag);
 
-    boolean refreshTest(TagEntity tagEntity);
-
     boolean markIntegration(TagEntity tagEntity,Integer type);
 
     List<TagEntity> findAll();
 
-    Double mapTestTable(List<Boolean> test);
 }

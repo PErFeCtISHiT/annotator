@@ -54,13 +54,12 @@ public class TaskController {
         task.setTaskName(jsonObject.getString(StdName.TASKNAME));
         task.setDescription(jsonObject.getString(StdName.DESCRIPTION));
         String endDate = jsonObject.getString(StdName.ENDDATE);
-        String startDate = jsonObject.getString(StdName.STARTDATE);
-        task.setStartDate(DateHelper.convertStringToDate(startDate));
+        java.sql.Date startDate = new java.sql.Date(new Date().getTime());
+        task.setStartDate(startDate);
         task.setEndDate(DateHelper.convertStringToDate(endDate));
         task.setType(jsonObject.getInt(StdName.TYPE));
         UserEntity userEntity = userService.findByUsername(jsonObject.getString(StdName.SPONSORNAME));
         task.setSponsor(userEntity);
-
 
 
         JSONArray tagArray = jsonObject.getJSONArray(StdName.TAG);
@@ -69,7 +68,6 @@ public class TaskController {
         addTag(tagArray, tagEntities);
         task.setTagEntityList(tagEntities);
         task.setImageNum(0);
-        task.setTaskName(jsonObject.getString(StdName.TASKNAME));
         task.setWorkerLevel(jsonObject.getInt(StdName.WORKERLEVEL));
         task.setState(1);
         JSONObject ret = new JSONObject();

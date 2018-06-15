@@ -34,7 +34,6 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
     @Resource
     private UserService userService;
 
-    private List<Boolean> testTable;
 
     @Autowired
     public TagServiceImpl(TagRepository tagRepository) {
@@ -47,8 +46,7 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
         return tagRepository.findByTag(tag);
     }
 
-    @Override
-    public boolean refreshTest(TagEntity tagEntity) {
+    private void refreshTest(TagEntity tagEntity) {
         List<TaskEntity> taskEntities = tagEntity.getTaskEntityList();
         List<ImageEntity> imageEntities = new ArrayList<>();
         List<ImageEntity> imageEntities1 = new ArrayList<>();
@@ -65,11 +63,11 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
                 }
                 if (imageEntities.size() == 10 && imageEntities1.size() == 10) {
                     tagEntity.setTestImageList(imageEntities);
-                    return this.modify(tagEntity);
+                    this.modify(tagEntity);
+                    return;
                 }
             }
         }
-        return false;
     }
 
     @Override
@@ -81,9 +79,12 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
         if (type == 2) {//写标注
             imageEntities = tagEntity.getTestImageList1();
             for (ImageEntity imageEntity : imageEntities) {
+                //得到标注
                 List<ImgMarkEntity> imgMarkEntities = imageEntity.getImgMarkEntityList();
+                //整合，簇里面有历史信息
                 List<RecNodeList> recNodeLists = NaiveBayesianClassification.integration(imgMarkEntities);
                 for (RecNodeList recNodeList : recNodeLists) {
+                    //对每个簇分词，修改工人正确率
                     List<WorkerAnswer> workerAnswers = segmentation.segment(recNodeList);
                     logger.info("clause size:" + recNodeLists.size());
                     logger.info("workers size:" + workerAnswers.size());
@@ -133,18 +134,6 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
         return this.tagRepository.findAll();
     }
 
-    @Override
-    public Double mapTestTable(List<Boolean> test) {
-        Double temp = 0.0;
-        for (int i = 0; i < 10; i++) {
-            assert test.get(i) != null && testTable.get(i) != null;
-            if (test.get(i).equals(testTable.get(i))) {
-                temp++;
-            }
-        }
-        return temp / 10;
-    }
-
     @Scheduled(cron = "0 0 12 * * ?")   //每天执行一次
     public void tagRefresh() {
         log.info("refresh begin");
@@ -153,16 +142,7 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
             if (tagEntity.getId() != 6)
                 this.refreshTest(tagEntity);
         }
-        testTable = new ArrayList<>();
-        this.refreshTable(testTable);
         log.info("refresh success");
 
-    }
-
-    private void refreshTable(List<Boolean> table) {
-        for (int i = 0; i < 5; i++) {
-            table.add(true);
-            table.add(false);
-        }
     }
 }

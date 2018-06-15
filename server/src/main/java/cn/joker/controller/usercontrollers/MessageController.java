@@ -215,21 +215,4 @@ public class MessageController {
         JsonHelper.jsonToResponse(response, ret);
 
     }
-
-    /**
-     * @author:pis
-     * @description: 工人注册测试
-     * @date: 13:33 2018/6/12
-     */
-    @RequestMapping(value = "/signTest", method = RequestMethod.GET)
-    public void signTest(HttpServletRequest request, HttpServletResponse response) {
-        JSONObject jsonObject = JsonHelper.requestToJson(request);
-        JSONArray jsonArray = jsonObject.getJSONArray(StdName.TESTS);
-        List tests = (List) jsonArray;
-        Double correctRate = tagService.mapTestTable(tests);
-        JSONObject ret = new JSONObject();
-        ret.put(StdName.MES, correctRate >= 0.7);
-        ret.put(StdName.RATE, correctRate);
-        JsonHelper.jsonToResponse(response, ret);
-    }
 }
