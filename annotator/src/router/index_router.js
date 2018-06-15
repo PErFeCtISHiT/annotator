@@ -16,6 +16,7 @@ import firstPart from '../components/firstPart'
 import requesterWannaSee from '../components/requestorWannaSee'
 import requestorTotal from '../components/requestorTotal'
 import personalInfoMain from '../components/personal_info/personalInfoMain'
+import oneTask from '../components/oneTask'
 
 export default new VueRouter({
   routes: [
@@ -38,7 +39,7 @@ export default new VueRouter({
      * 菜单项*/
     {
       path: "/1-1",
-      component: requesterTasks
+      component: oneTask
     },
     {
       path: "/1-2",

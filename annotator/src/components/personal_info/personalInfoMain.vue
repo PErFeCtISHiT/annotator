@@ -1,23 +1,24 @@
 <template>
   <div style="width: 100%; height: 1600px">
     <div style="background-image: url(../../../src/images/bgp.jpg); opacity: 0.5;
-        position: absolute; z-index: 1; width: 96%; height: 1508px"></div>
+        position: absolute; z-index: 1; width: 96%; height: 1508px;
+        box-shadow: 10px 10px 5px #9d9d9d"></div>
 
     <div style="position: absolute; z-index: 2; width: 105%; margin-left: -5%; margin-top: 20px">
       <el-row type="flex" justify="center" class="row-bg">
         <el-col :span="18">
           <div class="grid-content bg-purple">
 
-            <el-tabs type="border-card">
-              <el-tab-pane>
+            <el-tabs type="border-card" v-model="activePane">
+              <el-tab-pane name="information">
                 <span slot="label" class="my-tag"><i class="el-icon-date"></i>&nbsp;个人信息修改</span>
                 <div class="grid-content bg-purple">
-                  <info-detail :baseInfoDetail="personalInfo"></info-detail>
+                  <info-detail style="margin-top: 20px" :baseInfoDetail="personalInfo"></info-detail>
                 </div>
               </el-tab-pane>
 
 
-              <el-tab-pane>
+              <el-tab-pane name="statistics">
                 <span slot="label" class="my-tag"><i class="el-icon-document"></i>&nbsp;统计数据</span>
                 <div class="grid-content bg-purple">
                   <info-statistic></info-statistic>
@@ -50,6 +51,8 @@
     tagScore: [79.1, 68.4, 32.5, 85.8, 92.6],
     inclination: [15, 7, 40, 28, 10]
   };
+
+  //
   const infoMockItem = {
     "level": 1,
     "nickname": "somnus",
@@ -82,14 +85,12 @@
       return {
         personalInfo: {},
         personalStatistic: {},
-        isDetail: true
+        activePane: 'statistics'
       }
     },
 
     methods: {
-      handleChangeTab(tabName) {
-        this.isDetail === true ? this.isDetail = false : this.isDetail = true;
-      }
+
 
 
     }
@@ -101,6 +102,6 @@
 <style scoped>
   .my-tag {
     font-size: large;
-    font-family: 华文行楷;
+    font-family: "等线 Light";
   }
 </style>
