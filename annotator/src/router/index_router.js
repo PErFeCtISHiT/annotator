@@ -8,8 +8,7 @@ import distributeNewTask from '../components/distributeNewTask'
 import testDraw from '../components/testDraw'
 import admin from '../components/admin/admin'
 import recharge from '../components/recharge'
-import workerAcceptTasks from '../components/worker/workerAcceptTasks'
-import workerOnDoing from '../components/worker/workerOnDoing'
+import workerGetTask from '../components/worker/workerGetTask'
 import workerHistRank from '../components/worker/workerHistRank'
 import workerNoteMark from '../components/worker/workerNoteMark'
 import taskDetail from '../components/taskDetail'
@@ -47,14 +46,11 @@ export default new VueRouter({
     },
     {
       path: "/2-1",
-      component: workerAcceptTasks
+      component: workerGetTask
     },
+
     {
       path: "/2-2",
-      component: workerOnDoing
-    },
-    {
-      path: "/2-3",
       component: workerHistRank
     },
     {

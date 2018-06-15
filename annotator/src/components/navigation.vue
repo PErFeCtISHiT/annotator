@@ -18,9 +18,8 @@
 
         <el-submenu index="2" :disabled="!$store.state.user.isWorker" v-if="!$store.state.user.isAdmin">
           <template slot="title">工人</template>
-          <el-menu-item index="/2-1">查看与获取任务</el-menu-item>
-          <el-menu-item index="/2-2">进行中的任务</el-menu-item>
-          <el-menu-item index="/2-3">积分历史与排名</el-menu-item>
+          <el-menu-item index="/2-1">开始标注</el-menu-item>
+          <el-menu-item index="/2-2">积分历史与排名</el-menu-item>
         </el-submenu>
 
         <el-submenu index="3" v-if="!$store.state.user.isAdmin">
@@ -38,7 +37,9 @@
     </el-col>
 
     <el-col :span="2">
-      <el-button class="navigation-button" @click="handleLogOut">登出</el-button>
+      <el-row type="flex" justify="center" align="middle" style="height: 100%; width: 100%">
+        <el-button class="navigation-button" @click="handleLogOut">登出</el-button>
+      </el-row>
     </el-col>
   </el-row>
 </template>
@@ -113,7 +114,7 @@
     background-color: #22326c;
     color: aliceblue;
     vertical-align: center;
-    margin: 10px auto;
+    margin-top: 10px;
   }
 
   .el-menu-demo {
