@@ -35,7 +35,7 @@
       </el-dialog>
 
 
-      <el-col :span="16">
+      <el-col :span="14">
         <div :ref="canvasOuterSaver">
           <el-row type="flex" justify="center" align="middle"
                   :style="borderMsg+'; width:100%; height:' + componentHeight + 'px'">
@@ -59,7 +59,7 @@
         </div>
       </el-col>
 
-      <el-col :span="4" :style="borderMsg+'; height:100%'">
+      <el-col :span="5" :style="borderMsg+'; height:100%'">
         <el-row :style="borderMsg+'; width:100%; height:20%'">
           <el-row style="margin-left: 5%"><h4>全局属性：</h4></el-row>
 
@@ -225,7 +225,7 @@
         </el-row>
       </el-col>
 
-      <el-col :span="4" :style="borderMsg+'; height:100%'">
+      <el-col :span="5" :style="borderMsg+'; height:100%'">
         <el-row v-if="showTotal" :style="borderMsg+'; width:100%; height:30%'">
           <el-row style="margin-left: 5%"><h4>整体描述：</h4></el-row>
           <div style="width:80%; height:50%; margin: auto auto">
@@ -286,7 +286,7 @@
   const originalWidth = originalHeight + 2 * padding;
   const taskDescriptionHeight = 80;
   const checkCircleNum = 100;
-  const testDrawImages = ['../../../src/testDrawImage/1.jpg', '../../../src/testDrawImage/2.jpg', '../../../src/testDrawImage/3.jpg', '../../../src/testDrawImage/4.jpg'];
+  const testDrawImages = ['../../../src/testDrawImage/1.jpg', '../../../src/testDrawImage/2.jpg', '../../../src/testDrawImage/3.jpg', '../../../src/testDrawImage/4.jpg','../../../src/testDrawImage/elephant.jpg','../../../src/testDrawImage/tableware.jpg','../../../src/testDrawImage/road.jpg'];
 
   import {
     getOffset,
@@ -354,16 +354,10 @@
       }
 
       if (this.markType === 1 || this.markType === 2) {
-        if (this.markType === 1) {
-          this.markRequireStatus = 0;
-        } else {
-          this.markRequireStatus = 2;
-        }
         this.getCheckImgsAndRefreshCanvas();
       }
 
       if (this.markType === 3) {
-        this.markRequireStatus = 1;
         this.getNormalImgAndRefreshCanvas();
       }
     },
@@ -889,7 +883,11 @@
             };
           };
           image.onerror = function () {
-            alert("Could not load image.");
+            that.$message({
+              message: '加载图片失败',
+              type: 'error',
+              duration: 1800
+            });
           }
         }
       },        //为了保证有序，写到了一个函数里
@@ -1390,6 +1388,8 @@
           }
         })
           .then(function (response) {
+            console.log('回传的图像数据');
+            console.log(response.data);
             that.checkImages = response.data['imgs'];
             let tempObj = that.checkImages.pop();
             that.refreshComponent(tempObj.imgURL, tempObj.description);
@@ -1408,7 +1408,7 @@
         let that = this;
 
         if (this.markType === 0) {
-          this.refreshComponent(testDrawImages[(this.imgCounter - 1) % 4]);
+          this.refreshComponent(testDrawImages[(this.imgCounter - 1) % testDrawImages.length]);
           this.$message({
             message: '请注意：您现在处于测试模式',
             duration: 1800

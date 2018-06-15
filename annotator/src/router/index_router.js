@@ -8,8 +8,7 @@ import distributeNewTask from '../components/distributeNewTask'
 import testDraw from '../components/testDraw'
 import admin from '../components/admin/admin'
 import recharge from '../components/recharge'
-import workerAcceptTasks from '../components/worker/workerAcceptTasks'
-import workerOnDoing from '../components/worker/workerOnDoing'
+import workerGetTask from '../components/worker/workerGetTask'
 import workerHistRank from '../components/worker/workerHistRank'
 import workerNoteMark from '../components/worker/workerNoteMark'
 import taskDetail from '../components/taskDetail'
@@ -17,6 +16,7 @@ import firstPart from '../components/firstPart'
 import requesterWannaSee from '../components/requestorWannaSee'
 import requestorTotal from '../components/requestorTotal'
 import personalInfoMain from '../components/personal_info/personalInfoMain'
+import oneTask from '../components/oneTask'
 
 export default new VueRouter({
   routes: [
@@ -47,14 +47,11 @@ export default new VueRouter({
     },
     {
       path: "/2-1",
-      component: workerAcceptTasks
+      component: workerGetTask
     },
+
     {
       path: "/2-2",
-      component: workerOnDoing
-    },
-    {
-      path: "/2-3",
       component: workerHistRank
     },
     {
