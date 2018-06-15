@@ -39,7 +39,7 @@ export default new VueRouter({
      * 菜单项*/
     {
       path: "/1-1",
-      component: oneTask
+      component: requesterTasks
     },
     {
       path: "/1-2",

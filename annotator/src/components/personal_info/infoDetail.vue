@@ -1,42 +1,67 @@
 <template>
   <div>
+
+
+
+
+
     <el-row type="flex" justify="center" class="row-bg">
-      <el-col :span="16" style="background-color: #3c763d">
+      <el-col :span="16">
 
         <!--个人信息部分-->
         <el-card class="box-card">
           <!--标题-->
-          <div slot="header" class="clearfix">
-            <span>个人信息</span>
-            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+          <div slot="header" class="clearfix" style="margin-left: 40%">
+            <span class="my-card-header">个人信息</span>
+            <el-button style="float: right; padding: 10px 25px 10px 25px; font-size: large" type="primary">修改</el-button>
           </div>
 
           <!--内容-->
-          <div>
-            <div>
-              <el-col :span="8" style="margin-top: 23px">
-                <span class="label-all">用户名:</span>
+          <div style="font-size: large">
+            <el-row style="margin-top: 25px; margin-bottom: 25px">
+              <el-col :span="8" class="label-all">
+                <span>用户名:</span>
               </el-col>
-              <el-col :span="16" class="label-all" style="text-align: right; margin-right: 10px">
-                <span class="taskIDLabel">{{ this.baseInfoDetail.username }}</span>
+              <el-col :span="16" class="label-all">
+                <span>{{ baseInfoDetail.username }}</span>
               </el-col>
-            </div>
-            <div>
+            </el-row>
+
+            <el-row style="margin-top: 25px; margin-bottom: 25px">
               <el-col :span="8" class="label-all">
                 <span>昵称:</span>
               </el-col>
-              <el-col :span="16" class="label-all label_detail" style="text-align: right;">
-                <span>{{this.baseInfoDetail.nickname}}</span>
+              <el-col :span="16" class="label-all">
+                <span>{{ baseInfoDetail.nickname }}</span>
               </el-col>
-            </div>
-            <div>
-              <el-col :span="8" class="label-all" style="margin-top: 17px">
+            </el-row>
+
+            <el-row style="margin-top: 25px; margin-bottom: 25px">
+              <el-col :span="8" class="label-all">
+                <span>当前拥有积分</span>
+              </el-col>
+              <el-col :span="16" class="label-all">
+                <span>{{ baseInfoDetail.points}}</span>
+              </el-col>
+            </el-row>
+
+            <el-row style="margin-top: 25px; margin-bottom: 25px">
+              <el-col :span="8" class="label-all">
                 <span>E-mail:</span>
               </el-col>
-              <el-col :span="16" class="label-all label_detail">
-                <span>{{ this.baseInfoDetail.email}}</span>
+              <el-col :span="16" class="label-all">
+                <span>{{ baseInfoDetail.email}}</span>
               </el-col>
-            </div>
+            </el-row>
+
+            <el-row v-if="baseInfoDetail.type === 'worker'" style="margin-top: 25px; margin-bottom: 25px">
+              <el-col :span="8" class="label-all">
+                <span>当前等级</span>
+              </el-col>
+              <el-col :span="16" class="label-all">
+                <el-rate v-model="baseInfoDetail.lev" disabled></el-rate>
+              </el-col>
+            </el-row>
           </div>
         </el-card>
 
@@ -46,7 +71,10 @@
 </template>
 
 <script>
+  import ElRow from "element-ui/packages/row/src/row";
+
   export default {
+    components: {ElRow},
     name: "info-detail",
     props: ["baseInfoDetail"],
 
@@ -55,5 +83,29 @@
 </script>
 
 <style scoped>
+  .my-card-header {
+    font-size: xx-large;
+    font-family: 等线 Light;
+    font-style: normal;
+  }
 
+  .clearfix {
+    color: #4f4f52;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+
+  .clearfix:after {
+    clear: both
+  }
+
+  .label-all {
+    font-size: 20px;
+    color: #4f4f52;
+    padding-left: 30px;
+  }
 </style>
