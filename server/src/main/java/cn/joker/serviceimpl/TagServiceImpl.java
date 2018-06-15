@@ -78,57 +78,52 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
         boolean ret = true;
         Segmentation segmentation = new Segmentation();
         List<ImageEntity> imageEntities;
-        if (type == 1)
-            imageEntities = tagEntity.getTestImageList();
-        else
-            imageEntities = tagEntity.getTestImageList1();
-        List<ImgMarkEntity> imgMarkEntities = new ArrayList<>();
-        for (ImageEntity imageEntity : imageEntities) {
-            List<ImgMarkEntity> imgMarkEntities1 = imageEntity.getImgMarkEntityList();
-            imgMarkEntities.addAll(imgMarkEntities1);
-        }
-        List<RecNodeList> recNodeLists = NaiveBayesianClassification.integration(imgMarkEntities);
-        logger.info("clause size:" + recNodeLists.size());
         if (type == 2) {//写标注
-            for (RecNodeList recNodeList : recNodeLists) {
-                List<WorkerAnswer> workerAnswers = segmentation.segment(recNodeList);
-                logger.info("workers size:" + workerAnswers.size());
-                QuestionModel questionModel = new QuestionModel();
-                for (WorkerAnswer workerAnswer : workerAnswers) {
-                    logger.info("answer:" + workerAnswer.getAnswer());
-                    UserEntity worker = workerAnswer.getUserEntity();
-                    WorkerMatrixEntity workerMatrixEntity = worker.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
-                    Double gamma = (workerMatrixEntity.getC00() + workerMatrixEntity.getC11())
-                            / (workerMatrixEntity.getC11() + workerMatrixEntity.getC00() + workerMatrixEntity.getC01() + workerMatrixEntity.getC10());
-                    questionModel.psUpdate(gamma, workerAnswer.getAnswer());
+            imageEntities = tagEntity.getTestImageList1();
+            for (ImageEntity imageEntity : imageEntities) {
+                List<ImgMarkEntity> imgMarkEntities = imageEntity.getImgMarkEntityList();
+                List<RecNodeList> recNodeLists = NaiveBayesianClassification.integration(imgMarkEntities);
+                for (RecNodeList recNodeList : recNodeLists) {
+                    List<WorkerAnswer> workerAnswers = segmentation.segment(recNodeList);
+                    logger.info("clause size:" + recNodeLists.size());
+                    logger.info("workers size:" + workerAnswers.size());
+                    QuestionModel questionModel = new QuestionModel();
+                    for (WorkerAnswer workerAnswer : workerAnswers) {
+                        logger.info("answer:" + workerAnswer.getAnswer());
+                        UserEntity worker = workerAnswer.getUserEntity();
+                        WorkerMatrixEntity workerMatrixEntity = worker.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
+                        Double gamma = (workerMatrixEntity.getC00() + workerMatrixEntity.getC11())
+                                / (workerMatrixEntity.getC11() + workerMatrixEntity.getC00() + workerMatrixEntity.getC01() + workerMatrixEntity.getC10());
+                        questionModel.psUpdate(gamma, workerAnswer.getAnswer());
 
-                }
-                for (WorkerAnswer workerAnswer : workerAnswers) {
-                    UserEntity worker = workerAnswer.getUserEntity();
-
-                    logger.info(tagEntity.getTag());
-                    WorkerMatrixEntity workerMatrixEntity = worker.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
-                    assert workerMatrixEntity != null;
-                    if (workerAnswer.getAnswer()) {
-                        workerMatrixEntity.setC10(workerMatrixEntity.getC10() + questionModel.getP1());
-                        workerMatrixEntity.setC11(workerMatrixEntity.getC11() + questionModel.getP0());
-
-                    } else {
-                        workerMatrixEntity.setC00(workerMatrixEntity.getC00() + questionModel.getP1());
-                        workerMatrixEntity.setC01(workerMatrixEntity.getC01() + questionModel.getP0());
                     }
-                    logger.info("c00: " + workerMatrixEntity.getC00());
-                    logger.info("c01: " + workerMatrixEntity.getC01());
-                    logger.info("c10: " + workerMatrixEntity.getC10());
-                    logger.info("c11: " + workerMatrixEntity.getC11());
-                    logger.info("rate:" + (workerMatrixEntity.getC00() + workerMatrixEntity.getC11())
-                            / (workerMatrixEntity.getC11() + workerMatrixEntity.getC00() + workerMatrixEntity.getC01() + workerMatrixEntity.getC10()));
+                    for (WorkerAnswer workerAnswer : workerAnswers) {
+                        UserEntity worker = workerAnswer.getUserEntity();
 
-                    ret = ret && userService.modify(worker);
+                        logger.info(tagEntity.getTag());
+                        WorkerMatrixEntity workerMatrixEntity = worker.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
+                        assert workerMatrixEntity != null;
+                        if (workerAnswer.getAnswer()) {
+                            workerMatrixEntity.setC10(workerMatrixEntity.getC10() + questionModel.getP1());
+                            workerMatrixEntity.setC11(workerMatrixEntity.getC11() + questionModel.getP0());
+
+                        } else {
+                            workerMatrixEntity.setC00(workerMatrixEntity.getC00() + questionModel.getP1());
+                            workerMatrixEntity.setC01(workerMatrixEntity.getC01() + questionModel.getP0());
+                        }
+                        logger.info("c00: " + workerMatrixEntity.getC00());
+                        logger.info("c01: " + workerMatrixEntity.getC01());
+                        logger.info("c10: " + workerMatrixEntity.getC10());
+                        logger.info("c11: " + workerMatrixEntity.getC11());
+                        logger.info("rate:" + (workerMatrixEntity.getC00() + workerMatrixEntity.getC11())
+                                / (workerMatrixEntity.getC11() + workerMatrixEntity.getC00() + workerMatrixEntity.getC01() + workerMatrixEntity.getC10()));
+
+                        ret = ret && userService.modify(worker);
+                    }
                 }
             }
         } else {//不写标注
-
+            imageEntities = tagEntity.getTestImageList();
         }
         return ret;
     }
