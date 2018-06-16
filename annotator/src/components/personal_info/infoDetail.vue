@@ -38,25 +38,16 @@
 
             <el-row style="margin-top: 25px; margin-bottom: 25px">
               <el-col :span="8" class="label-all">
-                <span>当前拥有积分</span>
+                <span>当前拥有积分:</span>
               </el-col>
               <el-col :span="16" class="label-all">
                 <span>{{ baseInfoDetail.points}}</span>
               </el-col>
             </el-row>
 
-            <el-row style="margin-top: 25px; margin-bottom: 25px">
-              <el-col :span="8" class="label-all">
-                <span>E-mail:</span>
-              </el-col>
-              <el-col :span="16" class="label-all">
-                <span>{{ baseInfoDetail.email}}</span>
-              </el-col>
-            </el-row>
-
             <el-row v-if="baseInfoDetail.type === 'worker'" style="margin-top: 25px; margin-bottom: 25px">
               <el-col :span="8" class="label-all">
-                <span>当前等级</span>
+                <span>当前等级:</span>
               </el-col>
               <el-col :span="16" class="label-all">
                 <el-rate v-model="baseInfoDetail.lev" disabled></el-rate>
@@ -95,8 +86,8 @@
 <style scoped>
   .my-card-header {
     font-size: xx-large;
-    font-family: 等线 Light;
-    font-style: normal;
+    font-weight: bolder;
+    font-family: Chalkboard;
   }
 
   .clearfix {

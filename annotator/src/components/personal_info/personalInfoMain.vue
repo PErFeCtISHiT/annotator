@@ -19,14 +19,14 @@
           </el-col>
         </el-row>
 
-        <el-row type="flex" justify="center" style="margin-top: 20px; margin-bottom: 20px">
-          <el-col class="my-dialog" :span="6">
-            <span>邮箱</span>
-          </el-col>
-          <el-col :span="15">
-            <el-input clearable placeholder="请输入新的绑定邮箱" v-model="newMail"></el-input>
-          </el-col>
-        </el-row>
+        <!--<el-row type="flex" justify="center" style="margin-top: 20px; margin-bottom: 20px">-->
+          <!--<el-col class="my-dialog" :span="6">-->
+            <!--<span>邮箱</span>-->
+          <!--</el-col>-->
+          <!--<el-col :span="15">-->
+            <!--<el-input clearable placeholder="请输入新的绑定邮箱" v-model="newMail"></el-input>-->
+          <!--</el-col>-->
+        <!--</el-row>-->
 
         <el-row type="flex" justify="center" style="margin-top: 20px; margin-bottom: 20px">
           <el-col class="my-dialog" :span="6">
@@ -194,20 +194,19 @@
       confirmInfoChange() {
         let that = this;
 
-        if(!this.newMail.match( /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/))
-          this.$message({
-            showClose: true,
-            message: '邮箱格式错误',
-            type: 'warning'
-          });
-        else if(this.passwr1 !== this.passwr2)
+        // if(!this.newMail.match( /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/))
+        //   this.$message({
+        //     showClose: true,
+        //     message: '邮箱格式错误',
+        //     type: 'warning'
+        //   });
+        if(this.passwr1 !== this.passwr2)
           this.$message({
             showClose: true,
             message: '两次密码不一致',
             type: 'warning'
           });
 
-        //
         else{
           this.clearScreen();
           this.dialogVisible = false;
@@ -234,7 +233,7 @@
   }
 
   .height1 {
-    height: 700px;
+    height: 600px;
   }
 
   .height2 {
@@ -242,7 +241,7 @@
   }
 
   .height3 {
-    height: 808px;
+    height: 708px;
   }
 
   .height4 {
@@ -250,7 +249,7 @@
   }
 
   .height5 {
-    height: 900px;
+    height: 800px;
   }
 
   .height6 {
