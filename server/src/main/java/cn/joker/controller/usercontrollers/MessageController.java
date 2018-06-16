@@ -68,7 +68,6 @@ public class MessageController {
             }
         }
         userInfo.setRoleEntityList(roleList);
-        userInfo.setEmail(jsonObject.getString(StdName.EMAIL));
         userInfo.setPasswr((String) jsonObject.get(StdName.PASSWR));
         PasswordHelper.encryptPassword(userInfo);
         userInfo.setLev(1);
@@ -92,7 +91,6 @@ public class MessageController {
         UserEntity newEntity = userService.findByUsername(userEntity.getUsername());
         newEntity.setNickname(userEntity.getNickname());
         newEntity.setPasswr(userEntity.getPasswr());
-        newEntity.setEmail(userEntity.getEmail());
         PasswordHelper.encryptPassword(newEntity);
         ret.put(StdName.MES, userService.modify(newEntity));
         JsonHelper.jsonToResponse(response, ret);
