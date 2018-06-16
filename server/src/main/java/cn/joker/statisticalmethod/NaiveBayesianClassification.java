@@ -4,7 +4,6 @@ import cn.joker.entity.ImgMarkEntity;
 import cn.joker.namespace.StdName;
 import cn.joker.vo.RecNode;
 import cn.joker.vo.RecNodeList;
-import org.hibernate.jpa.criteria.expression.function.AggregationFunction;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -13,7 +12,7 @@ import java.util.List;
 
 
 public class NaiveBayesianClassification {
-    private static double MINOFFSET = 1.2;
+    private static double MIN_OFFSET = 1.2;
     private static List<RecNode> resultList = new ArrayList<>();
     private static List<Integer> userID = new ArrayList<>();
     private static List<Integer> startIndex = new ArrayList<>();
@@ -44,6 +43,7 @@ public class NaiveBayesianClassification {
         return markList;
     }
 
+    //对答案进行排序，对用户的答案进行分类（只是排序），结果存在resultList，userID，startIndex中
     private static void classificationByMarkedUser(List<RecNode> markList){
         // 把标注根据用户进行分类，最后还是一个list，但是调整顺序，提供一个用户id的list和一个该用户开始的index的list
         resultList = new ArrayList<>();
@@ -68,7 +68,10 @@ public class NaiveBayesianClassification {
         }
     }
 
-    private static ArrayList<RecNodeList> getRecMarkByClass(){
+    //进行聚类，会先对答案进行排序（调用上一个方法）
+    public static List<RecNodeList> getRecMarkByClass(List<RecNode> markList){
+        classificationByMarkedUser(markList);
+
         //整合之后的标注集合
         ArrayList<RecNodeList> classificationList = new ArrayList<>();
         // 单独的频率数组，方便后期按权重调整相应数据
@@ -99,7 +102,7 @@ public class NaiveBayesianClassification {
             // 得到差异最小的数据之后进行差异量和偏移范围的比较
             // 如果假设成立，在偏移范围之内就把该结果放入相应分类中，调整该分类中的数据
             // 如果假设不成立，就单独建立一个新的类
-            if (minOffset < MINOFFSET) { // 假设成立
+            if (minOffset < MIN_OFFSET) { // 假设成立
                 RecNode node = new RecNode(classificationList.get(classIndex).getRecNode().getTop(), classificationList.get(classIndex).getRecNode().getLeft(),
                         classificationList.get(classIndex).getRecNode().getHeight(), classificationList.get(classIndex).getRecNode().getWidth(),
                         classificationList.get(classIndex).getRecNode().getMark(), null);
@@ -134,12 +137,11 @@ public class NaiveBayesianClassification {
         return offset;
     }
 
-    public static int getCorrectNumber(List<RecNode> testMark, List<RecNode> markList){
+    public static List<Boolean> getCorrectNumber(List<RecNode> testMark, List<RecNode> markList){
         //对之前做过的测试结果进行分类
-        classificationByMarkedUser(markList);
-        ArrayList<RecNodeList> classificationList = getRecMarkByClass();
+        List<RecNodeList> classificationList = getRecMarkByClass(markList);
 
-        int correctNumber = 0;
+        List<Boolean> correct = new ArrayList<>();
 
         List<Boolean> match = new ArrayList<>();
         for(int i = 0; i < classificationList.size(); i++){
@@ -160,21 +162,22 @@ public class NaiveBayesianClassification {
                     }
                 }
             }
-            // 如果在的话表示标注成功+1
-            if (minOffset < MINOFFSET) {
-                correctNumber++;
+            // 如果在的话表示标注成功+1,更新list
+            if (minOffset < MIN_OFFSET) {
+                correct.add(true);
                 match.set(classIndex, true);
             }
+            else
+                correct.add(false);
         }
 
-        return correctNumber;
+        return correct;
     }
 
     public static List<RecNodeList> integration(List<ImgMarkEntity> imgMarkEntityList) {
         List<RecNode> markList = getAllMark(imgMarkEntityList);
-        classificationByMarkedUser(markList);
 
-        return getRecMarkByClass();
+        return getRecMarkByClass(markList);
     }
 
 //    /**
