@@ -354,7 +354,7 @@
       }
 
       if (this.markType === 1 || this.markType === 2) {
-        this.getCheckImgsAndRefreshCanvas();
+        this.getCheckImgsAndRefreshCanvas(1);
       }
 
       if (this.markType === 3) {
@@ -1328,7 +1328,7 @@
         if (this.imgCounter % this.recheckCircleNum === 0 && (this.markType === 1 || this.markType === 2)) {              //补充用于测试的图片
           this.imgCounter %= this.recheckCircleNum;
           this.recheckCircleNum += getRandomIntInclusive(0, 20);
-          this.getCheckImgsAndRefreshCanvas();
+          this.getCheckImgsAndRefreshCanvas(0);
         }
 
         if (this.checkImages && this.checkImages.length && this.checkImages.length > 0) {               //有测试用的图片
@@ -1378,7 +1378,7 @@
           });
       },
 
-      getCheckImgsAndRefreshCanvas() {
+      getCheckImgsAndRefreshCanvas(status=0) {
         let that = this;
         this.$http.get('/mark/markTest', {
           params: {
@@ -1391,8 +1391,10 @@
             console.log('回传的图像数据');
             console.log(response.data);
             that.checkImages = response.data['imgs'];
-            let tempObj = that.checkImages.pop();
-            that.refreshComponent(tempObj.imgURL, tempObj.description);
+            if(status===1) {
+              let tempObj = that.checkImages.pop();
+              that.refreshComponent(tempObj.imgURL, tempObj.description);
+            }
           })
           .catch(function (error) {
             that.$message({
