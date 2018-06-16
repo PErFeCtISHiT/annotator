@@ -15,11 +15,11 @@
         <property name="yearIsDateType" value="false" />
       </driver-properties>
     </data-source>
-    <data-source source="LOCAL" name="mycap@localhost" uuid="cfc087fe-bbfe-4c91-a3e9-f3e03c83f2e0">
+    <data-source source="LOCAL" name="imgannotator@localhost" uuid="d2b590dc-0717-405d-8fbe-56c5a76eb36a">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/mycap</jdbc-url>
+      <jdbc-url>jdbc:mysql://localhost:3306/imgannotator</jdbc-url>
       <driver-properties>
         <property name="autoReconnect" value="true" />
         <property name="zeroDateTimeBehavior" value="convertToNull" />
