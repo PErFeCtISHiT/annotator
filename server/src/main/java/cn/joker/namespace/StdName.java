@@ -77,6 +77,8 @@ public class StdName {
     public static final String EMAIL = "email";
     public static final String REQUESTOR = "requestor";
     public static final String WORKER = "worker";
+    public static final String DATA = "data";
+    public static final String CHOICES = "choices";
 
     private StdName() {
         throw new IllegalStateException("namespace class");

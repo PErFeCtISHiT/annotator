@@ -1,7 +1,6 @@
 package cn.joker.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.context.annotation.Bean;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -29,6 +28,8 @@ public class TaskEntity implements Serializable {
     private Integer type;
     private Integer polygonNum;
     private Integer actNum;
+    private List<ImageEntity> imageEntityList;
+    private List<TagEntity> tagEntityList;
     @Basic
     @Column(name = "actNum", nullable = true)
     public Integer getActNum() {
@@ -58,9 +59,6 @@ public class TaskEntity implements Serializable {
     public void setType(Integer type) {
         this.type = type;
     }
-
-    private List<ImageEntity> imageEntityList;
-    private List<TagEntity> tagEntityList;
 
 
     @ManyToMany(cascade = CascadeType.MERGE)

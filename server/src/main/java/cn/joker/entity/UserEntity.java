@@ -24,7 +24,6 @@ public class UserEntity implements Serializable {
     private Integer lev;
     private Integer points;
     private Integer state;
-    private String email;
     private List<SysRoleEntity> roleEntityList;
     private List<AbilityEntity> abilityEntityList;
     private List<WorkerMatrixEntity> workerMatrixEntities;
@@ -120,15 +119,7 @@ public class UserEntity implements Serializable {
         this.state = state;
     }
 
-    @Basic
-    @Column(name = "email", nullable = true, length = 200)
-    public String getEmail() {
-        return email;
-    }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "user_role", joinColumns = {@JoinColumn(referencedColumnName = "ID")}
@@ -181,7 +172,6 @@ public class UserEntity implements Serializable {
                 Objects.equals(lev, that.lev) &&
                 Objects.equals(points, that.points) &&
                 Objects.equals(state, that.state) &&
-                Objects.equals(email, that.email) &&
                 Objects.equals(roleEntityList, that.roleEntityList) &&
                 Objects.equals(abilityEntityList, that.abilityEntityList);
     }
@@ -189,6 +179,6 @@ public class UserEntity implements Serializable {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, username, passwr, salt, bonus, nickname, lev, points, state, email, roleEntityList, abilityEntityList);
+        return Objects.hash(id, username, passwr, salt, bonus, nickname, lev, points, state, roleEntityList, abilityEntityList);
     }
 }

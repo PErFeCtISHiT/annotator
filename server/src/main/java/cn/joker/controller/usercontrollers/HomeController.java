@@ -70,7 +70,6 @@ public class HomeController {
             jsonObject.put(StdName.LEVEL, userInfo.getLev());
             jsonObject.put(StdName.NICKNAME, userInfo.getNickname());
             jsonObject.put(StdName.POINTS, userInfo.getPoints());
-            jsonObject.put(StdName.EMAIL,userInfo.getEmail());
             JSONArray list1 = new JSONArray();
             List<SysRoleEntity> list = userInfo.getRoleEntityList();
             for (SysRoleEntity sysRole : list) {

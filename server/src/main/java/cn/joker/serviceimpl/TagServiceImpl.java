@@ -8,6 +8,7 @@ import cn.joker.sevice.UserService;
 import cn.joker.statisticalmethod.NaiveBayesianClassification;
 import cn.joker.statisticalmethod.QuestionModel;
 import cn.joker.statisticalmethod.Segmentation;
+import cn.joker.vo.RecNode;
 import cn.joker.vo.RecNodeList;
 import cn.joker.vo.WorkerAnswer;
 import org.apache.log4j.Logger;
@@ -34,7 +35,6 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
     @Resource
     private UserService userService;
 
-    private List<Boolean> testTable;
 
     @Autowired
     public TagServiceImpl(TagRepository tagRepository) {
@@ -47,8 +47,7 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
         return tagRepository.findByTag(tag);
     }
 
-    @Override
-    public boolean refreshTest(TagEntity tagEntity) {
+    private void refreshTest(TagEntity tagEntity) {
         List<TaskEntity> taskEntities = tagEntity.getTaskEntityList();
         List<ImageEntity> imageEntities = new ArrayList<>();
         List<ImageEntity> imageEntities1 = new ArrayList<>();
@@ -65,70 +64,93 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
                 }
                 if (imageEntities.size() == 10 && imageEntities1.size() == 10) {
                     tagEntity.setTestImageList(imageEntities);
-                    return this.modify(tagEntity);
+                    this.modify(tagEntity);
+                    return;
                 }
             }
         }
-        return false;
     }
 
     @Override
-    public boolean markIntegration(TagEntity tagEntity, Integer type) {
+    public boolean markIntegration(UserEntity userEntity, TagEntity tagEntity, Integer type) {
         Logger logger = Logger.getLogger(TaskServiceImpl.class);
         boolean ret = true;
+        int correctNumber = 0;
         Segmentation segmentation = new Segmentation();
         List<ImageEntity> imageEntities;
-        if (type == 1)
-            imageEntities = tagEntity.getTestImageList();
-        else
-            imageEntities = tagEntity.getTestImageList1();
-        List<ImgMarkEntity> imgMarkEntities = new ArrayList<>();
-        for (ImageEntity imageEntity : imageEntities) {
-            List<ImgMarkEntity> imgMarkEntities1 = imageEntity.getImgMarkEntityList();
-            imgMarkEntities.addAll(imgMarkEntities1);
-        }
-        List<RecNodeList> recNodeLists = NaiveBayesianClassification.integration(imgMarkEntities);
-        logger.info("clause size:" + recNodeLists.size());
         if (type == 2) {//写标注
-            for (RecNodeList recNodeList : recNodeLists) {
-                List<WorkerAnswer> workerAnswers = segmentation.segment(recNodeList);
-                logger.info("workers size:" + workerAnswers.size());
-                QuestionModel questionModel = new QuestionModel();
-                for (WorkerAnswer workerAnswer : workerAnswers) {
-                    logger.info("answer:" + workerAnswer.getAnswer());
-                    UserEntity worker = workerAnswer.getUserEntity();
-                    WorkerMatrixEntity workerMatrixEntity = worker.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
-                    Double gamma = (workerMatrixEntity.getC00() + workerMatrixEntity.getC11())
-                            / (workerMatrixEntity.getC11() + workerMatrixEntity.getC00() + workerMatrixEntity.getC01() + workerMatrixEntity.getC10());
-                    questionModel.psUpdate(gamma, workerAnswer.getAnswer());
+            imageEntities = tagEntity.getTestImageList1();
+            for (ImageEntity imageEntity : imageEntities) {
+                //得到标注
+                List<ImgMarkEntity> imgMarkEntities = imageEntity.getImgMarkEntityList();
+                //整合，簇里面有历史信息
+                List<RecNodeList> recNodeLists = NaiveBayesianClassification.integration(imgMarkEntities);
+                for (RecNodeList recNodeList : recNodeLists) {
+                    //对每个簇分词，修改工人正确率
+                    List<WorkerAnswer> workerAnswers = segmentation.segment(recNodeList);
+                    logger.info("clause size:" + recNodeLists.size());
+                    logger.info("workers size:" + workerAnswers.size());
+                    QuestionModel questionModel = new QuestionModel();
+                    for (WorkerAnswer workerAnswer : workerAnswers) {
+                        logger.info("answer:" + workerAnswer.getAnswer());
+                        UserEntity worker = workerAnswer.getUserEntity();
+                        WorkerMatrixEntity workerMatrixEntity = worker.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
+                        Double gamma = (workerMatrixEntity.getC00() + workerMatrixEntity.getC11())
+                                / (workerMatrixEntity.getC11() + workerMatrixEntity.getC00() + workerMatrixEntity.getC01() + workerMatrixEntity.getC10());
+                        questionModel.psUpdate(gamma, workerAnswer.getAnswer());
 
-                }
-                for (WorkerAnswer workerAnswer : workerAnswers) {
-                    UserEntity worker = workerAnswer.getUserEntity();
-
-                    logger.info(tagEntity.getTag());
-                    WorkerMatrixEntity workerMatrixEntity = worker.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
-                    assert workerMatrixEntity != null;
-                    if (workerAnswer.getAnswer()) {
-                        workerMatrixEntity.setC10(workerMatrixEntity.getC10() + questionModel.getP1());
-                        workerMatrixEntity.setC11(workerMatrixEntity.getC11() + questionModel.getP0());
-
-                    } else {
-                        workerMatrixEntity.setC00(workerMatrixEntity.getC00() + questionModel.getP1());
-                        workerMatrixEntity.setC01(workerMatrixEntity.getC01() + questionModel.getP0());
                     }
-                    logger.info("c00: " + workerMatrixEntity.getC00());
-                    logger.info("c01: " + workerMatrixEntity.getC01());
-                    logger.info("c10: " + workerMatrixEntity.getC10());
-                    logger.info("c11: " + workerMatrixEntity.getC11());
-                    logger.info("rate:" + (workerMatrixEntity.getC00() + workerMatrixEntity.getC11())
-                            / (workerMatrixEntity.getC11() + workerMatrixEntity.getC00() + workerMatrixEntity.getC01() + workerMatrixEntity.getC10()));
+                    for (WorkerAnswer workerAnswer : workerAnswers) {
+                        UserEntity worker = workerAnswer.getUserEntity();
 
-                    ret = ret && userService.modify(worker);
+                        logger.info(tagEntity.getTag());
+                        WorkerMatrixEntity workerMatrixEntity = worker.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
+                        assert workerMatrixEntity != null;
+                        if (workerAnswer.getAnswer()) {
+                            workerMatrixEntity.setC10(workerMatrixEntity.getC10() + questionModel.getP1());
+                            workerMatrixEntity.setC11(workerMatrixEntity.getC11() + questionModel.getP0());
+
+                        } else {
+                            workerMatrixEntity.setC00(workerMatrixEntity.getC00() + questionModel.getP1());
+                            workerMatrixEntity.setC01(workerMatrixEntity.getC01() + questionModel.getP0());
+                        }
+                        logger.info("c00: " + workerMatrixEntity.getC00());
+                        logger.info("c01: " + workerMatrixEntity.getC01());
+                        logger.info("c10: " + workerMatrixEntity.getC10());
+                        logger.info("c11: " + workerMatrixEntity.getC11());
+                        logger.info("rate:" + (workerMatrixEntity.getC00() + workerMatrixEntity.getC11())
+                                / (workerMatrixEntity.getC11() + workerMatrixEntity.getC00() + workerMatrixEntity.getC01() + workerMatrixEntity.getC10()));
+
+                        ret = ret && userService.modify(worker);
+                    }
                 }
             }
         } else {//不写标注
+            //目前所有测试图片
+            imageEntities = tagEntity.getTestImageList();
+            for (ImageEntity imageEntity : imageEntities) {
+                List<ImgMarkEntity> imgMarkEntities = imageEntity.getImgMarkEntityList();
+                List<RecNode> testMark= new ArrayList<>();
+                //得到所有的标注
+                List<RecNode> markList = NaiveBayesianClassification.getAllMark(imgMarkEntities);
+                //先把测试的用户的标注结果去掉单独放在一边
+                for(RecNode recNode: markList){
+                    if(recNode.getWorker().getId().equals(userEntity.getId())){
+                        testMark.add(recNode);
+                        markList.remove(recNode);
+                    }
+                }
 
+                correctNumber = NaiveBayesianClassification.getCorrectNumber(testMark, markList);
+            }
+
+            // 调整用户正确率
+            if(correctNumber < 0.8) {
+                // 把判断结果输出
+                ret = false;
+            }
+
+            // 最后整合一次测试答案，更新用户正确率
         }
         return ret;
     }
@@ -136,18 +158,6 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
     @Override
     public List<TagEntity> findAll() {
         return this.tagRepository.findAll();
-    }
-
-    @Override
-    public Double mapTestTable(List<Boolean> test) {
-        Double temp = 0.0;
-        for (int i = 0; i < 10; i++) {
-            assert test.get(i) != null && testTable.get(i) != null;
-            if (test.get(i).equals(testTable.get(i))) {
-                temp++;
-            }
-        }
-        return temp / 10;
     }
 
     @Scheduled(cron = "0 0 12 * * ?")   //每天执行一次
@@ -158,16 +168,7 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
             if (tagEntity.getId() != 6)
                 this.refreshTest(tagEntity);
         }
-        testTable = new ArrayList<>();
-        this.refreshTable(testTable);
         log.info("refresh success");
 
-    }
-
-    private void refreshTable(List<Boolean> table) {
-        for (int i = 0; i < 5; i++) {
-            table.add(true);
-            table.add(false);
-        }
     }
 }

@@ -187,7 +187,7 @@ public class MarkController {
         UserEntity userEntity = userService.findByUsername(map.get(StdName.USERNAME)[0]);
         TagEntity tagEntity = tagService.findByTag(map.get(StdName.TAG)[0]);
         JSONObject ret = new JSONObject();
-        boolean b = tagService.markIntegration(tagEntity, Integer.valueOf(map.get(StdName.TYPE)[0]));
+        boolean b = tagService.markIntegration(userEntity, tagEntity, Integer.valueOf(map.get(StdName.TYPE)[0]));
         if (!b || userEntity.getWorkerMatrixEntities().get(tagEntity.getId() - 1).getCorrect() < 0.7) {
             ret.put(StdName.MES, false);
         } else {

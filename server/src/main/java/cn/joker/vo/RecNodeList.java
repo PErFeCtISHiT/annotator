@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * @author: pis
- * @description: good good study
+ * @description: 在图片整合过程中用到的临时对象，把标注信息单独提取出来
  * @date: create in 19:40 2018/5/27
  */
 public class RecNodeList {
