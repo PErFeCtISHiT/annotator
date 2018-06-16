@@ -3,8 +3,6 @@
 
 
 
-
-
     <el-row type="flex" justify="center" class="row-bg">
       <el-col :span="16">
 
@@ -13,7 +11,9 @@
           <!--标题-->
           <div slot="header" class="clearfix" style="margin-left: 40%">
             <span class="my-card-header">个人信息</span>
-            <el-button style="float: right; padding: 10px 25px 10px 25px; font-size: large" type="primary">修改</el-button>
+            <el-button style="float: right; padding: 10px 25px 10px 25px; font-size: large"
+                       type="primary" @click="$emit('handleOpen')">修改
+            </el-button>
           </div>
 
           <!--内容-->
@@ -76,8 +76,18 @@
   export default {
     components: {ElRow},
     name: "info-detail",
+
     props: ["baseInfoDetail"],
 
+    data() {
+      return {
+
+      }
+    },
+
+    methods: {
+
+    }
 
   }
 </script>

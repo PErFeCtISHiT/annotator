@@ -68,7 +68,6 @@ public class MessageController {
             }
         }
         userInfo.setRoleEntityList(roleList);
-        userInfo.setEmail(jsonObject.getString(StdName.EMAIL));
         userInfo.setPasswr((String) jsonObject.get(StdName.PASSWR));
         PasswordHelper.encryptPassword(userInfo);
         userInfo.setLev(1);
@@ -92,7 +91,6 @@ public class MessageController {
         UserEntity newEntity = userService.findByUsername(userEntity.getUsername());
         newEntity.setNickname(userEntity.getNickname());
         newEntity.setPasswr(userEntity.getPasswr());
-        newEntity.setEmail(userEntity.getEmail());
         PasswordHelper.encryptPassword(newEntity);
         ret.put(StdName.MES, userService.modify(newEntity));
         JsonHelper.jsonToResponse(response, ret);
@@ -214,22 +212,5 @@ public class MessageController {
             ret.put(StdName.MES, StdName.NULL);
         JsonHelper.jsonToResponse(response, ret);
 
-    }
-
-    /**
-     * @author:pis
-     * @description: 工人注册测试
-     * @date: 13:33 2018/6/12
-     */
-    @RequestMapping(value = "/signTest", method = RequestMethod.GET)
-    public void signTest(HttpServletRequest request, HttpServletResponse response) {
-        JSONObject jsonObject = JsonHelper.requestToJson(request);
-        JSONArray jsonArray = jsonObject.getJSONArray(StdName.TESTS);
-        List tests = (List) jsonArray;
-        Double correctRate = tagService.mapTestTable(tests);
-        JSONObject ret = new JSONObject();
-        ret.put(StdName.MES, correctRate >= 0.7);
-        ret.put(StdName.RATE, correctRate);
-        JsonHelper.jsonToResponse(response, ret);
     }
 }
