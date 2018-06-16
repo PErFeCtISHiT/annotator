@@ -60,6 +60,8 @@ public class TaskController {
         task.setType(jsonObject.getInt(StdName.TYPE));
         UserEntity userEntity = userService.findByUsername(jsonObject.getString(StdName.SPONSORNAME));
         task.setSponsor(userEntity);
+        task.setActNum(0);
+        task.setPolygonNum(5);
 
 
         JSONArray tagArray = jsonObject.getJSONArray(StdName.TAG);

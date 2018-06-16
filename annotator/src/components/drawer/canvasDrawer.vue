@@ -42,6 +42,7 @@
             <!--对齐方法：用flex模式-->
             <div v-if="loadCanvas" :style="getSaverStyle">
               <!--touch事件是给手机端用的-->
+              <!--<img :src="imgSrc">-->
               <canvas
                 v-if="loadCanvas"
                 @mousedown="handleCanvasDownDistribute($event)"
@@ -286,7 +287,7 @@
   const originalWidth = originalHeight + 2 * padding;
   const taskDescriptionHeight = 80;
   const checkCircleNum = 100;
-  const testDrawImages = ['../../../src/testDrawImage/1.jpg', '../../../src/testDrawImage/2.jpg', '../../../src/testDrawImage/3.jpg', '../../../src/testDrawImage/4.jpg', '../../../src/testDrawImage/elephant.jpg', '../../../src/testDrawImage/tableware.jpg', '../../../src/testDrawImage/road.jpg'];
+  const testDrawImages = ['../../../task/10/images/10-Camera Roll.zips/magazine-unlock-04-2.3.963-_acccdf8618d64add9fa51.jpg','../../../src/testDrawImage/1.jpg', '../../../src/testDrawImage/2.jpg', '../../../src/testDrawImage/3.jpg', '../../../src/testDrawImage/4.jpg', '../../../src/testDrawImage/elephant.jpg', '../../../src/testDrawImage/tableware.jpg', '../../../src/testDrawImage/road.jpg'];
 
   import {
     getOffset,
@@ -358,6 +359,7 @@
       }
 
       if (this.markType === 3) {
+        console.log('third type');
         this.getNormalImgAndRefreshCanvas();
       }
     },
@@ -1420,6 +1422,8 @@
           return;
         }
 
+        console.log(this.tagMsg);
+        console.log(this.markType);
         this.$http.get('/mark/markOne', {
           params: {
             tag: that.tagMsg,
@@ -1429,7 +1433,11 @@
         })
           .then(function (response) {
             let ImageMsg = response.data;
+            console.log('图片路径');
+            console.log(ImageMsg.imgURL);
             that.refreshComponent(ImageMsg.imgURL, ImageMsg.description);
+            console.log('更新后');
+            console.log(that.imgSrc);
           })
           .catch(function (error) {
             that.$message({

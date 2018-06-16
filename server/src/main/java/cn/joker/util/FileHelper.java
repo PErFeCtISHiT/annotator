@@ -87,6 +87,7 @@ public class FileHelper {
                     imgService.add(imageEntity);
                     warpList(taskEntity, imageEntity);
                 }
+                return Objects.requireNonNull(newFile.list()).length;
             }
             else {
                 ImageEntity imageEntity = new ImageEntity();
@@ -96,12 +97,12 @@ public class FileHelper {
                 imageEntity.setUrl("task/" + taskEntity.getId() + "/images/" + fileName);
                 imgService.add(imageEntity);
                 warpList(taskEntity, imageEntity);
+                return 1;
             }
         } catch (IOException e) {
             logger.error(StdName.ERROR);
         }
-
-        return Objects.requireNonNull(dest.getParentFile().list()).length;
+        return -1;
     }
 
     private static void warpList(TaskEntity taskEntity, ImageEntity imageEntity) {

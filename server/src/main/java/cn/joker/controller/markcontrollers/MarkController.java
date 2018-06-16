@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -56,6 +57,8 @@ public class MarkController {
         imgMark.setNoteTotal(jsonObject.get(StdName.NOTETOTAL).toString());
         UserEntity userEntity = imgMark.getWorker();
         ImageEntity imageEntity = imgMark.getImage_imgMark();
+        if(imageEntity.getImgMarkEntityList() == null)
+            imageEntity.setImgMarkEntityList(new ArrayList<>());
         imageEntity.getImgMarkEntityList().add(imgMark);
         JSONArray jsonArray = new JSONArray(imgMark.getNotePolygon());
         userEntity.setPoints(userEntity.getPoints() + jsonArray.length());
@@ -215,7 +218,7 @@ public class MarkController {
                 List<ImageEntity> imageEntities = taskEntity.getImageEntityList();
                 for (ImageEntity imageEntity : imageEntities) {
                     if (user.getLev() >= taskEntity.getWorkerLevel()) {
-                        if (type == 3 && taskEntity.getPolygonNum() < taskEntity.getActNum()) {
+                        if (type == 3 && taskEntity.getPolygonNum() > taskEntity.getActNum()) {
                             int flag = 0;
                             List<UserEntity> userEntities = imageEntity.getWorkers();
                             for (UserEntity userEntity : userEntities) {
@@ -229,6 +232,7 @@ public class MarkController {
                                 imgService.modify(imageEntity);
                                 ret.put(StdName.IMGURL, imageEntity.getUrl());
                                 ret.put(StdName.DESCRIPTION, taskEntity.getDescription());
+                                System.out.println(imageEntity.getId());
                                 JsonHelper.jsonToResponse(response, ret);
                                 return;
                             }
