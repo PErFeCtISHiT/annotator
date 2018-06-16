@@ -476,10 +476,17 @@
                     that.messageFlag = false;
                   }, 2000);
 
+                }else {
+                  that.isLoading = false;
+                  that.$message({
+                    message: "任务上传失败",
+                    type: 'warning'
+                  });
                 }
 
               })
               .catch(function (error) {
+                that.isLoading = false;
                 that.$message({
                   message: '任务上传失败，服务器异常' + error,
                   type: 'warning'
