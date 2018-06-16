@@ -8,6 +8,7 @@ import cn.joker.sevice.UserService;
 import cn.joker.statisticalmethod.NaiveBayesianClassification;
 import cn.joker.statisticalmethod.QuestionModel;
 import cn.joker.statisticalmethod.Segmentation;
+import cn.joker.vo.RecNode;
 import cn.joker.vo.RecNodeList;
 import cn.joker.vo.WorkerAnswer;
 import org.apache.log4j.Logger;
@@ -71,9 +72,10 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
     }
 
     @Override
-    public boolean markIntegration(TagEntity tagEntity, Integer type) {
+    public boolean markIntegration(UserEntity userEntity, TagEntity tagEntity, Integer type) {
         Logger logger = Logger.getLogger(TaskServiceImpl.class);
         boolean ret = true;
+        int correctNumber = 0;
         Segmentation segmentation = new Segmentation();
         List<ImageEntity> imageEntities;
         if (type == 2) {//写标注
@@ -124,7 +126,31 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
                 }
             }
         } else {//不写标注
+            //目前所有测试图片
             imageEntities = tagEntity.getTestImageList();
+            for (ImageEntity imageEntity : imageEntities) {
+                List<ImgMarkEntity> imgMarkEntities = imageEntity.getImgMarkEntityList();
+                List<RecNode> testMark= new ArrayList<>();
+                //得到所有的标注
+                List<RecNode> markList = NaiveBayesianClassification.getAllMark(imgMarkEntities);
+                //先把测试的用户的标注结果去掉单独放在一边
+                for(RecNode recNode: markList){
+                    if(recNode.getWorker().getId().equals(userEntity.getId())){
+                        testMark.add(recNode);
+                        markList.remove(recNode);
+                    }
+                }
+
+                correctNumber = NaiveBayesianClassification.getCorrectNumber(testMark, markList);
+            }
+
+            // 调整用户正确率
+            if(correctNumber < 0.8) {
+                // 把判断结果输出
+                ret = false;
+            }
+
+            // 最后整合一次测试答案，更新用户正确率
         }
         return ret;
     }
