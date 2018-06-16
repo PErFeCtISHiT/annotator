@@ -438,7 +438,7 @@
               startDate: that.newTask.startDate.getFullYear() + "-" + (that.newTask.startDate.getMonth() + 1) + "-" + that.newTask.startDate.getDate(),
               endDate: that.newTask.endDate.getFullYear() + "-" + (that.newTask.endDate.getMonth() + 1) + "-" + that.newTask.endDate.getDate(),
               workerLevel: that.newTask.workerLevel,
-              type: 1
+              type: that.intType
               // expectedNumber: that.newTask.expectedNumber,
               // points: that.newTask.points
             })
