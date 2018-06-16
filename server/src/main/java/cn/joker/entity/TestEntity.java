@@ -13,7 +13,7 @@ import java.util.Objects;
  * @date: create in 21:55 2018/5/4
  */
 @Entity
-@Table(name = "test", schema = "imgannotator", catalog = "")
+@Table(name = "test", catalog = "")
 public class TestEntity implements Serializable{
     private Integer id;
     private String imgURL;

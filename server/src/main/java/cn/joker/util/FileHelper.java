@@ -41,53 +41,6 @@ public class FileHelper {
 
     private static final String DIR = System.getProperty("user.dir") + "/annotator/";
 
-    public static Integer saveZip(TaskEntity taskEntity, MultipartFile file, ImgService imgService) {
-        if (file.isEmpty()) {
-            return 0;
-        }
-        String fileName = file.getOriginalFilename();
-        fileName = FileHelper.getRealFilePath(fileName);
-        fileName = fileName.substring(fileName.lastIndexOf(FILE_SEPARATOR) + 1, fileName.lastIndexOf('.'));
-
-        String path = DIR + "task/" + taskEntity.getId() + "/images/";
-        File dest = new File(path + fileName);
-        boolean bool = true;
-        if (!dest.getParentFile().getParentFile().exists()) {
-            bool = dest.getParentFile().getParentFile().mkdir();
-        }
-        if (!dest.getParentFile().exists()) {
-            bool = bool && dest.getParentFile().mkdir();
-        }
-        if (!bool)
-            return 0;
-        File parent = dest.getParentFile();
-        try {
-            file.transferTo(dest);  //保存zip
-            Project p = new Project();
-            Expand e = new Expand();
-            e.setProject(p);
-            e.setSrc(new File(dest.getPath()));
-            e.setOverwrite(false);
-            e.setDest(new File(path));
-           /*
-           ant下的zip工具默认压缩编码为UTF-8编码，
-           而winRAR软件压缩是用的windows默认的GBK或者GB2312编码
-           所以解压缩时要制定编码格式
-           */
-            e.setEncoding("gbk");
-            e.execute();  //解压
-            Path path1 = Paths.get(path + fileName);
-            Files.delete(path1);
-        } catch (IllegalStateException | IOException e) {
-            logger.error(globalException);
-            return 0;
-        }
-        String files[] = parent.getParentFile().list();
-        for(String str : files){
-
-        }
-        return Objects.requireNonNull(dest.getParentFile().list()).length;
-    }
 
     public static Integer saveFiles(TaskEntity taskEntity, MultipartFile file, ImgService imgService) {
         if (file.isEmpty())
@@ -106,6 +59,7 @@ public class FileHelper {
         }
         if (!bool)
             return 0;
+        logger.info(fileName);
         try {
             file.transferTo(dest);
             String attr = fileName.substring(fileName.lastIndexOf('.') + 1);
@@ -115,28 +69,47 @@ public class FileHelper {
                 e.setProject(p);
                 e.setSrc(new File(dest.getPath()));
                 e.setOverwrite(false);
-                e.setDest(new File(path));
+                e.setDest(new File(path + fileName));
                 e.setEncoding("gbk");
                 e.execute();  //解压
                 Path path1 = Paths.get(path + fileName);
                 Files.delete(path1);
+                File file1 = new File(path + fileName);
+                String strings[] = file1.list();
+                for(String string : strings){
+                    ImageEntity imageEntity = new ImageEntity();
+                    imageEntity.setImg_task(taskEntity);
+                    imageEntity.setType(taskEntity.getType());
+                    imageEntity.setImgName(string.substring(0,string.lastIndexOf('.')));
+                    imageEntity.setUrl("task/" + taskEntity.getId() + "/images/" + fileName + "/" + string);
+                    imgService.add(imageEntity);
+                    warpList(taskEntity, imageEntity);
+                }
+            }
+            else {
+                ImageEntity imageEntity = new ImageEntity();
+                imageEntity.setImg_task(taskEntity);
+                imageEntity.setType(taskEntity.getType());
+                imageEntity.setImgName(fileName.substring(fileName.lastIndexOf('/') + 1, fileName.lastIndexOf('.')));
+                imageEntity.setUrl("task/" + taskEntity.getId() + "/images/" + fileName);
+                imgService.add(imageEntity);
+                warpList(taskEntity, imageEntity);
             }
         } catch (IOException e) {
             logger.error(globalException);
         }
 
-        ImageEntity imageEntity = new ImageEntity();
-        imageEntity.setImg_task(taskEntity);
-        imageEntity.setType(taskEntity.getType());
-        imageEntity.setImgName(fileName.substring(fileName.lastIndexOf('/') + 1, fileName.lastIndexOf('.')));
-        imageEntity.setUrl("task/" + taskEntity.getId() + "/images/" + fileName);
-        imgService.add(imageEntity);
+        return Objects.requireNonNull(dest.getParentFile().list()).length;
+    }
+
+    private static void warpList(TaskEntity taskEntity, ImageEntity imageEntity) {
         if (taskEntity.getImageEntityList() == null) {
             List<ImageEntity> imageEntities = new ArrayList<>();
             taskEntity.setImageEntityList(imageEntities);
         }
-        List<ImageEntity> imageEntities = taskEntity.getImageEntityList();
-        imageEntities.add(imageEntity);
-        return Objects.requireNonNull(dest.getParentFile().list()).length;
+        else {
+            List<ImageEntity> imageEntities = taskEntity.getImageEntityList();
+            imageEntities.add(imageEntity);
+        }
     }
 }
