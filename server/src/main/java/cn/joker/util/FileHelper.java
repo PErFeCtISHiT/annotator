@@ -41,15 +41,15 @@ public class FileHelper {
 
     private static final String DIR = System.getProperty("user.dir") + "/annotator/";
 
-    public static boolean saveZip(String taskID, MultipartFile file) {
+    public static Integer saveZip(TaskEntity taskEntity, MultipartFile file, ImgService imgService) {
         if (file.isEmpty()) {
-            return false;
+            return 0;
         }
         String fileName = file.getOriginalFilename();
         fileName = FileHelper.getRealFilePath(fileName);
         fileName = fileName.substring(fileName.lastIndexOf(FILE_SEPARATOR) + 1, fileName.lastIndexOf('.'));
 
-        String path = DIR + "task/" + taskID + "/images/";
+        String path = DIR + "task/" + taskEntity.getId() + "/images/";
         File dest = new File(path + fileName);
         boolean bool = true;
         if (!dest.getParentFile().getParentFile().exists()) {
@@ -59,7 +59,8 @@ public class FileHelper {
             bool = bool && dest.getParentFile().mkdir();
         }
         if (!bool)
-            return false;
+            return 0;
+        File parent = dest.getParentFile();
         try {
             file.transferTo(dest);  //保存zip
             Project p = new Project();
@@ -79,9 +80,13 @@ public class FileHelper {
             Files.delete(path1);
         } catch (IllegalStateException | IOException e) {
             logger.error(globalException);
-            return false;
+            return 0;
         }
-        return true;
+        String files[] = parent.getParentFile().list();
+        for(String str : files){
+
+        }
+        return Objects.requireNonNull(dest.getParentFile().list()).length;
     }
 
     public static Integer saveFiles(TaskEntity taskEntity, MultipartFile file, ImgService imgService) {

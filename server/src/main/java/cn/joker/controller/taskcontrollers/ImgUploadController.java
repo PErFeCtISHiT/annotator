@@ -41,11 +41,10 @@ public class ImgUploadController {
      * @date: 10:38 2018/4/17
      */
     @RequestMapping(value = "/zipFileUpload", method = RequestMethod.POST)
-    public void zipFileUpload(HttpServletRequest request, HttpServletResponse response) {
-        MultipartFile file = ((MultipartHttpServletRequest) request).getFile(StdName.FILENAME);
-        String taskID = request.getParameter(StdName.TASKID);
+    public void zipFileUpload(@RequestParam(StdName.FILE) MultipartFile file, @RequestParam(StdName.TASKID) Integer taskID, HttpServletResponse response) {
+        TaskEntity taskEntity = (TaskEntity) taskService.findByID(taskID);
         JSONObject ret = new JSONObject();
-        ret.put(StdName.MES, FileHelper.saveZip(taskID, file));
+        //ret.put(StdName.MES, FileHelper.saveZip(taskID, file));
         JsonHelper.jsonToResponse(response, ret);
     }
 
