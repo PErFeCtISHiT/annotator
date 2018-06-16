@@ -3,8 +3,8 @@ import VueRouter from 'vue-router'
 
 
 Vue.use(VueRouter);
-import requesterTasks from '../components/requesterTasks'
-import distributeNewTask from '../components/distributeNewTask'
+import requesterTasks from '../components/requester/requesterTasks'
+import distributeNewTask from '../components/requester/distributeNewTask'
 import testDraw from '../components/testDraw'
 import admin from '../components/admin/admin'
 import recharge from '../components/recharge'
