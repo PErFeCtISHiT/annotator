@@ -135,9 +135,9 @@
 
 <script>
   import CanvasDrawer from "../drawer/canvasDrawer";
-  import TypeCard from "../Utils/typeCard";
+  import TypeCard from "../utils/typecard";
   import ElRow from "element-ui/packages/row/src/row";
-  import InstructionPart from "../Utils/instructionPart";
+  import InstructionPart from "../utils/instructionPart";
 
   const contentStyle = 'margin: 3% 3% 3% 3%; background-color: #f5f7fa';
   const singleCardStyle = 'margin-top: 3%;margin-bottom: 3%';

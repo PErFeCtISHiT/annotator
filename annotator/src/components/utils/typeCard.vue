@@ -96,7 +96,7 @@
         type: String,
         default: briefDescription
       },
-      exampleDescription: {
+      description: {
         type: String,
         default: exampleDescription
       },

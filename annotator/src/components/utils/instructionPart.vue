@@ -63,7 +63,7 @@
         type: String,
         default: totalTitle
       },
-      exampleDescription: {
+      description: {
         type: String,
         default: exampleDescription
       },

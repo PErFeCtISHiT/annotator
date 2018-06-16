@@ -8,6 +8,7 @@ import cn.joker.sevice.UserService;
 import cn.joker.statisticalmethod.NaiveBayesianClassification;
 import cn.joker.statisticalmethod.QuestionModel;
 import cn.joker.statisticalmethod.Segmentation;
+import cn.joker.vo.RecNode;
 import cn.joker.vo.RecNodeList;
 import cn.joker.vo.WorkerAnswer;
 import org.apache.log4j.Logger;
@@ -71,7 +72,7 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
     }
 
     @Override
-    public boolean markIntegration(TagEntity tagEntity, Integer type) {
+    public boolean markIntegration(UserEntity userEntity, TagEntity tagEntity, Integer type) {
         Logger logger = Logger.getLogger(TaskServiceImpl.class);
         boolean ret = true;
         Segmentation segmentation = new Segmentation();
@@ -124,7 +125,71 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
                 }
             }
         } else {//不写标注
+            //目前所有测试图片
             imageEntities = tagEntity.getTestImageList();
+            for (ImageEntity imageEntity : imageEntities) {
+                //要一张一张图片来计算，计算出来之后得出当前用户的正确率是否符合要求，符合的话返回true
+                List<ImgMarkEntity> imgMarkEntities = imageEntity.getImgMarkEntityList();
+                List<RecNode> testMark = new ArrayList<>();
+                //得到所有的标注
+                List<RecNode> markList = NaiveBayesianClassification.getAllMark(imgMarkEntities);
+                //先把测试的用户的标注结果去掉单独放在一边
+                for (RecNode recNode : markList) {
+                    if (recNode.getWorker().getId().equals(userEntity.getId())) {
+                        testMark.add(recNode);
+                        markList.remove(recNode);
+                    }
+                }
+
+                List<RecNodeList> otherResultSet = NaiveBayesianClassification.getRecMarkByClass(markList);
+                //根据其他人的结果建立本张图的模型
+                QuestionModel questionModel = getNewQuestionModel(otherResultSet, tagEntity);
+
+                List<Boolean> correct = NaiveBayesianClassification.getCorrectNumber(testMark, markList);
+                // 在前人的基础上修正正确率
+                for (Boolean iscorrect: correct) {
+                    WorkerMatrixEntity workerMatrixEntity = userEntity.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
+                    if (iscorrect) {
+                        workerMatrixEntity.setC10(workerMatrixEntity.getC10() + questionModel.getP1());
+                        workerMatrixEntity.setC11(workerMatrixEntity.getC11() + questionModel.getP0());
+
+                    } else {
+                        workerMatrixEntity.setC00(workerMatrixEntity.getC00() + questionModel.getP1());
+                        workerMatrixEntity.setC01(workerMatrixEntity.getC01() + questionModel.getP0());
+                    }
+                }
+
+                userService.modify(userEntity);
+
+                if(userEntity.getWorkerMatrixEntities().get(tagEntity.getId() - 1).getCorrect() < 0.8)
+                    ret = false;
+
+                // 前面是把测试答案单独整合之后把最后一个用户与之进行比对，最后要把该用户的测试答案也放到答案池里面
+                List<RecNodeList> totalResultSet = NaiveBayesianClassification.integration(imgMarkEntities);
+                questionModel = getNewQuestionModel(totalResultSet, tagEntity);
+                for (RecNodeList recNodeList : totalResultSet) {
+                    UserEntity worker = new UserEntity();
+                    if (recNodeList.getRecNodes().size() == 1) {
+                        worker = recNodeList.getRecNodes().get(0).getWorker();
+                        WorkerMatrixEntity workerMatrixEntity = worker.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
+                        workerMatrixEntity.setC00(workerMatrixEntity.getC00() + questionModel.getP1());
+                        workerMatrixEntity.setC01(workerMatrixEntity.getC01() + questionModel.getP0());
+                    }
+                    else{
+                        for (RecNode arec : recNodeList.getRecNodes()){
+                            worker = arec.getWorker();
+                            WorkerMatrixEntity workerMatrixEntity = worker.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
+                            workerMatrixEntity.setC10(workerMatrixEntity.getC10() + questionModel.getP1());
+                            workerMatrixEntity.setC11(workerMatrixEntity.getC11() + questionModel.getP0());
+                        }
+                    }
+
+                    assert worker.getId() == 0;
+                    userService.modify(worker);
+                }
+            }
+
+
         }
         return ret;
     }
@@ -143,6 +208,23 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
                 this.refreshTest(tagEntity);
         }
         log.info("refresh success");
+    }
 
+    private QuestionModel getNewQuestionModel(List<RecNodeList> resultSet, TagEntity tagEntity){
+        QuestionModel questionModel = new QuestionModel();
+        for (RecNodeList recNodeList : resultSet) {
+            if (recNodeList.getRecNodes().size() == 1) {
+                Double gamma = recNodeList.getRecNodes().get(0).getWorker()
+                        .getWorkerMatrixEntities().get(tagEntity.getId() - 1).getCorrect();
+                questionModel.psUpdate(gamma, false);
+            } else {
+                for (RecNode arec : recNodeList.getRecNodes()){
+                    Double gamma = arec.getWorker().getWorkerMatrixEntities().get(tagEntity.getId() - 1).getCorrect();
+                    questionModel.psUpdate(gamma, false);
+                }
+            }
+        }
+
+        return questionModel;
     }
 }

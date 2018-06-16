@@ -3,20 +3,20 @@
     <!--<p>{{title}}</p>-->
     <!--<el-button type="text" @click="dialogVisible = true">点击打开 Dialog</el-button>-->
 
-    <el-dialog
-      v-dialogDrag
-      title="提示"
-      :visible.sync="dialogVisible"
-      width="30%">
-      <span>这是一段信息</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-      </span>
-    </el-dialog>
+    <!--<el-dialog-->
+      <!--v-dialogDrag-->
+      <!--title="提示"-->
+      <!--:visible.sync="dialogVisible"-->
+      <!--width="30%">-->
+      <!--<span>这是一段信息</span>-->
+      <!--<span slot="footer" class="dialog-footer">-->
+        <!--<el-button @click="dialogVisible = false">取 消</el-button>-->
+        <!--<el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
+      <!--</span>-->
+    <!--</el-dialog>-->
 
-    <worker-get-task>
-    </worker-get-task>
+    <tester>
+    </tester>
 
     <!--<canvas id="canvas2" width=600 height=400 style="border: 1px solid #000;"></canvas>-->
     <!--<div id="test"></div>-->
@@ -33,11 +33,11 @@
 <script>
   import TaskItem from "./taskItem";
   import CanvasDrawer from "./drawer/canvasDrawer";
-  import WorkerGetTask from "./worker/WorkerGetTask";
+  import Tester from "./test/tester";
 
   export default {
     components: {
-      WorkerGetTask,
+      Tester,
       CanvasDrawer,
       TaskItem
     },
