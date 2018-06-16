@@ -51,31 +51,34 @@ public class MessageController {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
         UserEntity userInfo = new UserEntity();
         userInfo.setPoints(100);
-        userInfo.setUsername((String) jsonObject.get(StdName.USERNAME));
+        userInfo.setUsername(jsonObject.getString(StdName.USERNAME));
         userInfo.setWorkerMatrixEntities(new ArrayList<>());
         JSONArray jsonArray = jsonObject.getJSONArray(StdName.ROLELIST);
         List<SysRoleEntity> roleList = new ArrayList<>();
+        userInfo.setPasswr(jsonObject.getString(StdName.PASSWR));
+        PasswordHelper.encryptPassword(userInfo);
+        userService.add(userInfo);
         for (Object obj : jsonArray) {
             Integer srid = (Integer) obj;
             roleList.add((SysRoleEntity) sysRoleService.findByID(srid));
             if (srid == 4) {
                 WorkerMatrixEntity workerMatrixEntity;
                 for (int i = 0; i < 5; i++) {
-                    workerMatrixEntity = new WorkerMatrixEntity(userInfo, jsonObject.getDouble(StdName.RATE), jsonObject.getInt(StdName.NUM));
+                    //workerMatrixEntity = new WorkerMatrixEntity(userInfo, jsonObject.getDouble(StdName.RATE), jsonObject.getInt(StdName.NUM));
+                    workerMatrixEntity = new WorkerMatrixEntity(userInfo, 0.5,10);
+                    workerMatrixEntity.setUser_matrix(userInfo);
                     workerMatrixService.add(workerMatrixEntity);
                     userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
                 }
             }
         }
         userInfo.setRoleEntityList(roleList);
-        userInfo.setPasswr((String) jsonObject.get(StdName.PASSWR));
-        PasswordHelper.encryptPassword(userInfo);
         userInfo.setLev(1);
-        userInfo.setNickname((String) jsonObject.get(StdName.NICKNAME));
+        userInfo.setNickname(jsonObject.getString(StdName.NICKNAME));
         userInfo.setState(1);
         userInfo.setBonus(0);
         JSONObject ret = new JSONObject();
-        ret.put(StdName.MES, userService.add(userInfo));
+        ret.put(StdName.MES, userService.modify(userInfo));
         JsonHelper.jsonToResponse(response, ret);
     }
 

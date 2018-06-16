@@ -33,7 +33,7 @@ public class FileHelper {
 
     private static Logger logger = LoggerFactory.getLogger(JsonHelper.class);
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-    private static String globalException = "Exception";
+
 
     private static String getRealFilePath(String path) {
         return path.replace("/", FILE_SEPARATOR).replace("\\", FILE_SEPARATOR);
@@ -69,19 +69,21 @@ public class FileHelper {
                 e.setProject(p);
                 e.setSrc(new File(dest.getPath()));
                 e.setOverwrite(false);
-                e.setDest(new File(path + fileName));
+                e.setDest(new File(path + fileName + "s"));
                 e.setEncoding("gbk");
                 e.execute();  //解压
                 Path path1 = Paths.get(path + fileName);
                 Files.delete(path1);
-                File file1 = new File(path + fileName);
-                String strings[] = file1.list();
+                File newFile = new File(path + fileName + "s");
+                newFile.mkdir();
+                String strings[] = newFile.list();
+                assert strings != null;
                 for(String string : strings){
                     ImageEntity imageEntity = new ImageEntity();
                     imageEntity.setImg_task(taskEntity);
                     imageEntity.setType(taskEntity.getType());
                     imageEntity.setImgName(string.substring(0,string.lastIndexOf('.')));
-                    imageEntity.setUrl("task/" + taskEntity.getId() + "/images/" + fileName + "/" + string);
+                    imageEntity.setUrl("task/" + taskEntity.getId() + "/images/" + fileName + "s/" + string);
                     imgService.add(imageEntity);
                     warpList(taskEntity, imageEntity);
                 }
@@ -96,7 +98,7 @@ public class FileHelper {
                 warpList(taskEntity, imageEntity);
             }
         } catch (IOException e) {
-            logger.error(globalException);
+            logger.error(StdName.ERROR);
         }
 
         return Objects.requireNonNull(dest.getParentFile().list()).length;

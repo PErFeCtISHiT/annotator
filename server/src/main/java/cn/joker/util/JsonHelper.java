@@ -18,7 +18,6 @@ import java.io.*;
  * @date: create in 20:47 2018/3/28
  */
 public class JsonHelper {
-    private static String globalIOException = "IOException";
     private static Logger logger = LoggerFactory.getLogger(JsonHelper.class);
     private static String dir = System.getProperty("user.dir") + "/annotator/";
 
@@ -39,7 +38,7 @@ public class JsonHelper {
         try (FileReader fileReader = new FileReader(path)) {
             jsonObject = (JsonObject) jsonParser.parse(fileReader);
         } catch (IOException e) {
-            logger.error(globalIOException);
+            logger.error(StdName.ERROR);
         }
 
 
@@ -66,7 +65,7 @@ public class JsonHelper {
             }
             streamReader.close();
         } catch (IOException e) {
-            logger.error(globalIOException);
+            logger.error(StdName.ERROR);
         }
         return new JSONObject(jsonStr.toString());
     }
@@ -96,7 +95,7 @@ public class JsonHelper {
         try (PrintWriter writer = response.getWriter()) {
             writer.append(jsonObject.toString());
         } catch (IOException e) {
-            logger.error(globalIOException);
+            logger.error(StdName.ERROR);
         }
     }
 }
