@@ -213,4 +213,22 @@ public class MessageController {
         JsonHelper.jsonToResponse(response, ret);
 
     }
+    /**
+    *@author:pis
+    *@description: 查看正确率是否达标
+    *@date: 16:54 2018/6/16
+    */
+    @RequestMapping(value = "/checkAccuracy", method = RequestMethod.GET)
+    public void checkAccuracy(HttpServletRequest request,HttpServletResponse response){
+        Map<String, String[]> map = request.getParameterMap();
+        String username = map.get(StdName.USERNAME)[0];
+        UserEntity userEntity = userService.findByUsername(username);
+        String tag = map.get(StdName.TAG)[0];
+        TagEntity tagEntity = tagService.findByTag(tag);
+        JSONObject ret = new JSONObject();
+        if (userEntity.getWorkerMatrixEntities().get(tagEntity.getId() - 1).getCorrect() >= 0.7)
+            ret.put(StdName.MES,true);
+        else
+            ret.put(StdName.MES,false);
+    }
 }
