@@ -78,7 +78,7 @@
 
 
     <!--第二层的表单部分开始-->
-    <el-row v-show="isActive === 2" type="flex" class="row-bg" justify="center" style="margin-left: 5%">
+    <el-row v-loading="isLoading" v-show="isActive === 2" type="flex" class="row-bg" justify="center" style="margin-left: 5%">
       <el-col :span="12">
         <div class="grid-content bg-purple-light main-div">
 
@@ -155,7 +155,7 @@
               <el-row :gutter="20">
                 <el-col :span="6" :offset="4">
                   <div>
-                    <el-button type="primary" :loading="isLoading" @click="submitForm('newTask')" style="padding: 15px 30px 15px 30px">提交</el-button>
+                    <el-button type="primary" @click="submitForm('newTask')" style="padding: 15px 30px 15px 30px">提交</el-button>
                   </div>
                 </el-col>
                 <el-col :span="6">
@@ -312,6 +312,7 @@
         isLoading: false,
         isActive: 1,
         intType: -10,
+        messageFlag: false, //默认认为上传不成功
 
         //第一部分的图片需要的东西
         tagMsg: '',
@@ -396,7 +397,6 @@
           //   {type: 'number', message: '预期参与人数必须为数字值'}
           // ],
           level: [
-            {required: true, trigger: 'blur'},
             {validator: checkLevel, trigger: 'change'},
           ],
           points: [
@@ -438,7 +438,7 @@
               startDate: that.newTask.startDate.getFullYear() + "-" + (that.newTask.startDate.getMonth() + 1) + "-" + that.newTask.startDate.getDate(),
               endDate: that.newTask.endDate.getFullYear() + "-" + (that.newTask.endDate.getMonth() + 1) + "-" + that.newTask.endDate.getDate(),
               workerLevel: that.newTask.workerLevel,
-              type: 1
+              type: that.intType
               // expectedNumber: that.newTask.expectedNumber,
               // points: that.newTask.points
             })
@@ -458,29 +458,30 @@
                   that.resetForm('newTask');
                   setTimeout(function () {
                     that.isLoading = false;
-                    that.$refs.upload.clearFiles();
 
-                    that.$confirm('文件成功上传, 继续留在本页面发布任务?', '提示', {
-                      confirmButtonText: '留在此页',
-                      cancelButtonText: '查看其他',
-                      type: 'warning'
-                    }).then(() => {
-                      //nothing to do
-                    }).catch(() => {
-                      that.$router.push('1-1');
-                    });
+                    if(that.messageFlag) {
+                      that.$refs.upload.clearFiles();
+
+                      that.$confirm('文件成功上传, 继续留在本页面发布任务?', '提示', {
+                        confirmButtonText: '留在此页',
+                        cancelButtonText: '查看其他',
+                        type: 'warning'
+                      }).then(() => {
+                        //nothing to do
+                      }).catch(() => {
+                        that.$router.push('1-1');
+                      });
+                    }
+
+                    that.messageFlag = false;
                   }, 2000);
 
                 }
 
-                else {
-                  that.$message.warning('上传失败');
-                  console.log('2')
-                }
               })
               .catch(function (error) {
                 that.$message({
-                  message: '上传失败' + error,
+                  message: '任务上传失败，服务器异常' + error,
                   type: 'warning'
                 });
                 console.log('1');
@@ -498,8 +499,9 @@
               message: "您填写的内容不合规范",
               type: 'warning'
             });
-          }
-        })
+          } //外层嵌套检查valid
+        });
+
       },
 
       resetForm(formName) {
@@ -530,10 +532,11 @@
         })
           .then(function (response) {
             if (response.data.mes === true) {
+              that.messageFlag = true;
               that.updateWithoutPointer();
             }
             else {
-              that.$message.warning('图片上传失败。可能由网络引起');
+              that.$message.warning('图片上传失败。网络异常');
             }
           })
           .catch(function (error) {

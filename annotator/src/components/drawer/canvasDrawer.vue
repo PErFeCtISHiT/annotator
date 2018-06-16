@@ -286,7 +286,7 @@
   const originalWidth = originalHeight + 2 * padding;
   const taskDescriptionHeight = 80;
   const checkCircleNum = 100;
-  const testDrawImages = ['../../../src/testDrawImage/1.jpg', '../../../src/testDrawImage/2.jpg', '../../../src/testDrawImage/3.jpg', '../../../src/testDrawImage/4.jpg','../../../src/testDrawImage/elephant.jpg','../../../src/testDrawImage/tableware.jpg','../../../src/testDrawImage/road.jpg'];
+  const testDrawImages = ['../../../src/testDrawImage/1.jpg', '../../../src/testDrawImage/2.jpg', '../../../src/testDrawImage/3.jpg', '../../../src/testDrawImage/4.jpg', '../../../src/testDrawImage/elephant.jpg', '../../../src/testDrawImage/tableware.jpg', '../../../src/testDrawImage/road.jpg'];
 
   import {
     getOffset,
@@ -354,7 +354,7 @@
       }
 
       if (this.markType === 1 || this.markType === 2) {
-        this.getCheckImgsAndRefreshCanvas(1);
+        this.getCheckImgsAndRefreshCanvas();
       }
 
       if (this.markType === 3) {
@@ -1325,15 +1325,19 @@
       },
 
       handleSubmitAfterSuccess() {
+        let isAlreadySet = false;
         if (this.imgCounter % this.recheckCircleNum === 0 && (this.markType === 1 || this.markType === 2)) {              //补充用于测试的图片
           this.imgCounter %= this.recheckCircleNum;
           this.recheckCircleNum += getRandomIntInclusive(0, 20);
-          this.getCheckImgsAndRefreshCanvas(0);
+          this.getCheckImgsAndRefreshCanvas();
+          isAlreadySet = true;
         }
 
         if (this.checkImages && this.checkImages.length && this.checkImages.length > 0) {               //有测试用的图片
-          let tempObj = this.checkImages.pop();
-          this.refreshComponent(tempObj.imgURL, tempObj.description);                            //优先进行测试
+          if(!isAlreadySet) {
+            let tempObj = this.checkImages.pop();
+            this.refreshComponent(tempObj.imgURL, tempObj.description);                            //优先进行测试
+          }
           if (this.checkImages.length === 0) {
             this.lengthFirstToZero = true;
           }
@@ -1378,7 +1382,7 @@
           });
       },
 
-      getCheckImgsAndRefreshCanvas(status=0) {
+      getCheckImgsAndRefreshCanvas() {
         let that = this;
         this.$http.get('/mark/markTest', {
           params: {
@@ -1391,10 +1395,8 @@
             console.log('回传的图像数据');
             console.log(response.data);
             that.checkImages = response.data['imgs'];
-            if(status===1) {
-              let tempObj = that.checkImages.pop();
-              that.refreshComponent(tempObj.imgURL, tempObj.description);
-            }
+            let tempObj = that.checkImages.pop();
+            that.refreshComponent(tempObj.imgURL, tempObj.description);
           })
           .catch(function (error) {
             that.$message({
@@ -1493,9 +1495,9 @@
           if (layer.type === polyLayer) {
             layer.x *= changeRate;
             layer.y *= changeRate;
-            for(let i = 0; i < layer.data.points.length; i++){
-              layer['x'+(i+1)] *= changeRate;
-              layer['y'+(i+1)] *= changeRate;
+            for (let i = 0; i < layer.data.points.length; i++) {
+              layer['x' + (i + 1)] *= changeRate;
+              layer['y' + (i + 1)] *= changeRate;
             }
           }
           return false; // do not generate the array

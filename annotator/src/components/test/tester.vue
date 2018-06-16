@@ -65,11 +65,15 @@
   export default {
     components: {ElRow},
     name: "tester",
-    props:{
-      mode:{
+    props: {
+      mode: {
         type: String,
         default: normalMode
       }
+    },
+
+    mounted() {
+      this.getTestsFromServer(this.getTestFromTests);   //这里传入了一个回调函数
     },
 
     data() {
@@ -95,47 +99,72 @@
     },
     methods: {
 
-      comfirmChoose() {
+      getTestsFromServer(recall = null) {
+        let that = this;
+        this.$http.get('/test/getTests')
+          .then(function (response) {
+            that.tests = response.data.data;
+            that.testResult = [];
+            if (recall && recall !== null) {
+              recall();
+            }
+          })
+          .catch(function (error) {
+            that.$message({
+              message: '网络错误',
+              type: 'error',
+              duration: 1800
+            });
+            console.log(error);
+          });
+      },
 
+      comfirmChoose() {
+        this.testResult.push(this.checkDraw());
+        this.doThingsAccordingToLength();
       },
 
       confirmDraw() {
         this.testResult.push(this.checkChoose());
+        this.doThingsAccordingToLength();
+      },
+
+      doThingsAccordingToLength() {
         if (this.test.length > 0) {
           this.getTestFromTests();
-        }else{
+        } else {
           this.handleTestFinished();
         }
       },
 
-      handleTestFinished(){
-        if(this.mode===this.normalMode){
+      handleTestFinished() {
+        if (this.mode === this.normalMode) {
           //向后端询问结果
           //如果返回值为真，返回工人的页面
           //如果返回值为假，询问用户是否继续做题
-            //如果用户选择继续做题，再发起一次请求获取题目
-            //否则用户选择不再继续做题，页面返回首页
-        }else if(this.mode===this.registerMode){
+          //  如果用户选择继续做题，再发起一次请求获取题目
+          //  否则用户选择不再继续做题，页面返回首页
+        } else if (this.mode === this.registerMode) {
           //直接在前端检查正确率
           //如果正确率够，告诉父组件正确率够了，并且把本页面关闭
           //如果正确率不够，询问用户是否继续做题
-            //如果用户选择继续做题，再发起一次请求获取题目
-            //如果用户选择不继续做题，告诉父组件正确率不够，并且把本页面关闭
+          //  如果用户选择继续做题，再发起一次请求获取题目
+          //  如果用户选择不继续做题，告诉父组件正确率不够，并且把本页面关闭
         }
       },
 
-      getTestResult(){
+      getTestResult() {
         let num = 0;
-        for(let i = 0; i < this.testResult.length; i++){
-          if(this.testResult[i]){
+        for (let i = 0; i < this.testResult.length; i++) {
+          if (this.testResult[i]) {
             num++;
           }
         }
-        let rate = num/this.testResult.length;
-        return {rate,num};
+        let rate = num / this.testResult.length;
+        return {rate, num};
       },
 
-      handleNormalFinished(){
+      handleNormalFinished() {
         let that = this;
         let testResult = this.getTestResult();
         this.$http.post('/test/postResult', {
@@ -144,9 +173,9 @@
           num: testResult.num
         })
           .then(function (response) {
-            if(response.data.mes===true){
+            if (response.data.mes === true) {
               that.$router.push('/2-1');
-            }else{
+            } else {
               this.handleNormalNotTrue();
             }
           })
@@ -160,29 +189,31 @@
           });
       },
 
-      handleNormalNotTrue(){
+      handleNormalNotTrue() {
         this.$confirm('您的正确率仍未达标，是否继续答题？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
-        }).catch(() => {
+          this.getTestsFromServer(this.getTestFromTests);
           this.$message({
             type: 'info',
-            message: '已取消删除'
+            message: '已经开始新一轮的测试'
+          });
+        }).catch(() => {
+          this.$router.push('/index');
+          this.$message({
+            type: 'info',
+            message: '已取消继续作答'
           });
         });
       },
 
-      handleRegisterFinished(){
+      handleRegisterFinished() {
 
       },
 
-      getTestFromTests(){
+      getTestFromTests() {
         let tempObj = test.pop();
         this.testType = tempObj.testType;
         this.description = tempObj.description;
@@ -194,6 +225,9 @@
         this.height = tempObj.height;
         this.faultTolerantRate = tempObj.faultTolerantRate;
         this.imgURL = tempObj.imgURL;
+        if (this.testType === typeDraw) {
+          //TODO 做画图测试的必要工作
+        }
       },
 
       checkChoose() {
