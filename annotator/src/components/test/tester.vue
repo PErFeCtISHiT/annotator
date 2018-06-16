@@ -59,14 +59,25 @@
   const choices = ['0个', '1个', '2个', '3个'];
   const typeChoose = 'choose';
   const typeDraw = 'draw';
+  const registerMode = 'register';
+  const normalMode = 'normal';
 
   export default {
     components: {ElRow},
     name: "tester",
+    props:{
+      mode:{
+        type: String,
+        default: normalMode
+      }
+    },
+
     data() {
       return {
         typeChoose,
         typeDraw,
+        normalMode,
+        registerMode,
         testType: typeChoose,
         description: description,
         choices: choices,
@@ -98,6 +109,76 @@
       },
 
       handleTestFinished(){
+        if(this.mode===this.normalMode){
+          //向后端询问结果
+          //如果返回值为真，返回工人的页面
+          //如果返回值为假，询问用户是否继续做题
+            //如果用户选择继续做题，再发起一次请求获取题目
+            //否则用户选择不再继续做题，页面返回首页
+        }else if(this.mode===this.registerMode){
+          //直接在前端检查正确率
+          //如果正确率够，告诉父组件正确率够了，并且把本页面关闭
+          //如果正确率不够，询问用户是否继续做题
+            //如果用户选择继续做题，再发起一次请求获取题目
+            //如果用户选择不继续做题，告诉父组件正确率不够，并且把本页面关闭
+        }
+      },
+
+      getTestResult(){
+        let num = 0;
+        for(let i = 0; i < this.testResult.length; i++){
+          if(this.testResult[i]){
+            num++;
+          }
+        }
+        let rate = num/this.testResult.length;
+        return {rate,num};
+      },
+
+      handleNormalFinished(){
+        let that = this;
+        let testResult = this.getTestResult();
+        this.$http.post('/test/postResult', {
+          username: that.$store.state.user.userInfo.username,
+          rate: testResult.rate,
+          num: testResult.num
+        })
+          .then(function (response) {
+            if(response.data.mes===true){
+              that.$router.push('/2-1');
+            }else{
+              this.handleNormalNotTrue();
+            }
+          })
+          .catch(function (error) {
+            that.$message({
+              message: '网络错误，请检查网络连接',
+              type: 'error',
+              duration: 1800
+            });
+            console.log(error);
+          });
+      },
+
+      handleNormalNotTrue(){
+        this.$confirm('您的正确率仍未达标，是否继续答题？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+      },
+
+      handleRegisterFinished(){
 
       },
 

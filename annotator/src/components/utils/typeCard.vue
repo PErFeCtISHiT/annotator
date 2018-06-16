@@ -33,7 +33,7 @@
         <span>{{coreMsg}}</span>
         <div class="bottom clearfix">
           <time class="briefDescription" :style="`font-size:${cardType===typeTag?'10px':'13px'}`">{{ briefDescription }}</time>
-          <el-button type="text" class="button" @click="handleChoose">选中此项</el-button>
+          <el-button type="primary" class="button" @click="handleChoose">选中此项</el-button>
         </div>
       </div>
     </el-card>
