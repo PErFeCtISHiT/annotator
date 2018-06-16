@@ -177,7 +177,7 @@
 
 <script>
   import {mapActions} from 'vuex'
-  import TypeCard from '../../src/components/Utils/typeCard'
+  import TypeCard from '../utils/typeCard'
 
   let taskID = -100;
   const contentStyle = 'margin: 3% 3% 3% 3%; background-color: #f5f7fa';

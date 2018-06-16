@@ -13,7 +13,7 @@
 
             <div slot="header" class="clearfix">
               <el-col :span="7">
-                <img src="../images/task.png" style="width: 55px; height: 55px"/>
+                <img src="../../images/task.png" style="width: 55px; height: 55px"/>
               </el-col>
               <el-col :span="17">
                 <el-button type="text" @click="jump">
@@ -100,7 +100,7 @@
 
         <!--图钉-->
         <el-col :span="3">
-          <img src="../images/ping.png" height="50" width="50" style="margin-left: -38px; margin-top: -20px">
+          <img src="../../images/ping.png" height="50" width="50" style="margin-left: -38px; margin-top: -20px">
         </el-col>
       </el-col>
       </div>
