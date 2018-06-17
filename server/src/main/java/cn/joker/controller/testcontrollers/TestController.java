@@ -41,17 +41,35 @@ public class TestController {
      * @description: 请求测试
      * @date: 3:48 2018/6/16
      */
+//    @RequestMapping(value = "/getTests", method = RequestMethod.GET)
+//    public void getTests(HttpServletResponse response) {
+//        JSONObject ret = new JSONObject();
+//        JSONArray data = new JSONArray();
+//        List<TestEntity> testEntities = testService.findAll();
+//        Random r = new Random();
+//        Integer rand = r.nextInt(5);
+//        //Integer rand = (int) (Math.random() * 5);
+//        for (int i = 1; i <= 10; i++) {
+//            JSONObject testObj = new JSONObject(testEntities.get(i * rand - 1));
+//            JSONArray jsonArray = new JSONArray(testEntities.get(i * rand - 1).getChoices());
+//            testObj.put(StdName.CHOICES, jsonArray);
+//            data.put(testObj);
+//
+//        }
+//        ret.put(StdName.DATA, data);
+//        JsonHelper.jsonToResponse(response, ret);
+//    }
     @RequestMapping(value = "/getTests", method = RequestMethod.GET)
     public void getTests(HttpServletResponse response) {
         JSONObject ret = new JSONObject();
         JSONArray data = new JSONArray();
         List<TestEntity> testEntities = testService.findAll();
         Random r = new Random();
-        Integer rand = r.nextInt(5);
+        Integer rand = r.nextInt(2);
         //Integer rand = (int) (Math.random() * 5);
         for (int i = 1; i <= 10; i++) {
-            JSONObject testObj = new JSONObject(testEntities.get(i * rand - 1));
-            JSONArray jsonArray = new JSONArray(testEntities.get(i * rand - 1).getChoices());
+            JSONObject testObj = new JSONObject(testEntities.get(i * rand));
+            JSONArray jsonArray = new JSONArray(testEntities.get(i * rand).getChoices());
             testObj.put(StdName.CHOICES, jsonArray);
             data.put(testObj);
 
@@ -59,6 +77,7 @@ public class TestController {
         ret.put(StdName.DATA, data);
         JsonHelper.jsonToResponse(response, ret);
     }
+
 
     /**
      * @param request  请求内容
