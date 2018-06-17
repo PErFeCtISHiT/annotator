@@ -87,7 +87,7 @@ public class TestEntity implements Serializable{
     }
 
     @Basic
-    @Column(name = "choices", nullable = false, length = 200)
+    @Column(name = "choices", nullable = true, length = 200)
     public String getChoices() {
         return choices;
     }

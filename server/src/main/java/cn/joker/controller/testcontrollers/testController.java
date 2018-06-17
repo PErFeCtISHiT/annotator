@@ -25,7 +25,7 @@ import java.util.List;
  * @date: create in 3:26 2018/6/16
  */
 @RestController
-@RequestMapping("/task")
+@RequestMapping("/test")
 public class testController {
     @Resource
     private TestService testService;
