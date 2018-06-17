@@ -6,6 +6,7 @@ import cn.joker.entity.UserEntity;
 import cn.joker.namespace.StdName;
 import cn.joker.sevice.BonusHistoryService;
 import cn.joker.sevice.UserService;
+import cn.joker.statisticalmethod.Comentropy;
 import cn.joker.util.JsonHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -90,5 +91,35 @@ public class WorkerController {
         JSONObject ret = new JSONObject();
         ret.put(StdName.WORKERS, workersArray);
         JsonHelper.jsonToResponse(response, ret);
+    }
+    /**
+    *@author:pis
+    *@description: 查看正确率
+    *@date: 12:18 2018/6/17
+    */
+    @RequestMapping(value = "/getCorrect", method = RequestMethod.GET)
+    public void getCorrect(HttpServletResponse response,HttpServletRequest request) {
+        Map<String, String[]> map = request.getParameterMap();
+        String username = map.get(StdName.USERNAME)[0];
+        UserEntity userEntity = userService.findByUsername(username);
+        List<UserEntity> workers = userService.findAllWorkers();
+        Double [][]data = new Double[workers.size() + 1][5];
+        for(int i = 0;i < workers.size();i++){
+            for(int j = 0;j < 5;j++){
+                data[i][j] = workers.get(i).getWorkerMatrixEntities().get(j).getCorrect();
+            }
+        }
+        for(int j = 0;j < 5;j++){
+            data[workers.size()][j] = userEntity.getWorkerMatrixEntities().get(j).getCorrect();
+        }
+        Double []correct = Comentropy.getComentropy(data);
+        JSONObject ret = new JSONObject();
+        JSONArray array = new JSONArray();
+        for(int i = 0;i < 5;i++){
+            array.put(userEntity.getWorkerMatrixEntities().get(i).getCorrect());
+        }
+        array.put(correct[workers.size()]);
+        ret.put(StdName.MES,array);
+        JsonHelper.jsonToResponse(response,ret);
     }
 }

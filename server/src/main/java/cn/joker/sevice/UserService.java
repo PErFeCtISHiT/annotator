@@ -8,4 +8,6 @@ public interface UserService extends PubService {
     UserEntity findByUsername(String username);
 
     List<UserEntity> findAll();
+
+    List<UserEntity> findAllWorkers();
 }

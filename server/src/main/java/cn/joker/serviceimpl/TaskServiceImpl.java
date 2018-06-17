@@ -132,7 +132,8 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
     @Override
     public ResponseEntity<FileSystemResource> getDataSet(TaskEntity taskEntity) {
         File file = new File(DIR + "data/" + taskEntity.getId().toString());
-        try (FileWriter fileWriter = new FileWriter(file); BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+        try (FileWriter fileWriter = new FileWriter(file);
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
             List<ImageEntity> imageEntities = taskEntity.getImageEntityList();
             for (ImageEntity imageEntity : imageEntities) {
                 List<ImgMarkEntity> imgMarkEntities = imageEntity.getImgMarkEntityList();
