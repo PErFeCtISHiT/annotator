@@ -132,13 +132,29 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
     @Override
     public ResponseEntity<FileSystemResource> getDataSet(TaskEntity taskEntity) {
         File file = new File(DIR + "data/" + taskEntity.getId().toString());
-        try (FileWriter fileWriter = new FileWriter(file);
-             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+        Boolean bool = true;
+        if (!file.getParentFile().getParentFile().exists()) {
+            bool = file.getParentFile().getParentFile().mkdir();
+        }
+        if (!file.getParentFile().exists()) {
+            bool = bool && file.getParentFile().mkdir();
+        }
+        if (!bool)
+            return null;
+        try (FileWriter fileWriter = new FileWriter(file); BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
             List<ImageEntity> imageEntities = taskEntity.getImageEntityList();
             for (ImageEntity imageEntity : imageEntities) {
                 List<ImgMarkEntity> imgMarkEntities = imageEntity.getImgMarkEntityList();
                 for (ImgMarkEntity imgMarkEntity : imgMarkEntities) {
-                    JSONObject jsonObject = new JSONObject(imgMarkEntity);
+                    System.out.println(imgMarkEntity.getId());
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put(StdName.NOTEPOLYGON,imgMarkEntity.getNotePolygon());
+                    jsonObject.put(StdName.NOTETOTAL,imgMarkEntity.getNoteTotal());
+                    jsonObject.put(StdName.NOTERECTANGLE,imgMarkEntity.getNoteRectangle());
+                    jsonObject.put(StdName.ID,imgMarkEntity.getId());
+                    jsonObject.put(StdName.WORKER,imgMarkEntity.getWorker().getUsername());
+                    jsonObject.put(StdName.IMGNAME,imgMarkEntity.getImage_imgMark().getImgName());
+                    System.out.println("here");
                     bufferedWriter.write(jsonObject.toString());
                 }
             }
@@ -146,7 +162,7 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
             fileWriter.close();
             HttpHeaders headers = new HttpHeaders();
             headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-            headers.add("Content-Disposition", "attachment; filename=" + System.currentTimeMillis() + ".xls");
+            headers.add("Content-Disposition", "attachment; filename=" + System.currentTimeMillis() + ".txt");
             headers.add("Pragma", "no-cache");
             headers.add("Expires", "0");
             return ResponseEntity
