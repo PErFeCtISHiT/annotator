@@ -16,7 +16,8 @@ import firstPart from '../components/firstPart'
 import requesterWannaSee from '../components/requestorWannaSee'
 import requestorTotal from '../components/requestorTotal'
 import personalInfoMain from '../components/personal_info/personalInfoMain'
-import oneTask from '../components/oneTask'
+import tester from '../components/test/tester'
+
 
 export default new VueRouter({
   routes: [
@@ -100,5 +101,9 @@ export default new VueRouter({
       component: testDraw
     },
 
+    {
+      path: '/testPage',
+      component: tester
+    },
   ]
 });

@@ -199,7 +199,8 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
         return this.tagRepository.findAll();
     }
 
-    @Scheduled(cron = "0 0 12 * * ?")   //每天执行一次
+    //@Scheduled(cron = "0 0 12 * * ?")   //每天执行一次
+    @Scheduled(cron = "0/10 * * * * ?")   //每10秒执行一次
     public void tagRefresh() {
         log.info("refresh begin");
         List<TagEntity> tagEntities = this.findAll();
