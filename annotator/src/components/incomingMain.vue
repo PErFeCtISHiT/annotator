@@ -90,6 +90,7 @@
       },
 
       handleUpdatePass(rate, num) {
+        this.inTest = false;
         let username = this.$refs.register.registerForm.userName;
         let nickname = this.$refs.register.registerForm.nickname;
         let passwr = this.$refs.register.registerForm.pass;

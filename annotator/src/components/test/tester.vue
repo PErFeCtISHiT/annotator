@@ -386,6 +386,7 @@
         let that = this;
         this.$http.get('/test/getTests')
           .then(function (response) {
+            console.log(response.data.data);
             that.tests = response.data.data;
             that.testResult = [];
             if (recall && recall !== null) {
@@ -533,6 +534,7 @@
 
       getTestFromTests() {
         let tempObj = this.tests.pop();
+        console.log(this.tests.length);
         this.testType = tempObj.testType;
         this.description = tempObj.description;
         this.choices = tempObj.choices;
