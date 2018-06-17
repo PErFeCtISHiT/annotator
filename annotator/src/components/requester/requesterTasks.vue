@@ -224,18 +224,17 @@
         let that = this;
 
         //确认的话发一个ajax请求
-        this.$http.get('/mark/getDataSet', {
+        this.$http.get('/task/getDataSet', {
           params: {
             taskID: payload.uid
           },
-          responseType: 'blob'
         })
           .then(function (response) {
-            let url = window.URL.createObjectURL(new Blob[response]);
+            //let url = window.URL.createObjectURL(new Blob[response]);
             let link = document.createElement('a');
             link.style.display = 'none';
-            link.href = url;
-            link.setAttribute('download', 'excel.xlsx');
+            //link.href = url;
+            link.setAttribute('href', '/task/getDataSet?taskID='+ payload.uid);
 
             document.body.appendChild(link);
             link.click();

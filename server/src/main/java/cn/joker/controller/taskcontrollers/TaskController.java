@@ -349,7 +349,7 @@ public class TaskController {
      * @description: 发起者下载任务标注的数据集
      * @date: 14:30 2018/6/5
      */
-    @RequestMapping(value = "getDataSet", method = RequestMethod.GET)
+    @RequestMapping(value = "/getDataSet", method = RequestMethod.GET)
     public ResponseEntity<FileSystemResource> getDataSet(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
         Integer taskID = Integer.valueOf(map.get(StdName.TASKID)[0]);
