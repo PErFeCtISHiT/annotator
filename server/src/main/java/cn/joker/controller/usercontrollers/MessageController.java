@@ -69,6 +69,7 @@ public class MessageController {
                     //workerMatrixEntity = new WorkerMatrixEntity(userInfo, jsonObject.getDouble(StdName.RATE), jsonObject.getInt(StdName.NUM));
                     workerMatrixEntity = new WorkerMatrixEntity(userInfo, 0.5, 10);
                     workerMatrixEntity.setUser_matrix(userInfo);
+                    workerMatrixEntity.setNum(0.0);
                     workerMatrixService.add(workerMatrixEntity);
                     userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
                 }
