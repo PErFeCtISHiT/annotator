@@ -63,9 +63,27 @@ public class MarkController {
         JSONArray jsonArray = new JSONArray(imgMark.getNotePolygon());
         userEntity.setPoints(userEntity.getPoints() + jsonArray.length());
         userEntity.setBonus(userEntity.getBonus() + jsonArray.length());
+        switch (imageEntity.getType()){
+            case 1:
+                userEntity.setType1Num(userEntity.getType1Num() + 1);
+                break;
+            case 2:
+                userEntity.setType2Num(userEntity.getType1Num() + 1);
+                break;
+            case 3:
+                userEntity.setType3Num(userEntity.getType1Num() + 1);
+                break;
+
+        }
         userEntity.setLev((int) (Math.log(userEntity.getBonus() + 1.0) / Math.log(10) + 1));
         imageEntity.setMarked(true);
         TaskEntity taskEntity = imageEntity.getImg_task();
+        List<TagEntity> tagEntities = taskEntity.getTagEntityList();
+        List<WorkerMatrixEntity> workerMatrixEntities = userEntity.getWorkerMatrixEntities();
+        for(TagEntity tagEntity : tagEntities){
+            WorkerMatrixEntity workerMatrixEntity = workerMatrixEntities.get(tagEntity.getId() - 1);
+            workerMatrixEntity.setNum(workerMatrixEntity.getNum() + 1);
+        }
         taskEntity.setActNum(taskEntity.getActNum() + 1);
         JSONObject ret = new JSONObject();
         ret.put(StdName.MES, userService.modify(userEntity) && imgService.modify(imageEntity) && imgMarkService.add(imgMark) && taskService.modify(taskEntity));

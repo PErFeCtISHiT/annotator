@@ -122,4 +122,25 @@ public class WorkerController {
         ret.put(StdName.MES,array);
         JsonHelper.jsonToResponse(response,ret);
     }
+    /**
+    *@author:pis
+    *@description: 查看标注数
+    *@date: 13:53 2018/6/17
+    */
+    @RequestMapping(value = "/getMarkNum", method = RequestMethod.GET)
+    public void getMarkNum(HttpServletResponse response,HttpServletRequest request) {
+        Map<String, String[]> map = request.getParameterMap();
+        String username = map.get(StdName.USERNAME)[0];
+        UserEntity userEntity = userService.findByUsername(username);
+        JSONObject ret = new JSONObject();
+        JSONArray array = new JSONArray();
+        array.put(userEntity.getType1Num());
+        array.put(userEntity.getType2Num());
+        array.put(userEntity.getType3Num());
+        for(int i = 0;i < 5;i++){
+            array.put(userEntity.getWorkerMatrixEntities().get(i).getNum());
+        }
+        ret.put(StdName.MES,array);
+        JsonHelper.jsonToResponse(response,ret);
+    }
 }
