@@ -2,9 +2,11 @@ package cn.joker.controller.statisticcontrollers;
 
 import cn.joker.entity.BonusHistoryEntity;
 import cn.joker.entity.SysRoleEntity;
+import cn.joker.entity.TaskEntity;
 import cn.joker.entity.UserEntity;
 import cn.joker.namespace.StdName;
 import cn.joker.sevice.BonusHistoryService;
+import cn.joker.sevice.TaskService;
 import cn.joker.sevice.UserService;
 import cn.joker.statisticalmethod.Comentropy;
 import cn.joker.util.JsonHelper;
@@ -28,11 +30,13 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/statistic")
-public class WorkerController {
+public class UserController {
     @Resource
     private BonusHistoryService bonusHistoryService;
     @Resource
     private UserService userService;
+    @Resource
+    private TaskService taskService;
 
 
     /**
@@ -119,6 +123,103 @@ public class WorkerController {
             array.put(userEntity.getWorkerMatrixEntities().get(i).getCorrect());
         }
         array.put(correct[workers.size()]);
+        ret.put(StdName.MES,array);
+        JsonHelper.jsonToResponse(response,ret);
+    }
+    /**
+    *@author:pis
+    *@description: 查看标注数
+    *@date: 13:53 2018/6/17
+    */
+    @RequestMapping(value = "/getMarkNum", method = RequestMethod.GET)
+    public void getMarkNum(HttpServletResponse response,HttpServletRequest request) {
+        Map<String, String[]> map = request.getParameterMap();
+        String username = map.get(StdName.USERNAME)[0];
+        UserEntity userEntity = userService.findByUsername(username);
+        JSONObject ret = new JSONObject();
+        JSONArray array = new JSONArray();
+        array.put(userEntity.getType1Num());
+        array.put(userEntity.getType2Num());
+        array.put(userEntity.getType3Num());
+        for(int i = 0;i < 5;i++){
+            array.put(userEntity.getWorkerMatrixEntities().get(i).getNum());
+        }
+        ret.put(StdName.MES,array);
+        JsonHelper.jsonToResponse(response,ret);
+    }
+    /**
+    *@author:pis
+    *@description: 查看任务数
+    *@date: 14:07 2018/6/17
+    */
+    @RequestMapping(value = "/getTaskNum", method = RequestMethod.GET)
+    public void getTaskNum(HttpServletResponse response,HttpServletRequest request) {
+        Map<String, String[]> map = request.getParameterMap();
+        String username = map.get(StdName.USERNAME)[0];
+        UserEntity userEntity = userService.findByUsername(username);
+        List<TaskEntity> taskEntities = taskService.findAll();
+        Integer complete = 0;
+        Integer unComplete = 0;
+        for(TaskEntity taskEntity : taskEntities){
+            if(taskEntity.getSponsor().getId().equals(userEntity.getId())){
+                if(taskEntity.getState() == 1){
+                    unComplete++;
+                }
+                else
+                    complete++;
+            }
+        }
+        JSONObject ret = new JSONObject();
+        JSONArray array = new JSONArray();
+        array.put(complete);
+        array.put(unComplete);
+        ret.put(StdName.MES,array);
+        JsonHelper.jsonToResponse(response,ret);
+    }
+    /**
+    *@author:pis
+    *@description: 查看系统发布任务情况
+    *@date: 14:13 2018/6/17
+    */
+    @RequestMapping(value = "/getTaskDetail", method = RequestMethod.GET)
+    public void getTaskDetail(HttpServletResponse response,HttpServletRequest request) {
+        Map<String, String[]> map = request.getParameterMap();
+        String username = map.get(StdName.USERNAME)[0];
+        UserEntity userEntity = userService.findByUsername(username);
+        Integer type1 = 0;
+        Integer type2 = 0;
+        Integer type3 = 0;
+        Integer userType1 = 0;
+        Integer userType2 = 0;
+        Integer userType3 = 0;
+        List<TaskEntity> taskEntities = taskService.findAll();
+        for(TaskEntity taskEntity : taskEntities){
+            switch (taskEntity.getType()){
+                case 1:
+                    type1++;
+                    if(taskEntity.getSponsor().getId().equals(userEntity.getId()))
+                        userType1++;
+                    break;
+                case 2:
+                    type2++;
+                    if(taskEntity.getSponsor().getId().equals(userEntity.getId()))
+                        userType2++;
+                    break;
+                case 3:
+                    type3++;
+                    if(taskEntity.getSponsor().getId().equals(userEntity.getId()))
+                        userType3++;
+                    break;
+            }
+        }
+        JSONObject ret = new JSONObject();
+        JSONArray array = new JSONArray();
+        array.put(type1);
+        array.put(type2);
+        array.put(type3);
+        array.put(userType1);
+        array.put(userType2);
+        array.put(userType3);
         ret.put(StdName.MES,array);
         JsonHelper.jsonToResponse(response,ret);
     }

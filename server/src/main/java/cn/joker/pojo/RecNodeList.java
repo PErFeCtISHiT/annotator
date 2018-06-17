@@ -1,4 +1,4 @@
-package cn.joker.vo;
+package cn.joker.pojo;
 
 import java.util.ArrayList;
 import java.util.List;

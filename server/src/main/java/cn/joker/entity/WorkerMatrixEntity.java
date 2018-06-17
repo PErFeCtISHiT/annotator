@@ -19,6 +19,18 @@ public class WorkerMatrixEntity implements Serializable {
     private Double C11;
     private UserEntity user_matrix;
     private Integer id;
+    private Double num;
+
+    @Basic
+    @Column(name = "num")
+    public Double getNum() {
+        return num;
+    }
+
+    public void setNum(Double num) {
+        this.num = num;
+    }
+
     @Transient
     private Double correct;
 
@@ -37,7 +49,8 @@ public class WorkerMatrixEntity implements Serializable {
     public WorkerMatrixEntity(UserEntity userEntity,Double rate,Integer num) {
         C00 = C11 = rate * num / 2;
         C01 = C10 = (1 - rate) * num / 2;
-        this.user_matrix = userEntity;
+        user_matrix = userEntity;
+        num = 0;
     }
 
     @Id

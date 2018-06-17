@@ -72,6 +72,9 @@ public class MessageController {
                 }
             }
         }
+        userInfo.setType1Num(0);
+        userInfo.setType2Num(0);
+        userInfo.setType3Num(0);
         userInfo.setRoleEntityList(roleList);
         userInfo.setLev(1);
         userInfo.setNickname(jsonObject.getString(StdName.NICKNAME));
@@ -233,5 +236,6 @@ public class MessageController {
             ret.put(StdName.MES,true);
         else
             ret.put(StdName.MES,false);
+        JsonHelper.jsonToResponse(response,ret);
     }
 }

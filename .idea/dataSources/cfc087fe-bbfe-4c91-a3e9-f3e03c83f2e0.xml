@@ -1626,117 +1626,137 @@
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="376" parent="248" name="PRIMARY">
+    <column id="376" parent="248" name="num1">
+      <Position>10</Position>
+      <DataType>int(11)|0</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="377" parent="248" name="num2">
+      <Position>11</Position>
+      <DataType>int(11)|0</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="378" parent="248" name="num3">
+      <Position>12</Position>
+      <DataType>int(11)|0</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <key id="379" parent="248" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="377" parent="249" name="user_entity_list_id">
+    <column id="380" parent="249" name="user_entity_list_id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="378" parent="249" name="ability_entity_list_id">
+    <column id="381" parent="249" name="ability_entity_list_id">
       <Position>2</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="379" parent="249" name="FKrskcyiymk83an203x4l6360t7">
+    <index id="382" parent="249" name="FKrskcyiymk83an203x4l6360t7">
       <ColNames>user_entity_list_id</ColNames>
     </index>
-    <index id="380" parent="249" name="FK3exdwj1n0wwwhk2bmqaob93jc">
+    <index id="383" parent="249" name="FK3exdwj1n0wwwhk2bmqaob93jc">
       <ColNames>ability_entity_list_id</ColNames>
     </index>
-    <foreign-key id="381" parent="249" name="FKrskcyiymk83an203x4l6360t7">
+    <foreign-key id="384" parent="249" name="FKrskcyiymk83an203x4l6360t7">
       <ColNames>user_entity_list_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="382" parent="249" name="FK3exdwj1n0wwwhk2bmqaob93jc">
+    <foreign-key id="385" parent="249" name="FK3exdwj1n0wwwhk2bmqaob93jc">
       <ColNames>ability_entity_list_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>ability</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="383" parent="250" name="user_entity_list_id">
+    <column id="386" parent="250" name="user_entity_list_id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="384" parent="250" name="role_entity_list_id">
+    <column id="387" parent="250" name="role_entity_list_id">
       <Position>2</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="385" parent="250" name="FKqoiittscjpgbpor9tgm6no9u5">
+    <index id="388" parent="250" name="FKqoiittscjpgbpor9tgm6no9u5">
       <ColNames>user_entity_list_id</ColNames>
     </index>
-    <index id="386" parent="250" name="FK3pitj00gydc6gghpbfuxrc124">
+    <index id="389" parent="250" name="FK3pitj00gydc6gghpbfuxrc124">
       <ColNames>role_entity_list_id</ColNames>
     </index>
-    <foreign-key id="387" parent="250" name="FKqoiittscjpgbpor9tgm6no9u5">
+    <foreign-key id="390" parent="250" name="FKqoiittscjpgbpor9tgm6no9u5">
       <ColNames>user_entity_list_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="388" parent="250" name="FK3pitj00gydc6gghpbfuxrc124">
+    <foreign-key id="391" parent="250" name="FK3pitj00gydc6gghpbfuxrc124">
       <ColNames>role_entity_list_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>sys_role</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="389" parent="251" name="id">
+    <column id="392" parent="251" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="390" parent="251" name="c00">
+    <column id="393" parent="251" name="c00">
       <Position>2</Position>
       <DataType>double|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="391" parent="251" name="c01">
+    <column id="394" parent="251" name="c01">
       <Position>3</Position>
       <DataType>double|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="392" parent="251" name="c10">
+    <column id="395" parent="251" name="c10">
       <Position>4</Position>
       <DataType>double|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="393" parent="251" name="c11">
+    <column id="396" parent="251" name="c11">
       <Position>5</Position>
       <DataType>double|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="394" parent="251" name="correct">
+    <column id="397" parent="251" name="correct">
       <Position>6</Position>
       <DataType>double|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="395" parent="251" name="user_id">
+    <column id="398" parent="251" name="user_id">
       <Position>7</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="396" parent="251" name="FK7yc0aq8e6k03mopj4p294umd2">
+    <column id="399" parent="251" name="num">
+      <Position>8</Position>
+      <DataType>double|0</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="400" parent="251" name="FK7yc0aq8e6k03mopj4p294umd2">
       <ColNames>user_id</ColNames>
     </index>
-    <key id="397" parent="251" name="PRIMARY">
+    <key id="401" parent="251" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="398" parent="251" name="FK7yc0aq8e6k03mopj4p294umd2">
+    <foreign-key id="402" parent="251" name="FK7yc0aq8e6k03mopj4p294umd2">
       <ColNames>user_id</ColNames>
       <RefSchemaName>imgannotator</RefSchemaName>
       <RefTableName>user</RefTableName>

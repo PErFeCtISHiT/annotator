@@ -1,8 +1,8 @@
 package cn.joker.statisticalmethod;
 
-import cn.joker.vo.RecNode;
-import cn.joker.vo.RecNodeList;
-import cn.joker.vo.WorkerAnswer;
+import cn.joker.pojo.RecNode;
+import cn.joker.pojo.RecNodeList;
+import cn.joker.pojo.WorkerAnswer;
 import org.apdplat.word.WordSegmenter;
 import org.apdplat.word.segmentation.Word;
 import org.slf4j.Logger;
