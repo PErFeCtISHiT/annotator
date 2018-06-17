@@ -77,8 +77,7 @@ public class FileHelper {
                 e.execute();  //解压
                 Path path1 = Paths.get(path + fileName);
                 Files.delete(path1);
-                File newFile = new File(path + fileName + "s");
-                newFile.mkdir();
+                File newFile = new File(str);
                 String strings[] = newFile.list();
                 assert strings != null;
                 for(String string : strings){
@@ -86,7 +85,10 @@ public class FileHelper {
                     imageEntity.setImg_task(taskEntity);
                     imageEntity.setType(taskEntity.getType());
                     imageEntity.setImgName(string.substring(0,string.lastIndexOf('.')));
-                    imageEntity.setUrl("task/" + taskEntity.getId() + "/images/" + fileName + "s/" + string);
+                    String temp = fileName;
+                    temp = temp.replaceAll(" ","");
+                    temp = temp.replaceAll("%","");
+                    imageEntity.setUrl("task/" + taskEntity.getId() + "/images/" + temp + "s/" + string);
                     imgService.add(imageEntity);
                     warpList(taskEntity, imageEntity);
                 }

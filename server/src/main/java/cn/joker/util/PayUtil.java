@@ -23,8 +23,6 @@ public class PayUtil {
 
     public static String RETURN_URL = "http://localhost:8080/3-1";
 
-    public static String BASE_URL = "https://pay.paysapi.com";
-
     public static String TOKEN = "9fc9a411cac1508a6ab0687b2105b060";
 
     public static Map<String, Object> payOrder(Map<String, Object> remoteMap) {

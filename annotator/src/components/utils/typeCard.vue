@@ -9,7 +9,7 @@
       top="5vh"
       :visible.sync="dialogVisible">
       <h3 slot="title" style="margin-top: 0; margin-bottom: 0">模式说明</h3>
-      <instruction-part :total-title="coreMsg" :description="description" :details="details"
+      <instruction-part :total-title="coreMsg" :example-description="exampleDescription" :details="details"
                         :img-u-r-l="imgURL">
       </instruction-part>
     </el-dialog>
@@ -33,7 +33,7 @@
         <span>{{coreMsg}}</span>
         <div class="bottom clearfix">
           <time class="briefDescription" :style="`font-size:${cardType===typeTag?'10px':'13px'}`">{{ briefDescription }}</time>
-          <el-button type="text" class="button" @click="handleChoose">选中此项</el-button>
+          <el-button type="primary" class="button" @click="handleChoose">选中此项</el-button>
         </div>
       </div>
     </el-card>

@@ -1,22 +1,22 @@
 <template>
-  <el-radio-group v-model="radio">
-    <el-radio label="发起者">
-    </el-radio>
-    <el-radio label="工人">
-    </el-radio>
-  </el-radio-group>
+  <el-checkbox-group v-model="checkList">
+    <el-checkbox label="发起者"></el-checkbox>
+    <el-checkbox label="工人"></el-checkbox>
+  </el-checkbox-group>
 </template>
 
 <script>
+  //这是一个多选组件？？
   export default {
     data () {
       return {
-        radio: '发起者',
+        checkList: ['发起者','工人']
       };
     },
     methods:{
       getResult: function () {
-        return [this.mapNum(this.radio)];
+        console.log(this.checkList.map(this.mapNum));
+        return this.checkList.map(this.mapNum);
       },
       mapNum: function (str) {
         if(str==='发起者'){
