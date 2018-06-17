@@ -69,7 +69,10 @@ public class FileHelper {
                 e.setProject(p);
                 e.setSrc(new File(dest.getPath()));
                 e.setOverwrite(false);
-                e.setDest(new File(path + fileName + "s"));
+                String str = path + fileName + "s";
+                str =  str.replaceAll(" ","");
+                str = str.replaceAll("%","");
+                e.setDest(new File(str));
                 e.setEncoding("gbk");
                 e.execute();  //解压
                 Path path1 = Paths.get(path + fileName);
