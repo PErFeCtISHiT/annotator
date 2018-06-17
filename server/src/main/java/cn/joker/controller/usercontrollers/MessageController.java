@@ -42,6 +42,8 @@ public class MessageController {
 
 
     /**
+     * @param request  请求内容
+     * @param response 返回内容
      * @author:pis
      * @description: 注册，point，uid，state初始化为0
      * @date: 14:10 2018/4/8
@@ -65,7 +67,7 @@ public class MessageController {
                 WorkerMatrixEntity workerMatrixEntity;
                 for (int i = 0; i < 5; i++) {
                     //workerMatrixEntity = new WorkerMatrixEntity(userInfo, jsonObject.getDouble(StdName.RATE), jsonObject.getInt(StdName.NUM));
-                    workerMatrixEntity = new WorkerMatrixEntity(userInfo, 0.5,10);
+                    workerMatrixEntity = new WorkerMatrixEntity(userInfo, 0.5, 10);
                     workerMatrixEntity.setUser_matrix(userInfo);
                     workerMatrixService.add(workerMatrixEntity);
                     userInfo.getWorkerMatrixEntities().add(workerMatrixEntity);
@@ -87,6 +89,8 @@ public class MessageController {
 
 
     /**
+     * @param userEntity 请求内容
+     * @param response   返回内容
      * @author:pis
      * @description: 修改一个用户的信息
      * @date: 13:36 2018/4/13
@@ -103,6 +107,8 @@ public class MessageController {
     }
 
     /**
+     * @param request  请求内容
+     * @param response 返回内容
      * @author:pis
      * @description: 按用户名查找一个用户是否存在
      * @date: 13:36 2018/4/13
@@ -136,6 +142,8 @@ public class MessageController {
 
 
     /**
+     * @param request  请求内容
+     * @param response 返回内容
      * @author:pis
      * @description: 删除用户
      * @date: 14:16 2018/4/13
@@ -152,6 +160,8 @@ public class MessageController {
     }
 
     /**
+     * @param request  请求内容
+     * @param response 返回内容
      * @author:pis
      * @description: 积分提现充值
      * @date: 14:41 2018/4/13
@@ -174,6 +184,8 @@ public class MessageController {
     }
 
     /**
+     * @param request  请求内容
+     * @param response 返回内容
      * @author:pis
      * @description: 修改积分
      * @date: 14:45 2018/4/13
@@ -195,6 +207,8 @@ public class MessageController {
     }
 
     /**
+     * @param request  请求内容
+     * @param response 返回内容
      * @author:pis
      * @description: 奖励积分
      * @date: 14:45 2018/4/13
@@ -219,13 +233,16 @@ public class MessageController {
         JsonHelper.jsonToResponse(response, ret);
 
     }
+
     /**
-    *@author:pis
-    *@description: 查看正确率是否达标
-    *@date: 16:54 2018/6/16
-    */
+     * @param request  请求内容
+     * @param response 返回内容
+     * @author:pis
+     * @description: 查看正确率是否达标
+     * @date: 16:54 2018/6/16
+     */
     @RequestMapping(value = "/checkAccuracy", method = RequestMethod.GET)
-    public void checkAccuracy(HttpServletRequest request,HttpServletResponse response){
+    public void checkAccuracy(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
         String username = map.get(StdName.USERNAME)[0];
         UserEntity userEntity = userService.findByUsername(username);
@@ -233,9 +250,9 @@ public class MessageController {
         TagEntity tagEntity = tagService.findByTag(tag);
         JSONObject ret = new JSONObject();
         if (userEntity.getWorkerMatrixEntities().get(tagEntity.getId() - 1).getCorrect() >= 0.7)
-            ret.put(StdName.MES,true);
+            ret.put(StdName.MES, true);
         else
-            ret.put(StdName.MES,false);
-        JsonHelper.jsonToResponse(response,ret);
+            ret.put(StdName.MES, false);
+        JsonHelper.jsonToResponse(response, ret);
     }
 }

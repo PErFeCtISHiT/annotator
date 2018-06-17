@@ -1,9 +1,11 @@
 package cn.joker.controller;
 
 import cn.joker.entity.PaySaPi;
-import cn.joker.util.DateHelper;
+import cn.joker.util.JsonHelper;
 import cn.joker.util.PayUtil;
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,23 +19,28 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/pays")
+//@CrossOrigin
 public class PayController {
 
     @RequestMapping("/pay")
     @ResponseBody
-    public Map<String, Object> pay(HttpServletRequest request, float price, int istype) {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        Map<String, Object> remoteMap = new HashMap<String, Object>();
-        remoteMap.put("price", price);
-        remoteMap.put("istype", istype);
+    public Map<String, Object> pay(HttpServletRequest request) {
+        JSONObject jsonObject = JsonHelper.requestToJson(request);
+        Map<String, Object> resultMap = new HashMap<>();
+        Map<String, Object> remoteMap = new HashMap<>();
+
+        remoteMap.put("price", jsonObject.getDouble("price"));
+        remoteMap.put("istype", jsonObject.getInt("istype"));
         remoteMap.put("orderid", PayUtil.getOrderIdByUUId());
-        remoteMap.put("orderuid", DateHelper.convertDateToString((java.sql.Date) new Date()));
-        remoteMap.put("goodsname", "您自己的商品名称");
+        remoteMap.put("orderuid", new Date().toString());
+        remoteMap.put("goodsname", "hhh");
+
         resultMap.put("data", PayUtil.payOrder(remoteMap));
         return resultMap;
     }
 
     @RequestMapping("/notifyPay")
+    @CrossOrigin
     public void notifyPay(HttpServletRequest request, HttpServletResponse response, PaySaPi paySaPi) {
         // 保证密钥一致性
         if (PayUtil.checkPayKey(paySaPi)) {
@@ -44,6 +51,7 @@ public class PayController {
     }
 
     @RequestMapping("/returnPay")
+    @CrossOrigin
     public ModelAndView returnPay(HttpServletRequest request, HttpServletResponse response, String orderid) {
         boolean isTrue = false;
         ModelAndView view = null;
