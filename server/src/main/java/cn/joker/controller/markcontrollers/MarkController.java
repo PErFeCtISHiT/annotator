@@ -44,6 +44,8 @@ public class MarkController {
     /**
      * @author:pis
      * @description: 上传图片标注
+     * @param request 请求内容
+     * @param response 返回内容
      * @date: 9:06 2018/4/14
      */
     @RequestMapping(value = "/postMark", method = RequestMethod.POST)
@@ -73,7 +75,8 @@ public class MarkController {
             case 3:
                 userEntity.setType3Num(userEntity.getType1Num() + 1);
                 break;
-
+            default:
+                break;
         }
         userEntity.setLev((int) (Math.log(userEntity.getBonus() + 1.0) / Math.log(10) + 1));
         imageEntity.setMarked(true);
@@ -93,6 +96,8 @@ public class MarkController {
     /**
      * @author:pis
      * @description: 查看图片标注
+     * @param request 请求内容
+     * @param response 返回内容
      * @date: 10:33 2018/4/14
      */
     @RequestMapping(value = "/checkImage", method = RequestMethod.POST)
@@ -121,6 +126,8 @@ public class MarkController {
     /**
      * @author:pis
      * @description: 查看整合结果
+     * @param request 请求内容
+     * @param response 返回内容
      * @date: 19:29 2018/5/28
      */
     @RequestMapping(value = "/checkImageIntegration", method = RequestMethod.POST)
@@ -173,6 +180,8 @@ public class MarkController {
     /**
      * @author:pis
      * @description: 工人测试标注
+     * @param request 请求内容
+     * @param response 返回内容
      * @date: 15:22 2018/6/4
      */
     @RequestMapping(value = "/markTest", method = RequestMethod.GET)
@@ -200,6 +209,8 @@ public class MarkController {
     /**
      * @author:pis
      * @description: 工人测试
+     * @param request 请求内容
+     * @param response 返回内容
      * @date: 12:14 2018/6/5
      */
     @RequestMapping(value = "/test", method = RequestMethod.GET)
@@ -220,6 +231,8 @@ public class MarkController {
     /**
      * @author:pis
      * @description: 工人得到一张图
+     * @param request 请求内容
+     * @param response 返回内容
      * @date: 14:22 2018/6/5
      */
     @RequestMapping(value = "/markOne", method = RequestMethod.GET)
@@ -250,7 +263,7 @@ public class MarkController {
                                 imgService.modify(imageEntity);
                                 ret.put(StdName.IMGURL, imageEntity.getUrl());
                                 ret.put(StdName.DESCRIPTION, taskEntity.getDescription());
-                                System.out.println(imageEntity.getId());
+                                //System.out.println(imageEntity.getId());
                                 JsonHelper.jsonToResponse(response, ret);
                                 return;
                             }

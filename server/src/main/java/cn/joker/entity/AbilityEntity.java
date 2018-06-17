@@ -52,8 +52,10 @@ public class AbilityEntity implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         AbilityEntity that = (AbilityEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(totalPoints, that.totalPoints) &&

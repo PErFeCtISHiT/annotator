@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
-import java.util.List;
-import java.util.Objects;
 /**
  * @author: pis
  * @description: good good study
@@ -87,7 +84,7 @@ public class TestEntity implements Serializable{
     }
 
     @Basic
-    @Column(name = "choices", nullable = false, length = 200)
+    @Column(name = "choices", nullable = true, length = 200)
     public String getChoices() {
         return choices;
     }

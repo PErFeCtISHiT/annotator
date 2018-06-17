@@ -29,6 +29,10 @@ public class AdminController {
     @Resource
     private TaskService taskService;
 
+    /**
+     *
+     * @param response 返回用户数量
+     */
     @RequestMapping(value = "/checkUserNum", method = RequestMethod.GET)
     public void checkUserNum(HttpServletResponse response) {
         JSONObject ret = new JSONObject();
@@ -54,6 +58,10 @@ public class AdminController {
 
     }
 
+    /**
+     *
+     * @param response 返回任务的数量
+     */
     @RequestMapping(value = "/checkTaskNum", method = RequestMethod.GET)
     public void checkTaskNum(HttpServletResponse response) {
         JSONObject ret = new JSONObject();
