@@ -25,7 +25,7 @@ public class PaySaPi {
 	/**
 	 * 实际支付金额
 	 */
-	private String realprice;
+	private String realPrice;
 
 	/**
 	 * 您的自定义用户ID
@@ -62,11 +62,11 @@ public class PaySaPi {
 	}
 
 	public String getRealprice() {
-		return realprice;
+		return realPrice;
 	}
 
-	public void setRealprice(String realprice) {
-		this.realprice = realprice;
+	public void setRealPrice(String realPrice) {
+		this.realPrice = realPrice;
 	}
 
 	public String getOrderuid() {

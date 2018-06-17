@@ -13,7 +13,7 @@
           <el-col :span="24">
 
             <requester-task-item v-for="(message, index) in messages"
-                                 @aggregation="handleAggregation" @download="handleDownload"
+                                 @download="handleDownload"
                                  :taskMsg="message" :theIndex="index" :key="message.taskID"> </requester-task-item>
 
           </el-col>
@@ -40,7 +40,8 @@
       imgNum: 12,
       tag: ['植物'],
       startDate: '2018-03-21',
-      endDate: '2018-08-08'
+      endDate: '2018-08-08',
+      status: 1
     },
 
     {
@@ -52,7 +53,8 @@
       imgNum: 18,
       tag: ['动物'],
       startDate: '2018-12-31',
-      endDate: '2018-05-04'
+      endDate: '2018-05-04',
+      status: 2
     },
 
     {
@@ -64,7 +66,8 @@
       imgNum: 18,
       tag: ['植物'],
       startDate: '2018-12-31',
-      endDate: '2018-05-04'
+      endDate: '2018-05-04',
+      status: 1
     },
 
     // {
@@ -126,6 +129,7 @@
 
     mounted: function () {
       this.changeTabs("total");
+      //this.messages = items;
     },
 
 
@@ -133,6 +137,7 @@
       return {
         messages: [],
         tags: [],
+
         tabName: ""
       };
     },
@@ -182,40 +187,39 @@
 
       },
 
-      handleAggregation(uid, index) {
-        let that = this;
-
-        this.$confirm('结束此任务，积分无法退还。是否继续', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-          .then(() => {
-
-            //确认的话发一个ajax请求
-            that.$http.get('/task/endTask',{
-              params:{
-                taskID: uid
-              }
-            })
-              .then(function (response) {
-                if(response.data.mes === true){
-                  that.messages.splice(index, 1);
-                  that.$message.success('已结束任务');
-                }
-                else{
-                  that.$message.warning('结束任务失败');
-                }
-              })
-              .catch(function (error) {
-                that.$message.warning('结束任务失败' + error);
-              })
-
-          })
-          .catch(() => {
-            that.$message.info('已取消');
-          })
-      },
+      // handleAggregation(uid, index) {
+      //
+      //   this.$confirm('结束此任务，积分无法退还。是否继续', '提示', {
+      //     confirmButtonText: '确定',
+      //     cancelButtonText: '取消',
+      //     type: 'warning'
+      //   })
+      //     .then(() => {
+      //
+      //       //确认的话发一个ajax请求
+      //       that.$http.get('/task/endTask',{
+      //         params:{
+      //           taskID: uid
+      //         }
+      //       })
+      //         .then(function (response) {
+      //           if(response.data.mes === true){
+      //             that.messages.splice(index, 1);
+      //             that.$message.success('已结束任务');
+      //           }
+      //           else{
+      //             that.$message.warning('结束任务失败');
+      //           }
+      //         })
+      //         .catch(function (error) {
+      //           that.$message.warning('结束任务失败' + error);
+      //         })
+      //
+      //     })
+      //     .catch(() => {
+      //       that.$message.info('已取消');
+      //     })
+      // },
 
       /**
        * 删除任务。是从子组件emit过来的

@@ -287,7 +287,7 @@
   const originalWidth = originalHeight + 2 * padding;
   const taskDescriptionHeight = 80;
   const checkCircleNum = 100;
-  const testDrawImages = ['../../../task/10/images/10-Camera Roll.zips/magazine-unlock-04-2.3.963-_acccdf8618d64add9fa51.jpg','../../../src/testDrawImage/1.jpg', '../../../src/testDrawImage/2.jpg', '../../../src/testDrawImage/3.jpg', '../../../src/testDrawImage/4.jpg', '../../../src/testDrawImage/elephant.jpg', '../../../src/testDrawImage/tableware.jpg', '../../../src/testDrawImage/road.jpg'];
+  const testDrawImages = ['task/10/images/测试/elephant.jpg','../../../src/testDrawImage/1.jpg', '../../../src/testDrawImage/2.jpg', '../../../src/testDrawImage/3.jpg', '../../../src/testDrawImage/4.jpg', '../../../src/testDrawImage/elephant.jpg', '../../../src/testDrawImage/tableware.jpg', '../../../src/testDrawImage/road.jpg'];
 
   import {
     getOffset,
@@ -774,8 +774,10 @@
           });
           this.lastX = x;
           this.lastY = y;
-
+          canvas.drawLayers();
           this.handleAfterDrawingOneNoteFinished();
+        }else{
+          canvas.drawLayers();
         }
       },
 
@@ -1366,7 +1368,7 @@
           .then(function (response) {
             let isDoingGoodJob = response.data['mes'];
             if (!isDoingGoodJob) {
-              //TODO 压到做测试的界面
+              that.$router.push('/testPage');
               that.$message({
                 message: '您似乎有些疲倦了，标注的正确率有所下降',
                 type: 'warning',

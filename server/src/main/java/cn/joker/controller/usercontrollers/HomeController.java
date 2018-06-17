@@ -30,6 +30,8 @@ public class HomeController {
 
     /**
      * @author:pis
+     * @param userEntity 用户
+     * @param response http
      * @description: 登陆
      * @date: 13:35 2018/4/13
      */
@@ -57,6 +59,7 @@ public class HomeController {
 
     /**
      * @author:pis
+     * @param response http
      * @description: 得到当前用户，无法通过junit单元测试，手动测
      * @date: 18:49 2018/4/13
      */

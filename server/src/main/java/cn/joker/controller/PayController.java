@@ -17,11 +17,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+/**
+ * 支付的controller
+ */
 @Controller
 @RequestMapping("/pays")
 //@CrossOrigin
 public class PayController {
 
+    /**
+     *
+     * @param request http
+     * @return 支付接口相关内容
+     */
     @RequestMapping("/pay")
     @ResponseBody
     public Map<String, Object> pay(HttpServletRequest request) {
@@ -29,16 +37,22 @@ public class PayController {
         Map<String, Object> resultMap = new HashMap<>();
         Map<String, Object> remoteMap = new HashMap<>();
 
-        remoteMap.put("price", jsonObject.getDouble("price"));
+        remoteMap.put("price", jsonObject.getString("price"));
         remoteMap.put("istype", jsonObject.getInt("istype"));
-        remoteMap.put("orderid", PayUtil.getOrderIdByUUId());
-        remoteMap.put("orderuid", new Date().toString());
-        remoteMap.put("goodsname", "hhh");
+        remoteMap.put("orderid", new Date().getTime() + "");
+        remoteMap.put("orderuid", jsonObject.getString("orderuid"));
+        remoteMap.put("goodsname", "recharge");
 
         resultMap.put("data", PayUtil.payOrder(remoteMap));
         return resultMap;
     }
 
+    /**
+     *
+     * @param request 请求
+     * @param response 回复
+     * @param paySaPi 类
+     */
     @RequestMapping("/notifyPay")
     @CrossOrigin
     public void notifyPay(HttpServletRequest request, HttpServletResponse response, PaySaPi paySaPi) {
@@ -50,6 +64,13 @@ public class PayController {
         }
     }
 
+    /**
+     *
+     * @param request 请求
+     * @param response 回复
+     * @param orderid 订单号
+     * @return
+     */
     @RequestMapping("/returnPay")
     @CrossOrigin
     public ModelAndView returnPay(HttpServletRequest request, HttpServletResponse response, String orderid) {
