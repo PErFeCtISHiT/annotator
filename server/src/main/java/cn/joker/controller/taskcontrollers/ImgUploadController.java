@@ -50,7 +50,7 @@ public class ImgUploadController {
         } else {
             UserEntity userEntity = taskEntity.getSponsor();
             taskEntity.setImageNum(FileHelper.saveFiles(taskEntity, file, imgService));
-            userEntity.setPoints(userEntity.getPoints() - taskEntity.getImageNum());
+            userEntity.setPoints((int) (userEntity.getPoints() - taskEntity.getImageNum() * 1.5));
             if (userEntity.getPoints() < 0) {
                 ret.put(StdName.MES, !taskService.delete(taskEntity));
             } else

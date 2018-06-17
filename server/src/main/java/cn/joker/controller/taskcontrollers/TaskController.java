@@ -20,10 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @RestController
@@ -298,10 +295,22 @@ public class TaskController {
         jsonObject.put(StdName.ENDDATE, DateHelper.convertDateToString(task.getEndDate()));
         jsonObject.put(StdName.IMGNUM, task.getImageNum());
 
-        Integer totalTagNum = 0;
         JSONArray userInfos = new JSONArray();
-        jsonObject.put(StdName.TOTALTAGNUM, totalTagNum);
-        jsonObject.put(StdName.AVERAGETAGNUM, totalTagNum / task.getImageNum());
+        List<ImageEntity> imageEntities = task.getImageEntityList();
+        Set<UserEntity> userEntities = new HashSet<>();
+        for(ImageEntity imageEntity : imageEntities){
+            List<UserEntity> users = imageEntity.getWorkers();
+            for(UserEntity userEntity : users){
+                if(!userEntities.contains(userEntity))
+                    userEntities.add(userEntity);
+            }
+        }
+        for(UserEntity userEntity : userEntities){
+            JSONObject obj = new JSONObject();
+            obj.put(StdName.USERNAME,userEntity.getUsername());
+            obj.put(StdName.LEVEL,userEntity.getLev());
+            userInfos.put(obj);
+        }
         jsonObject.put(StdName.WORKERINFO, userInfos);
         JsonHelper.jsonToResponse(response, jsonObject);
     }
