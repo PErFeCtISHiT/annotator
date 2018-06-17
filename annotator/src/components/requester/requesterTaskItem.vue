@@ -2,62 +2,38 @@
 
 
   <el-col :span="8" class="slot-border">
-    <el-dialog title="工人信息" :visible.sync="dialogTableVisible">
-      <el-table
-        :data="workers"
-        height="300"
-        style="width: 100%">
+    <!--详细信息部分-->
+    <el-dialog title="工人信息" :visible.sync="dialogTableVisible" center>
+      <div style="alignment: center">
+        <el-table
+          :data="workers"
+          height="300"
+          style="margin-left: 24%; width: 60%;">
 
-        <el-table-column
-          label="用户名"
-          width="180">
-          <template slot-scope="scope">
-            <i class="el-icon-info"></i>
-            <span style="margin-left: 10px">{{ scope.row.username }}</span>
-          </template>
-        </el-table-column>
+          <el-table-column label="用户名" width="180">
+            <template slot-scope="scope">
+              <i class="el-icon-info"></i>
+              <span style="margin-left: 10px">{{ scope.row.username }}</span>
+            </template>
+          </el-table-column>
 
-        <el-table-column
-          label="等级"
-          width="200">
-          <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-              <p>等级: {{ scope.row.lev }}</p>
-              <div slot="reference" class="name-wrapper">
-                <el-rate v-model="scope.row.lev" disabled></el-rate>
-              </div>
-            </el-popover>
-          </template>
-        </el-table-column>
+          <el-table-column label="等级" width="200">
+            <template slot-scope="scope">
+              <el-popover trigger="hover" placement="top">
+                <p>等级: {{ scope.row.lev }}</p>
+                <div slot="reference" class="name-wrapper">
+                  <el-rate v-model="scope.row.lev" disabled></el-rate>
+                </div>
+              </el-popover>
+            </template>
+          </el-table-column>
 
-        <el-table-column label="操作">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              @click="handleComplain(scope.row)">举报
-            </el-button>
+        </el-table>
+      </div>
 
-            <el-dialog title="投诉举报" :visible.sync="dialogVisible" close-on-press-escape show-close="false" :before-close="handleClose">
-              <el-form ref="reqComplaint" :model="complaintInfo" label-width="100px">
-                <el-form-item label="举报原因">
-                  <el-input type="textarea" column="22" row="4" v-model="complaintInfo.content" clearable
-                            style="width: 500px"></el-input>
-                </el-form-item>
-              </el-form>
+      <el-button type="primary" style="margin-left: 40%; margin-top: 20px">查看整合标注结果</el-button>
 
-              <div slot="footer">
-                <el-button type="primary" @click="submitComplaint('reqComplaint')">提交</el-button>
-              </div>
-            </el-dialog>
 
-            <el-button
-              size="mini"
-              type="danger"
-              @click="handleView(scope.row)">查看
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
     </el-dialog>
 
     <!-- 最外面一层是给引用它的都看的 -->
@@ -163,7 +139,7 @@
 
               <el-col :span="6" :offset="5">
                 <el-popover placement="top-start" trigger="hover"
-                            title="温馨贴士" content="任务还在分发标注中哦，请耐心等待。"
+                            title="温馨小贴士" content="任务还在分发标注中哦，请耐心等待。"
                             width="200"
                             :disabled="!isDisabled">
 
@@ -198,8 +174,22 @@
 <script>
   const workerMock = [
     {
-
+      username: 'somnus',
+      lev: 2
     },
+    {
+      username: 'keith',
+      lev: 3
+    },
+    {
+      username: 'whiskey',
+      lev: 3
+    },
+    {
+      username: 'somnus',
+      lev: 2
+    },
+
   ];
 
   export default {
@@ -222,26 +212,26 @@
     methods: {
       handleAgg() {
         //console.log('2line----------------------------',this.theIndex, this.taskMsg.taskID, 'finish--------------');
-        this.workers = workerMock;
-        this.dialogTableVisible = true;
-        // let that = this;
-        //
-        // this.$http.get('/task/checkTaskDetail', {
-        //   params: {
-        //     taskID: this.taskMsg.taskID,
-        //   }
-        // })
-        //   .then(function (response) {
-        //     that.workers = response.data.workerInfo;
-        //     that.dialogTableVisible = true;
-        //   })
-        //   .catch(function (error) {
-        //     that.$message({
-        //       message: '网络请求失败' + error,
-        //       type: 'warning'
-        //     });
-        //     console.log('网络请求错误');
-        //   });
+
+        let that = this;
+
+        this.$http.get('/task/checkTaskDetail', {
+          params: {
+            taskID: this.taskMsg.taskID,
+          }
+        })
+          .then(function (response) {
+            that.workers = response.data.workerInfo;
+            that.workers = workerMock;
+            that.dialogTableVisible = true;
+          })
+          .catch(function (error) {
+            that.$message({
+              message: '网络请求失败' + error,
+              type: 'warning'
+            });
+            console.log('网络请求错误');
+          });
       },
 
       handleDw() {
