@@ -154,6 +154,7 @@ public class TaskController {
             taskObject.put(StdName.DESCRIPTION, task.getDescription());
             taskObject.put(StdName.IMGNUM, task.getImageNum());
             taskObject.put(StdName.SPONSORNAME, task.getSponsor().getUsername());
+            taskObject.put(StdName.STATUS,task.getState());
             JSONArray tags = new JSONArray();
             List<TagEntity> tagEntities = task.getTagEntityList();
             for (TagEntity tagEntity : tagEntities) {
