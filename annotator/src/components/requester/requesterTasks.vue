@@ -13,7 +13,7 @@
           <el-col :span="24">
 
             <requester-task-item v-for="(message, index) in messages"
-                                 @remove="handleRemove" @complete="handleComplete"
+                                 @aggregation="handleAggregation" @download="handleDownload"
                                  :taskMsg="message" :theIndex="index" :key="message.taskID"> </requester-task-item>
 
           </el-col>
@@ -32,50 +32,86 @@
   import requesterTaskItem from './requesterTaskItem'
   const items = [
     {
-      taskID: 6,
-      taskName: "成功了",
-      description: "阿斯顿还是低啊随便丢撒比都把送都弄撒旦好似嗲上班都i啊班底哦那送你的撒都纳斯哦你滴哦啊索尼电视都",
-      totalProgress: 0.67,
-      tags: ['A', 'B', 'C'],
-      startDate: "2018-04-25",
-      endDate: "2018-04-27",
+      taskID: '1',
+      taskName: '静物之植物',
+      description: '随便写一点',
+
+      sponsorName: 'Ax',
+      imgNum: 12,
+      tag: ['植物'],
+      startDate: '2018-03-21',
+      endDate: '2018-08-08'
     },
+
     {
-      taskID: 4,
-      taskName: "失败了",
-      description: "按时打开链接爱斯莫地方v王企鹅王企鹅女妇女被送女滴哦是计费的方式你",
-      totalProgress: 1.00,
-      tags: ['A', 'B', 'C'],
-      startDate: "2018-04-25",
-      endDate: "2018-04-27",
+      taskID: '2',
+      taskName: '静物之动物',
+      description: '“风波一失所，各在天一隅”，这说的是多情人的离别；用来描述元稹写诗时候的感受也应不会有怎样的偏颇。元',
+
+      sponsorName: 'Ba',
+      imgNum: 18,
+      tag: ['动物'],
+      startDate: '2018-12-31',
+      endDate: '2018-05-04'
     },
+
     {
-      taskID: 3,
-      taskName: "1",
-      description: "2351",
-      totalProgress: 1.00,
-      tags: ['A', 'B', 'C'],
-      startDate: "2018-04-25",
-      endDate: "2018-04-27",
+      taskID: '3',
+      taskName: 'test',
+      description: '“风波一失所，各在天一隅”，这说的是多情人的离别；用来描述元稹写诗时候的感受也应不会有怎样的偏颇。元',
+
+      sponsorName: 'Ba',
+      imgNum: 18,
+      tag: ['植物'],
+      startDate: '2018-12-31',
+      endDate: '2018-05-04'
     },
-    {
-      taskID: 2,
-      taskName: "1",
-      description: "2351",
-      totalProgress: 0.67,
-      tags: ['A', 'B', 'C'],
-      startDate: "2018-04-25",
-      endDate: "2018-04-27",
-    },
-    {
-      taskID: 1,
-      taskName: "1",
-      description: "2351",
-      totalProgress: 0.67,
-      tags: ['A'],
-      startDate: "2018-04-25",
-      endDate: "2018-04-27",
-    }
+
+    // {
+    //   taskID: 6,
+    //   taskName: "成功了",
+    //   description: "阿斯顿还是低啊随便丢撒比都把送都弄撒旦好似嗲上班都i啊班底哦那送你的撒都纳斯哦你滴哦啊索尼电视都",
+    //   totalProgress: 0.67,
+    //   tags: ['A', 'B', 'C'],
+    //   startDate: "2018-04-25",
+    //   endDate: "2018-04-27",
+    // },
+    // {
+    //   taskID: 4,
+    //   taskName: "失败了",
+    //   description: "按时打开链接爱斯莫地方v王企鹅王企鹅女妇女被送女滴哦是计费的方式你",
+    //   totalProgress: 1.00,
+    //   tags: ['A', 'B', 'C'],
+    //   startDate: "2018-04-25",
+    //   endDate: "2018-04-27",
+    // },
+    // {
+    //   taskID: 3,
+    //   taskName: "1",
+    //   description: "2351",
+    //   totalProgress: 1.00,
+    //   tags: ['A', 'B', 'C'],
+    //   startDate: "2018-04-25",
+    //   endDate: "2018-04-27",
+    // },
+    // {
+    //   taskID: 2,
+    //   taskName: "1",
+    //   description: "2351",
+    //   totalProgress: 0.67,
+    //   tags: ['A', 'B', 'C'],
+    //   startDate: "2018-04-25",
+    //   endDate: "2018-04-27",
+    // },
+    // {
+    //   taskID: 1,
+    //   taskName: "1",
+    //   description: "2351",
+    //   totalProgress: 0.67,
+    //   tags: ['A'],
+    //   startDate: "2018-04-25",
+    //   endDate: "2018-04-27",
+    // }
   ];
 
 
@@ -90,7 +126,6 @@
 
     mounted: function () {
       this.changeTabs("total");
-      console.log(this.messages);
     },
 
 
@@ -147,7 +182,7 @@
 
       },
 
-      handleComplete(uid, index) {
+      handleAggregation(uid, index) {
         let that = this;
 
         this.$confirm('结束此任务，积分无法退还。是否继续', '提示', {
@@ -185,41 +220,30 @@
       /**
        * 删除任务。是从子组件emit过来的
        * */
-      handleRemove(payload){
+      handleDownload(payload) {
         let that = this;
 
-        this.$confirm('删除此任务，积分无法退还。是否继续', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
+        //确认的话发一个ajax请求
+        this.$http.get('/mark/getDataSet', {
+          params: {
+            taskID: payload.uid
+          },
+          responseType: 'blob'
         })
-          .then(() => {
+          .then(function (response) {
+            let url = window.URL.createObjectURL(new Blob[response]);
+            let link = document.createElement('a');
+            link.style.display = 'none';
+            link.href = url;
+            link.setAttribute('download', 'excel.xlsx');
 
-            //确认的话发一个ajax请求
-            that.$http.get('/task/deleteTask', {
-              params:{
-                taskID: payload.uid
-              }
-            })
-              .then(function (response) {
-                if(response.data.mes === true){
-                  that.messages.splice(payload.index, 1);
-                  that.$message.success('删除成功');
-                }
-                else{
-                  that.$message.warning('删除失败');
-                }
-              })
-              .catch(function (error) {
-                that.$message.warning('删除失败' + error);
-              })
-
+            document.body.appendChild(link);
+            link.click();
           })
-          .catch(() => {
-            this.$message.info('已取消');
+          .catch(function (error) {
+            that.$message.warning('下载失败' + error);
           })
       }
-
     }
 
   }
