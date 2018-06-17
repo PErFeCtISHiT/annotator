@@ -470,7 +470,7 @@
             if (response.data.mes === true) {
               that.$router.push('/2-1');
             } else {
-              this.handleNormalNotTrue();
+              that.handleNormalNotTrue();
             }
           })
           .catch(function (error) {

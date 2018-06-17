@@ -35,7 +35,7 @@ public class WorkerMatrixEntity implements Serializable {
     private Double correct;
 
     public Double getCorrect() {
-        return (C00 + C01) / (C00 + C01 + C10 + C11);
+        return (C00 + C11) / (C00 + C01 + C10 + C11);
     }
 
     public void setCorrect(Double correct) {
