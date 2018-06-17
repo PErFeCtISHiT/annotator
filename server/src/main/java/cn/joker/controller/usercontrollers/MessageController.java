@@ -233,5 +233,6 @@ public class MessageController {
             ret.put(StdName.MES,true);
         else
             ret.put(StdName.MES,false);
+        JsonHelper.jsonToResponse(response,ret);
     }
 }

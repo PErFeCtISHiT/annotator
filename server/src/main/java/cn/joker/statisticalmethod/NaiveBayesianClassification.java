@@ -2,8 +2,8 @@ package cn.joker.statisticalmethod;
 
 import cn.joker.entity.ImgMarkEntity;
 import cn.joker.namespace.StdName;
-import cn.joker.vo.RecNode;
-import cn.joker.vo.RecNodeList;
+import cn.joker.pojo.RecNode;
+import cn.joker.pojo.RecNodeList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
