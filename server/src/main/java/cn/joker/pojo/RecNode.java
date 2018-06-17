@@ -2,6 +2,9 @@ package cn.joker.pojo;
 
 import cn.joker.entity.UserEntity;
 
+/**
+ * 在分析统计的时候要用到的类
+ */
 public class RecNode {
     private double top;
     private double left;
@@ -10,6 +13,15 @@ public class RecNode {
     private String mark;
     private UserEntity worker;
 
+    /**
+     *
+     * @param top 上
+     * @param left 左
+     * @param height 高度
+     * @param width 宽度
+     * @param mark 标注
+     * @param worker 工人
+     */
     public RecNode(double top, double left, double height, double width, String mark,UserEntity worker){
         this.top = top;
         this.left = left;
