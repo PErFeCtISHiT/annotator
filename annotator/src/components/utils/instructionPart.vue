@@ -3,7 +3,7 @@
     style="border:1px solid #000; box-sizing: border-box; border-radius: 8px; background-color: #f9f8f7">
     <el-row style="border-bottom: 2px solid lightgrey">
       <h3 style="margin-left: 20px">{{'· '+totalTitle}}</h3>
-      <p style="margin-left: 25px; color:darkgrey">{{exampleDescription}}</p>
+      <p style="margin-left: 25px; color:darkgrey">{{description}}</p>
     </el-row>
     <el-row>
       <el-col :span="16">

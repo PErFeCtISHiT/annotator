@@ -1,9 +1,67 @@
 <template>
 
 
-    <el-col :span="8" class="slot-border">
-      <!-- 最外面一层是给引用它的都看的 -->
-      <div>
+  <el-col :span="8" class="slot-border">
+    <el-dialog title="工人信息" :visible.sync="dialogTableVisible">
+      <el-table
+        :data="workers"
+        height="300"
+        style="width: 100%">
+
+        <el-table-column
+          label="用户名"
+          width="180">
+          <template slot-scope="scope">
+            <i class="el-icon-info"></i>
+            <span style="margin-left: 10px">{{ scope.row.username }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          label="等级"
+          width="200">
+          <template slot-scope="scope">
+            <el-popover trigger="hover" placement="top">
+              <p>等级: {{ scope.row.lev }}</p>
+              <div slot="reference" class="name-wrapper">
+                <el-rate v-model="scope.row.lev" disabled></el-rate>
+              </div>
+            </el-popover>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              @click="handleComplain(scope.row)">举报
+            </el-button>
+
+            <el-dialog title="投诉举报" :visible.sync="dialogVisible" close-on-press-escape show-close="false" :before-close="handleClose">
+              <el-form ref="reqComplaint" :model="complaintInfo" label-width="100px">
+                <el-form-item label="举报原因">
+                  <el-input type="textarea" column="22" row="4" v-model="complaintInfo.content" clearable
+                            style="width: 500px"></el-input>
+                </el-form-item>
+              </el-form>
+
+              <div slot="footer">
+                <el-button type="primary" @click="submitComplaint('reqComplaint')">提交</el-button>
+              </div>
+            </el-dialog>
+
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleView(scope.row)">查看
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
+
+    <!-- 最外面一层是给引用它的都看的 -->
+    <div>
       <el-col :span="24">
 
         <!-- 主体 -->
@@ -16,13 +74,13 @@
                 <img src="../../images/task.png" style="width: 55px; height: 55px"/>
               </el-col>
               <el-col :span="17">
-                <el-button type="text" @click="jump">
-                  <div style="font-size: larger;">任务名称</div>
-                  <div
-                    style="text-align: center; margin-right: 20px; margin-top: 14px; font-size: larger; font-weight: bolder;">
-                    {{ taskMsg.taskName }}
-                  </div>
-                </el-button>
+                <!--<el-button type="text" @click="jump">-->
+                <div style="font-size: larger;">任务名称</div>
+                <div
+                  style="text-align: center; margin-right: 20px; margin-top: 14px; font-size: larger; font-weight: bolder;">
+                  {{ taskMsg.taskName }}
+                </div>
+                <!--</el-button>-->
               </el-col>
               <!--<el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
             </div>
@@ -32,29 +90,33 @@
                 <el-col :span="8" style="margin-top: 23px">
                   <span class="label-all">任务编号:</span>
                 </el-col>
-                <el-col :span="13" class="label-all" style="text-align: right; margin-right: 10px">
+                <el-col :span="13" class="label-all" style="text-align: right">
                   <span class="taskIDLabel">NO.</span>
                   <span class="taskIDLabel" id="taskID">{{ taskMsg.taskID }}</span>
                 </el-col>
               </div>
+
               <div>
                 <el-col :span="8" class="label-all" style="margin-top: 45px">
                   <span>任务描述:</span>
                 </el-col>
-                <el-col :span="14" class="label-all label_detail" style="text-align: left; height: 100px">
-                  <span>{{ taskMsg.description }}</span>
+                <el-col :span="15" class="label-all label_detail">
+                  <div style="text-align: center; margin: auto; height: 105px;
+                  box-shadow: 5px 5px 5px #9d9d9d; padding: 5px 5px 5px 5px; background-color: rgba(223,248,251,0.35)">
+                    <span style="padding-top: 10px">{{ taskMsg.description }}</span>
+                  </div>
                 </el-col>
               </div>
+
               <div>
-                <el-col :span="8" class="label-all" style="margin-top: 17px">
+                <el-col :span="8" class="label-all" style="margin-top: 30px">
                   <span>任务标签:</span>
                 </el-col>
-                <el-col :span="12" class="label-all label_detail">
-                  <span v-for="theTag in taskMsg.tag">
-                    <el-tag >{{ theTag }}</el-tag>&thinsp;
-                  </span>
+                <el-col :span="14" class="label-all label_detail">
+                  <el-tag v-for="theTag in taskMsg.tag" style="margin: 10px 10px 10px 10px">{{ theTag }}</el-tag>&thinsp;
                 </el-col>
               </div>
+
               <div>
                 <el-col :span="10" class="label-all">
                   <span>发布时间:</span>
@@ -74,24 +136,47 @@
               </div>
 
               <div>
-                <el-col :span="10" class="label-all" style="margin-bottom: 20px">
-                  <span>任务进度:</span>
+                <el-col :span="10" class="label-all">
+                  <span>图片数量:</span>
                 </el-col>
-                <el-col :span="12" class="label-all">
-                  <el-progress :text-inside="true" :stroke-width="18" :percentage="taskMsg.totalProgress.toFixed(2) * 100" :status="taskMsg.totalProgress===1?'success':''"></el-progress>
+                <el-col :span="12" class="label-all label_detail">
+                  <span>{{ taskMsg.imgNum}}</span>
                 </el-col>
               </div>
+
+              <!--<div>-->
+              <!--<el-col :span="10" class="label-all" style="margin-bottom: 20px">-->
+              <!--<span>任务进度:</span>-->
+              <!--</el-col>-->
+              <!--<el-col :span="12" class="label-all">-->
+              <!--<el-progress :text-inside="true" :stroke-width="18" :percentage="taskMsg.totalProgress.toFixed(2) * 100" :status="taskMsg.totalProgress===1?'success':''"></el-progress>-->
+              <!--</el-col>-->
+              <!--</div>-->
             </div>
 
-            <el-col :span="24" style="margin-bottom: 20px; margin-top:5px">
+
+            <el-col :span="24" style="margin-bottom: 20px; margin-top:23px">
               <el-col :span="6" :offset="2">
-                <el-button type="warning" size="small" @click="handleDelete">删除任务</el-button>
+                <el-button type="warning" size="medium" @click="handleAgg">标注详情</el-button>
               </el-col>
 
+
               <el-col :span="6" :offset="5">
-                <el-button type="primary" size="small" @click="handleFinish" :disabled="isDisabled">结束任务</el-button>
+                <el-popover placement="top-start" trigger="hover"
+                            title="温馨贴士" content="任务还在分发标注中哦，请耐心等待。"
+                            width="200"
+                            :disabled="!isDisabled">
+
+                  <div slot="reference">
+                    <el-button type="primary" size="medium" @click="handleDw" :disabled="isDisabled">
+                      下载数据集
+                    </el-button>
+                  </div>
+                </el-popover>
+
               </el-col>
             </el-col>
+
 
           </el-card>
 
@@ -103,38 +188,68 @@
           <img src="../../images/ping.png" height="50" width="50" style="margin-left: -38px; margin-top: -20px">
         </el-col>
       </el-col>
-      </div>
+    </div>
 
-    </el-col>
-
+  </el-col>
 
 
 </template>
 
 <script>
+  const workerMock = [
+    {
+
+    },
+  ];
 
   export default {
     name: "requester-task-item",
     props: ['taskMsg', 'theIndex'],
 
+    data() {
+      return {
+        workers: {},
+        dialogTableVisible: false,
+      }
+    },
+
     computed: {
-      isDisabled(){
-        return this.taskMsg.totalProgress >= 0.999;
+      isDisabled() {
+        return this.taskMsg.status === 1;
       }
     },
 
     methods: {
-      handleDelete() {
+      handleAgg() {
         //console.log('2line----------------------------',this.theIndex, this.taskMsg.taskID, 'finish--------------');
-        this.$emit('remove', {
-          uid: this.taskMsg.taskID,
-          index: this.theIndex
-        });
+        this.workers = workerMock;
+        this.dialogTableVisible = true;
+        // let that = this;
+        //
+        // this.$http.get('/task/checkTaskDetail', {
+        //   params: {
+        //     taskID: this.taskMsg.taskID,
+        //   }
+        // })
+        //   .then(function (response) {
+        //     that.workers = response.data.workerInfo;
+        //     that.dialogTableVisible = true;
+        //   })
+        //   .catch(function (error) {
+        //     that.$message({
+        //       message: '网络请求失败' + error,
+        //       type: 'warning'
+        //     });
+        //     console.log('网络请求错误');
+        //   });
       },
 
-      handleFinish() {
+      handleDw() {
         //console.log('2line----------------------------',this.theIndex, this.taskMsg.taskID, 'finish--------------');
-        this.$emit('complete', this.taskMsg.taskID, this.theIndex);
+        this.$emit('download', {
+          uid: this.taskMsg.taskID,
+          //status: this.taskMsg.
+        });
       },
 
       jump() {
@@ -143,7 +258,7 @@
           params: {
             taskID: this.taskMsg.taskID
           }
-      });
+        });
       }
 
     }
@@ -173,9 +288,10 @@
 
   .label-all {
     font-size: 14px;
-    margin-top: 12px;
+    margin-top: 15px;
     color: #4f4f52;
   }
+
   /*任务ID单独要放大显示*/
   .taskIDLabel {
     color: #e44030;

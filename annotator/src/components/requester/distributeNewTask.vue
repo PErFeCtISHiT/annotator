@@ -101,13 +101,13 @@
             <el-form-item label="任务描述" prop="taskDescription">
               <el-input type="text" v-model="newTask.taskDescription" auto-complete="false" clearable
                         style="width: 500px"
-                        maxlength=100></el-input>
+                        maxlength=50></el-input>
             </el-form-item>
 
             <el-form-item label="任务类型标签" prop="checkedTags">
-              <el-checkbox-group v-model="newTask.checkedTags">
-                <el-checkbox v-for="tag in $store.state.tags.tagMsg" :label="tag" :key="tag">{{ tag }}</el-checkbox>
-              </el-checkbox-group>
+              <el-radio-group v-model="newTask.checkedTags">
+                <el-radio v-for="tag in $store.state.tags.tagMsg" :label="tag" :key="tag">{{ tag }}</el-radio>
+              </el-radio-group>
             </el-form-item>
 
             <el-form-item label="开始时间" prop="taskStartDate">
@@ -363,7 +363,7 @@
         newTask: {
           taskName: "",
           taskDescription: "",
-          checkedTags: [],
+          checkedTags: "",
           taskStartDate: '',
           taskEndDate: '',
           //expectedNumber: 0,
@@ -382,7 +382,7 @@
             {required: true, message: '请输入描述', trigger: 'blur'}
           ],
           checkedTags: [
-            {type: 'array', required: true, message: '请至少选择一个类别', trigger: 'change'}
+            {required: true, message: '请至少选择一个类别', trigger: 'change'}
           ],
           taskStartDate: [
             {validator: checkDate, trigger: 'blur'},
@@ -434,7 +434,7 @@
               sponsorName: that.$store.state.user.userInfo.username,
               taskName: that.newTask.taskName,
               description: that.newTask.taskDescription,
-              tag: that.newTask.checkedTags,
+              tag: [that.newTask.checkedTags],
               startDate: that.newTask.startDate.getFullYear() + "-" + (that.newTask.startDate.getMonth() + 1) + "-" + that.newTask.startDate.getDate(),
               endDate: that.newTask.endDate.getFullYear() + "-" + (that.newTask.endDate.getMonth() + 1) + "-" + that.newTask.endDate.getDate(),
               workerLevel: that.newTask.workerLevel,
@@ -476,10 +476,17 @@
                     that.messageFlag = false;
                   }, 2000);
 
+                }else {
+                  that.isLoading = false;
+                  that.$message({
+                    message: "任务上传失败",
+                    type: 'warning'
+                  });
                 }
 
               })
               .catch(function (error) {
+                that.isLoading = false;
                 that.$message({
                   message: '任务上传失败，服务器异常' + error,
                   type: 'warning'

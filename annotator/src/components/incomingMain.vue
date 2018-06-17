@@ -1,56 +1,125 @@
 <template>
-
-
-  <div class="login" id="login">
-    <a class="log-close"><i class="icons close"></i></a>
-    <div class="log-bg">
-      <div class="log-cloud cloud1"></div>
-      <div class="log-cloud cloud2"></div>
-      <div class="log-cloud cloud3"></div>
-      <div class="log-cloud cloud4"></div>
-
-      <div class="log-logo">Welcome!</div>
-      <div class="log-text">ImageAnnotator</div>
+  <div>
+    <div v-if="inTest">
+      <tester @not-pass="handleNotPass" @update-pass="handleUpdatePass" mode="register">
+      </tester>
     </div>
+    <div v-show="!inTest">
+      <div class="left-side" v-if="showLeft" :style="leftStyle"></div>
+      <div class="login" id="login" :style="dialogStyle">
+        <div class="log-bg">
+          <div class="log-cloud cloud1"></div>
+          <div class="log-cloud cloud2"></div>
+          <div class="log-cloud cloud3"></div>
+          <div class="log-cloud cloud4"></div>
 
-    <div class="log-container">
+          <div class="log-logo">众包标注平台</div>
+          <div class="log-text">ImageAnnotator</div>
+        </div>
 
-      <!--<input type="text" placeholder="Email" :class="'log-input' + (account==''?' log-input-empty':'')"-->
-      <!--v-model="account">-->
-      <!--<input type="password" placeholder="Password" :class="'log-input' + (password==''?' log-input-empty':'')"-->
-      <!--v-model="password">-->
-      <!--<a class="log-btn" @click="login">Login</a>-->
-      <login-holder v-if = "inLoginNotRegister" v-on:changePart="changeLoginAndRegister">
-      </login-holder>
-      <register-holder v-if = "!inLoginNotRegister" v-on:changePart="changeLoginAndRegister">
-      </register-holder>
+        <div class="log-container">
 
+          <login-holder v-if="inLoginNotRegister" v-on:changePart="changeLoginAndRegister">
+          </login-holder>
+          <register-holder v-if="!inLoginNotRegister" v-on:changePart="changeLoginAndRegister" ref="register"
+                           @turn-to-test="handleTurnToTest">
+          </register-holder>
+
+        </div>
+      </div>
     </div>
-
-
   </div>
 </template>
 
 <script>
   import loginHolder from './loginHolder'
   import registerHolder from './registerHolder'
+  import Tester from "./test/tester";
+
+  const dialogMinWidth = 500;
+  const dialogMinHeight = 580;
+  const halfRate = 0.5;
 
   export default {
-    data(){
+    data() {
       return {
-        inLoginNotRegister: true
+        inLoginNotRegister: true,
+        dialogStyle: '',
+        leftStyle: '',
+        inTest: false,
+        showLeft: false,
       }
     },
 
+    mounted() {
+      if (window.innerWidth > 2 * dialogMinWidth) {
+        this.showLeft = true;
+        this.dialogStyle = `width:${dialogMinWidth}px;min-width:${dialogMinWidth}px;height:${dialogMinHeight}px;min-height:${dialogMinHeight}px;top:${(window.innerHeight - dialogMinHeight) * halfRate}px;left:${window.innerWidth * halfRate + (window.innerWidth * halfRate - dialogMinWidth) * halfRate}px;`;
+        this.leftStyle = `width:${window.innerWidth * halfRate}px;height:${window.innerHeight}px;`
+      } else {
+        this.showLeft = false;
+        this.dialogStyle = `width:${dialogMinWidth}px;min-width:${dialogMinWidth}px;height:${dialogMinHeight}px;min-height:${dialogMinHeight}px;top:${(window.innerHeight - dialogMinHeight) * halfRate}px;left:${(window.innerWidth - dialogMinWidth) * halfRate}px;`;
+      }
+      window.onresize = () => {
+        if (window.innerWidth > 2 * dialogMinWidth) {
+          this.showLeft = true;
+          this.dialogStyle = `width:${dialogMinWidth}px;min-width:${dialogMinWidth}px;height:${dialogMinHeight}px;min-height:${dialogMinHeight}px;top:${(window.innerHeight - dialogMinHeight) * halfRate}px;left:${window.innerWidth * halfRate + (window.innerWidth * halfRate - dialogMinWidth) * halfRate}px;`;
+          this.leftStyle = `width:${window.innerWidth * halfRate}px;height:${window.innerHeight}px;`
+        } else {
+          this.showLeft = false;
+          this.dialogStyle = `width:${dialogMinWidth}px;min-width:${dialogMinWidth}px;height:${dialogMinHeight}px;min-height:${dialogMinHeight}px;top:${(window.innerHeight - dialogMinHeight) * halfRate}px;left:${(window.innerWidth - dialogMinWidth) * halfRate}px;`;
+        }
+      };
+    },
+
     components: {
+      Tester,
       loginHolder,
       registerHolder
     },
 
-    methods:{
-      changeLoginAndRegister(){
+    methods: {
+      changeLoginAndRegister() {
         this.inLoginNotRegister = !this.inLoginNotRegister;
-      }
+      },
+      handleTurnToTest() {
+        this.inTest = true;
+      },
+      handleNotPass() {
+        this.inTest = false;
+      },
+
+      handleUpdatePass(rate, num) {
+        let username = this.$refs.register.registerForm.userName;
+        let nickname = this.$refs.register.registerForm.nickname;
+        let passwr = this.$refs.register.registerForm.pass;
+        let roleList = this.$refs.register.getResult();
+        let that = this;
+
+        this.$http.post('/user/signUp', {
+          username,
+          nickname,
+          passwr,
+          roleList,
+          rate,
+          num
+        })
+          .then(function (response) {
+            if (response.data.mes === false) {
+              that.sendAlert('此用户已存在', '注册错误提示');
+            } else {
+              that.$message({
+                message: '注册成功',
+                type: 'success'
+              });
+            }
+
+          })
+          .catch(function (error) {
+            that.sendAlert('请检查您的网络连接', '网络错误');
+            console.log(error);
+          });
+      },
     }
   }
 </script>
@@ -60,12 +129,6 @@
   .login {
     position: fixed;
     overflow: hidden;
-    left: 50%;
-    margin-left: -250px;
-    top: 55%;
-    margin-top: -350px;
-    width: 500px;
-    min-height: 555px;
     z-index: 10;
     right: 140px;
     background: #fff;
@@ -76,22 +139,18 @@
     box-shadow: 0 3px 16px -5px #070707
   }
 
-  .log-close {
-    display: block;
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    opacity: 1;
-  }
-
-  .log-close:hover .icons {
-    transform: rotate(180deg);
-  }
-
-  .log-close .icons {
-    opacity: 1;
-    transition: all .3s
-  }
+  /*.login {*/
+  /*overflow: hidden;*/
+  /*width: 500px;*/
+  /*margin: 2% auto;*/
+  /*z-index: 10;*/
+  /*background: #fff;*/
+  /*-webkit-border-radius: 5px;*/
+  /*-moz-border-radius: 5px;*/
+  /*border-radius: 5px;*/
+  /*-webkit-box-shadow: 0 3px 16px -5px #070707;*/
+  /*box-shadow: 0 3px 16px -5px #070707*/
+  /*}*/
 
   .log-cloud {
     background-image: url(../images/login-cloud.png);
@@ -130,7 +189,7 @@
 
   .log-bg {
     background: url(../images/login-bg.jpg);
-    background-size:100% 100%;
+    background-size: 100% 100%;
     width: 100%;
     height: 312px;
     overflow: hidden;
@@ -170,6 +229,25 @@
   .log-container {
     text-align: center;
     margin-top: 20px;
+  }
+
+  .left-side {
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: #344187;
+    background-image: repeating-linear-gradient(transparent, transparent 50px, rgba(0, 0, 0, .4) 50px, rgba(0, 0, 0, .4) 53px,
+    transparent 53px, transparent 63px, rgba(0, 0, 0, .4) 63px, rgba(0, 0, 0, .4) 66px, transparent 66px, transparent 116px,
+    rgba(0, 0, 0, .5) 116px, rgba(0, 0, 0, .5) 166px, rgba(255, 255, 255, .2) 166px, rgba(255, 255, 255, .2) 169px,
+    rgba(0, 0, 0, .5) 169px, rgba(0, 0, 0, .5) 179px, rgba(255, 255, 255, .2) 179px, rgba(255, 255, 255, .2) 182px,
+    rgba(0, 0, 0, .5) 182px, rgba(0, 0, 0, .5) 232px, transparent 232px),
+    repeating-linear-gradient(270deg, transparent, transparent 50px, rgba(0, 0, 0, .4) 50px, rgba(0, 0, 0, .4) 53px,
+      transparent 53px, transparent 63px, rgba(0, 0, 0, .4) 63px, rgba(0, 0, 0, .4) 66px, transparent 66px, transparent 116px,
+      rgba(0, 0, 0, .5) 116px, rgba(0, 0, 0, .5) 166px, rgba(255, 255, 255, .2) 166px, rgba(255, 255, 255, .2) 169px,
+      rgba(0, 0, 0, .5) 169px, rgba(0, 0, 0, .5) 179px, rgba(255, 255, 255, .2) 179px, rgba(255, 255, 255, .2) 182px,
+      rgba(0, 0, 0, .5) 182px, rgba(0, 0, 0, .5) 232px, transparent 232px),
+    repeating-linear-gradient(125deg, transparent, transparent 2px, rgba(0, 0, 0, .2) 2px, rgba(0, 0, 0, .2) 3px,
+      transparent 3px, transparent 5px, rgba(0, 0, 0, .2) 5px);
   }
 
   @-webkit-keyframes cloud1 {
