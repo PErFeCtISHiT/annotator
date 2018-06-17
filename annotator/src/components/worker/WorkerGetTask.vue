@@ -92,7 +92,7 @@
           :card-type="typeDraw"
           :core-msg="typeMsg1"
           :brief-description="briefDescription1"
-          :example-description="exampleDescription1"
+          :description="exampleDescription1"
           :details="details1"
           :img-u-r-l="imgURL1"
           :preview-img-u-r-l="previewImgURL1"
@@ -104,7 +104,7 @@
           :card-type="typeDraw"
           :core-msg="typeMsg2"
           :brief-description="briefDescription2"
-          :example-description="exampleDescription2"
+          :description="exampleDescription2"
           :details="details2"
           :img-u-r-l="imgURL2"
           :preview-img-u-r-l="previewImgURL2"
@@ -116,7 +116,7 @@
           :card-type="typeDraw"
           :core-msg="typeMsg3"
           :brief-description="briefDescription3"
-          :example-description="exampleDescription3"
+          :description="exampleDescription3"
           :details="details3"
           :img-u-r-l="imgURL3"
           :preview-img-u-r-l="previewImgURL3"
@@ -135,7 +135,7 @@
 
 <script>
   import CanvasDrawer from "../drawer/canvasDrawer";
-  import TypeCard from "../utils/typecard";
+  import TypeCard from "../utils/typeCard";
   import ElRow from "element-ui/packages/row/src/row";
   import InstructionPart from "../utils/instructionPart";
 
@@ -255,7 +255,7 @@
     name: "worker-get-task",
     data() {
       return {
-        activeStep: 2,    //实际步骤减一
+        activeStep: 0,    //实际步骤减一
         tagMsg: '',
         type: 0,
 
@@ -414,15 +414,46 @@
 
       handleGoToDraw() {
         if (this.activeStep !== 2) {
-          if (this.tagNotEmpty && this.typeNotEmpty) {     //computed属性复用不加()
-            this.activeStep = 2;
-          } else {
-            this.$message({
-              message: '请先完成前置的标记方式选择，再进行标记工作',
-              type: 'warning',
-              duration: 1800
+          let that = this;
+          this.$http.get('/user/checkAccuracy', {
+            params: {
+              username: that.$store.state.user.userInfo.username,
+              tag: that.tagMsg
+            }
+          })
+            .then(function (response) {
+              let result = response.data.mes;
+              if (result === false) {
+                that.$router.push('/testPage');
+                that.$message({
+                  message: '您似乎有些疲倦了，正确率不达标',
+                  type: 'warning',
+                  duration: 1500
+                });
+              }else{
+                that.actualGoToDraw();
+              }
+            })
+            .catch(function (error) {
+              that.$message({
+                message: '网络错误',
+                type: 'error',
+                duration: 1500
+              });
+              console.log(error);
             });
-          }
+        }
+      },
+
+      actualGoToDraw() {
+        if (this.tagNotEmpty && this.typeNotEmpty) {     //computed属性复用不加()
+          this.activeStep = 2;
+        } else {
+          this.$message({
+            message: '请先完成前置的标记方式选择，再进行标记工作',
+            type: 'warning',
+            duration: 1800
+          });
         }
       },
 

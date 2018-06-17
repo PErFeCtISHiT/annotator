@@ -70,12 +70,18 @@
 
       handleLogOut() {
         if (this.$store.state.user.userInfo.username === 'admin') {
+          this.$router.push('/');
+          this.$message({       //回调函数要用that
+            message: '登出成功',
+            type: 'success'
+          });
           this.logOut();
         } else {
           let that = this;
           this.$http.get('/user/logout')
             .then(function (response) {
               //console.log(response);
+              that.$router.push('/');
               that.$message({       //回调函数要用that
                 message: '登出成功',
                 type: 'success'
