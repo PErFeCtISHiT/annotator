@@ -6,6 +6,7 @@ import cn.joker.sevice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,6 +32,18 @@ public class UserServiceImpl extends PubServiceImpl implements UserService {
     @Override
     public List<UserEntity> findAll() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public List<UserEntity> findAllWorkers() {
+        List<UserEntity> userEntities = userRepository.findAll();
+        List<UserEntity> ret = new ArrayList<>();
+        for(UserEntity userEntity : userEntities){
+            if(userEntity.getRoleEntityList().get(0).getId() == 4){
+                ret.add(userEntity);
+            }
+        }
+        return ret;
     }
 
 }

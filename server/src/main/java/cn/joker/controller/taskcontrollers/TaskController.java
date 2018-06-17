@@ -20,10 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @RestController
@@ -154,6 +151,7 @@ public class TaskController {
             taskObject.put(StdName.DESCRIPTION, task.getDescription());
             taskObject.put(StdName.IMGNUM, task.getImageNum());
             taskObject.put(StdName.SPONSORNAME, task.getSponsor().getUsername());
+            taskObject.put(StdName.STATUS,task.getState());
             JSONArray tags = new JSONArray();
             List<TagEntity> tagEntities = task.getTagEntityList();
             for (TagEntity tagEntity : tagEntities) {
@@ -297,10 +295,22 @@ public class TaskController {
         jsonObject.put(StdName.ENDDATE, DateHelper.convertDateToString(task.getEndDate()));
         jsonObject.put(StdName.IMGNUM, task.getImageNum());
 
-        Integer totalTagNum = 0;
         JSONArray userInfos = new JSONArray();
-        jsonObject.put(StdName.TOTALTAGNUM, totalTagNum);
-        jsonObject.put(StdName.AVERAGETAGNUM, totalTagNum / task.getImageNum());
+        List<ImageEntity> imageEntities = task.getImageEntityList();
+        Set<UserEntity> userEntities = new HashSet<>();
+        for(ImageEntity imageEntity : imageEntities){
+            List<UserEntity> users = imageEntity.getWorkers();
+            for(UserEntity userEntity : users){
+                if(!userEntities.contains(userEntity))
+                    userEntities.add(userEntity);
+            }
+        }
+        for(UserEntity userEntity : userEntities){
+            JSONObject obj = new JSONObject();
+            obj.put(StdName.USERNAME,userEntity.getUsername());
+            obj.put(StdName.LEVEL,userEntity.getLev());
+            userInfos.put(obj);
+        }
         jsonObject.put(StdName.WORKERINFO, userInfos);
         JsonHelper.jsonToResponse(response, jsonObject);
     }
@@ -348,7 +358,7 @@ public class TaskController {
      * @description: 发起者下载任务标注的数据集
      * @date: 14:30 2018/6/5
      */
-    @RequestMapping(value = "getDataSet", method = RequestMethod.GET)
+    @RequestMapping(value = "/getDataSet", method = RequestMethod.GET)
     public ResponseEntity<FileSystemResource> getDataSet(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> map = request.getParameterMap();
         Integer taskID = Integer.valueOf(map.get(StdName.TASKID)[0]);

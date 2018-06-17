@@ -27,6 +27,37 @@ public class UserEntity implements Serializable {
     private List<SysRoleEntity> roleEntityList;
     private List<AbilityEntity> abilityEntityList;
     private List<WorkerMatrixEntity> workerMatrixEntities;
+    private Integer type1Num;
+    private Integer type2Num;
+    private Integer type3Num;
+
+    @Basic
+    @Column(name = "num1", nullable = true)
+    public Integer getType1Num() {
+        return type1Num;
+    }
+
+    public void setType1Num(Integer type1Num) {
+        this.type1Num = type1Num;
+    }
+    @Basic
+    @Column(name = "num2", nullable = true)
+    public Integer getType2Num() {
+        return type2Num;
+    }
+
+    public void setType2Num(Integer type2Num) {
+        this.type2Num = type2Num;
+    }
+    @Basic
+    @Column(name = "num3", nullable = true)
+    public Integer getType3Num() {
+        return type3Num;
+    }
+
+    public void setType3Num(Integer type3Num) {
+        this.type3Num = type3Num;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -160,8 +191,10 @@ public class UserEntity implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         UserEntity that = (UserEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(username, that.username) &&

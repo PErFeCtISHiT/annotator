@@ -21,7 +21,7 @@ public class PayUtil {
 
     public static String NOTIFY_URL = "http://localhost:8080/pays/notifyPay";
 
-    public static String RETURN_URL = "hhttp://localhost:8080/pays/returnPay";
+    public static String RETURN_URL = "http://localhost:8080/3-1";
 
     public static String BASE_URL = "https://pay.paysapi.com";
 
@@ -102,6 +102,7 @@ public class PayUtil {
             hashCodeV = -hashCodeV;
         }
         // 0 代表前面补充0;d 代表参数为正数型
+        System.out.println(machineId + String.format("%01d", hashCodeV));
         return machineId + String.format("%01d", hashCodeV);
     }
 

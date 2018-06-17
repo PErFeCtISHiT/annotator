@@ -1,4 +1,4 @@
-package cn.joker.vo;
+package cn.joker.pojo;
 
 import cn.joker.entity.UserEntity;
 
