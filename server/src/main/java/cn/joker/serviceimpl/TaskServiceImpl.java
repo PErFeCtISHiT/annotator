@@ -146,7 +146,6 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
             for (ImageEntity imageEntity : imageEntities) {
                 List<ImgMarkEntity> imgMarkEntities = imageEntity.getImgMarkEntityList();
                 for (ImgMarkEntity imgMarkEntity : imgMarkEntities) {
-                    System.out.println(imgMarkEntity.getId());
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put(StdName.NOTEPOLYGON,imgMarkEntity.getNotePolygon());
                     jsonObject.put(StdName.NOTETOTAL,imgMarkEntity.getNoteTotal());
@@ -154,7 +153,6 @@ public class TaskServiceImpl extends PubServiceImpl implements TaskService {
                     jsonObject.put(StdName.ID,imgMarkEntity.getId());
                     jsonObject.put(StdName.WORKER,imgMarkEntity.getWorker().getUsername());
                     jsonObject.put(StdName.IMGNAME,imgMarkEntity.getImage_imgMark().getImgName());
-                    System.out.println("here");
                     bufferedWriter.write(jsonObject.toString());
                 }
             }
