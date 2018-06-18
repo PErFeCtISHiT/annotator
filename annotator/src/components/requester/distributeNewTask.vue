@@ -461,10 +461,10 @@
 
                   //全部提交完成
                   that.resetForm('newTask');
-                  that.$refs.upload.clearFiles();
+
                   setTimeout(function () {
                     that.isLoading = false;
-
+                    that.$refs.upload.clearFiles();
                     if(that.messageFlag) {
 
                       that.$confirm('文件成功上传, 继续留在本页面发布任务?', '提示', {
@@ -479,7 +479,7 @@
                     }
 
                     that.messageFlag = false;
-                  }, 3000);
+                  }, 3500);
 
                 }else {
                   that.isLoading = false;
