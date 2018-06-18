@@ -100,8 +100,10 @@ public class MessageController {
     public void modifyMessage(@RequestBody UserEntity userEntity, HttpServletResponse response) {
         JSONObject ret = new JSONObject();
         UserEntity newEntity = userService.findByUsername(userEntity.getUsername());
-        newEntity.setNickname(userEntity.getNickname());
-        newEntity.setPasswr(userEntity.getPasswr());
+        if (userEntity.getNickname() != null)
+            newEntity.setNickname(userEntity.getNickname());
+        if (userEntity.getPasswr() != null)
+            newEntity.setPasswr(userEntity.getPasswr());
         PasswordHelper.encryptPassword(newEntity);
         ret.put(StdName.MES, userService.modify(newEntity));
         JsonHelper.jsonToResponse(response, ret);
