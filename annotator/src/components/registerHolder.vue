@@ -14,7 +14,7 @@
 
         <el-col :span="12">
           <el-form-item prop="name">
-            <el-input prefix-icon="el-icon-goods" v-model="registerForm.name" placeholder="请输入昵称">
+            <el-input prefix-icon="el-icon-goods" v-model="registerForm.nickname" placeholder="请输入昵称">
             </el-input>
           </el-form-item>
         </el-col>

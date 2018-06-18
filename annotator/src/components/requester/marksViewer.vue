@@ -2,7 +2,7 @@
   <div>
 
     <div :style="borderMsg+`height:${taskDescriptionHeight}px`">
-      <h3 style="margin-left: 12px">{{'· 任务描述：'+currentDescription}}</h3>
+      <h3 style="margin-left: 12px">{{'· 任务ID：'+taskID}}</h3>
     </div>
 
     <div :style="'height:' + componentHeight + 'px'">
