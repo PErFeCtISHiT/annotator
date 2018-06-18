@@ -39,9 +39,12 @@
               <el-card :body-style="{ padding: '0px' }">
 
                 <el-row type="flex" justify="center" style="padding-top: 20px">
-                  <div id="myChart4" style="width: 500px; height: 550px; margin-left: -5%"></div>
+                  <div id="myChart4" style="width: 550px; height: 650px; margin-left: -5%"></div>
                 </el-row>
 
+                <el-row type="flex" justify="center" style="padding-top: 20px">
+                  <div id="myChart5" style="width: 600px; height: 650px; margin-left: -5%"></div>
+                </el-row>
 
               </el-card>
             </el-col>
@@ -62,7 +65,7 @@
     name: "info-statistic",
 
     mounted() {
-      if(!this.$store.state.user.isRequester) {
+      if (!this.$store.state.user.isRequester) {
         this.drawLinesOfWorkers();
       }
       else {
@@ -74,7 +77,9 @@
       return {
         score: [0.5, 0.5, 0.1, 0.1, 0.1, 0.77],
         tagNum: [500, 25, 400, 150, 100],
-        catNum: [100, 35, 48]
+        catNum: [100, 35, 48],
+        taskNum: [5, 5],
+        taskType: [10, 7, 6, 20, 45, 18]
       }
     },
 
@@ -223,58 +228,58 @@
         let that = this;
         let taskChart = this.$echarts.init(document.getElementById('myChart4'), 'customed.js');
         taskChart.setOption({
-          //backgroundColor: ,
 
           title: {
-            text: 'Customized Pie',
+            text: '任务完成情况',
             left: 'center',
             top: 20,
             textStyle: {
-              color: '#ccc'
+              color: '#1c1c1c',
+              fontSize: 30
             }
           },
 
-          tooltip : {
+          tooltip: {
             trigger: 'item',
             formatter: "{a} <br/>{b} : {c} ({d}%)"
           },
 
           visualMap: {
             show: false,
-            min: 80,
-            max: 600,
+            min: 0,
+            max: 50,
             inRange: {
-              colorLightness: [0, 1]
+              colorLightness: [0.1, 0.9]
             }
           },
-          series : [
+          series: [
             {
-              name:'访问来源',
-              type:'pie',
-              radius : '55%',
+              name: '访问来源',
+              type: 'pie',
+              radius: '55%',
               center: ['50%', '50%'],
-              data:[
-                {value:335, name:'直接访问'},
-                {value:310, name:'邮件营销'},
-                {value:274, name:'联盟广告'},
-                {value:235, name:'视频广告'},
-                {value:400, name:'搜索引擎'}
-              ].sort(function (a, b) { return a.value - b.value; }),
+              data: [
+                {value: that.taskNum[0], name: '已完成'},
+                {value: that.taskNum[1], name: '进行中'},
+              ].sort(function (a, b) {
+                return a.value - b.value;
+              }),
               roseType: 'radius',
               label: {
                 normal: {
                   textStyle: {
-                    color: 'rgba(255, 255, 255, 0.3)'
+                    color: '#73a373',
+                    fontSize: 20
                   }
                 }
               },
               labelLine: {
                 normal: {
                   lineStyle: {
-                    color: 'rgba(255, 255, 255, 0.3)'
+                    color: '#73a373'
                   },
                   smooth: 0.2,
-                  length: 10,
+                  length: 30,
                   length2: 20
                 }
               },
@@ -291,6 +296,54 @@
               animationDelay: function (idx) {
                 return Math.random() * 200;
               }
+            }
+          ]
+        });
+
+        let taskTotalChart = this.$echarts.init(document.getElementById('myChart5'), 'customed.js');
+        taskTotalChart.setOption({
+          title: {
+            text: '发布任务类型分布',
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow'
+            }
+          },
+          legend: {
+            data: ['您发布的任务', '系统中的所有任务']
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'value',
+            boundaryGap: [0.2, 0.4]
+          },
+          yAxis: {
+            type: 'category',
+            data: ['制定目标', '描述子类', '划分区域']
+          },
+          series: [
+            {
+              name: '您发布的任务',
+              type: 'bar',
+              data: function () {
+                let temp = that.taskType.slice(0, 3);
+                return temp.map(x => (x / temp.reduce((x, y) => x + y)).toFixed(2));
+              }()
+            },
+            {
+              name: '系统中的所有任务',
+              type: 'bar',
+              data: function () {
+                let temp = that.taskType.slice(3, 6);
+                return temp.map(x => (x / temp.reduce((x, y) => x + y)).toFixed(2));
+              }()
             }
           ]
         });

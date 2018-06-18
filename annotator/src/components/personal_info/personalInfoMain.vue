@@ -134,6 +134,7 @@
 
     //挂载的时候获取数据
     mounted() {
+      
       this.personalInfo = infoMockItem;
       this.personalStatistic = statisticMockItem;
     },
