@@ -12,6 +12,11 @@ public class Comentropy {
         throw new IllegalStateException(StdName.UTILCLASS);
     }
 
+    /**
+    *@author:pis
+    *@description: 熵权法
+    *@date: 14:43 2018/6/17
+    */
     public static Double[] getComentropy(Double[][] data) {
         Integer row = data.length;
         Integer colonm = data[0].length;
