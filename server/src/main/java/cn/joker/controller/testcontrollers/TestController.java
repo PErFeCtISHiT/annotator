@@ -46,10 +46,10 @@ public class TestController {
         JSONArray data = new JSONArray();
         List<TestEntity> testEntities = testService.findAll();
         Random r = new Random();
-        Integer rand = r.nextInt(2) + 1;
+        Integer rand = r.nextInt(testEntities.size() / 10) + 1;
         for (int i = 1; i <= 10; i++) {
-            JSONObject testObj = new JSONObject(testEntities.get(i * rand));
-            JSONArray jsonArray = new JSONArray(testEntities.get(i * rand).getChoices());
+            JSONObject testObj = new JSONObject(testEntities.get(i * rand - 1));
+            JSONArray jsonArray = new JSONArray(testEntities.get(i * rand - 1).getChoices());
             testObj.put(StdName.CHOICES, jsonArray);
             data.put(testObj);
 
