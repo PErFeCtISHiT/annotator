@@ -62,9 +62,8 @@ public class MarkController {
         if(imageEntity.getImgMarkEntityList() == null)
             imageEntity.setImgMarkEntityList(new ArrayList<>());
         imageEntity.getImgMarkEntityList().add(imgMark);
-        JSONArray jsonArray = new JSONArray(imgMark.getNotePolygon());
-        userEntity.setPoints(userEntity.getPoints() + jsonArray.length());
-        userEntity.setBonus(userEntity.getBonus() + jsonArray.length());
+        userEntity.setPoints(userEntity.getPoints() + 1);
+        userEntity.setBonus(userEntity.getBonus() + 1);
         switch (imageEntity.getType()){
             case 1:
                 userEntity.setType1Num(userEntity.getType1Num() + 1);
