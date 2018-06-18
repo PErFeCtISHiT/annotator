@@ -117,6 +117,7 @@ let router = new VueRouter({
 });
 
 router.beforeEach(function (to, from, next) {
+  console.log('进入路由拦截器');
   if(to.path==='/pays/notifyPay'){
     console.log('已经进入转发器');
     Vue.prototype.$http.post('/pays/notifyPay')
