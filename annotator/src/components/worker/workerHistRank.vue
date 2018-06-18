@@ -45,25 +45,25 @@
         :data="rankMsg"
         style="width: 80%; padding-left: 40px">
         <el-table-column
-          prop="taskID"
+          prop="username"
           label="用户名"
           align="center"
           width="155px">
         </el-table-column>
         <el-table-column
-          prop="points"
-          label="姓名"
+          prop="nickName"
+          label="昵称"
           align="center"
           width="155px">
         </el-table-column>
         <el-table-column
-          prop="taskID"
+          prop="rank"
           label="排名"
           align="center"
           width="155px">
         </el-table-column>
         <el-table-column
-          prop="taskID"
+          prop="points"
           label="积分"
           align="center"
           width="155px">

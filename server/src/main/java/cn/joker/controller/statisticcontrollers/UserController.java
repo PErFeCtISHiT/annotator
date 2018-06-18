@@ -78,7 +78,7 @@ public class UserController {
             List<SysRoleEntity> sysRoles = userInfo.getRoleEntityList();
             int tag = 0;
             for (SysRoleEntity sysRole : sysRoles) {
-                if (sysRole.getId() == 3)
+                if (sysRole.getId() == 4)
                     tag = 1;
             }
             if (tag == 1) {

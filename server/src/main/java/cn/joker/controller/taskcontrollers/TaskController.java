@@ -22,7 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
-
+/**
+ * 任务处理类
+ */
 @RestController
 @RequestMapping("/task")
 public class TaskController {
@@ -262,6 +264,7 @@ public class TaskController {
 
     /**
      * 管理员查看用户被举报的所有信息
+     * return 举报列表
      */
     @RequestMapping(method = RequestMethod.GET, value = "/checkWorkerReport")
     public List<ReportmessageEntity> checkWorkerReport() {
@@ -270,6 +273,7 @@ public class TaskController {
 
     /**
      * 管理员查看任务被举报的所有信息
+     * return 举报信息
      */
     @RequestMapping(method = RequestMethod.GET, value = "/checkTaskReport")
     public List<ReportmessageEntity> checkTaskReport() {
@@ -372,6 +376,7 @@ public class TaskController {
      * @param request  http
      * @param response http
      * @date: 14:30 2018/6/5
+     * return 数据集下载
      */
     @RequestMapping(value = "/getDataSet", method = RequestMethod.GET)
     public ResponseEntity<FileSystemResource> getDataSet(HttpServletRequest request, HttpServletResponse response) {
