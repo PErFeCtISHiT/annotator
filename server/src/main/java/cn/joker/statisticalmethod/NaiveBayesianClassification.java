@@ -10,9 +10,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * 整合、分类。判断正确性
+ */
 public class NaiveBayesianClassification {
-    private static double MIN_OFFSET = 1.2;
+    private static double MINOFFSET = 1.2;
     private static List<RecNode> resultList = new ArrayList<>();
     private static List<Integer> userID = new ArrayList<>();
     private static List<Integer> startIndex = new ArrayList<>();
@@ -44,7 +46,10 @@ public class NaiveBayesianClassification {
         return markList;
     }
 
-    //对答案进行排序，对用户的答案进行分类（只是排序），结果存在resultList，userID，startIndex中
+    /**
+     * 对答案进行排序，对用户的答案进行分类（只是排序），结果存在resultList，userID，startIndex中
+     * @param markList 标注列表
+     */
     private static void classificationByMarkedUser(List<RecNode> markList) {
         // 把标注根据用户进行分类，最后还是一个list，但是调整顺序，提供一个用户id的list和一个该用户开始的index的list
         resultList = new ArrayList<>();
@@ -68,7 +73,11 @@ public class NaiveBayesianClassification {
         }
     }
 
-    //进行聚类，会先对答案进行排序（调用上一个方法）
+    /**
+     * 进行聚类，会先对答案进行排序（调用上一个方法）
+     * @param markList 标注列表
+     * @return 分类结果
+     */
     public static List<RecNodeList> getRecMarkByClass(List<RecNode> markList) {
         classificationByMarkedUser(markList);
 
@@ -85,7 +94,7 @@ public class NaiveBayesianClassification {
             frequency.add(1);
         }
         //后续的用户标注结果就和第一个进行对比，如果只有一个人标注的话就不继续了
-        if (startIndex.size() != 0) {
+        if (startIndex.size() != 1) {
             for (int i = startIndex.get(1); i < resultList.size(); i++) {
                 RecNode aMark = resultList.get(i);
                 double minOffset = 1000; // 初始化的时候要把最小值变到极大，否则每次比较都不满足
@@ -103,15 +112,15 @@ public class NaiveBayesianClassification {
                 // 得到差异最小的数据之后进行差异量和偏移范围的比较
                 // 如果假设成立，在偏移范围之内就把该结果放入相应分类中，调整该分类中的数据
                 // 如果假设不成立，就单独建立一个新的类
-                if (minOffset < MIN_OFFSET) { // 假设成立
+                if (minOffset < MINOFFSET) { // 假设成立
                     RecNode node = new RecNode(classificationList.get(classIndex).getRecNode().getTop(), classificationList.get(classIndex).getRecNode().getLeft(),
                             classificationList.get(classIndex).getRecNode().getHeight(), classificationList.get(classIndex).getRecNode().getWidth(),
                             classificationList.get(classIndex).getRecNode().getMark(), null);
                     // 加权调整数据
-                    node.setTop(((node.getTop() * frequency.get(classIndex) + aMark.getTop()) / (frequency.get(classIndex) + 1)));
-                    node.setLeft(((node.getLeft() * frequency.get(classIndex) + aMark.getLeft()) / (frequency.get(classIndex) + 1)));
-                    node.setHeight(((node.getTop() * frequency.get(classIndex) + aMark.getHeight()) / (frequency.get(classIndex) + 1)));
-                    node.setWidth(((node.getTop() * frequency.get(classIndex) + aMark.getWidth()) / (frequency.get(classIndex) + 1)));
+                    node.setTop((node.getTop() * frequency.get(classIndex) + aMark.getTop()) / (frequency.get(classIndex) + 1));
+                    node.setLeft((node.getLeft() * frequency.get(classIndex) + aMark.getLeft()) / (frequency.get(classIndex) + 1));
+                    node.setHeight((node.getTop() * frequency.get(classIndex) + aMark.getHeight()) / (frequency.get(classIndex) + 1));
+                    node.setWidth((node.getTop() * frequency.get(classIndex) + aMark.getWidth()) / (frequency.get(classIndex) + 1));
                     classificationList.get(classIndex).setRecNode(node);
                     classificationList.get(classIndex).getRecNodes().add(aMark);
 
@@ -129,6 +138,12 @@ public class NaiveBayesianClassification {
         return classificationList;
     }
 
+    /**
+     *
+     * @param standardNode 标准标注
+     * @param toTestNode 实际标注
+     * @return 是否正确
+     */
     private static double calculateOffset(RecNode standardNode, RecNode toTestNode) {
         double offset = 0.0;
         offset += Math.abs(toTestNode.getTop() - standardNode.getTop()) / standardNode.getTop();
@@ -139,6 +154,12 @@ public class NaiveBayesianClassification {
         return offset;
     }
 
+    /**
+     *
+     * @param testMark 测试的标注集
+     * @param markList 进行比对的标注集
+     * @return 比对结果
+     */
     public static List<Boolean> getCorrectNumber(List<RecNode> testMark, List<RecNode> markList) {
         //对之前做过的测试结果进行分类
         List<RecNodeList> classificationList = getRecMarkByClass(markList);
@@ -172,7 +193,7 @@ public class NaiveBayesianClassification {
                     }
                 }
                 // 如果在的话表示标注成功+1,更新list
-                if (minOffset < MIN_OFFSET) {
+                if (minOffset < MINOFFSET) {
                     correct.add(true);
                     match.set(classIndex, true);
                 } else
@@ -184,70 +205,15 @@ public class NaiveBayesianClassification {
         return correct;
     }
 
+    /**
+     * 整合
+     * @param imgMarkEntityList 所有标注信息
+     * @return 整合效果
+     */
     public static List<RecNodeList> integration(List<ImgMarkEntity> imgMarkEntityList) {
         List<RecNode> markList = getAllMark(imgMarkEntityList);
 
         return getRecMarkByClass(markList);
     }
 
-//    /**
-//     * @param markList 对于某张图片所有的长方形标注数据
-//     * @return 整合之后的对单张图片的所有标注信息
-//     */
-//    private static ArrayList<RecNodeList> getRecMarkByClass(List<RecNode> markList) {
-//        ArrayList<RecNodeList> recNodeArrayList = new ArrayList<>(); //整合之后的结果
-//        ArrayList<Integer> frequency = new ArrayList<>(); // 单独的频率数组，方便后期按权重调整相应数据
-//
-//        for (RecNode aMarkList : markList) {
-//            if (recNodeArrayList.isEmpty()) { // 对于第一个标注结果，默认直接加进分类中
-//                RecNodeList recNodeList = new RecNodeList();
-//                recNodeList.getRecNodes().add(aMarkList);
-//                recNodeList.setRecNode(aMarkList);
-//                recNodeArrayList.add(recNodeList);
-//                frequency.add(1);
-//            } else {
-//                double minOffset = 1000; // 初始化的时候要把最小值变到极大，否则每次比较都不满足
-//                int classIndex = 0; // 记录最小偏移量对应的值对应在recNodeArrayList中的位置
-//                for (int j = 0; j < recNodeArrayList.size(); j++) {
-//                    // 计算和每个具体分类的差异，用差异来表示概率，差异越大，表明在此分类中的概率越小
-//                    double offset = 0.0;
-//                    offset += Math.abs(aMarkList.getTop() - recNodeArrayList.get(j).getRecNode().getTop()) / recNodeArrayList.get(j).getRecNode().getTop();
-//                    offset += Math.abs(aMarkList.getLeft() - recNodeArrayList.get(j).getRecNode().getLeft()) / recNodeArrayList.get(j).getRecNode().getLeft();
-//                    offset += Math.abs(aMarkList.getWidth() - recNodeArrayList.get(j).getRecNode().getWidth()) / recNodeArrayList.get(j).getRecNode().getWidth();
-//                    offset += Math.abs(aMarkList.getHeight() - recNodeArrayList.get(j).getRecNode().getHeight()) / recNodeArrayList.get(j).getRecNode().getHeight();
-//
-//                    if (offset < minOffset) { //选择
-//                        minOffset = offset;
-//                        classIndex = j;
-//                    }
-//                }
-//
-//                // 得到差异最小的数据之后进行差异量和偏移范围的比较
-//                // 如果假设成立，在偏移范围之内就把该结果放入相应分类中，调整该分类中的数据
-//                // 如果假设不成立，就单独建立一个新的类
-//                if (minOffset < MINOFFSET) { // 假设成立
-//                    RecNode node = new RecNode(recNodeArrayList.get(classIndex).getRecNode().getTop(), recNodeArrayList.get(classIndex).getRecNode().getLeft(),
-//                            recNodeArrayList.get(classIndex).getRecNode().getHeight(), recNodeArrayList.get(classIndex).getRecNode().getWidth(),
-//                            recNodeArrayList.get(classIndex).getRecNode().getMark(), null);
-//                    // 加权调整数据
-//                    node.setTop(((node.getTop() * frequency.get(classIndex) + aMarkList.getTop()) / (frequency.get(classIndex) + 1)));
-//                    node.setLeft(((node.getLeft() * frequency.get(classIndex) + aMarkList.getLeft()) / (frequency.get(classIndex) + 1)));
-//                    node.setHeight(((node.getTop() * frequency.get(classIndex) + aMarkList.getHeight()) / (frequency.get(classIndex) + 1)));
-//                    node.setWidth(((node.getTop() * frequency.get(classIndex) + aMarkList.getWidth()) / (frequency.get(classIndex) + 1)));
-//                    recNodeArrayList.get(classIndex).setRecNode(node);
-//                    recNodeArrayList.get(classIndex).getRecNodes().add(aMarkList);
-//
-//                    frequency.set(classIndex, frequency.get(classIndex) + 1);
-//                } else { // 假设不成立
-//                    RecNodeList recNodeList = new RecNodeList();
-//                    recNodeList.setRecNode(aMarkList);
-//                    recNodeList.getRecNodes().add(aMarkList);
-//                    recNodeArrayList.add(recNodeList);
-//                    frequency.add(1);
-//                }
-//            }
-//        }
-//
-//        return recNodeArrayList;
-//    }
 }
