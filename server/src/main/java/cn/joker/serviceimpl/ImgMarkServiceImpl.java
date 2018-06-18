@@ -19,17 +19,30 @@ import java.util.List;
 public class ImgMarkServiceImpl extends PubServiceImpl implements ImgMarkService {
     private final ImgMarkRepository imgMarkRepository;
 
+    /**
+     *
+     * @param imgMarkRepository 数据库
+     */
     @Autowired
     public ImgMarkServiceImpl(ImgMarkRepository imgMarkRepository) {
         this.repository = imgMarkRepository;
         this.imgMarkRepository = imgMarkRepository;
     }
 
+    /**
+     *
+     * @return 图片标注列表
+     */
     @Override
     public List<ImgMarkEntity> findAll() {
         return imgMarkRepository.findAll();
     }
 
+    /**
+     *
+     * @param imageEntity 图片
+     * @return 图片列表
+     */
     @Override
     public List<ImgMarkEntity> findByImage(ImageEntity imageEntity) {
         List<ImgMarkEntity> imgMarkEntities = findAll();

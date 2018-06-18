@@ -15,17 +15,31 @@ import org.springframework.stereotype.Service;
 public class ImgServiceImpl extends PubServiceImpl implements ImgService {
     private final ImageRepository imageRepository;
 
+    /**
+     *
+     * @param imageRepository 图片数据库
+     */
     @Autowired
     public ImgServiceImpl(ImageRepository imageRepository) {
         this.repository = imageRepository;
         this.imageRepository = imageRepository;
     }
 
+    /**
+     *
+     * @param url 地址
+     * @return 图片
+     */
     @Override
     public ImageEntity findByUrl(String url) {
         return imageRepository.findByUrl(url);
     }
 
+    /**
+     *
+     * @param name 名字
+     * @return 图片
+     */
     @Override
     public ImageEntity findByName(String name) {
         return imageRepository.findByImgName(name);

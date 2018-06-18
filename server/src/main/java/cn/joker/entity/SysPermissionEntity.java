@@ -52,8 +52,10 @@ public class SysPermissionEntity implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         SysPermissionEntity that = (SysPermissionEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(permission, that.permission) &&

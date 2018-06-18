@@ -89,8 +89,10 @@ public class ImgMarkEntity implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         ImgMarkEntity that = (ImgMarkEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(image_imgMark, that.image_imgMark) &&

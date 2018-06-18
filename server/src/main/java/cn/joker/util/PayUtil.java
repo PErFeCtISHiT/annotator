@@ -72,9 +72,9 @@ public class PayUtil {
             //logger.info("支付回来的支付记录的ID：" + paySaPi.getOrderuid());
             key += paySaPi.getOrderuid();
         }
-        if (!StringUtils.isBlank(paySaPi.getPaysapi_id())) {
+        if (!StringUtils.isBlank(paySaPi.getPaysapiId())) {
             //logger.info("支付回来的平台订单号：" + paySaPi.getPaysapi_id());
-            key += paySaPi.getPaysapi_id();
+            key += paySaPi.getPaysapiId();
         }
         if (!StringUtils.isBlank(paySaPi.getPrice())) {
             //logger.info("支付回来的价格：" + paySaPi.getPrice());

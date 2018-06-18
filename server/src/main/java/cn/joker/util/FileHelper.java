@@ -32,23 +32,34 @@ public class FileHelper {
 
 
     private static Logger logger = LoggerFactory.getLogger(JsonHelper.class);
-    private static final String FILE_SEPARATOR = System.getProperty("file.separator");
+    private static final String FILESEPARATOR = System.getProperty("file.separator");
 
-
+    /**
+     *
+     * @param path 路径
+     * @return 实际路径
+     */
     private static String getRealFilePath(String path) {
-        return path.replace("/", FILE_SEPARATOR).replace("\\", FILE_SEPARATOR);
+        return path.replace("/", FILESEPARATOR).replace("\\", FILESEPARATOR);
     }
 
     private static final String DIR = System.getProperty("user.dir") + "/annotator/";
 
 
+    /**
+     *
+     * @param taskEntity 任务
+     * @param file 文件
+     * @param imgService 文件服务
+     * @return 是否成功
+     */
     public static Integer saveFiles(TaskEntity taskEntity, MultipartFile file, ImgService imgService) {
         if (file.isEmpty())
             return 0;
         String path = DIR + "task/" + taskEntity.getId() + "/images/";
         String fileName = taskEntity.getId().toString() + "-" + file.getOriginalFilename();
         fileName = FileHelper.getRealFilePath(fileName);
-        fileName = fileName.substring(fileName.lastIndexOf(FILE_SEPARATOR) + 1);
+        fileName = fileName.substring(fileName.lastIndexOf(FILESEPARATOR) + 1);
         File dest = new File(path + fileName);
         boolean bool = true;
         if (!dest.getParentFile().getParentFile().exists()) {
@@ -110,6 +121,11 @@ public class FileHelper {
         return -1;
     }
 
+    /**
+     *
+     * @param taskEntity 任务
+     * @param imageEntity 图片
+     */
     private static void warpList(TaskEntity taskEntity, ImageEntity imageEntity) {
         if (taskEntity.getImageEntityList() == null) {
             List<ImageEntity> imageEntities = new ArrayList<>();

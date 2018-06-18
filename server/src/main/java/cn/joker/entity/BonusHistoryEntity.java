@@ -65,8 +65,10 @@ public class BonusHistoryEntity implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         BonusHistoryEntity that = (BonusHistoryEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(bonusHistory_task, that.bonusHistory_task) &&
