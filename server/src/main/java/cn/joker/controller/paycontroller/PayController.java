@@ -61,7 +61,6 @@ public class PayController {
      *
      * @param request 请求
      * @param response 回复
-     * @param paySaPi 类
      */
     @RequestMapping(value = "/notifyPay",method = RequestMethod.POST)
     @CrossOrigin
