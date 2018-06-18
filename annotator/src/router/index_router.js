@@ -118,6 +118,7 @@ let router = new VueRouter({
 
 router.beforeEach(function (to, from, next) {
   if(to.path==='/pays/notifyPay'){
+    console.log('已经进入转发器');
     Vue.prototype.$http.post('/pays/notifyPay')
       .then(function () {
         console.log('已经转发');
