@@ -178,20 +178,23 @@
                   </div>
                 </template>
 
-                <div style="margin-left: 15%;">
-                  <el-checkbox v-if="showCheckAll" :indeterminate="isIndeterminate" v-model="checkAll"
-                               @change="handleCheckAllChange">全选
-                  </el-checkbox>
+                <el-row type="flex" justify="center" align="middle">
 
-                  <el-checkbox-group v-model="checkedShowModes" @change="handleCheckedModesChange">
-                    <el-checkbox v-if="shouldShow(showMode)" v-for="showMode in showModes" :label="showMode"
-                                 :key="showMode"
-                                 @change="checked=>handleSingleChange(checked,showMode)">
-                      {{getModeName(showMode)}}
+                  <div>
+                    <el-checkbox v-if="showCheckAll" :indeterminate="isIndeterminate" v-model="checkAll"
+                                 @change="handleCheckAllChange">全选
                     </el-checkbox>
-                  </el-checkbox-group>
 
-                </div>
+                    <el-checkbox-group v-model="checkedShowModes" @change="handleCheckedModesChange">
+                      <el-checkbox v-if="shouldShow(showMode)" v-for="showMode in showModes" :label="showMode"
+                                   :key="showMode"
+                                   @change="checked=>handleSingleChange(checked,showMode)">
+                        {{getModeName(showMode)}}
+                      </el-checkbox>
+                    </el-checkbox-group>
+
+                  </div>
+                </el-row>
 
               </el-collapse-item>
 
@@ -287,7 +290,7 @@
   const originalWidth = originalHeight + 2 * padding;
   const taskDescriptionHeight = 80;
   const checkCircleNum = 100;
-  const testDrawImages = ['task/10/images/测试/elephant.jpg','../../../src/testDrawImage/1.jpg', '../../../src/testDrawImage/2.jpg', '../../../src/testDrawImage/3.jpg', '../../../src/testDrawImage/4.jpg', '../../../src/testDrawImage/elephant.jpg', '../../../src/testDrawImage/tableware.jpg', '../../../src/testDrawImage/road.jpg'];
+  const testDrawImages = ['../../../src/testDrawImage/1.jpg', '../../../src/testDrawImage/2.jpg', '../../../src/testDrawImage/3.jpg', '../../../src/testDrawImage/4.jpg', '../../../src/testDrawImage/elephant.jpg', '../../../src/testDrawImage/tableware.jpg', '../../../src/testDrawImage/road.jpg'];
 
   import {
     getOffset,
@@ -476,10 +479,11 @@
             return 0;
           case 2:
             return 2;
-          case 0:
           case 3:
-          default:
             return 1;
+          case 0:
+          default:
+            return 0;
         }
       },
 
@@ -776,7 +780,7 @@
           this.lastY = y;
           canvas.drawLayers();
           this.handleAfterDrawingOneNoteFinished();
-        }else{
+        } else {
           canvas.drawLayers();
         }
       },
@@ -990,6 +994,8 @@
           this.setCurrentLayerLocked();
           if (this.markRequireStatus !== 0) {
             this.openInputDialog(layer);
+          } else {
+            //TODO 模式0要提供删除功能
           }
         }
 
@@ -1338,7 +1344,7 @@
         }
 
         if (this.checkImages && this.checkImages.length && this.checkImages.length > 0) {               //有测试用的图片
-          if(!isAlreadySet) {
+          if (!isAlreadySet) {
             let tempObj = this.checkImages.pop();
             this.refreshComponent(tempObj.imgURL, tempObj.description);                            //优先进行测试
           }

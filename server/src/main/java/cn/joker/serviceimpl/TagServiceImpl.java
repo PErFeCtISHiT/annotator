@@ -55,20 +55,24 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
             List<ImageEntity> images = taskEntity.getImageEntityList();
             for (ImageEntity imageEntity : images) {
                 if (imageEntity.getMarked().equals(false)) {
-                    if (imageEntity.getType() == 1)
+                    if (imageEntity.getType() == 1 && imageEntities.size() < 10)
                         imageEntities.add(imageEntity);
-                    else
+                    else if (imageEntity.getType() == 2 && imageEntities1.size() < 10)
                         imageEntities1.add(imageEntity);
                     imageEntity.setMarked(true);
                     imgService.modify(imageEntity);
                 }
                 if (imageEntities.size() == 10 && imageEntities1.size() == 10) {
                     tagEntity.setTestImageList(imageEntities);
+                    tagEntity.setTestImageList1(imageEntities1);
                     this.modify(tagEntity);
                     return;
                 }
             }
         }
+        tagEntity.setTestImageList(imageEntities);
+        tagEntity.setTestImageList1(imageEntities1);
+        this.modify(tagEntity);
     }
 
     @Override
@@ -147,7 +151,7 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
 
                 List<Boolean> correct = NaiveBayesianClassification.getCorrectNumber(testMark, markList);
                 // 在前人的基础上修正正确率
-                for (Boolean iscorrect: correct) {
+                for (Boolean iscorrect : correct) {
                     WorkerMatrixEntity workerMatrixEntity = userEntity.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
                     if (iscorrect) {
                         workerMatrixEntity.setC10(workerMatrixEntity.getC10() + questionModel.getP1());
@@ -161,7 +165,7 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
 
                 userService.modify(userEntity);
 
-                if(userEntity.getWorkerMatrixEntities().get(tagEntity.getId() - 1).getCorrect() < 0.8)
+                if (userEntity.getWorkerMatrixEntities().get(tagEntity.getId() - 1).getCorrect() < 0.8)
                     ret = false;
 
                 // 前面是把测试答案单独整合之后把最后一个用户与之进行比对，最后要把该用户的测试答案也放到答案池里面
@@ -174,9 +178,8 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
                         WorkerMatrixEntity workerMatrixEntity = worker.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
                         workerMatrixEntity.setC00(workerMatrixEntity.getC00() + questionModel.getP1());
                         workerMatrixEntity.setC01(workerMatrixEntity.getC01() + questionModel.getP0());
-                    }
-                    else{
-                        for (RecNode arec : recNodeList.getRecNodes()){
+                    } else {
+                        for (RecNode arec : recNodeList.getRecNodes()) {
                             worker = arec.getWorker();
                             WorkerMatrixEntity workerMatrixEntity = worker.getWorkerMatrixEntities().get(tagEntity.getId() - 1);
                             workerMatrixEntity.setC10(workerMatrixEntity.getC10() + questionModel.getP1());
@@ -199,8 +202,8 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
         return this.tagRepository.findAll();
     }
 
-    //@Scheduled(cron = "0 0 12 * * ?")   //每天执行一次
-    @Scheduled(cron = "0/10 * * * * ?")   //每10秒执行一次
+    @Scheduled(cron = "0 0 12 * * ?")   //每天执行一次
+    //@Scheduled(cron = "0/40 * * * * ?")   //每10秒执行一次
     public void tagRefresh() {
         log.info("refresh begin");
         List<TagEntity> tagEntities = this.findAll();
@@ -211,7 +214,7 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
         log.info("refresh success");
     }
 
-    private QuestionModel getNewQuestionModel(List<RecNodeList> resultSet, TagEntity tagEntity){
+    private QuestionModel getNewQuestionModel(List<RecNodeList> resultSet, TagEntity tagEntity) {
         QuestionModel questionModel = new QuestionModel();
         for (RecNodeList recNodeList : resultSet) {
             if (recNodeList.getRecNodes().size() == 1) {
@@ -219,7 +222,7 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
                         .getWorkerMatrixEntities().get(tagEntity.getId() - 1).getCorrect();
                 questionModel.psUpdate(gamma, false);
             } else {
-                for (RecNode arec : recNodeList.getRecNodes()){
+                for (RecNode arec : recNodeList.getRecNodes()) {
                     Double gamma = arec.getWorker().getWorkerMatrixEntities().get(tagEntity.getId() - 1).getCorrect();
                     questionModel.psUpdate(gamma, false);
                 }

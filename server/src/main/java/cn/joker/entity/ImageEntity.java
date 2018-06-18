@@ -1,6 +1,8 @@
 package cn.joker.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -34,8 +36,8 @@ public class ImageEntity implements Serializable {
     public void setWorkers(List<UserEntity> workers) {
         this.workers = workers;
     }
-
-    @OneToMany(mappedBy = "image_imgMark", cascade = CascadeType.MERGE)
+    @Fetch(FetchMode.SELECT)
+    @OneToMany(mappedBy = "image_imgMark", cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
     @JsonIgnore
     public List<ImgMarkEntity> getImgMarkEntityList() {
         return imgMarkEntityList;
