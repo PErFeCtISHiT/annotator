@@ -28,7 +28,7 @@
                 <br/><br/>
 
                 <el-row type="flex" justify="center" style="padding-top: 20px">
-                  <div id="myChart3" style="width: 400px; height: 400px; margin-left: -5%"></div>
+                  <div id="myChart3" style="width: 400px; height: 400px; margin-left: -5%; margin-bottom: 15px"></div>
                 </el-row>
 
               </el-card>
@@ -67,64 +67,117 @@
     mounted() {
       let that = this;
 
+      //工人部分
       if (this.$store.state.user.isWorker) {
-        this.$http.get('statistic/getCorrect', {
-          params: {
-            username: this.$store.state.user.userInfo.username
-          }
-        })
-          .then(function (response) {
-            that.score = response.data.mes;
-          })
-          .catch(function () {
+        this.$http.all([
+          that.$http.get('statistic/getCorrect?username=' + that.$store.state.user.userInfo.username),
+          that.$http.get('statistic/getMarkNum?username=' + that.$store.state.user.userInfo.username),
+        ])
+          .then(that.$http.spread(function (rsp1, rsp2) {
+            that.score = [].concat(rsp1.data.mes);
+            that.tagNum = [].concat(rsp2.data.mes.slice(0, 3));
+            that.catNum = [].concat(rsp2.data.mes.slice(3, 8));
+            that.drawLinesOfWorkers();
+          }))
+          .catch(function (error) {
             that.$message({
-              message: '网络异常' + error,
+              message: 'Num网络异常' + error,
               type: 'warning'
             });
           });
 
-        this.$http.get('statistic/getMarkNum', {
-          params: {
-            username: this.$store.state.user.userInfo.username
-          }
-        })
-          .then(function (response) {
-            that.tagNum = response.data.mes.slice(0, 3);
-            that.catNum = response.data.mes.slice(3, 8);
-          });
 
-        this.drawLinesOfWorkers();
+
+        // this.$http.get('statistic/getCorrect', {
+        //   params: {
+        //     username: that.$store.state.user.userInfo.username
+        //   }
+        // })
+        //   .then(function (response) {
+        //     that.score = [].concat(response.data.mes);
+        //   })
+        //   .catch(function (error) {
+        //     that.$message({
+        //       message: '网络异常' + error,
+        //       type: 'warning'
+        //     });
+        //   });
+        //
+        // this.$http.get('statistic/getMarkNum', {
+        //   params: {
+        //     username: this.$store.state.user.userInfo.username
+        //   }
+        // })
+        //   .then(function (response) {
+        //     that.tagNum = [].concat(response.data.mes.slice(0, 3));
+        //     that.catNum = [].concat(response.data.mes.slice(3, 8));
+        //   });
+        //
+        // this.drawLinesOfWorkers();
       }
+
+      //发起者部分
       else {
-        this.$http.get('statistic/getTaskNum', {
-          params: {
-            username: this.$store.state.user.userInfo.username
-          }
-        })
-          .then(function (response) {
-            that.taskNum = response.data.mes;
+        this.$http.all([
+          that.$http.get('statistic/getTaskNum?username=' + that.$store.state.user.userInfo.username),
+          that.$http.get('statistic/getTaskDetail?username=' + that.$store.state.user.userInfo.username),
+        ])
+          .then(that.$http.spread(function (rsp1, rsp2) {
+            that.taskNum = [...rsp1.data.mes];
+            that.taskType = [].concat(rsp2.data.mes);
+
+            console.log(that.taskType);
+            that.drawLinesOfRequester();
+          }))
+          .catch(function (error) {
+            that.$message({
+              message: 'Num网络异常' + error,
+              type: 'warning'
+            });
           });
 
-        this.$http.get('statistic/getTaskDetail', {
-          params: {
-            username: this.$store.state.user.userInfo.username
-          }
-        })
-          .then(function (response) {
-            that.taskType = response.data.mes;
-          });
-
-        this.drawLinesOfRequester();
+        // this.$http.get('statistic/getTaskNum', {
+        //   params: {
+        //     username: this.$store.state.user.userInfo.username
+        //   }
+        // })
+        //   .then(function (response) {
+        //     that.taskNum = [...response.data.mes];
+        //   })
+        //   .catch(function (error) {
+        //     console.log(error);
+        //     that.$message({
+        //       message: 'Num网络异常' + error,
+        //       type: 'warning'
+        //     });
+        //   });
+        //
+        // this.$http.get('statistic/getTaskDetail', {
+        //   params: {
+        //     username: this.$store.state.user.userInfo.username
+        //   }
+        // })
+        //   .then(function (response) {
+        //     that.taskType = [].concat(response.data.mes);
+        //   })
+        //   .catch(function (error) {
+        //     that.$message({
+        //       message: 'Task网络异常' + error,
+        //       type: 'warning'
+        //     });
+        //   });
+        //
+        // this.drawLinesOfRequester();
       }
     },
 
     data() {
       return {
-        score: [0.5, 0.5, 0.1, 0.1, 0.1, 0.77],
-        tagNum: [500, 25, 400, 150, 100],
-        catNum: [100, 35, 48],
-        taskNum: [5, 5],
-        taskType: [10, 7, 6, 20, 45, 18]
+        score: [],
+        tagNum: [],
+        catNum: [],
+        taskNum: [],
+        taskType: []
       }
     },
 
@@ -272,6 +325,7 @@
       drawLinesOfRequester() {
         let that = this;
         let taskChart = this.$echarts.init(document.getElementById('myChart4'), 'customed.js');
+        console.log('start init');
         taskChart.setOption({
 
           title: {
@@ -378,7 +432,7 @@
               name: '您发布的任务',
               type: 'bar',
               data: function () {
-                let temp = that.taskType.slice(0, 3);
+                let temp = that.taskType.slice(3, 6);
                 return temp.map(x => (x / temp.reduce((x, y) => x + y)).toFixed(2));
               }()
             },
@@ -386,7 +440,7 @@
               name: '系统中的所有任务',
               type: 'bar',
               data: function () {
-                let temp = that.taskType.slice(3, 6);
+                let temp = that.taskType.slice(0, 3);
                 return temp.map(x => (x / temp.reduce((x, y) => x + y)).toFixed(2));
               }()
             }

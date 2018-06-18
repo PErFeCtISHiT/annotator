@@ -167,7 +167,7 @@
 
     methods: {
       handleTabEvent(tab) {
-        console.log(tab);
+        //console.log(tab);
         //
         // this.h1 ? this.h1 = false : this.h1 = true;
         // this.h2 ? this.h2 = false : this.h2 = true;
@@ -224,12 +224,16 @@
             passwr: this.passwr1,
           })
             .then(function (response) {
-              if(response.data.mes === true) {
-                that.$message({
-                  message: '修改成功' + error,
-                  type: 'success',
-                });
-              }
+              //if(response.data.mes === true) {
+              that.$message({
+                showClose: true,
+                message: '修改成功',
+                type: 'success',
+              });
+              that.personalInfo.nickname = that.nickname;
+              that.clearScreen();
+              that.dialogVisible = false;
+              //}
             })
             .catch(function (error) {
               that.$message({
@@ -237,16 +241,6 @@
                 type: 'warning',
               });
             });
-
-          this.clearScreen();
-          this.dialogVisible = false;
-
-          this.$message({
-            showClose: true,
-            message: '成功修改',
-            type: 'success'
-          });
-
 
         }
       }//此方法结束
