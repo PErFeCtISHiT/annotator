@@ -115,7 +115,6 @@ public class MarkController {
             mark.put(StdName.NOTERECTANGLE, jsonArray);
             jsonArray = new JSONArray(imgMarkEntity.getNoteTotal());
             mark.put(StdName.NOTETOTAL, jsonArray);
-            marksArray.put(mark);
         }
         JSONObject ret = new JSONObject();
         ret.put(StdName.MARKS, marksArray);
