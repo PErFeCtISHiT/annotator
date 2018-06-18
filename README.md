@@ -11,4 +11,4 @@
 ## 开发技术
 * 本系统采用前后端分离的方式。
 * 前端采用vue框架，利用elementui相关组件
-* 后端采用spring boot框架，数据库使用mysql，同时使用hibernate和JPO对此进行封装
+* 后端采用spring boot框架，数据库使用mysql，同时使用hibernate和jpa对此进行封装
