@@ -611,7 +611,7 @@
             }
 
             //把note注入图层的data中
-            this.polyObj['data'] = new NotePolygon(this.currentWorkerName, tempPoints, '', this.currentLayerName, this.strokeNormalColor, this.strokeWidth);
+            this.polyObj['data'] = new NotePolygon(this.currentWorkerName, tempPoints, '', this.currentLayerName, this.strokeNormalColor, this.getActualStrokeWidth());
 
             this.drawLines();
 
@@ -683,6 +683,7 @@
       },
 
       addOrReviseMark(layerName) {
+        console.log(this.getCanvasTarget().getLayer(layerName));
         let mark = this.getCanvasTarget().getLayer(layerName).data.mark;
         let toAdd = '';
         if (!mark || mark === null || mark === '') {
@@ -826,7 +827,7 @@
         if (Math.abs(width) >= 5 && Math.abs(height) >= 5) {
           let dataObj = new NoteRectangle(this.currentWorkerName, this.currentRectX * this.globalRate,
             this.currentRectY * this.globalRate, width * this.globalRate, height * this.globalRate, '',
-            this.currentLayerName, this.strokeNormalColor, this.strokeWidth);
+            this.currentLayerName, this.strokeNormalColor, this.getActualStrokeWidth());
 
           let that = this;
           canvas.addLayer({
@@ -1623,7 +1624,9 @@
         })
           .then(function (response) {
             let marks = response.data.marks;
-            that.loadFromMarks(marks);
+            if (marks && marks.length > 0) {
+              that.loadFromMarks(marks);
+            }
           })
           .catch(function (error) {
             that.$message({
@@ -1658,10 +1661,10 @@
           strokeWidth: noteRectangle.strokeWidth,
           name: noteRectangle.id,
           fromCenter: false,
-          x: noteRectangle.x, y: noteRectangle.y,
+          x: noteRectangle.left, y: noteRectangle.top,
           width: noteRectangle.width,
           height: noteRectangle.height,
-          data: noteRectangle.data,
+          data: noteRectangle,
           mouseover: this.layerMouseOverFunc,
           mouseout: this.layerMouseOutFunc,
           mousedown: this.layerMouseDownFunc,
@@ -1688,7 +1691,7 @@
         polyObj['mouseout'] = this.layerMouseOutFunc;
         polyObj['mousedown'] = this.layerMouseDownFunc;
         polyObj['mouseup'] = this.layerMouseUpFunc;
-        polyObj['data'] = notePolygon.data;
+        polyObj['data'] = notePolygon;
         canvasJQ.drawLine(polyObj);
         canvasJQ.getLayer(notePolygon.id).type = polyLayer;
         this.addOrReviseMark(notePolygon.id);
