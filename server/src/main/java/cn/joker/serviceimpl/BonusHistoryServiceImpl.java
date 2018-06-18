@@ -18,12 +18,21 @@ import java.util.List;
 public class BonusHistoryServiceImpl extends PubServiceImpl implements BonusHistoryService {
     private BonusHistoryRepository bonusHistoryRepository;
 
+    /**
+     *
+     * @param bonusHistoryRepository 历史
+     */
     @Autowired
     public BonusHistoryServiceImpl(BonusHistoryRepository bonusHistoryRepository) {
         this.repository = bonusHistoryRepository;
         this.bonusHistoryRepository = bonusHistoryRepository;
     }
 
+    /**
+     *
+     * @param username 用户名
+     * @return
+     */
     @Override
     public List<BonusHistoryEntity> findByName(String username) {
         List<BonusHistoryEntity> bonusHistoryEntities = bonusHistoryRepository.findAll();
