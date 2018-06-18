@@ -2,8 +2,21 @@
 
 
   <el-col :span="8" class="slot-border">
+
     <!--详细信息部分-->
     <el-dialog title="工人信息" :visible.sync="dialogTableVisible" center>
+      <el-dialog
+        title="整合结果"
+        :visible.sync="innerVisible"
+        width="80%"
+        append-to-body>
+
+        <div>
+          <marks-viewer :taskID="taskMsg.taskID"></marks-viewer>
+        </div>
+      </el-dialog>
+
+
       <div style="alignment: center">
         <el-table
           :data="workers"
@@ -31,7 +44,7 @@
         </el-table>
       </div>
 
-      <el-button type="primary" style="margin-left: 40%; margin-top: 20px">查看整合标注结果</el-button>
+      <el-button type="primary" style="margin-left: 40%; margin-top: 20px" @click="handleViewDetail">查看整合标注结果</el-button>
 
 
     </el-dialog>
@@ -172,6 +185,8 @@
 </template>
 
 <script>
+  import marksViewer from './marksViewer'
+
   const workerMock = [
     {
       username: 'somnus',
@@ -193,13 +208,19 @@
   ];
 
   export default {
+    components: {marksViewer},
     name: "requester-task-item",
     props: ['taskMsg', 'theIndex'],
+
+    component:{
+      marksViewer
+    },
 
     data() {
       return {
         workers: {},
         dialogTableVisible: false,
+        innerVisible: false
       }
     },
 
@@ -240,6 +261,10 @@
           uid: this.taskMsg.taskID,
           //status: this.taskMsg.
         });
+      },
+
+      handleViewDetail(){
+        this.innerVisible = true;
       },
 
       jump() {
