@@ -45,6 +45,14 @@ public class WorkerMatrixEntity implements Serializable {
         num = 0;
     }
 
+    public void setCorrect(Double correct) {
+        this.correct = correct;
+    }
+
+    public WorkerMatrixEntity() {
+
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
