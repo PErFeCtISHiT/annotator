@@ -66,8 +66,7 @@ public class MessageController {
             if (srid == 4) {
                 WorkerMatrixEntity workerMatrixEntity;
                 for (int i = 0; i < 5; i++) {
-                    //workerMatrixEntity = new WorkerMatrixEntity(userInfo, jsonObject.getDouble(StdName.RATE), jsonObject.getInt(StdName.NUM));
-                    workerMatrixEntity = new WorkerMatrixEntity(userInfo, 0.5, 10);
+                    workerMatrixEntity = new WorkerMatrixEntity(userInfo, jsonObject.getDouble(StdName.RATE), jsonObject.getInt(StdName.NUM));
                     workerMatrixEntity.setUser_matrix(userInfo);
                     workerMatrixEntity.setNum(0.0);
                     workerMatrixService.add(workerMatrixEntity);

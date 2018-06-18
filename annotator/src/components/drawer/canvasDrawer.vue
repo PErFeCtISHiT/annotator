@@ -274,6 +274,7 @@
 </template>
 
 <script>
+  import {mapActions} from 'vuex'
   import ElRow from "element-ui/packages/row/src/row";
   import '../../assets/icon/iconfont.css'      //在要用的页面引入icon
   const canvasMinWidth = 100;
@@ -492,6 +493,8 @@
     },
 
     methods: {
+      ...mapActions(['updateWithoutPointer']),
+
       canvasOuterSaverRect() {
         return this.$refs[this.canvasOuterSaver].getBoundingClientRect();     //不能是vue组件，要绑定在div或其他原生组件上
       },
@@ -1333,6 +1336,9 @@
       },
 
       handleSubmitAfterSuccess() {
+
+        this.updateWithoutPointer();        //更新用户信息
+
         let isAlreadySet = false;
         if (this.imgCounter % this.recheckCircleNum === 0 && (this.markType === 1 || this.markType === 2)) {              //补充用于测试的图片
           this.imgCounter %= this.recheckCircleNum;
