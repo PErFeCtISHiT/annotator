@@ -1,7 +1,7 @@
 # imgannotator 众包数据标记平台
 
 ## 项目简述
-* imgannoyator众包数据标记平台的网址为[joker66.cn:8080](http://joker66.cn:8080)，欢迎使用本系统
+* imgannoyator众包数据标记平台的网址为[www.joker66.cn:8080](http://www.joker66.cn:8080)，欢迎使用本系统
 * 建议使用Chrome浏览器
 
 ## 系统特色
