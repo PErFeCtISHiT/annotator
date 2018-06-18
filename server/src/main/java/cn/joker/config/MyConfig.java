@@ -1,6 +1,5 @@
 package cn.joker.config;
 
-import cn.joker.sevice.TagService;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -20,7 +19,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.MultipartConfigElement;
 import java.lang.reflect.Method;
@@ -34,8 +32,6 @@ import java.util.concurrent.Executor;
 @EnableTransactionManagement
 public class MyConfig extends WebMvcConfigurerAdapter implements AsyncConfigurer {
     private static final Logger log = LoggerFactory.getLogger(MyConfig.class);
-    @Resource
-    private TagService tagService;
 
     @Bean
     public ShiroFilterFactoryBean shirFilter(DefaultWebSecurityManager securityManager) {
