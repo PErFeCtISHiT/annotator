@@ -75,8 +75,11 @@
         ])
           .then(that.$http.spread(function (rsp1, rsp2) {
             that.score = [].concat(rsp1.data.mes);
-            that.tagNum = [].concat(rsp2.data.mes.slice(0, 3));
-            that.catNum = [].concat(rsp2.data.mes.slice(3, 8));
+            that.tagNum = [].concat(rsp2.data.mes.slice(3, 8));
+            that.catNum = [].concat(rsp2.data.mes.slice(0, 3));
+            console.log('score--------------------',that.score);
+            console.log('tagNum--------------------',that.tagNum);
+            console.log('catNum--------------------',that.catNum);
             that.drawLinesOfWorkers();
           }))
           .catch(function (error) {
@@ -273,7 +276,7 @@
                 }
               },
               data: function () {
-                let tempItem = []
+                let tempItem = [];
                 for (let i = 1; i <= 4; i++) {
                   tempItem.push(that.tagNum.slice(i, 5).reduce((x, y) => x + y));
                 }
