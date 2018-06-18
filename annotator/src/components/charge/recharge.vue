@@ -4,7 +4,7 @@
     <div class="grid-bg">
       <!--最上面提示-->
       <el-col :span="2">
-        <img src="../images/recharge.png" style="width: 50px; height: 50px; margin-left: 30px"/>
+        <img src="../../images/recharge.png" style="width: 50px; height: 50px; margin-left: 30px"/>
       </el-col>
       <el-col :span="2">
         <div style="margin-top: 12px; color: #6b6b6b; font-weight: bolder; font-size: 19px"> 充值中心</div>
@@ -18,7 +18,7 @@
     <div class="grid-bg1">
       <!--充值账户提示-->
       <el-col :span="2">
-        <img src="../images/singleUser.png" style="width: 50px; height: 50px; margin-left: 30px"/>
+        <img src="../../images/singleUser.png" style="width: 50px; height: 50px; margin-left: 30px"/>
       </el-col>
       <el-col :span="2">
         <div style="margin-top: 15px; color: #6b6b6b; font-size: 15px"> 充值账号: &nbsp;</div>
@@ -27,7 +27,7 @@
         <div style="margin-top: 15px; color: #6b6b6b; font-size: 15px" id="username"> kiki</div>
       </el-col>
       <el-col :span="2">
-        <img src="../images/points.png" style="width: 50px; height: 50px; margin-left: 30px"/>
+        <img src="../../images/points.png" style="width: 50px; height: 50px; margin-left: 30px"/>
       </el-col>
       <el-col :span="2">
         <div style="margin-top: 15px; color: #6b6b6b; font-size: 15px"> 当前积分: &nbsp;</div>
@@ -43,7 +43,7 @@
       </el-col>
       <el-col :span="5">
         <el-col :span="1" style="margin-top: 17px">
-          <el-radio v-model="amount" label="1" id="bt1"> &nbsp;</el-radio>
+          <el-radio v-model="amount" label="10.00" id="bt1"> &nbsp;</el-radio>
         </el-col>
         <el-col :span="16" style="margin-left: 10px">
           <el-card style="" shadow="hover">
@@ -53,7 +53,7 @@
       </el-col>
       <el-col :span="5" style="margin-left: 0px">
         <el-col :span="1" style="margin-top: 17px">
-          <el-radio v-model="amount" label="2"> &nbsp;</el-radio>
+          <el-radio v-model="amount" label="20.00"> &nbsp;</el-radio>
         </el-col>
         <el-col :span="16" style="margin-left: 10px">
           <el-card style="" shadow="hover">
@@ -63,7 +63,7 @@
       </el-col>
       <el-col :span="5" style="margin-left: 0px">
         <el-col :span="1" style="margin-top: 17px">
-          <el-radio v-model="amount" label="3"> &nbsp;</el-radio>
+          <el-radio v-model="amount" label="40.00"> &nbsp;</el-radio>
         </el-col>
         <el-col :span="16" style="margin-left: 10px">
           <el-card style="" shadow="hover">
@@ -92,7 +92,7 @@
           <el-radio v-model="mode" label="2"> &nbsp</el-radio>
         </el-col>
         <el-col :span="16" style="margin-left: 10px">
-          <img src="../images/WeChat.png" style="height: 50px; width: 190px; margin-top: -6px">
+          <img src="../../images/WeChat.png" style="height: 50px; width: 190px; margin-top: -6px">
         </el-col>
       </el-col>
       <el-col :span="6">
@@ -100,7 +100,7 @@
           <el-radio v-model="mode" label="1"> &nbsp</el-radio>
         </el-col>
         <el-col :span="16" style="margin-left: 10px">
-          <img src="../images/Alipay.png" style="height: 55px; width: 160px; margin-top: -8px">
+          <img src="../../images/Alipay.png" style="height: 55px; width: 160px; margin-top: -8px">
         </el-col>
       </el-col>
     </el-row>
@@ -113,7 +113,6 @@
         <div style="color: #f2463f; font-weight: bolder" id="payMoney">50.00元</div>
       </el-col>
     </el-row>
-    方便提交表单
     <form style="display: none" id='formpay' name='formpay' method='post' action='https://pay.bbbapi.com/'>
       <input name='uid' id='uid' type='text' value=''/>
       <input name='price' id='price' type='text' value=''/>
@@ -154,21 +153,27 @@
     },
 
     methods: {
+      getAmount(){
+
+      },
+
+      getMode(){
+
+      },
+
       // 得到支付方式
       handleClick() {
         this.$message.error('尚未开通此功能');
       },
 
       onsubmit() {
-        //window.location.href = 'https://pay.bbbapi.com/';
-
         let that = this;
 
         // 微信的istype是1，支付宝的是2
         that.$http.post('/pays/pay', {
-          price: '20.99',
+          price: '0.02',
           istype: 1,
-          orderuin: 'ming'
+          orderuid: 'test'
         })
           .then(function (data) {
             $('#uid').val(data.data.data.uid);
