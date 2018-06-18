@@ -52,9 +52,7 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
         List<ImageEntity> imageEntities = new ArrayList<>();
         List<ImageEntity> imageEntities1 = new ArrayList<>();
         for (TaskEntity taskEntity : taskEntities) {
-            System.out.println(taskEntity.getId());
             List<ImageEntity> images = taskEntity.getImageEntityList();
-            System.out.println(images.size());
             for (ImageEntity imageEntity : images) {
                 System.out.println(imageEntity.getId());
                 if (imageEntity.getMarked().equals(false)) {
@@ -73,8 +71,6 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
                 }
             }
         }
-        System.out.println(imageEntities);
-        System.out.println(imageEntities1);
         tagEntity.setTestImageList(imageEntities);
         tagEntity.setTestImageList1(imageEntities1);
         this.modify(tagEntity);
