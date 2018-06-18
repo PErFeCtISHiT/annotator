@@ -2,6 +2,7 @@ package cn.joker.controller.paycontroller;
 
 import cn.joker.entity.PaySaPi;
 import cn.joker.entity.UserEntity;
+import cn.joker.namespace.StdName;
 import cn.joker.sevice.UserService;
 import cn.joker.util.JsonHelper;
 import cn.joker.util.PayUtil;
@@ -26,6 +27,7 @@ import java.util.Map;
  * 支付的controller
  */
 @Controller
+@RequestMapping("/pays")
 //@CrossOrigin
 public class PayController {
     private static Logger logger = LoggerFactory.getLogger(PayController.class);
@@ -38,7 +40,7 @@ public class PayController {
      * @param request http
      * @return 支付接口相关内容
      */
-    @RequestMapping("/pays/pay")
+    @RequestMapping("/pay")
     @ResponseBody
     public Map<String, Object> pay(HttpServletRequest request) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
@@ -61,25 +63,11 @@ public class PayController {
      * @param response 回复
      * @param paySaPi 类
      */
-    @RequestMapping(value = "/pays/notifyPay",method = RequestMethod.POST)
+    @RequestMapping(value = "/notifyPay",method = RequestMethod.POST)
     @CrossOrigin
     @ResponseBody
     public void notifyPay(HttpServletRequest request, HttpServletResponse response) {
         logger.info("一样");
-//        JSONObject ret = new JSONObject();
-//        ret.put("2","3");
-//        JsonHelper.jsonToResponse(response, ret);
-        // 保证密钥一致性
-//        if (PayUtil.checkPayKey(paySaPi)) {
-//            logger.info("一样");
-//            System.out.println("一样");
-//            UserEntity userEntity = userService.findByUsername(paySaPi.getOrderuid());
-//            userEntity.setPoints(userEntity.getPoints() + (int)(Double.parseDouble(paySaPi.getPrice())*100));
-//            userService.modify(userEntity);
-//        } else {
-//            System.out.println("不一样");
-//            logger.info("不一样");
-//        }
     }
 
     /**
@@ -89,11 +77,23 @@ public class PayController {
      * @param orderid 订单号
      * @return
      */
-    @RequestMapping("/pays/returnPay")
+    @RequestMapping("/returnPay")
     @CrossOrigin
     @ResponseBody
     public void returnPay(HttpServletRequest request, HttpServletResponse response, String orderid) throws IOException {
         System.out.println("----------tets------------/-");
         response.sendRedirect("http://localhost:8080/#/3-1/show");
+    }
+    /**
+    *@author:pis
+    *@description: 增加积分
+    *@date: 21:18 2018/6/18
+    */
+    @RequestMapping("/addPoints")
+    public void addPoints(HttpServletRequest request){
+        JSONObject jsonObject = JsonHelper.requestToJson(request);
+        UserEntity userEntity = userService.findByUsername(jsonObject.getString(StdName.USERNAME));
+        userEntity.setPoints(userEntity.getPoints() + jsonObject.getInt(StdName.POINTS));
+        userService.modify(userEntity);
     }
 }
