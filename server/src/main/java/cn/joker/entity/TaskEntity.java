@@ -1,6 +1,8 @@
 package cn.joker.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -73,8 +75,8 @@ public class TaskEntity implements Serializable {
         this.tagEntityList = tagEntityList;
     }
 
-
-    @OneToMany(mappedBy = "img_task", cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SELECT)
+    @OneToMany(mappedBy = "img_task", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JsonIgnore
     public List<ImageEntity> getImageEntityList() {
         return imageEntityList;
