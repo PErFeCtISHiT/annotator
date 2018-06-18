@@ -101,7 +101,7 @@ public class TestController {
             workerMatrixEntity.setC01(workerMatrixEntity.getC01() + (1 - rate) * num / 2);
             if (workerMatrixEntity.getCorrect() < 0.7)
                 b = false;
-            //workerMatrixService.modify(workerMatrixEntity);
+//            workerMatrixService.modify(workerMatrixEntity);
         }
         JSONObject ret = new JSONObject();
         ret.put(StdName.MES, userService.modify(userEntity) && b);

@@ -424,6 +424,7 @@
             .then(function (response) {
               let result = response.data.mes;
               if (result === false) {
+                console.log('正确率不达标，跳');
                 that.$router.push('/testPage');
                 that.$message({
                   message: '您似乎有些疲倦了，正确率不达标',

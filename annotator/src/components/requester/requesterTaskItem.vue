@@ -222,7 +222,7 @@
         })
           .then(function (response) {
             that.workers = response.data.workerInfo;
-            that.workers = workerMock;
+            //that.workers = workerMock;
             that.dialogTableVisible = true;
           })
           .catch(function (error) {

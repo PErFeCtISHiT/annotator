@@ -128,8 +128,8 @@
     name: "requester-tasks",
 
     mounted: function () {
-      //this.changeTabs("total");
-      this.messages = items;
+      this.changeTabs("total");
+      //this.messages = items;
     },
 
 
