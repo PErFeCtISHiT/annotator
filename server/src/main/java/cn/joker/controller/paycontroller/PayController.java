@@ -88,7 +88,7 @@ public class PayController {
     *@description: 增加积分
     *@date: 21:18 2018/6/18
     */
-    @RequestMapping("/addPoints")
+    @RequestMapping(value = "/addPoints",method = RequestMethod.POST)
     public void addPoints(HttpServletRequest request){
         JSONObject jsonObject = JsonHelper.requestToJson(request);
         UserEntity userEntity = userService.findByUsername(jsonObject.getString(StdName.USERNAME));

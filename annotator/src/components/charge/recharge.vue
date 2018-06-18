@@ -160,8 +160,12 @@
 
     mounted(){
       if(this.showMessage==='show'){
-        this.updateWithoutPointer();
+        // this.updateWithoutPointer();
 
+        this.$http.post('user/changePoints',{
+          username: this.$store.state.user.userInfo.username,
+          points: this.getNum(this.$store.state.charger.currentNum)
+        }).then(()=>{console.log('调用成功');this.updateWithoutPointer()}).catch(err=>{console.log(err)});
 
         this.$alert('充值成功', '提示', {
           confirmButtonText: '确定',
@@ -182,6 +186,16 @@
       //   this.$message.error('尚未开通此功能');
       // },
       ...mapActions(['updateWithoutPointer']),
+
+      getNum(str){
+        switch(str){
+          case '10.00': return 10;
+          case '20.00': return 20;
+          case '50.00': return 50;
+          case '100.00': return 100;
+          default: return 0;
+        }
+      },
 
       onSubmit() {
         // 微信的istype是1，支付宝的是2

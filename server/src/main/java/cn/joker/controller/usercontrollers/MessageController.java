@@ -177,6 +177,7 @@ public class MessageController {
         UserEntity userEntity = userService.findByUsername(username);
         JSONObject ret = new JSONObject();
         if (userEntity != null) {
+            System.out.println(points);
             userEntity.setPoints(userEntity.getPoints() + points);
             ret.put(StdName.MES, userService.modify(userEntity));
         } else
