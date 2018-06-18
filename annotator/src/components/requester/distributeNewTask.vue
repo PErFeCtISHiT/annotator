@@ -33,7 +33,7 @@
 
 
     <!--第一层的标记选择开始-->
-    <el-row v-show="isActive === 1" :gutter="40" type="flex" justify="center" align="middle" :style="contentStyle">
+    <el-row v-show="isActive === 0" :gutter="40" type="flex" justify="center" align="middle" :style="contentStyle">
       <el-col :span="6" :style="singleCardStyle">
         <type-card
           :card-type="typeDraw"
@@ -78,7 +78,7 @@
 
 
     <!--第二层的表单部分开始-->
-    <el-row v-loading="isLoading" v-show="isActive === 2" type="flex" class="row-bg" justify="center" style="margin-left: 5%">
+    <el-row v-loading="isLoading" v-show="isActive === 1" type="flex" class="row-bg" justify="center" style="margin-left: 5%">
       <el-col :span="12">
         <div class="grid-content bg-purple-light main-div">
 
@@ -563,7 +563,7 @@
 
       //新加入的解决选择类型问题的部分
       next(){
-        if(this.isActive !== 1){
+        if(this.isActive !== 0){
           this.$message({
             message: '尊敬的用户，已经到底了哟~',
             duration: 1800
@@ -576,16 +576,16 @@
             });
         }
         else{
-          this.isActive = 2;
+          this.isActive = 1;
         }
 
       },
 
       pre() {
-        if(this.isActive === 2){
+        if(this.isActive === 1){
           this.resetForm('newTask');
           this.$refs.upload.clearFiles();
-          this.isActive = 1;
+          this.isActive = 0;
           this.intType = -10;
         }
         else{
