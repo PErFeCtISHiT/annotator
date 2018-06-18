@@ -91,16 +91,6 @@ public class PayController {
     @CrossOrigin
     @ResponseBody
     public void returnPay(HttpServletRequest request, HttpServletResponse response, String orderid) throws IOException {
-        boolean isTrue = true;
-        //ModelAndView view = null;
-        new ModelAndView("3-1");
-        // 根据订单号查找相应的记录:根据结果跳转到不同的页面
-//        if (isTrue) {
-//
-//        } else {
-//
-//        }
-        response.sendRedirect("http://localhost:8080/#/3-1");
-        //return new ModelAndView("3-1");
+        response.sendRedirect("http://localhost:8080/#/3-1/show");
     }
 }
