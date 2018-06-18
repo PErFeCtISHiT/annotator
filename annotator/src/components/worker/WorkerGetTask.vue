@@ -255,7 +255,7 @@
     name: "worker-get-task",
     data() {
       return {
-        activeStep: 0,    //实际步骤减一
+        activeStep: 2,    //实际步骤减一
         tagMsg: '',
         type: 0,
 

@@ -10,7 +10,7 @@
       <!--对话框平时是不显示的-->
       <el-dialog
         v-dialogDrag="{screenX:eventScreenX,screenY:eventScreenY}"
-        title="标记内容"
+        :title="markRequireStatus===0?'提示':'标记内容'"
         @open="doFocus"
         :visible.sync="dialogVisible"
         :before-close="function(done) {
@@ -20,6 +20,7 @@
       }"
         width="30%">
         <el-input
+          v-show="markRequireStatus!==0"
           :ref="inputRef"
           placeholder="请输入标记的文本内容"
           v-model="markInputMsg"
@@ -27,10 +28,11 @@
           autofocus
           clearable>
         </el-input>
+        <span v-show="markRequireStatus===0">您不能修改本标签的内容，但您可以删除本标签</span>
         <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
         <el-button type="warning" @click="handleDelete">删 除</el-button>
-        <el-button type="primary" @click="handleRevise">修 改</el-button>
+        <el-button v-show="markRequireStatus!==0" type="primary" @click="handleRevise">修 改</el-button>
       </span>
       </el-dialog>
 
@@ -992,11 +994,7 @@
           }, 250);
           this.currentLayerName = layer.name;
           this.setCurrentLayerLocked();
-          if (this.markRequireStatus !== 0) {
-            this.openInputDialog(layer);
-          } else {
-            //TODO 模式0要提供删除功能
-          }
+          this.openInputDialog(layer);
         }
 
         if (this.isMoving()) {
@@ -1348,7 +1346,7 @@
             let tempObj = this.checkImages.pop();
             this.refreshComponent(tempObj.imgURL, tempObj.description);                            //优先进行测试
           }
-          if (this.checkImages.length === 0) {
+          if (this.checkImages.length === 1) {
             this.lengthFirstToZero = true;
           }
         } else {
