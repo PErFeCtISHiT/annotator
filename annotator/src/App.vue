@@ -11,7 +11,7 @@
 
   export default {
     created() {
-      window.myVueStore = this.$store;
+      // window.myVueStore = this.$store;
       window.myHttp = this.$http;
       window.myMessage = this.$message;
       window.myMessageBox = this.$msgbox;
