@@ -19,7 +19,7 @@ import personalInfoMain from '../components/personal_info/personalInfoMain'
 import tester from '../components/test/tester'
 
 
-export default new VueRouter({
+let router = new VueRouter({
   routes: [
     /**
      * 前三个是一样的*/
@@ -113,5 +113,47 @@ export default new VueRouter({
       path: '/testPage',
       component: tester
     },
+
+    {
+      path: '/pays/notifyPay',
+      name: 'pays_notifyPay',
+      component: recharge
+    },
   ]
 });
+
+router.beforeEach(function (to, from, next) {
+  console.log('进入路由拦截器');
+  if (to.path === '/pays/notifyPay') {
+    console.log('已经进入转发器');
+    Vue.prototype.$http.post('/pays/notifyPay')
+      .then(function () {
+        console.log('已经转发');
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  } else if (to.path === 'pays/notifyPay') {
+    console.log('已经进入转发器');
+    Vue.prototype.$http.post('/pays/notifyPay')
+      .then(function () {
+        console.log('已经转发');
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  } else if (to.name === 'pays_notifyPay') {
+    console.log('已经进入转发器');
+    Vue.prototype.$http.post('/pays/notifyPay')
+      .then(function () {
+        console.log('已经转发');
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  } else {
+    next();
+  }
+});
+
+export default router;

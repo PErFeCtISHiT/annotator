@@ -121,6 +121,10 @@
             console.log(error);
           });
       },
+
+      handleRegisterSuccess(){
+
+      },
     }
   }
 </script>
