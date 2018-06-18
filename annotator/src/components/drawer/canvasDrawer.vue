@@ -548,7 +548,7 @@
             }
 
             //把note注入图层的data中
-            this.polyObj['data'] = new NotePolygon(this.currentWorkerName, tempPoints, '', this.currentLayerName, this.strokeNormalColor, this.strokeWidth);
+            this.polyObj['data'] = new NotePolygon(this.currentWorkerName, tempPoints, '', this.currentLayerName, this.strokeNormalColor, this.getActualStrokeWidth());
 
             this.drawLines();
 
@@ -763,7 +763,7 @@
         if (Math.abs(width) >= 5 && Math.abs(height) >= 5) {
           let dataObj = new NoteRectangle(this.currentWorkerName, this.currentRectX * this.globalRate,
             this.currentRectY * this.globalRate, width * this.globalRate, height * this.globalRate, '',
-            this.currentLayerName, this.strokeNormalColor, this.strokeWidth);
+            this.currentLayerName, this.strokeNormalColor, this.getActualStrokeWidth());
 
           let that = this;
           canvas.addLayer({
