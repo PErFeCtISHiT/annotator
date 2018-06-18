@@ -1617,11 +1617,9 @@
       //TODO 加载器全部在下面！！！！！
 
       loadByOneImageURL(imgURL) {
-        let temp = imgURL.split('/');
-        let imgName = temp[temp.length - 1];
         let that = this;
         this.$http.post('/mark/checkImage', {
-          imgName
+          imgURL
         })
           .then(function (response) {
             let marks = response.data.marks;

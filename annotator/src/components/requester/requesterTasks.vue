@@ -14,7 +14,8 @@
 
             <requester-task-item v-for="(message, index) in messages"
                                  @download="handleDownload"
-                                 :taskMsg="message" :theIndex="index" :key="message.taskID"> </requester-task-item>
+                                 :taskMsg="message" :theIndex="index" :key="message.taskID">
+            </requester-task-item>
 
           </el-col>
         </el-row>
