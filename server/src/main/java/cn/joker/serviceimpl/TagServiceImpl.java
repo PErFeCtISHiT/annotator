@@ -54,11 +54,10 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
         for (TaskEntity taskEntity : taskEntities) {
             List<ImageEntity> images = taskEntity.getImageEntityList();
             for (ImageEntity imageEntity : images) {
-                System.out.println(imageEntity.getId());
                 if (imageEntity.getMarked().equals(false)) {
-                    if (imageEntity.getType() == 1)
+                    if (imageEntity.getType() == 1 && imageEntities.size() < 10)
                         imageEntities.add(imageEntity);
-                    else if (imageEntity.getType() == 2)
+                    else if (imageEntity.getType() == 2 && imageEntities1.size() < 10)
                         imageEntities1.add(imageEntity);
                     imageEntity.setMarked(true);
                     imgService.modify(imageEntity);
@@ -203,8 +202,8 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
         return this.tagRepository.findAll();
     }
 
-    //@Scheduled(cron = "0 0 12 * * ?")   //每天执行一次
-    @Scheduled(cron = "0/10 * * * * ?")   //每10秒执行一次
+    @Scheduled(cron = "0 0 12 * * ?")   //每天执行一次
+    //@Scheduled(cron = "0/40 * * * * ?")   //每10秒执行一次
     public void tagRefresh() {
         log.info("refresh begin");
         List<TagEntity> tagEntities = this.findAll();
