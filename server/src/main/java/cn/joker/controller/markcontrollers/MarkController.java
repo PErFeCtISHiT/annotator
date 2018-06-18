@@ -102,8 +102,8 @@ public class MarkController {
     @RequestMapping(value = "/checkImage", method = RequestMethod.POST)
     public void checkMark(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
-        String imgName = jsonObject.getString(StdName.IMGNAME);
-        ImageEntity imageEntity = imgService.findByName(imgName.substring(0, imgName.lastIndexOf('.')));
+        String imgURL = jsonObject.getString(StdName.IMGURL);
+        ImageEntity imageEntity = imgService.findByUrl(imgURL);
         List<ImgMarkEntity> imgMarkEntities = imgMarkService.findByImage(imageEntity);
         JSONArray marksArray = new JSONArray();
         for (ImgMarkEntity imgMarkEntity : imgMarkEntities) {
