@@ -89,7 +89,7 @@
       </el-col>
       <el-col :span="6">
         <el-col :span="1" style="margin-top: 10px">
-          <el-radio v-model="mode" :label="1"> &nbsp</el-radio>
+          <el-radio v-model="mode" :label="2"> &nbsp</el-radio>
         </el-col>
         <el-col :span="16" style="margin-left: 10px">
           <img src="../../images/WeChat.png" style="height: 50px; width: 190px; margin-top: -6px">
@@ -97,7 +97,7 @@
       </el-col>
       <el-col :span="6">
         <el-col :span="1" style="margin-top: 10px">
-          <el-radio v-model="mode" :label="2"> &nbsp</el-radio>
+          <el-radio v-model="mode" :label="1"> &nbsp</el-radio>
         </el-col>
         <el-col :span="16" style="margin-left: 10px">
           <img src="../../images/Alipay.png" style="height: 55px; width: 160px; margin-top: -8px">
@@ -161,6 +161,8 @@
     mounted(){
       if(this.showMessage==='show'){
         this.updateWithoutPointer();
+
+
         this.$alert('充值成功', '提示', {
           confirmButtonText: '确定',
           callback: () => {
@@ -185,6 +187,7 @@
         // 微信的istype是1，支付宝的是2
         // 价格传参一定要保留2位小数
         // orderuid 用户名
+        this.$store.state.charger.currentNum = this.amount;
         this.$http.post('/pays/pay', {
           price: this.amount,
           istype: this.mode,

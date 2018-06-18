@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
@@ -27,7 +28,7 @@ import java.util.Map;
 @Controller
 //@CrossOrigin
 public class PayController {
-    private static Logger logger = LoggerFactory.getLogger(JsonHelper.class);
+    private static Logger logger = LoggerFactory.getLogger(PayController.class);
 
     @Resource
     private UserService userService;
@@ -60,21 +61,25 @@ public class PayController {
      * @param response 回复
      * @param paySaPi 类
      */
-    @RequestMapping("/pays/notifyPay")
+    @RequestMapping(value = "/pays/notifyPay",method = RequestMethod.POST)
     @CrossOrigin
-    public void notifyPay(HttpServletRequest request, HttpServletResponse response, PaySaPi paySaPi) {
+    @ResponseBody
+    public void notifyPay(HttpServletRequest request, HttpServletResponse response) {
         logger.info("一样");
+//        JSONObject ret = new JSONObject();
+//        ret.put("2","3");
+//        JsonHelper.jsonToResponse(response, ret);
         // 保证密钥一致性
-        if (PayUtil.checkPayKey(paySaPi)) {
-            logger.info("一样");
-            System.out.println("一样");
-            UserEntity userEntity = userService.findByUsername(paySaPi.getOrderuid());
-            userEntity.setPoints(userEntity.getPoints() + (int)(Double.parseDouble(paySaPi.getPrice())*100));
-            userService.modify(userEntity);
-        } else {
-            System.out.println("不一样");
-            logger.info("不一样");
-        }
+//        if (PayUtil.checkPayKey(paySaPi)) {
+//            logger.info("一样");
+//            System.out.println("一样");
+//            UserEntity userEntity = userService.findByUsername(paySaPi.getOrderuid());
+//            userEntity.setPoints(userEntity.getPoints() + (int)(Double.parseDouble(paySaPi.getPrice())*100));
+//            userService.modify(userEntity);
+//        } else {
+//            System.out.println("不一样");
+//            logger.info("不一样");
+//        }
     }
 
     /**
@@ -88,6 +93,7 @@ public class PayController {
     @CrossOrigin
     @ResponseBody
     public void returnPay(HttpServletRequest request, HttpServletResponse response, String orderid) throws IOException {
+        System.out.println("----------tets------------/-");
         response.sendRedirect("http://localhost:8080/#/3-1/show");
     }
 }

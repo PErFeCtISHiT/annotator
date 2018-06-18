@@ -116,44 +116,44 @@ let router = new VueRouter({
 
     {
       path: '/pays/notifyPay',
-      name: 'pays_notifyPay',
-      component: recharge
+      component: tester
     },
   ]
 });
 
-router.beforeEach(function (to, from, next) {
-  console.log('进入路由拦截器');
-  if (to.path === '/pays/notifyPay') {
-    console.log('已经进入转发器');
-    Vue.prototype.$http.post('/pays/notifyPay')
-      .then(function () {
-        console.log('已经转发');
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  } else if (to.path === 'pays/notifyPay') {
-    console.log('已经进入转发器');
-    Vue.prototype.$http.post('/pays/notifyPay')
-      .then(function () {
-        console.log('已经转发');
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  } else if (to.name === 'pays_notifyPay') {
-    console.log('已经进入转发器');
-    Vue.prototype.$http.post('/pays/notifyPay')
-      .then(function () {
-        console.log('已经转发');
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  } else {
-    next();
-  }
-});
+// router.beforeEach(function (to, from, next) {
+//   console.log(to);
+//   console.log('进入路由拦截器');
+//   if (to.path === '/pays/notifyPay') {
+//     console.log('已经进入转发器');
+//     Vue.prototype.$http.post('/pays/notifyPay')
+//       .then(function () {
+//         console.log('已经转发');
+//       })
+//       .catch(function (error) {
+//         console.log(error);
+//       });
+//   } else if (to.path === 'pays/notifyPay') {
+//     console.log('已经进入转发器');
+//     Vue.prototype.$http.post('/pays/notifyPay')
+//       .then(function () {
+//         console.log('已经转发');
+//       })
+//       .catch(function (error) {
+//         console.log(error);
+//       });
+//   } else if (to.name === 'pays_notifyPay') {
+//     console.log('已经进入转发器');
+//     Vue.prototype.$http.post('/pays/notifyPay')
+//       .then(function () {
+//         console.log('已经转发');
+//       })
+//       .catch(function (error) {
+//         console.log(error);
+//       });
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;

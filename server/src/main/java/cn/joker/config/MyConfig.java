@@ -17,6 +17,7 @@ import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.persistence.EntityManagerFactory;
@@ -30,7 +31,7 @@ import java.util.concurrent.Executor;
 
 @Configuration
 @EnableTransactionManagement
-public class MyConfig extends WebMvcConfigurerAdapter implements AsyncConfigurer {
+public class MyConfig extends WebMvcConfigurerAdapter implements AsyncConfigurer{
     private static final Logger log = LoggerFactory.getLogger(MyConfig.class);
 
     @Bean
@@ -171,4 +172,12 @@ public class MyConfig extends WebMvcConfigurerAdapter implements AsyncConfigurer
 
     }
 
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowCredentials(true)
+                .allowedMethods("GET", "POST", "DELETE", "PUT")
+                .maxAge(3600);
+    }
 }
