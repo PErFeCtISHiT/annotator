@@ -2,7 +2,7 @@
   <div>
 
     <div :style="borderMsg+`height:${taskDescriptionHeight}px`">
-      <h3 style="margin-left: 12px">{{'· 任务描述：'+currentDescription}}</h3>
+      <h3 style="margin-left: 12px">{{'· 任务ID：'+taskID}}</h3>
     </div>
 
     <div :style="'height:' + componentHeight + 'px'">
@@ -35,7 +35,7 @@
       </el-dialog>
 
 
-      <el-col :span="14">
+      <el-col :span="19">
         <div :ref="canvasOuterSaver">
           <el-row type="flex" justify="center" align="middle"
                   :style="borderMsg+'; width:100%; height:' + componentHeight + 'px'">
@@ -60,7 +60,7 @@
         </div>
       </el-col>
 
-      <el-col :span="5" :style="borderMsg+'; height:100%'">
+      <el-col :span="5" v-if="false" :style="borderMsg+'; height:100%'">
         <el-row :style="borderMsg+'; width:100%; height:20%'">
           <el-row style="margin-left: 5%"><h4>全局属性：</h4></el-row>
 
@@ -178,23 +178,20 @@
                   </div>
                 </template>
 
-                <el-row type="flex" justify="center" align="middle">
+                <div style="margin-left: 15%;">
+                  <el-checkbox v-if="showCheckAll" :indeterminate="isIndeterminate" v-model="checkAll"
+                               @change="handleCheckAllChange">全选
+                  </el-checkbox>
 
-                  <div>
-                    <el-checkbox v-if="showCheckAll" :indeterminate="isIndeterminate" v-model="checkAll"
-                                 @change="handleCheckAllChange">全选
+                  <el-checkbox-group v-model="checkedShowModes" @change="handleCheckedModesChange">
+                    <el-checkbox v-if="shouldShow(showMode)" v-for="showMode in showModes" :label="showMode"
+                                 :key="showMode"
+                                 @change="checked=>handleSingleChange(checked,showMode)">
+                      {{getModeName(showMode)}}
                     </el-checkbox>
+                  </el-checkbox-group>
 
-                    <el-checkbox-group v-model="checkedShowModes" @change="handleCheckedModesChange">
-                      <el-checkbox v-if="shouldShow(showMode)" v-for="showMode in showModes" :label="showMode"
-                                   :key="showMode"
-                                   @change="checked=>handleSingleChange(checked,showMode)">
-                        {{getModeName(showMode)}}
-                      </el-checkbox>
-                    </el-checkbox-group>
-
-                  </div>
-                </el-row>
+                </div>
 
               </el-collapse-item>
 
@@ -230,7 +227,8 @@
       </el-col>
 
       <el-col :span="5" :style="borderMsg+'; height:100%'">
-        <el-row v-if="showTotal" :style="borderMsg+'; width:100%; height:30%'">
+
+        <el-row v-if="false" :style="borderMsg+'; width:100%; height:30%'">
           <el-row style="margin-left: 5%"><h4>整体描述：</h4></el-row>
           <div style="width:80%; height:50%; margin: auto auto">
             <el-input
@@ -242,7 +240,7 @@
           </div>
         </el-row>
 
-        <el-row :style="`${borderMsg}; width:100%; height:${showTotal?'58%':'88%'}`">
+        <el-row :style="`${borderMsg}; width:100%; height:64%`">
           <el-row style="margin-left: 5% "><h4>标记汇总：</h4></el-row>
           <el-scrollbar style="height: 77%; width: 100%; overflow-x: hidden">
             <el-card
@@ -262,14 +260,69 @@
         </el-row>
 
         <el-row :style="borderMsg+'; width:100%; height:12%'" type="flex" justify="center" align="middle">
-          <el-button type="primary" @click="handleSubmit">
-            提交标注结果
-          </el-button>
+          <div>
+            <el-checkbox v-if="showCheckAll" :indeterminate="isIndeterminate" v-model="checkAll"
+                         @change="handleCheckAllChange">全选
+            </el-checkbox>
+
+            <el-checkbox-group v-model="checkedShowModes" @change="handleCheckedModesChange">
+              <el-checkbox v-if="shouldShow(showMode)" v-for="showMode in showModes" :label="showMode"
+                           :key="showMode"
+                           @change="checked=>handleSingleChange(checked,showMode)">
+                {{getModeName(showMode)}}
+              </el-checkbox>
+            </el-checkbox-group>
+
+          </div>
         </el-row>
+
+        <el-row :style="borderMsg+'; width:100%; height:12%'" type="flex" justify="center" align="middle">
+          <el-button-group>
+            <el-tooltip class="item" effect="dark" content="重新渲染并放大" placement="bottom-start">
+              <el-button type="primary" size="normal" icon="el-icon-zoom-in" @click="handleSizeUp">
+              </el-button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="重新渲染并缩小" placement="bottom-start">
+              <el-button type="primary" size="normal" icon="el-icon-zoom-out" @click="handleSizeDown">
+              </el-button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="重新渲染并回归初始大小" placement="bottom-start">
+              <el-button type="primary" size="normal" icon="el-icon-search" @click="handleSizeBack">
+              </el-button>
+            </el-tooltip>
+          </el-button-group>
+        </el-row>
+
+        <el-row :style="borderMsg+'; width:100%; height:12%'" type="flex" justify="center" align="middle">
+
+          <el-col :span="12">
+            <el-row type="flex" justify="center" align="middle">
+              <el-button type="primary" @click="handlePre">
+                上一张
+              </el-button>
+            </el-row>
+          </el-col>
+
+          <el-col :span="12">
+            <el-row type="flex" justify="center" align="middle">
+              <el-button type="primary" @click="handleNext">
+                下一张
+              </el-button>
+            </el-row>
+          </el-col>
+
+        </el-row>
+
       </el-col>
     </div>
   </div>
 </template>
+
+
+<!--export default {-->
+<!--name: "marks-viewer"-->
+<!--}-->
+
 
 <script>
   import ElRow from "element-ui/packages/row/src/row";
@@ -290,7 +343,7 @@
   const originalWidth = originalHeight + 2 * padding;
   const taskDescriptionHeight = 80;
   const checkCircleNum = 100;
-  const testDrawImages = ['../../../src/testDrawImage/1.jpg', '../../../src/testDrawImage/2.jpg', '../../../src/testDrawImage/3.jpg', '../../../src/testDrawImage/4.jpg', '../../../src/testDrawImage/elephant.jpg', '../../../src/testDrawImage/tableware.jpg', '../../../src/testDrawImage/road.jpg'];
+  const testDrawImages = ['src/testDrawImage/1.jpg', 'src/testDrawImage/2.jpg', 'src/testDrawImage/3.jpg', 'src/testDrawImage/4.jpg', 'src/testDrawImage/elephant.jpg', 'src/testDrawImage/tableware.jpg', 'src/testDrawImage/road.jpg'];
 
   import {
     getOffset,
@@ -336,39 +389,55 @@
 
   export default {
     props: {
-      tagMsg: {
-        type: String,
-        default: '风景'
-      },
-      markType: {
+      taskID: {
         type: Number,
-        default: 0       //0测试模式 1 方框不写 2 方框必写 3 多边形可写可不写
+        default: 1
       }
+
     },
 
-    name: "canvas-drawer",
+    name: "marks-viewer",
 
     components: {
       ElRow,
     },
 
     mounted() {
-      if (this.markType === 0) {
-        this.refreshComponent(testDrawImages[0]);
-      }
-
-      if (this.markType === 1 || this.markType === 2) {
-        this.getCheckImgsAndRefreshCanvas();
-      }
-
-      if (this.markType === 3) {
-        console.log('third type');
-        this.getNormalImgAndRefreshCanvas();
+      if (this.inDebugMode) {
+        this.marksViewImages = testDrawImages;
+        this.marksViewIndex = 0;
+        this.refreshComponent(this.marksViewImages[this.marksViewIndex]);
+      } else {
+        let that = this;
+        this.$http.get('/task/checkImages', {
+          params: {
+            taskID: that.taskID
+          }
+        })
+          .then(function (response) {
+            that.marksViewImages = response.data.imgURLs;
+            that.marksViewIndex = 0;
+            that.refreshComponent(that.marksViewImages[that.marksViewIndex]);
+          })
+          .catch(function (error) {
+            that.$message({
+              message: '网络错误，无法加载图片',
+              type: 'error',
+              duration: 1500
+            });
+            console.log(error);
+          });
       }
     },
 
     data() {
       return {
+        inDebugMode: false,
+        marksViewImages: [],
+        marksViewIndex: 0,
+
+        tagMsg: '',
+        markType: 0,
         canvasOuterSaver,
 
         checkImages: [],
@@ -479,11 +548,10 @@
             return 0;
           case 2:
             return 2;
-          case 3:
-            return 1;
           case 0:
+          case 3:
           default:
-            return 0;
+            return 1;
         }
       },
 
@@ -877,6 +945,9 @@
 
           that.originGlobalRate = that.globalRate;
           that.loadCanvas = true;
+
+          //TODO 发起者查看需要新加这句话
+          that.loadByOneImageURL(imgSrc);
         };
 
         if (image.complete) {
@@ -994,8 +1065,6 @@
           this.setCurrentLayerLocked();
           if (this.markRequireStatus !== 0) {
             this.openInputDialog(layer);
-          } else {
-            //TODO 模式0要提供删除功能
           }
         }
 
@@ -1519,6 +1588,112 @@
           return false; // do not generate the array
         });
         this.getCanvasTarget().drawLayers();
+      },
+
+      handlePre() {
+        if (this.marksViewIndex - 1 >= 0) {
+          this.refreshComponent(this.marksViewImages[--this.marksViewIndex]);
+        } else {
+          this.$message({
+            message: '已经到达最前面了',
+            type: 'info',
+            duration: 1500
+          });
+        }
+      },
+
+      handleNext() {
+        if (this.marksViewIndex + 1 <= this.marksViewImages.length - 1) {
+          this.refreshComponent(this.marksViewImages[++this.marksViewIndex]);
+        } else {
+          this.$message({
+            message: '已经到达最后面了',
+            type: 'info',
+            duration: 1500
+          });
+        }
+      },
+
+      //TODO 加载器全部在下面！！！！！
+
+      loadByOneImageURL(imgURL) {
+        let temp = imgURL.split('/');
+        let imgName = temp[temp.length - 1];
+        let that = this;
+        this.$http.post('/mark/checkImage', {
+          imgName
+        })
+          .then(function (response) {
+            let marks = response.data.marks;
+            that.loadFromMarks(marks);
+          })
+          .catch(function (error) {
+            that.$message({
+              message: '网络错误，无法加载图片',
+              type: 'error',
+              duration: 1500
+            });
+            console.log(error);
+          });
+      },
+
+      loadFromMarks(marks) {
+        for (let mark of marks) {
+          this.loadFromOneMark(mark);
+        }
+      },
+
+      loadFromOneMark(mark) {
+        for (let note of mark.noteRectangle) {
+          this.loadOneRect(note);
+        }
+        for (let note of mark.notePolygon) {
+          this.loadOnePolygon(note);
+        }
+      },
+
+      loadOneRect(noteRectangle) {
+        let canvasJQ = this.getCanvasTarget();
+        canvasJQ.addLayer({
+          type: rectLayer,
+          strokeStyle: noteRectangle.strokeColor,
+          strokeWidth: noteRectangle.strokeWidth,
+          name: noteRectangle.id,
+          fromCenter: false,
+          x: noteRectangle.x, y: noteRectangle.y,
+          width: noteRectangle.width,
+          height: noteRectangle.height,
+          data: noteRectangle.data,
+          mouseover: this.layerMouseOverFunc,
+          mouseout: this.layerMouseOutFunc,
+          mousedown: this.layerMouseDownFunc,
+          mouseup: this.layerMouseUpFunc,
+        });
+        canvasJQ.drawLayers();
+        this.addOrReviseMark(noteRectangle.id);
+      },
+
+      loadOnePolygon(notePolygon) {
+        let polyObj = {};
+        let canvasJQ = this.getCanvasTarget();
+        for (let p = 0; p < notePolygon.data.points.length; p += 1) {
+          polyObj['x' + (p + 1)] = notePolygon.data.points[p].x;
+          polyObj['y' + (p + 1)] = notePolygon.data.points[p].y;
+        }
+        polyObj['strokeStyle'] = notePolygon.strokeStyle;
+        polyObj['strokeWidth'] = notePolygon.strokeWidth;
+        polyObj['rounded'] = true;
+        polyObj['layer'] = true;
+        polyObj['name'] = notePolygon.id;
+        polyObj['closed'] = true;
+        polyObj['mouseover'] = this.layerMouseOverFunc;
+        polyObj['mouseout'] = this.layerMouseOutFunc;
+        polyObj['mousedown'] = this.layerMouseDownFunc;
+        polyObj['mouseup'] = this.layerMouseUpFunc;
+        polyObj['data'] = notePolygon.data;
+        canvasJQ.drawLine(polyObj);
+        canvasJQ.getLayer(notePolygon.id).type = polyLayer;
+        this.addOrReviseMark(notePolygon.id);
       },
     },
 

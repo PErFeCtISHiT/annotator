@@ -75,7 +75,7 @@
               <el-tab-pane name="statistics">
                 <span slot="label" class="my-tag"><i class="el-icon-document"></i>&nbsp;统计数据</span>
                 <div class="grid-content bg-purple">
-                  <info-statistic style="margin-top: 20px; margin-left: 20px"></info-statistic>
+                  <info-statistic style="margin-top: 10px; margin-left: 20px"></info-statistic>
                 </div>
               </el-tab-pane>
             </el-tabs>
@@ -237,7 +237,7 @@
   }
 
   .height2 {
-    height: 1400px;
+    height: 1800px;
   }
 
   .height3 {
@@ -245,7 +245,7 @@
   }
 
   .height4 {
-    height: 1508px;
+    height: 1908px;
   }
 
   .height5 {
@@ -253,7 +253,7 @@
   }
 
   .height6 {
-    height: 1600px;
+    height: 2000px;
   }
 
   .my-dialog {

@@ -15,8 +15,8 @@
       <!--</span>-->
     <!--</el-dialog>-->
 
-    <tester>
-    </tester>
+    <marks-viewer>
+    </marks-viewer>
 
     <!--<canvas id="canvas2" width=600 height=400 style="border: 1px solid #000;"></canvas>-->
     <!--<div id="test"></div>-->
@@ -34,9 +34,11 @@
   import TaskItem from "./taskItem";
   import CanvasDrawer from "./drawer/canvasDrawer";
   import Tester from "./test/tester";
+  import MarksViewer from "./requester/marksViewer";
 
   export default {
     components: {
+      MarksViewer,
       Tester,
       CanvasDrawer,
       TaskItem

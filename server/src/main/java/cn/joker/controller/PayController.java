@@ -1,17 +1,24 @@
 package cn.joker.controller;
 
 import cn.joker.entity.PaySaPi;
+import cn.joker.entity.UserEntity;
+import cn.joker.sevice.UserService;
 import cn.joker.util.JsonHelper;
 import cn.joker.util.PayUtil;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,16 +28,19 @@ import java.util.Map;
  * 支付的controller
  */
 @Controller
-@RequestMapping("/pays")
 //@CrossOrigin
 public class PayController {
+    private static Logger logger = LoggerFactory.getLogger(JsonHelper.class);
+
+    @Resource
+    private UserService userService;
 
     /**
      *
      * @param request http
      * @return 支付接口相关内容
      */
-    @RequestMapping("/pay")
+    @RequestMapping("/pays/pay")
     @ResponseBody
     public Map<String, Object> pay(HttpServletRequest request) {
         JSONObject jsonObject = JsonHelper.requestToJson(request);
@@ -39,7 +49,7 @@ public class PayController {
 
         remoteMap.put("price", jsonObject.getString("price"));
         remoteMap.put("istype", jsonObject.getInt("istype"));
-        remoteMap.put("orderid", new Date().getTime() + "");
+        remoteMap.put("orderid", PayUtil.getOrderIdByUUId());
         remoteMap.put("orderuid", jsonObject.getString("orderuid"));
         remoteMap.put("goodsname", "recharge");
 
@@ -53,14 +63,20 @@ public class PayController {
      * @param response 回复
      * @param paySaPi 类
      */
-    @RequestMapping("/notifyPay")
+    @RequestMapping("/pays/notifyPay")
     @CrossOrigin
     public void notifyPay(HttpServletRequest request, HttpServletResponse response, PaySaPi paySaPi) {
+        logger.info("一样");
         // 保证密钥一致性
         if (PayUtil.checkPayKey(paySaPi)) {
-            // TODO 做自己想做的
+            logger.info("一样");
+            System.out.println("一样");
+            UserEntity userEntity = userService.findByUsername(paySaPi.getOrderuid());
+            userEntity.setPoints(userEntity.getPoints() + (int)(Double.parseDouble(paySaPi.getPrice())*100));
+            userService.modify(userEntity);
         } else {
-            // TODO 该怎么做就怎么做
+            System.out.println("不一样");
+            logger.info("不一样");
         }
     }
 
@@ -71,17 +87,20 @@ public class PayController {
      * @param orderid 订单号
      * @return
      */
-    @RequestMapping("/returnPay")
+    @RequestMapping("/pays/returnPay")
     @CrossOrigin
-    public ModelAndView returnPay(HttpServletRequest request, HttpServletResponse response, String orderid) {
-        boolean isTrue = false;
-        ModelAndView view = null;
+    @ResponseBody
+    public void returnPay(HttpServletRequest request, HttpServletResponse response, String orderid) throws IOException {
+        boolean isTrue = true;
+        //ModelAndView view = null;
+        new ModelAndView("3-1");
         // 根据订单号查找相应的记录:根据结果跳转到不同的页面
-        if (isTrue) {
-            view = new ModelAndView("/正确的跳转地址");
-        } else {
-            view = new ModelAndView("/没有支付成功的地址");
-        }
-        return view;
+//        if (isTrue) {
+//
+//        } else {
+//
+//        }
+        response.sendRedirect("http://localhost:8080/#/3-1");
+        //return new ModelAndView("3-1");
     }
 }
