@@ -24,7 +24,7 @@
         <div style="margin-top: 15px; color: #6b6b6b; font-size: 15px"> 充值账号: &nbsp;</div>
       </el-col>
       <el-col :span="14">
-        <div style="margin-top: 15px; color: #6b6b6b; font-size: 15px" id="username"> kiki</div>
+        <div style="margin-top: 15px; color: #6b6b6b; font-size: 15px" id="username">{{$store.state.user.userInfo.username}}</div>
       </el-col>
       <el-col :span="2">
         <img src="../../images/points.png" style="width: 50px; height: 50px; margin-left: 30px"/>
@@ -33,7 +33,7 @@
         <div style="margin-top: 15px; color: #6b6b6b; font-size: 15px"> 当前积分: &nbsp;</div>
       </el-col>
       <el-col :span="2">
-        <div style="margin-top: 15px; color: #6b6b6b; font-size: 15px" id="points"> 30</div>
+        <div style="margin-top: 15px; color: #6b6b6b; font-size: 15px" id="points">{{$store.state.user.userInfo.points}}</div>
       </el-col>
     </div>
     <!--充值金额选项-->
@@ -51,7 +51,7 @@
           </el-card>
         </el-col>
       </el-col>
-      <el-col :span="5" style="margin-left: 0px">
+      <el-col :span="5" style="margin-left: 0">
         <el-col :span="1" style="margin-top: 17px">
           <el-radio v-model="amount" label="20.00"> &nbsp;</el-radio>
         </el-col>
@@ -61,9 +61,9 @@
           </el-card>
         </el-col>
       </el-col>
-      <el-col :span="5" style="margin-left: 0px">
+      <el-col :span="5" style="margin-left: 0">
         <el-col :span="1" style="margin-top: 17px">
-          <el-radio v-model="amount" label="40.00"> &nbsp;</el-radio>
+          <el-radio v-model="amount" label="50.00"> &nbsp;</el-radio>
         </el-col>
         <el-col :span="16" style="margin-left: 10px">
           <el-card style="" shadow="hover">
@@ -73,7 +73,7 @@
       </el-col>
       <el-col :span="5" style="margin-left: 0px">
         <el-col :span="1" style="margin-top: 17px">
-          <el-radio v-model="amount" label="4" style="font-size: 25px">&nbsp;</el-radio>
+          <el-radio v-model="amount" label="100.00" style="font-size: 25px">&nbsp;</el-radio>
         </el-col>
         <el-col :span="16" style="margin-left: 10px">
           <el-card style="" shadow="hover">
@@ -89,7 +89,7 @@
       </el-col>
       <el-col :span="6">
         <el-col :span="1" style="margin-top: 10px">
-          <el-radio v-model="mode" label="2"> &nbsp</el-radio>
+          <el-radio v-model="mode" :label="1"> &nbsp</el-radio>
         </el-col>
         <el-col :span="16" style="margin-left: 10px">
           <img src="../../images/WeChat.png" style="height: 50px; width: 190px; margin-top: -6px">
@@ -97,7 +97,7 @@
       </el-col>
       <el-col :span="6">
         <el-col :span="1" style="margin-top: 10px">
-          <el-radio v-model="mode" label="1"> &nbsp</el-radio>
+          <el-radio v-model="mode" :label="2"> &nbsp</el-radio>
         </el-col>
         <el-col :span="16" style="margin-left: 10px">
           <img src="../../images/Alipay.png" style="height: 55px; width: 160px; margin-top: -8px">
@@ -110,7 +110,7 @@
         <div>应付金额:</div>
       </el-col>
       <el-col :span="8" style="margin: 8px 10px 10px 20px; font-size: 30px">
-        <div style="color: #f2463f; font-weight: bolder" id="payMoney">50.00元</div>
+        <div style="color: #f2463f; font-weight: bolder" id="payMoney">{{amount+' 元'}}</div>
       </el-col>
     </el-row>
     <form style="display: none" id='formpay' name='formpay' method='post' action='https://pay.bbbapi.com/'>
@@ -127,7 +127,7 @@
     </form>
 
     <el-col :span="4">
-      <el-button value="确认支付" id="demoBtn1" @click="onsubmit"
+      <el-button value="确认支付" id="demoBtn1" @click="onSubmit"
                  style="margin-left: 73px; margin-top: 10px; color: #ffffff; background-color: #56b5dc;">确认支付
       </el-button>
     </el-col>
@@ -138,44 +138,58 @@
 </template>
 
 <script>
+  import {mapActions} from 'vuex'
+
   export default {
     //根据选择的支付金额，这边的单选框组名叫amount，随时修改payMoney的值
     //根据选择的支付方式，这边的单选框组名叫mode
     //显示当前用户名 username， 当前用户积分 points
     data() {
       return {
-        amount: '1',
-        mode: '2',
-        username: 'keith',
-        points: '20',
-        payMoney: '100元'
+        amount: '10.00',
+        mode: 1,
       };
     },
 
+    props:{
+      showMessage:{
+        type: String,
+        default: 'not-show'
+      }
+    },
+
+    mounted(){
+      if(this.showMessage==='show'){
+        this.updateWithoutPointer();
+        this.$alert('充值成功', '提示', {
+          confirmButtonText: '确定',
+          callback: () => {
+            this.$message({
+              type: 'success',
+              message: '您已经充值成功',
+              duration: 2000
+            });
+          }
+        });
+      }
+    },
+
     methods: {
-      getAmount(){
-
-      },
-
-      getMode(){
-
-      },
-
       // 得到支付方式
-      handleClick() {
-        this.$message.error('尚未开通此功能');
-      },
+      // handleClick() {
+      //   this.$message.error('尚未开通此功能');
+      // },
+      ...mapActions(['updateWithoutPointer']),
 
-      onsubmit() {
+      onSubmit() {
         let that = this;
-
         // 微信的istype是1，支付宝的是2
         // 价格传参一定要保留2位小数
         // orderuid 用户名
-        that.$http.post('/pays/pay', {
-          price: '0.02',
-          istype: 1,
-          orderuid: 'test'
+        this.$http.post('/pays/pay', {
+          price: this.amount,
+          istype: this.mode,
+          orderuid: this.$store.state.user.userInfo.username
         })
           .then(function (data) {
             $('#uid').val(data.data.data.uid);
