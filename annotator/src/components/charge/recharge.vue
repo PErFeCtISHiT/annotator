@@ -11,7 +11,7 @@
       </el-col>
       <el-col :span="20">
         <div class="prompt-label">1.充值获得的积分可以在ImgAnnotator系统中用于发布任务。</div>
-        <div class="prompt-label">2.积分换算方法是 1元=10积分，你可以选择支付宝或者微信的付款方式进行充值，10元起充</div>
+        <div class="prompt-label">2.积分换算方法是 1元=1积分，你可以选择支付宝或者微信的付款方式进行充值，10元起充</div>
       </el-col>
     </div>
 
@@ -185,7 +185,7 @@
       // handleClick() {
       //   this.$message.error('尚未开通此功能');
       // },
-      ...mapActions(['updateWithoutPointer']),
+      ...mapActions(['updateWithoutPointer','writeNum']),
 
       getNum(str){
         switch(str){
@@ -201,7 +201,7 @@
         // 微信的istype是1，支付宝的是2
         // 价格传参一定要保留2位小数
         // orderuid 用户名
-        this.$store.state.charger.currentNum = this.amount;
+        this.writeNum(this.amount);
         this.$http.post('/pays/pay', {
           price: this.amount,
           istype: this.mode,

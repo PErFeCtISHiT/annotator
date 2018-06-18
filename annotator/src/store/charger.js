@@ -4,15 +4,20 @@ export default {
   // JSON.parse方法将一个字符串解析成一个JSON对象
 
   state: {
-    currentNum:'0.00',
+    currentNum:localStorage.getItem('currentNum'),
   },
 
   mutations: {
-
+    writeNum: function (state,num) {
+      localStorage.setItem('currentNum', num);
+      state.currentNum = num;
+    }
   },
 
   actions: {
-
+    writeNum({commit}, num) {
+      commit('writeNum', num)
+    },
   }
 
 }
