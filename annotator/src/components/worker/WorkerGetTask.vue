@@ -255,7 +255,7 @@
     name: "worker-get-task",
     data() {
       return {
-        activeStep: 2,    //实际步骤减一
+        activeStep: 0,    //实际步骤减一
         tagMsg: '',
         type: 0,
 
@@ -460,11 +460,13 @@
 
       chooseTag(val) {
         this.tagMsg = val;
+        this.next();
       },
 
 
       chooseType(val) {
         this.type = this.getType(val);
+        this.next();
       }
     }
   }
