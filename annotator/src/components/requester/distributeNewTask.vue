@@ -14,9 +14,9 @@
 
       <el-col :span="20">
         <el-steps :active="isActive" finish-status="success" simple style="margin-top: 20px">
-          <el-step :title="'选择标注类型'" style="cursor: pointer; margin-left: 10%">
+          <el-step :title="intType<0?'选择标注类型':`第${intType}种标注方式`" style="margin-left: 10%">
           </el-step>
-          <el-step :title="'待发布任务详情'" style="cursor: pointer; margin-right: 10%">
+          <el-step :title="isActive===1?'编辑中':'待发布任务详情'" style="margin-right: 10%">
           </el-step>
         </el-steps>
       </el-col>
@@ -33,7 +33,7 @@
 
 
     <!--第一层的标记选择开始-->
-    <el-row v-show="isActive === 1" :gutter="40" type="flex" justify="center" align="middle" :style="contentStyle">
+    <el-row v-show="isActive === 0" :gutter="40" type="flex" justify="center" align="middle" :style="contentStyle">
       <el-col :span="6" :style="singleCardStyle">
         <type-card
           :card-type="typeDraw"
@@ -78,7 +78,7 @@
 
 
     <!--第二层的表单部分开始-->
-    <el-row v-loading="isLoading" v-show="isActive === 2" type="flex" class="row-bg" justify="center" style="margin-left: 5%">
+    <el-row v-loading="isLoading" v-show="isActive === 1" type="flex" class="row-bg" justify="center" style="margin-left: 5%">
       <el-col :span="12">
         <div class="grid-content bg-purple-light main-div">
 
@@ -95,13 +95,15 @@
           <el-form :model="newTask" status-icon :rules="myRule" ref="newTask">
 
             <el-form-item label="任务名称" prop="taskName">
-              <el-input type="text" v-model="newTask.taskName" clearable style="width: 500px"></el-input>
+              <el-input type="text" v-model="newTask.taskName" clearable style="width: 500px">
+              </el-input>
             </el-form-item>
 
             <el-form-item label="任务描述" prop="taskDescription">
               <el-input type="text" v-model="newTask.taskDescription" auto-complete="false" clearable
                         style="width: 500px"
-                        maxlength=50></el-input>
+                        maxlength=50>
+              </el-input>
             </el-form-item>
 
             <el-form-item label="任务类型标签" prop="checkedTags">
@@ -113,13 +115,15 @@
             <el-form-item label="开始时间" prop="taskStartDate">
               <el-date-picker type="date" v-model="newTask.taskStartDate" placeholder="请选择开始时间" style="width: 500px"
                               ref="startTimePicker"
-                              :picker-options="option1" @change="getSTime" format="yyyy-MM-dd"></el-date-picker>
+                              :picker-options="option1" @change="getSTime" format="yyyy-MM-dd">
+              </el-date-picker>
             </el-form-item>
 
             <el-form-item label="结束时间" prop="taskEndDate">
               <el-date-picker type="date" v-model="newTask.taskEndDate" placeholder="请选择结束时间" style="width: 500px"
                               ref="endTimePicker"
-                              :picker-options="option2" @change="getETime" format="yyyy-MM-dd"></el-date-picker>
+                              :picker-options="option2" @change="getETime" format="yyyy-MM-dd">
+              </el-date-picker>
             </el-form-item>
 
             <!--<el-form-item label="参与人数" prop="expectedNumber">-->
@@ -128,7 +132,8 @@
             <!--</el-form-item>-->
 
             <el-form-item label="最低工人等级" prop="level">
-              <el-rate v-model="newTask.workerLevel" style="margin-top: 10px"></el-rate>
+              <el-rate v-model="newTask.workerLevel" style="margin-top: 10px">
+              </el-rate>
             </el-form-item>
 
             <!--<el-form-item label="奖励积分" prop="points">-->
@@ -310,7 +315,7 @@
 
       return {
         isLoading: false,
-        isActive: 1,
+        isActive: 0,
         intType: -10,
         messageFlag: false, //默认认为上传不成功
 
@@ -456,11 +461,11 @@
 
                   //全部提交完成
                   that.resetForm('newTask');
+                  that.$refs.upload.clearFiles();
                   setTimeout(function () {
                     that.isLoading = false;
 
                     if(that.messageFlag) {
-                      that.$refs.upload.clearFiles();
 
                       that.$confirm('文件成功上传, 继续留在本页面发布任务?', '提示', {
                         confirmButtonText: '留在此页',
@@ -474,7 +479,7 @@
                     }
 
                     that.messageFlag = false;
-                  }, 2000);
+                  }, 3000);
 
                 }else {
                   that.isLoading = false;
@@ -558,7 +563,7 @@
 
       //新加入的解决选择类型问题的部分
       next(){
-        if(this.isActive !== 1){
+        if(this.isActive !== 0){
           this.$message({
             message: '尊敬的用户，已经到底了哟~',
             duration: 1800
@@ -571,16 +576,17 @@
             });
         }
         else{
-          this.isActive = 2;
+          this.isActive = 1;
         }
 
       },
 
       pre() {
-        if(this.isActive === 2){
+        if(this.isActive === 1){
           this.resetForm('newTask');
           this.$refs.upload.clearFiles();
-          this.isActive = 1;
+          this.isActive = 0;
+          this.intType = -10;
         }
         else{
           this.$message({
@@ -594,6 +600,7 @@
         this.intType = cat;
         console.log(cat);
         console.log(this.isActive);
+        this.next();
       }
     }
 

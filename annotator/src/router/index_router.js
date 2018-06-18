@@ -56,9 +56,17 @@ export default new VueRouter({
       component: workerHistRank
     },
     {
-      path: "/3-1",
-      component: recharge
+      path: "/3-1/:showMessage",
+      name: '3-1',
+      component: recharge,
+      props: true
     },
+
+    {
+      path: "/3-1",
+      component: recharge,
+    },
+
     {
       path: "/4",
       component: personalInfoMain
@@ -86,7 +94,7 @@ export default new VueRouter({
     },
     {
       path: "/noteAndMark/:taskID",
-      name:'noteAndMark',
+      name: 'noteAndMark',
       component: workerNoteMark,
       props: true
     },

@@ -10,7 +10,7 @@ public class StringUtils extends org.apache.commons.lang.StringUtils {
     /**
      * 一次性判断多个或单个对象为空。
      *
-     * @param objects
+     * @param objects 对象
      * @return 只要有一个元素为Blank，则返回true
      * @author ztt
      */
@@ -28,7 +28,7 @@ public class StringUtils extends org.apache.commons.lang.StringUtils {
     /**
      * 一次性判断多个或单个对象不为空。
      *
-     * @param objects
+     * @param objects 对象
      * @return 只要有一个元素不为Blank，则返回true
      * @author ztt
      */

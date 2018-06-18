@@ -35,26 +35,38 @@
         </el-col>
         <el-col :span="18">
           <div style="margin-top: 20px; color: #545457; font-size: 30px; font-weight: bolder">
-            积分历史
+            群体排名
           </div>
         </el-col>
       </el-row>
 
       <el-table
         height="250px"
-        :data="messages"
+        :data="rankMsg"
         style="width: 80%; padding-left: 40px">
         <el-table-column
           prop="taskID"
-          label="任务编号"
+          label="用户名"
           align="center"
-          width="310px">
+          width="155px">
         </el-table-column>
         <el-table-column
           prop="points"
-          label="获得积分"
+          label="姓名"
           align="center"
-          width="310px">
+          width="155px">
+        </el-table-column>
+        <el-table-column
+          prop="taskID"
+          label="排名"
+          align="center"
+          width="155px">
+        </el-table-column>
+        <el-table-column
+          prop="taskID"
+          label="积分"
+          align="center"
+          width="155px">
         </el-table-column>
       </el-table>
     </el-col>
@@ -66,7 +78,6 @@
     name: "worker-hist-rank",
     data() {
       return {
-        messages: [],
         rank: 0,
         rankMsg: []
       }
@@ -78,25 +89,6 @@
     },
     created() {
       let that = this;
-
-      that.$http.get('/statistic/checkBonus', {
-        params: {
-          username: that.$store.state.user.userInfo.username
-        }
-      })
-        .then(function (response) {
-          console.log('积分历史：');
-          console.log(response.data.mes);
-          that.messages = response.data.mes;
-        })
-        .catch(function (error) {
-          console.log(error);
-          that.$message({
-            message:'更新积分历史失败',
-            type: 'error',
-            duration: 1500
-          });
-        });
 
       that.$http.get('/statistic/checkRanking')
         .then(function (response) {
@@ -134,8 +126,6 @@
           duration: 1500
         });
       }
-
-
 
     }
   }

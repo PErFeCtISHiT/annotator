@@ -12,14 +12,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -91,16 +88,6 @@ public class PayController {
     @CrossOrigin
     @ResponseBody
     public void returnPay(HttpServletRequest request, HttpServletResponse response, String orderid) throws IOException {
-        boolean isTrue = true;
-        //ModelAndView view = null;
-        new ModelAndView("3-1");
-        // 根据订单号查找相应的记录:根据结果跳转到不同的页面
-//        if (isTrue) {
-//
-//        } else {
-//
-//        }
-        response.sendRedirect("http://localhost:8080/#/3-1");
-        //return new ModelAndView("3-1");
+        response.sendRedirect("http://localhost:8080/#/3-1/show");
     }
 }

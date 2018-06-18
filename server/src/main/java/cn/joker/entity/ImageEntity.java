@@ -25,6 +25,7 @@ public class ImageEntity implements Serializable {
     private Integer type;
     private List<ImgMarkEntity> imgMarkEntityList;
     private List<UserEntity> workers;
+
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "image_worker", joinColumns = {@JoinColumn(referencedColumnName = "ID")}
             , inverseJoinColumns = {@JoinColumn(referencedColumnName = "ID")})
@@ -36,8 +37,9 @@ public class ImageEntity implements Serializable {
     public void setWorkers(List<UserEntity> workers) {
         this.workers = workers;
     }
+
     @Fetch(FetchMode.SELECT)
-    @OneToMany(mappedBy = "image_imgMark", cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "image_imgMark", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JsonIgnore
     public List<ImgMarkEntity> getImgMarkEntityList() {
         return imgMarkEntityList;
@@ -46,6 +48,7 @@ public class ImageEntity implements Serializable {
     public void setImgMarkEntityList(List<ImgMarkEntity> imgMarkEntityList) {
         this.imgMarkEntityList = imgMarkEntityList;
     }
+
     @Basic
     @Column(name = "type", nullable = true)
     public Integer getType() {
@@ -112,8 +115,10 @@ public class ImageEntity implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         ImageEntity that = (ImageEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(url, that.url) &&

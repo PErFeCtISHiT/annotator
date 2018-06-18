@@ -119,7 +119,7 @@
   const typeDraw = 'draw';
   const registerMode = 'register';
   const normalMode = 'normal';
-  const targetRate = 0.7;
+  const targetRate = 0.8;        //这个值要问清楚
   const originalHeight = 500;
   const padding = 50;
   const originalWidth = originalHeight + 2 * padding;

@@ -80,6 +80,7 @@ public class TaskController {
      * 修改任务
      *
      * @param request http
+     * @param response http
      * @return 任务是否修改
      */
     @ResponseBody
@@ -127,6 +128,7 @@ public class TaskController {
      * 查看当前所有任务以及搜索任务
      *
      * @param request http
+     * @param response http
      */
     @RequestMapping(method = RequestMethod.POST, value = "/allTasks")
     public void search(HttpServletRequest request, HttpServletResponse response) {
@@ -143,6 +145,11 @@ public class TaskController {
 
     }
 
+    /**
+     *
+     * @param tasks 任务列表
+     * @param taskArray json
+     */
     private void getTasks(List<TaskEntity> tasks, JSONArray taskArray) {
         for (TaskEntity task : tasks) {
             JSONObject taskObject = new JSONObject();
@@ -168,6 +175,7 @@ public class TaskController {
      * 结束任务
      *
      * @param request 编号
+     * @param response http
      * @return 是否成功结束该任务
      */
     @ResponseBody
@@ -184,6 +192,7 @@ public class TaskController {
      * 删除任务
      *
      * @param request id
+     * @param response http
      * @return 是否成功删除该任务
      */
     @ResponseBody
@@ -200,7 +209,8 @@ public class TaskController {
     /**
      * 举报任务
      *
-     * @param
+     * @param request http
+     * @param response http
      * @return boolean 成功与否
      */
     @ResponseBody
@@ -226,7 +236,8 @@ public class TaskController {
     /**
      * 举报工人
      *
-     * @param request
+     * @param request http
+     * @param response http
      * @return boolean 成功与否
      */
     @ResponseBody
@@ -268,7 +279,7 @@ public class TaskController {
     /**
      * 所有人员查看任务细节
      * 参数是taskID和人员角色
-     *
+     * @param request http
      * @param response http
      */
     @RequestMapping(method = RequestMethod.GET, value = "/checkTaskDetail")
@@ -336,6 +347,8 @@ public class TaskController {
     /**
      * @author:pis
      * @description: 查看某用户某次任务的所有图片的url
+     * @param request  http
+     * @param response http
      * @date: 22:58 2018/4/24
      */
     @RequestMapping(value = "/checkImages", method = RequestMethod.GET)
@@ -356,6 +369,8 @@ public class TaskController {
     /**
      * @author:pis
      * @description: 发起者下载任务标注的数据集
+     * @param request  http
+     * @param response http
      * @date: 14:30 2018/6/5
      */
     @RequestMapping(value = "/getDataSet", method = RequestMethod.GET)

@@ -10,12 +10,12 @@ public class PaySaPi {
 	/**
 	 * paysapi生成的订单ID号
 	 */
-	private String paysapi_id;
+	private String paysapiId;
 
 	/**
 	 * 您的自定义订单号
 	 */
-	private String orderid;
+	private String orderId;
 
 	/**
 	 * 订单定价
@@ -37,20 +37,20 @@ public class PaySaPi {
 	 */
 	private String key;
 
-	public String getPaysapi_id() {
-		return paysapi_id;
+	public String getPaysapiId() {
+		return paysapiId;
 	}
 
-	public void setPaysapi_id(String paysapi_id) {
-		this.paysapi_id = paysapi_id;
+	public void setPaysapiId(String paysapiId) {
+		this.paysapiId = paysapiId;
 	}
 
 	public String getOrderid() {
-		return orderid;
+		return orderId;
 	}
 
-	public void setOrderid(String orderid) {
-		this.orderid = orderid;
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	public String getPrice() {

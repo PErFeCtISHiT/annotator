@@ -38,19 +38,19 @@ public class WorkerMatrixEntity implements Serializable {
         return (C00 + C11) / (C00 + C01 + C10 + C11);
     }
 
+    public WorkerMatrixEntity(UserEntity userEntity,Double rate,Integer num) {
+        C00 = C11 = rate * num / 2;
+        C01 = C10 = (1 - rate) * num / 2;
+        user_matrix = userEntity;
+        num = 0;
+    }
+
     public void setCorrect(Double correct) {
         this.correct = correct;
     }
 
     public WorkerMatrixEntity() {
 
-    }
-
-    public WorkerMatrixEntity(UserEntity userEntity,Double rate,Integer num) {
-        C00 = C11 = rate * num / 2;
-        C01 = C10 = (1 - rate) * num / 2;
-        user_matrix = userEntity;
-        num = 0;
     }
 
     @Id
