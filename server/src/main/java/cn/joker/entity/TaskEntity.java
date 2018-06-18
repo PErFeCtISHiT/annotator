@@ -61,7 +61,7 @@ public class TaskEntity implements Serializable {
     }
 
 
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
     @JoinTable(name = "task_tag", joinColumns = {@JoinColumn(referencedColumnName = "ID")}
             , inverseJoinColumns = {@JoinColumn(referencedColumnName = "ID")})
     @JsonIgnore

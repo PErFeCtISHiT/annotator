@@ -47,7 +47,7 @@ public class TagEntity implements Serializable {
     }
 
 
-    @ManyToMany(cascade = CascadeType.MERGE, mappedBy = "tagEntityList")
+    @ManyToMany(cascade = CascadeType.MERGE, mappedBy = "tagEntityList",fetch = FetchType.EAGER)
     @JsonIgnore
     public List<TaskEntity> getTaskEntityList() {
         return taskEntityList;
