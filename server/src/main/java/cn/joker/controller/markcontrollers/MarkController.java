@@ -89,7 +89,7 @@ public class MarkController {
         }
         taskEntity.setActNum(taskEntity.getActNum() + 1);
         JSONObject ret = new JSONObject();
-        ret.put(StdName.MES, userService.modify(userEntity) && imgService.modify(imageEntity) && imgMarkService.add(imgMark) && taskService.modify(taskEntity));
+        ret.put(StdName.MES, userService.modify(userEntity) && imgService.modify(imageEntity) && taskService.modify(taskEntity));
         JsonHelper.jsonToResponse(response, ret);
     }
 
@@ -263,7 +263,6 @@ public class MarkController {
                                 imgService.modify(imageEntity);
                                 ret.put(StdName.IMGURL, imageEntity.getUrl());
                                 ret.put(StdName.DESCRIPTION, taskEntity.getDescription());
-                                //System.out.println(imageEntity.getId());
                                 JsonHelper.jsonToResponse(response, ret);
                                 return;
                             }
