@@ -182,7 +182,6 @@
       ...mapActions(['updateWithoutPointer']),
 
       onSubmit() {
-        let that = this;
         // 微信的istype是1，支付宝的是2
         // 价格传参一定要保留2位小数
         // orderuid 用户名
