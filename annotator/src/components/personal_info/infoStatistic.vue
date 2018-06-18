@@ -65,10 +65,55 @@
     name: "info-statistic",
 
     mounted() {
-      if (!this.$store.state.user.isRequester) {
+      let that = this;
+
+      if (this.$store.state.user.isWorker) {
+        this.$http.get('statistic/getCorrect', {
+          params: {
+            username: this.$store.state.user.userInfo.username
+          }
+        })
+          .then(function (response) {
+            that.score = response.data.mes;
+          })
+          .catch(function () {
+            that.$message({
+              message: '网络异常' + error,
+              type: 'warning'
+            });
+          });
+
+        this.$http.get('statistic/getMarkNum', {
+          params: {
+            username: this.$store.state.user.userInfo.username
+          }
+        })
+          .then(function (response) {
+            that.tagNum = response.data.mes.slice(0, 3);
+            that.catNum = response.data.mes.slice(3, 8);
+          });
+
         this.drawLinesOfWorkers();
       }
       else {
+        this.$http.get('statistic/getTaskNum', {
+          params: {
+            username: this.$store.state.user.userInfo.username
+          }
+        })
+          .then(function (response) {
+            that.taskNum = response.data.mes;
+          });
+
+        this.$http.get('statistic/getTaskDetail', {
+          params: {
+            username: this.$store.state.user.userInfo.username
+          }
+        })
+          .then(function (response) {
+            that.taskType = response.data.mes;
+          });
+
         this.drawLinesOfRequester();
       }
     },

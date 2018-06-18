@@ -20,12 +20,12 @@
         </el-row>
 
         <!--<el-row type="flex" justify="center" style="margin-top: 20px; margin-bottom: 20px">-->
-          <!--<el-col class="my-dialog" :span="6">-->
-            <!--<span>邮箱</span>-->
-          <!--</el-col>-->
-          <!--<el-col :span="15">-->
-            <!--<el-input clearable placeholder="请输入新的绑定邮箱" v-model="newMail"></el-input>-->
-          <!--</el-col>-->
+        <!--<el-col class="my-dialog" :span="6">-->
+        <!--<span>邮箱</span>-->
+        <!--</el-col>-->
+        <!--<el-col :span="15">-->
+        <!--<el-input clearable placeholder="请输入新的绑定邮箱" v-model="newMail"></el-input>-->
+        <!--</el-col>-->
         <!--</el-row>-->
 
         <el-row type="flex" justify="center" style="margin-top: 20px; margin-bottom: 20px">
@@ -134,9 +134,18 @@
 
     //挂载的时候获取数据
     mounted() {
-      
-      this.personalInfo = infoMockItem;
-      this.personalStatistic = statisticMockItem;
+      let that = this;
+
+      this.$http.get('user/getCurrentUser')
+        .then(function (response) {
+          that.personalInfo = response.data;
+        })
+        .catch(function (error) {
+          that.$message({
+            message: '网络异常' + error,
+            type: 'warning'
+          });
+        });
     },
 
     data() {
@@ -201,14 +210,34 @@
         //     message: '邮箱格式错误',
         //     type: 'warning'
         //   });
-        if(this.passwr1 !== this.passwr2)
+        if (this.passwr1 !== this.passwr2)
           this.$message({
             showClose: true,
             message: '两次密码不一致',
             type: 'warning'
           });
 
-        else{
+        else {
+          this.$http.post('/user/modify', {
+            username: this.$store.state.user.userInfo.username,
+            nickname: this.nickname,
+            passwr: this.passwr1,
+          })
+            .then(function (response) {
+              if(response.data.mes === true) {
+                that.$message({
+                  message: '修改成功' + error,
+                  type: 'success',
+                });
+              }
+            })
+            .catch(function (error) {
+              that.$message({
+                message: '网络异常' + error,
+                type: 'warning',
+              });
+            });
+
           this.clearScreen();
           this.dialogVisible = false;
 
@@ -220,7 +249,7 @@
 
 
         }
-      }
+      }//此方法结束
     }
 
 
