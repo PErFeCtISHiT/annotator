@@ -52,15 +52,12 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
         List<ImageEntity> imageEntities = new ArrayList<>();
         List<ImageEntity> imageEntities1 = new ArrayList<>();
         for (TaskEntity taskEntity : taskEntities) {
-            System.out.println(taskEntity.getId());
             List<ImageEntity> images = taskEntity.getImageEntityList();
-            System.out.println(images.size());
             for (ImageEntity imageEntity : images) {
-                System.out.println(imageEntity.getId());
                 if (imageEntity.getMarked().equals(false)) {
-                    if (imageEntity.getType() == 1)
+                    if (imageEntity.getType() == 1 && imageEntities.size() < 10)
                         imageEntities.add(imageEntity);
-                    else if (imageEntity.getType() == 2)
+                    else if (imageEntity.getType() == 2 && imageEntities1.size() < 10)
                         imageEntities1.add(imageEntity);
                     imageEntity.setMarked(true);
                     imgService.modify(imageEntity);
@@ -73,8 +70,6 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
                 }
             }
         }
-        System.out.println(imageEntities);
-        System.out.println(imageEntities1);
         tagEntity.setTestImageList(imageEntities);
         tagEntity.setTestImageList1(imageEntities1);
         this.modify(tagEntity);
@@ -207,8 +202,8 @@ public class TagServiceImpl extends PubServiceImpl implements TagService {
         return this.tagRepository.findAll();
     }
 
-    //@Scheduled(cron = "0 0 12 * * ?")   //每天执行一次
-    @Scheduled(cron = "0/10 * * * * ?")   //每10秒执行一次
+    @Scheduled(cron = "0 0 12 * * ?")   //每天执行一次
+    //@Scheduled(cron = "0/40 * * * * ?")   //每10秒执行一次
     public void tagRefresh() {
         log.info("refresh begin");
         List<TagEntity> tagEntities = this.findAll();

@@ -2,6 +2,6 @@
 /annotator/dist/
 /.idea/
 #
-/server/target/
 /server/src/main/resources/application.properties
-/.idea/
+
+target/
