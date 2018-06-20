@@ -2,9 +2,10 @@
   <div>
     <el-container>
       <!-- navigation bar  -->
-      <el-header style="position: fixed; top: 0; left:0; right: 0; z-index:10">
+      <el-header style="position: fixed; top: 0; left:0; right: 0; z-index:50; padding-left: 0; padding-right: 0"
+                 height="62px">
         <el-row class="navigation-background">
-          <el-col :span="1" style="margin-top: 2px; margin-left: 10px">
+          <el-col :span="1" style="margin-top: 2px; margin-left: 15px">
             <img src="../images/logo.png" style="width: 55px; height: 55px;">
           </el-col>
 
@@ -15,20 +16,22 @@
           </el-col>
 
           <el-col :span="19">
-            <div>
-              <!-- 这里放一个靠右边的栅格 -->
-              <el-row type="flex" id="navigation-div2" justify="end">
-                <el-col :span="18"><div id="navigation-div2-1"><navigation></navigation></div></el-col>
-              </el-row>
+            <!-- 这里放一个靠右边的栅格 -->
+            <el-row type="flex" id="navigation-div2" justify="end">
+              <div id="navigation-div2-1">
+                <navigation>
+                </navigation>
+              </div>
+            </el-row>
 
-            </div>
           </el-col>
         </el-row>
       </el-header>
       <!-- Main page -->
-      <el-main style="margin-top: 40px;">
+      <el-main style="margin-top: 62px;">
 
-        <router-view></router-view>
+        <router-view>
+        </router-view>
 
       </el-main>
 
@@ -40,8 +43,7 @@
     </el-container>
 
 
-    <!--<router-link :to="'/testDraw'">我是测试画图页面</router-link>-->
-
+    <router-link :to="'/testDraw'">我是测试画图页面</router-link>
   </div>
 </template>
 
@@ -51,36 +53,20 @@
 
 
   export default {
-      data() {
-          return {
-
-          }
-      },
-      components: {
-          navigation,
-      }
+    data() {
+      return {}
+    },
+    components: {
+      navigation,
+    }
 
   }
 </script>
 
 <style scoped>
-  el-header, el-footer {
 
-    text-align: center;
-    line-height: 60px;
-  }
-
-  el-main {
-    background-color: #E9EEF3;
-    color: #333;
-    text-align: center;
-    line-height: 160px;
-  }
-
-
-  <!-- 用来修改ImgAnnotator几个字 -->
-  #navigation-name {
-    ;
+  /*<!-- 用来修改ImgAnnotator几个字 -->*/
+  #navigation-name {;
   }
 
   /*上面的span在这个div里面*/
@@ -109,5 +95,6 @@
 
   .navigation-background {
     background-color: rgba(34, 44, 98, 1);
+    width: 100%;
   }
 </style>

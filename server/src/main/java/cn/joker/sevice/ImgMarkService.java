@@ -1,7 +1,7 @@
 package cn.joker.sevice;
 
 import cn.joker.entity.ImageEntity;
-import org.json.JSONObject;
+import cn.joker.entity.ImgMarkEntity;
 
 import java.util.List;
 
@@ -10,8 +10,17 @@ import java.util.List;
  * @description: good good study
  * @date: create in 9:11 2018/4/14
  */
-public interface ImgMarkService {
-    boolean refreshMark(ImageEntity imgMark, JSONObject jsonObject);
+public interface ImgMarkService extends PubService {
+    /**
+     *
+     * @return 标注列表
+     */
+    List<ImgMarkEntity> findAll();
 
-    List<ImageEntity> findAllMarks(JSONObject jsonObject);
+    /**
+     *
+     * @param imageEntity 图片
+     * @return 该张图片的标注
+     */
+    List<ImgMarkEntity> findByImage(ImageEntity imageEntity);
 }

@@ -16,10 +16,16 @@ import axios from './axios/index_axios'
 // 引入router配置文件
 import router from './router/index_router'
 
+// 引入e-charts组件
+import echarts from 'echarts'
+
+import './jsSourceFile/directive'
+
 //使用element-ui组件
 Vue.use(ElementUI);
 //挂载axios到vue的原型上，方便使用
 Vue.prototype.$http = axios;
+Vue.prototype.$echarts = echarts;
 // 设置 Vue.config.productionTip = false 来关闭生产模式下给出的提示
 Vue.config.productionTip = false;
 

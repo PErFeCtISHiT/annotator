@@ -32,9 +32,9 @@
           width="200">
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
-              <p>等级: {{ scope.row.level }}</p>
+              <p>等级: {{ scope.row.lev }}</p>
               <div slot="reference" class="name-wrapper">
-                <el-rate v-model="scope.row.level" disabled></el-rate>
+                <el-rate v-model="scope.row.lev" disabled></el-rate>
               </div>
             </el-popover>
           </template>
@@ -44,7 +44,7 @@
           label="进度"
           width="350">
           <template slot-scope="scope">
-            <el-progress :percentage="scope.row.completedNumber * 100 / response.imgNum" status="success"></el-progress>
+            <el-progress :percentage="(scope.row.completedNumber/ response.imgNum).toFixed(2) * 100 " :status="scope.row.completedNumber/ response.imgNum===1?'success':''"> </el-progress>
           </template>
 
         </el-table-column>
@@ -77,6 +77,12 @@
           </template>
         </el-table-column>
       </el-table>
+
+      <div class="block" style="width:800px; height:200px; margin:auto">
+        <el-button @click = "handleTotal(taskID)">查看整体标注结果</el-button>
+        <!--<el-button :disabled="response.totalProgress!==1" @click="handleMixed">查看矩形整合结果</el-button>-->
+      </div>
+
     </el-col>
 
   </el-col>
@@ -133,6 +139,8 @@
 
     methods: {
       handleView(row) {
+        console.log(row.completedNumber);
+
         this.$router.push({
           name: 'forTest',
           params: {
@@ -187,7 +195,16 @@
             done();
           })
           .catch(() => {});
-      }
+      },
+
+      handleTotal(taskID){
+        this.$router.push({
+          name: 'forReTotal',
+          params: {
+            taskID: taskID,
+          }
+        });
+      },
     }//所有方法结束
 
   }

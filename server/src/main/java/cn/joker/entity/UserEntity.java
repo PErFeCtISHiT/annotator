@@ -1,6 +1,9 @@
 package cn.joker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,8 +13,8 @@ import java.util.Objects;
  * @date: create in 21:55 2018/5/4
  */
 @Entity
-@Table(name = "user", schema = "imgannotator", catalog = "")
-public class UserEntity {
+@Table(name = "user",schema = "imgannotator", catalog = "")
+public class UserEntity implements Serializable {
     private Integer id;
     private String username;
     private String passwr;
@@ -21,10 +24,41 @@ public class UserEntity {
     private Integer lev;
     private Integer points;
     private Integer state;
-    private String email;
     private List<SysRoleEntity> roleEntityList;
     private List<AbilityEntity> abilityEntityList;
-    private List<BonusHistoryEntity> bonusHistoryEntityList;
+    private List<WorkerMatrixEntity> workerMatrixEntities;
+    private Integer type1Num;
+    private Integer type2Num;
+    private Integer type3Num;
+
+    @Basic
+    @Column(name = "num1", nullable = true)
+    public Integer getType1Num() {
+        return type1Num;
+    }
+
+    public void setType1Num(Integer type1Num) {
+        this.type1Num = type1Num;
+    }
+    @Basic
+    @Column(name = "num2", nullable = true)
+    public Integer getType2Num() {
+        return type2Num;
+    }
+
+    public void setType2Num(Integer type2Num) {
+        this.type2Num = type2Num;
+    }
+    @Basic
+    @Column(name = "num3", nullable = true)
+    public Integer getType3Num() {
+        return type3Num;
+    }
+
+    public void setType3Num(Integer type3Num) {
+        this.type3Num = type3Num;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
@@ -116,20 +150,12 @@ public class UserEntity {
         this.state = state;
     }
 
-    @Basic
-    @Column(name = "email", nullable = true, length = 200)
-    public String getEmail() {
-        return email;
-    }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
-    @ManyToMany(cascade=CascadeType.ALL)
-    @JoinTable(name="user_role", joinColumns={@JoinColumn(referencedColumnName="ID")}
-            , inverseJoinColumns={@JoinColumn(referencedColumnName="ID")})
-
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "user_role", joinColumns = {@JoinColumn(referencedColumnName = "ID")}
+            , inverseJoinColumns = {@JoinColumn(referencedColumnName = "ID")})
+    @JsonIgnore
     public List<SysRoleEntity> getRoleEntityList() {
         return roleEntityList;
     }
@@ -139,12 +165,11 @@ public class UserEntity {
     }
 
 
-
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="user_ability",joinColumns = {@JoinColumn(referencedColumnName = "ID")},
+    @JoinTable(name = "user_ability", joinColumns = {@JoinColumn(referencedColumnName = "ID")},
             inverseJoinColumns = {@JoinColumn(referencedColumnName = "ID")})
 
-
+    @JsonIgnore
     public List<AbilityEntity> getAbilityEntityList() {
         return abilityEntityList;
     }
@@ -153,20 +178,23 @@ public class UserEntity {
         this.abilityEntityList = abilityEntityList;
     }
 
-    @OneToMany(mappedBy = "bonusHistory_user",cascade = CascadeType.ALL)
-
-    public List<BonusHistoryEntity> getBonusHistoryEntityList() {
-        return bonusHistoryEntityList;
+    @OneToMany(mappedBy = "user_matrix", cascade = CascadeType.ALL)
+    @JsonIgnore
+    public List<WorkerMatrixEntity> getWorkerMatrixEntities() {
+        return workerMatrixEntities;
     }
 
-    public void setBonusHistoryEntityList(List<BonusHistoryEntity> bonusHistoryEntityList) {
-        this.bonusHistoryEntityList = bonusHistoryEntityList;
+    public void setWorkerMatrixEntities(List<WorkerMatrixEntity> workerMatrixEntities) {
+        this.workerMatrixEntities = workerMatrixEntities;
     }
+
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         UserEntity that = (UserEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(username, that.username) &&
@@ -177,15 +205,13 @@ public class UserEntity {
                 Objects.equals(lev, that.lev) &&
                 Objects.equals(points, that.points) &&
                 Objects.equals(state, that.state) &&
-                Objects.equals(email, that.email) &&
                 Objects.equals(roleEntityList, that.roleEntityList) &&
-                Objects.equals(abilityEntityList, that.abilityEntityList) &&
-                Objects.equals(bonusHistoryEntityList, that.bonusHistoryEntityList);
+                Objects.equals(abilityEntityList, that.abilityEntityList);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, username, passwr, salt, bonus, nickname, lev, points, state, email, roleEntityList, abilityEntityList, bonusHistoryEntityList);
+        return Objects.hash(id, username, passwr, salt, bonus, nickname, lev, points, state, roleEntityList, abilityEntityList);
     }
 }

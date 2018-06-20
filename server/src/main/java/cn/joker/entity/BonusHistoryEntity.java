@@ -1,7 +1,9 @@
 package cn.joker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
-import java.util.List;
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -11,7 +13,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "bonus_history", schema = "imgannotator", catalog = "")
-public class BonusHistoryEntity {
+public class BonusHistoryEntity implements Serializable {
     private Integer id;
     private TaskEntity bonusHistory_task;
     private Integer points;
@@ -31,7 +33,7 @@ public class BonusHistoryEntity {
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "task_id")
-
+    @JsonIgnore
     public TaskEntity getBonusHistory_task() {
         return bonusHistory_task;
     }
@@ -52,7 +54,7 @@ public class BonusHistoryEntity {
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id")
-
+    @JsonIgnore
     public UserEntity getBonusHistory_user() {
         return bonusHistory_user;
     }
@@ -63,8 +65,10 @@ public class BonusHistoryEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         BonusHistoryEntity that = (BonusHistoryEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(bonusHistory_task, that.bonusHistory_task) &&

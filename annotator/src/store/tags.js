@@ -1,7 +1,7 @@
 export default {
 
   state: {
-    tagMsg:['A','B','C','D','E'],
+    tagMsg:['人物','风景','动物','植物','文本'],
   },
 
   mutations: {

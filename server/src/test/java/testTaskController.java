@@ -72,7 +72,7 @@ public class testTaskController {
 
     @Test
     public void testEndTask(){
-        String url = "http://localhost:8080/task/endTask?taskID=1";
+        String url = "http://localhost:8080/task/endTask?taskID=16";
         RestTemplate restTemplate = new RestTemplate();
         String jsonData = restTemplate.getForObject(url,String.class);
         System.out.println(jsonData);

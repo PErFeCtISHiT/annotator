@@ -1,6 +1,9 @@
 package cn.joker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,13 +14,13 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "ability", schema = "imgannotator", catalog = "")
-public class AbilityEntity {
+public class AbilityEntity implements Serializable {
     private Integer id;
     private Double totalPoints;
     private List<UserEntity> userEntityList;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -37,7 +40,8 @@ public class AbilityEntity {
         this.totalPoints = totalPoints;
     }
 
-    @ManyToMany(mappedBy = "abilityEntityList",cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "abilityEntityList", cascade = CascadeType.MERGE)
+    @JsonIgnore
     public List<UserEntity> getUserEntityList() {
         return userEntityList;
     }
@@ -48,8 +52,10 @@ public class AbilityEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         AbilityEntity that = (AbilityEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(totalPoints, that.totalPoints) &&

@@ -4,19 +4,22 @@
     <el-form :model="loginForm" status-icon :rules="rules2" ref="loginForm" class="demo-ruleForm">
 
       <el-form-item prop="username">
-        <el-input prefix-icon="el-icon-goods" placeholder="请输入账号" v-model="loginForm.username"></el-input>
+        <el-input prefix-icon="el-icon-goods" placeholder="请输入账号" v-model="loginForm.username">
+        </el-input>
       </el-form-item>
 
-      <el-form-item prop="password">
+      <el-form-item prop="passwr">
         <el-input prefix-icon="el-icon-view" type="password" placeholder="请输入密码"
-                  v-model="loginForm.password"></el-input>
+                  v-model="loginForm.passwr">
+        </el-input>
       </el-form-item>
 
       <el-form-item prop="verification">
         <el-row :gutter="20">
           <el-col :span="16">
             <el-input prefix-icon="el-icon-edit-outline" placeholder="请输入验证码（不区分大小写）"
-                      v-model="loginForm.verification"></el-input>
+                      v-model="loginForm.verification">
+            </el-input>
           </el-col>
           <el-col :span="8">
             <el-button type="info" plain @click="changeVer">{{ver}}</el-button>
@@ -116,14 +119,14 @@
         // verReg: /\w{6}/, //验证码的正则表达式
         loginForm: {
           username: '',
-          password: '',
+          passwr: '',
           verification: ''
         },
         rules2: {
           username: [
             {validator: validateUsername, trigger: 'blur'}
           ],
-          password: [
+          passwr: [
             {validator: validatePassword, trigger: 'blur'}
           ],
           verification: [
@@ -143,7 +146,7 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if (this.loginForm.username === "admin") {
-              this.logIn({level: 1, name: "", username: "admin", points: 1000, roleList: [1, 2, 3]});
+              this.logIn({level: 1, name: "", username: "admin", points: 1000, roleList: [3, 4]});
               that.$message({
                 message: '登录成功',
                 type: 'success',
@@ -158,7 +161,7 @@
 
               that.$http.post('/user/login', {
                 username: that.loginForm.username,
-                password: that.loginForm.password
+                passwr: that.loginForm.passwr
               })
                 .then(function (response) {
                   // console.log('有回传信息');
@@ -191,6 +194,7 @@
           .then(function (response) {
             let result = response.data;
             // result['password'] = that.loginForm.password;
+            console.log(result.roleList)
             that.logIn(result);
             that.$message({
               message: '登录成功',

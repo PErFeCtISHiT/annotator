@@ -1,6 +1,9 @@
 package cn.joker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +14,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "sys_role", schema = "imgannotator", catalog = "")
-public class SysRoleEntity {
+public class SysRoleEntity implements Serializable {
     private Integer id;
     private String role;
     private String description;
@@ -45,8 +48,8 @@ public class SysRoleEntity {
         return description;
     }
 
-    @ManyToMany(mappedBy = "roleEntityList",cascade = CascadeType.ALL)
-
+    @ManyToMany(mappedBy = "roleEntityList", cascade = CascadeType.MERGE)
+    @JsonIgnore
     public List<UserEntity> getUserEntityList() {
         return userEntityList;
     }
@@ -55,10 +58,10 @@ public class SysRoleEntity {
         this.userEntityList = userEntityList;
     }
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="role_permission", joinColumns={@JoinColumn(referencedColumnName="ID")}
-            , inverseJoinColumns={@JoinColumn(referencedColumnName="ID")})
-
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "role_permission", joinColumns = {@JoinColumn(referencedColumnName = "ID")}
+            , inverseJoinColumns = {@JoinColumn(referencedColumnName = "ID")})
+    @JsonIgnore
     public List<SysPermissionEntity> getSysPermissionEntityList() {
         return sysPermissionEntityList;
     }
@@ -73,8 +76,10 @@ public class SysRoleEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         SysRoleEntity that = (SysRoleEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(role, that.role) &&

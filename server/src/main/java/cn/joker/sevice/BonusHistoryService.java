@@ -9,8 +9,11 @@ import java.util.List;
  * @description: good good study
  * @date: create in 15:52 2018/4/13
  */
-public interface BonusHistoryService {
-    boolean addBonusHistory(BonusHistoryEntity bonusHistory);
-
+public interface BonusHistoryService extends PubService {
+    /**
+     *
+     * @param username 用户名
+     * @return 查找符合的结果
+     */
     List<BonusHistoryEntity> findByName(String username);
 }

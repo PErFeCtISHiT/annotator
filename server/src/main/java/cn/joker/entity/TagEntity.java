@@ -1,6 +1,9 @@
 package cn.joker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,13 +14,41 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "tag", schema = "imgannotator", catalog = "")
-public class TagEntity {
+public class TagEntity implements Serializable {
     private Integer id;
     private String tag;
     private String description;
     private List<TaskEntity> taskEntityList;
+    private List<ImageEntity> testImageList;
+    private List<ImageEntity> testImageList1;
 
-    @ManyToMany(cascade = CascadeType.ALL,mappedBy = "tagEntityList")
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "image_tag1", joinColumns = {@JoinColumn(referencedColumnName = "ID")}
+            , inverseJoinColumns = {@JoinColumn(referencedColumnName = "ID")})
+    @JsonIgnore
+    public List<ImageEntity> getTestImageList1() {
+        return testImageList1;
+    }
+
+    public void setTestImageList1(List<ImageEntity> testImageList1) {
+        this.testImageList1 = testImageList1;
+    }
+
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "image_tag", joinColumns = {@JoinColumn(referencedColumnName = "ID")}
+            , inverseJoinColumns = {@JoinColumn(referencedColumnName = "ID")})
+    @JsonIgnore
+    public List<ImageEntity> getTestImageList() {
+        return testImageList;
+    }
+
+    public void setTestImageList(List<ImageEntity> testImageList) {
+        this.testImageList = testImageList;
+    }
+
+
+    @ManyToMany(cascade = CascadeType.MERGE, mappedBy = "tagEntityList",fetch = FetchType.EAGER)
+    @JsonIgnore
     public List<TaskEntity> getTaskEntityList() {
         return taskEntityList;
     }
@@ -59,8 +90,10 @@ public class TagEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         TagEntity tagEntity = (TagEntity) o;
         return Objects.equals(id, tagEntity.id) &&
                 Objects.equals(tag, tagEntity.tag) &&

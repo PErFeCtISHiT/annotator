@@ -4,10 +4,8 @@ import cn.joker.entity.ReportmessageEntity;
 
 import java.util.List;
 
-public interface ReportService {
-    boolean reportWorker(ReportmessageEntity reportMessage);
+public interface ReportService extends PubService {
 
-    boolean reportTask(ReportmessageEntity reportMessage);
 
     List<ReportmessageEntity> checkWorkerReport();
 

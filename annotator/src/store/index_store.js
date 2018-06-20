@@ -9,9 +9,11 @@ import user from './user'
 import workerTask from './workerTask'
 import requestTask from './requester'
 import tags from './tags'
+import charger from './charger'
 
 export default new Vuex.Store({
   modules: {
+    charger,
     user,
     workerTask,
     requestTask,

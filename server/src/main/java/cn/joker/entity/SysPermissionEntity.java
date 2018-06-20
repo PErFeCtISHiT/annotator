@@ -1,6 +1,9 @@
 package cn.joker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +14,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "sys_Permission", schema = "imgannotator", catalog = "")
-public class SysPermissionEntity {
+public class SysPermissionEntity implements Serializable {
     private Integer id;
     private String permission;
     private List<SysRoleEntity> sysRoleEntityList;
@@ -37,8 +40,8 @@ public class SysPermissionEntity {
         this.permission = permission;
     }
 
-    @ManyToMany(mappedBy = "sysPermissionEntityList",cascade = CascadeType.ALL)
-
+    @ManyToMany(mappedBy = "sysPermissionEntityList", cascade = CascadeType.MERGE)
+    @JsonIgnore
     public List<SysRoleEntity> getSysRoleEntityList() {
         return sysRoleEntityList;
     }
@@ -49,8 +52,10 @@ public class SysPermissionEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         SysPermissionEntity that = (SysPermissionEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(permission, that.permission) &&

@@ -1,39 +1,62 @@
 package cn.joker.sevice;
 
 import cn.joker.entity.TaskEntity;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public interface TaskService {
+public interface TaskService extends PubService {
+    /**
+     *
+     * @param task 任务
+     * @return 是否标注成功
+     */
     Integer releaseTask(TaskEntity task);
 
-    boolean modifyTask(TaskEntity task);
-
+    /**
+     *
+     * @param userName 用户名字
+     * @param status 状态
+     * @param userRole 角色
+     * @param tag 标签
+     * @return 任务列表
+     */
     List<TaskEntity> checkMyTask(String userName, Integer status, Integer userRole, String tag);
 
+    /**
+     *
+     * @param userRole 角色
+     * @param tag 标签
+     * @param status 状态
+     * @return 任务列表
+     */
     List<TaskEntity> search(int userRole, String tag, Integer status);
 
+    /**
+     *
+     * @param taskID 任务id
+     * @return 是否成功
+     */
     boolean endTask(Integer taskID);
 
+    /**
+     *
+     * @param taskID  任务id
+     * @return 是否成功
+     */
     boolean deleteTask(Integer taskID);
 
-    boolean completeTask(Integer taskID, String workerName);
+    /**
+     *
+     * @return 所有任务列表
+     */
+    List<TaskEntity> findAll();
 
-    boolean abortTask(Integer taskID, String workerName);
-
-    boolean acceptTask(Integer taskID, String workerName);
-
-    //目前还不确定，好像这个返回值有点多
-    JSONObject checkTaskDetail(Integer taskID);
-
-    //查看某个工人的进度
-    Double checkTaskProgress(Integer taskID, String workerName);
-
-    List findImgURLByID(String taskID);
-
-    Integer findMarkNumByImgNameAndUserAndID(Integer taskID, String imgName, JSONArray users);
-
-    boolean postMark(String workerName, Integer taskID);
+    /**
+     *
+     * @param taskEntity 任务信息
+     * @return 下载任务
+     */
+    ResponseEntity<FileSystemResource> getDataSet(TaskEntity taskEntity);
 }

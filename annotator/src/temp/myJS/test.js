@@ -1,5 +1,20 @@
 (function (imgURL, workerName, sponsorName, taskID) {
 
+  let picsArea = 'pics';
+
+  function getOffset(obj)   //获取任意元素的offsetLeft/offsetTop值
+  {
+    let offsetTop = 0;
+    let offsetLeft = 0;
+    while(obj!==window.document.body&&obj!==null)
+    {
+      offsetLeft+=obj.offsetLeft;
+      offsetTop+=obj.offsetTop;
+      obj=obj.offsetParent;
+    }
+    return {offsetTop,offsetLeft};
+  }
+
   let getAbsolute = function (reference, target) {
     //因为我们会将目标元素的边框纳入递归公式中，这里先减去对应的值
     let result = {
@@ -618,7 +633,11 @@
         $("#" + inputID).val("");
         $("#" + canvasId).removeLayer(layer.name);
         refreshLabels(CanvasExt.canvasId, labelSaverID);
-        alert("删除成功");
+        window.myMessage({
+          message:'删除成功',
+          type:'success',
+          duration:1500
+        });
       });
     },
 
@@ -769,7 +788,7 @@
           let tempJQCA = $("#" + canvasId);
           tempJQCA.removeLayer(layerName);
 
-          let dataObj = new NoteRectangle(that.author, x, y, width, height, "", id);
+          let dataObj = new NoteRectangle(that.author, x*globalRate, y*globalRate, width*globalRate, height*globalRate, "", id);
 
           function smallHandle(layer) {
             CanvasExt.showNote(canvasId, inputID, layer);
@@ -1020,7 +1039,12 @@
       $("#" + poly_inputMarkID).val("");
       $("#" + poly_canvasID).removeLayer(layer.name);
       refreshLabels(poly_canvasID, labelSaverID);
-      alert("删除成功");
+      window.myMessage({
+        message:'删除成功',
+        type:'success',
+        duration:1500
+      });
+      // alert("删除成功");
     });
   }
 
@@ -1130,8 +1154,6 @@
 
     let points = [];
 
-    let pointsCache = [];
-
     let refreshLayerMsg = function (inputId) {
       id = inputId;
       layerName = polyPrefix + id;
@@ -1168,9 +1190,9 @@
           // offsetLeft = document.body.parentElement.scrollLeft;
           setBtnDisabled(true);
 
-          points.push(new Poly_Point(getLocX(e, canvasLeft) - offsetLeft, getLocY(e, canvasTop) - offSetTop));
+          points.push(new Poly_Point(getLocX(e, canvasLeft), getLocY(e, canvasTop)));
           // console.log('x:'+getLocX(e, canvasLeft)+'y:'+getLocY(e, canvasTop));
-          points.push(new Poly_Point(getLocX(e, canvasLeft) - offsetLeft, getLocY(e, canvasTop) - offSetTop));
+          points.push(new Poly_Point(getLocX(e, canvasLeft), getLocY(e, canvasTop)));
 
           id = getIDByTime();
           refreshLayerMsg(id);
@@ -1182,13 +1204,13 @@
           secondPoint = true;
         } else if (!firstPoint && secondPoint) {
           obj.strokeWidth = penWidth;
-          points[1] = new Poly_Point(getLocX(e, canvasLeft) - offsetLeft, getLocY(e, canvasTop) - offSetTop);
+          points[1] = new Poly_Point(getLocX(e, canvasLeft), getLocY(e, canvasTop));
           // console.log('x:'+getLocX(e, canvasLeft)+'y:'+getLocY(e, canvasTop));
           // draw the line
           drawLines();
           secondPoint = false;
         } else {
-          if (testIfCloseEnough(getLocX(e, canvasLeft) - offsetLeft, points[0].x, 14) && testIfCloseEnough(getLocY(e, canvasTop) - offSetTop, points[0].y, 14) && !inMoving) {
+          if (testIfCloseEnough(getLocX(e, canvasLeft), points[0].x, 14) && testIfCloseEnough(getLocY(e, canvasTop), points[0].y, 14) && !inMoving) {
             // console.log('x:'+getLocX(e, canvasLeft)+'y:'+getLocY(e, canvasTop));
             //close the shape
             obj['closed'] = true;
@@ -1196,7 +1218,7 @@
             console.log('注入点集');
             console.log(points);
 
-            pointsCache = points;
+
 
             obj['mouseover'] = function (layer) {
               if (!poly_isDrawingPolygon && !inDrawing) {
@@ -1204,17 +1226,21 @@
                   fillStyle: poly_hoverFillStyle,
                 }, 100);
 
-                console.log('注入点集');
-                console.log(pointsCache);
-                let pointCenter = getPolygonAreaCenter(pointsCache);
+                let pointCenter = getPolygonAreaCenter(layer.data.points);
                 drawHintTextOnLayer(this, layer, pointCenter.x, pointCenter.y);
               }
             };
             obj['mouseout'] = poly_mouseOut;
             obj['click'] = poly_handleLayerClicked;
 
+
+            let tempPoints = [];
+            for (let i = 0; i < points.length; i++) {
+              tempPoints.push(new Poly_Point(points[i].x*globalRate,points[i].y*globalRate));
+            }
+
             //把note注入图层的data中
-            obj['data'] = new NotePolygon(author, points, "", id);
+            obj['data'] = new NotePolygon(author, tempPoints, "", id);
 
             drawLines();
             // poly_ActualBtnStartToNormal();
@@ -1232,7 +1258,7 @@
             setJQObjDisabled(btnPoly, false);
             reInit();
           } else {
-            points.push(new Poly_Point(getLocX(e, canvasLeft) - offsetLeft, getLocY(e, canvasTop) - offSetTop));
+            points.push(new Poly_Point(getLocX(e, canvasLeft), getLocY(e, canvasTop)));
             //redraw the lines
             drawLines();
           }
@@ -1395,7 +1421,9 @@
   }
 
   function checkIfHasMarks() {
-    return globalImgMsg.notePolygon.length > 0 || globalImgMsg.noteTotal.length > 0 || globalImgMsg.noteTotal !== {};
+    console.log("标注了吗？");
+    // console.log(globalImgMsg.notePolygon.length > 0 || globalImgMsg.noteRectangle.length > 0 || (globalImgMsg.noteTotal.length > 0&&globalImgMsg.noteTotal[0].mark!==''&&globalImgMsg.noteTotal[0].mark!==null));
+    return globalImgMsg.notePolygon.length > 0 || globalImgMsg.noteRectangle.length > 0 || (globalImgMsg.noteTotal.length > 0&&globalImgMsg.noteTotal[0].mark!==''&&globalImgMsg.noteTotal[0].mark!==null);
   }
 
   function setGlobalBtnSubmit(btnSubmitID) {
@@ -1403,7 +1431,7 @@
 
       //先刷新数据
 
-      multiplyRate();
+      // multiplyRate();
       poly_getRefreshedJson();
       CanvasExt.getRefreshedJson();
 
@@ -1417,18 +1445,23 @@
           data: JSON.stringify(globalImgMsg),
           success: function (result) {
             console.log(result);
+            //TODO 后面就可以去掉下面这句了
+            window.myMessage(
+              {
+                message: '提交成功',
+                type: 'success',
+                duration: 1000
+              }
+            );
+            window.refreshSelfProgress();
+
+            let ActualPicsArea = $("#"+picsArea)[0];
+            let resultTop = getAbsolute(document,ActualPicsArea).top;
+            window.scrollTo(0,resultTop===0?resultTop:resultTop-250);
           },
           contentType: 'application/json',
           dataType: 'json'
         });
-        //TODO 后面就可以去掉下面这句了
-        window.myMessage(
-          {
-            message: '提交成功',
-            type: 'success',
-            duration: 1000
-          }
-        );
       } else {
         window.myAlert('您未进行任何标注', '错误提示', {
           confirmButtonText: '确定',
@@ -1512,6 +1545,11 @@
   function multiplyRate() {
     if (globalRate !== 1) {
       $("#" + poly_canvasID).getLayers(function (layer) {
+
+        // console.log("做了乘法");
+        // console.log(layer.data);
+        // console.log(globalRate);
+
         if (layer.type === 'line') {
           let points = layer.data.points;
           for (let i = 0; i < points.length; i++) {

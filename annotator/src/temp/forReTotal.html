@@ -1,0 +1,87 @@
+<!--外部调用不能重复导入css和js文件，否则下拉框不能显示-->
+<div class="container-fluid">
+  <div class="row clearfix">
+    <div class="col-md-8">
+      <div>
+        <div id="canvasSaver" class="background" style="margin: 0 auto; background-size:100% 100%;">
+          <canvas id="canvas"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+
+      <div class="row clearfix">
+
+        <div class="col-md-3">
+          <button readonly class="btn btn-link" id="totalDes">整体描述</button>
+        </div>
+
+
+        <div class="col-md-9">
+          <input readonly type="text" style="border:0;" class="temp-control" id="totalMsg" placeholder="显示当前的整体描述">
+        </div>
+
+      </div>
+
+
+      <div class="row clearfix">
+
+        <div class="col-md-3">
+          <button readonly class="btn btn-link" id="total" style="display: none">整体输入</button>
+          <!--不显示-->
+        </div>
+
+        <div class="col-md-8">
+          <input type="text" class="form-control" id="totalInput" placeholder="请输入整体描述" style="display: none">
+          <!--不显示-->
+        </div>
+
+      </div>
+
+      <div class="row clearfix">
+
+        <div class="col-md-3">
+          <button readonly class="btn btn-link" id="tag">选中的标签</button>
+        </div>
+
+        <div class="col-md-6">
+          <input readonly type="text" style="border:0;" class="temp-control" id="markInput" placeholder="显示当前选中的标签">
+        </div>
+
+        <div class="col-md-3">
+          <button class="btn btn-primary" id="updateMark" style="display: none">更新</button>
+        </div>
+
+      </div>
+
+
+      <div class="row clearfix" style="margin-top: 5%;">
+        <span style="font-weight: bold; margin: auto; color: #22326c">提示：所有带文本的标签均显示在下方</span>
+        <div id="labelSaver" style="border: 1px solid #bebebe; height:100px; width:91%; padding: 5px 5px 5px 5px;">
+        </div>
+      </div>
+      <br>
+
+      <div role="form">
+        <button class="btn btn-primary" id="switchEdit" style="display: none">添加矩形</button>
+        <button class="btn btn-primary" id="polyEdit" style="display: none">区域标注</button>
+        <button class="btn btn-primary" id="deleteNote" style="display: none">删除</button>
+        <button class="btn btn-primary" id="showAll">显示所有</button>
+        <button class="btn btn-primary" id="hideAll">隐藏所有</button>
+        <button class="btn btn-primary" id="mixAll">标记整合</button>
+      </div>
+
+
+      <br>
+
+      <div role="form">
+        <button class="btn btn-primary" id="commit" style="display: none">提交</button>
+      </div>
+
+      <link href="../../src/temp/myCSS/bootstrap.css" rel="stylesheet">
+      <script src="../../src/temp/myJS/bootstrap.js"></script>
+      <script src="../../src/temp/myJS/forReTotal.js"></script>
+    </div>
+  </div>
+</div>
+

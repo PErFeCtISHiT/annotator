@@ -3,23 +3,30 @@ import VueRouter from 'vue-router'
 
 
 Vue.use(VueRouter);
-import requesterTasks from '../components/requesterTasks'
-import distributeNewTask from '../components/distributeNewTask'
+import requesterTasks from '../components/requester/requesterTasks'
+import distributeNewTask from '../components/requester/distributeNewTask'
 import testDraw from '../components/testDraw'
-import admin from '../components/admin'
-import recharge from '../components/recharge'
-import workerAcceptTasks from '../components/workerAcceptTasks'
-import workerOnDoing from '../components/workerOnDoing'
-import workerHistRank from '../components/workerHistRank'
-import workerNoteMark from '../components/workerNoteMark'
+import admin from '../components/admin/admin'
+import recharge from '../components/charge/recharge'
+import workerGetTask from '../components/worker/workerGetTask'
+import workerHistRank from '../components/worker/workerHistRank'
+import workerNoteMark from '../components/worker/workerNoteMark'
 import taskDetail from '../components/taskDetail'
 import firstPart from '../components/firstPart'
 import requesterWannaSee from '../components/requestorWannaSee'
+import requestorTotal from '../components/requestorTotal'
+import personalInfoMain from '../components/personal_info/personalInfoMain'
+import tester from '../components/test/tester'
 
-export default new VueRouter({
+
+let router = new VueRouter({
   routes: [
     /**
-     * 这前两个是一样的*/
+     * 前三个是一样的*/
+    {
+      path: "/",
+      component: firstPart
+    },
     {
       path: "/0",
       component: firstPart
@@ -41,27 +48,44 @@ export default new VueRouter({
     },
     {
       path: "/2-1",
-      component: workerAcceptTasks
+      component: workerGetTask
     },
+
     {
       path: "/2-2",
-      component: workerOnDoing
-    },
-    {
-      path: "/2-3",
       component: workerHistRank
     },
     {
-      path: "/3-1",
-      component: recharge
+      path: "/3-1/:showMessage",
+      name: '3-1',
+      component: recharge,
+      props: true
     },
-    
+
+    {
+      path: "/3-1",
+      component: recharge,
+    },
+
+    {
+      path: "/4",
+      component: personalInfoMain
+    },
+
     {
       path: "/requesterLike/:taskID/:workerName",
       name: 'forTest',
       component: requesterWannaSee,
       props: true
     },
+
+    {
+      path: "/requesterLike/:taskID",
+      name: 'forReTotal',
+      component: requestorTotal,
+      props: true
+    },
+
     {
       path: "/taskDetail/:taskID",
       name: 'taskDetail',
@@ -70,7 +94,7 @@ export default new VueRouter({
     },
     {
       path: "/noteAndMark/:taskID",
-      name:'noteAndMark',
+      name: 'noteAndMark',
       component: workerNoteMark,
       props: true
     },
@@ -85,5 +109,51 @@ export default new VueRouter({
       component: testDraw
     },
 
+    {
+      path: '/testPage',
+      component: tester
+    },
+
+    {
+      path: '/pays/notifyPay',
+      component: tester
+    },
   ]
 });
+
+// router.beforeEach(function (to, from, next) {
+//   console.log(to);
+//   console.log('进入路由拦截器');
+//   if (to.path === '/pays/notifyPay') {
+//     console.log('已经进入转发器');
+//     Vue.prototype.$http.post('/pays/notifyPay')
+//       .then(function () {
+//         console.log('已经转发');
+//       })
+//       .catch(function (error) {
+//         console.log(error);
+//       });
+//   } else if (to.path === 'pays/notifyPay') {
+//     console.log('已经进入转发器');
+//     Vue.prototype.$http.post('/pays/notifyPay')
+//       .then(function () {
+//         console.log('已经转发');
+//       })
+//       .catch(function (error) {
+//         console.log(error);
+//       });
+//   } else if (to.name === 'pays_notifyPay') {
+//     console.log('已经进入转发器');
+//     Vue.prototype.$http.post('/pays/notifyPay')
+//       .then(function () {
+//         console.log('已经转发');
+//       })
+//       .catch(function (error) {
+//         console.log(error);
+//       });
+//   } else {
+//     next();
+//   }
+// });
+
+export default router;

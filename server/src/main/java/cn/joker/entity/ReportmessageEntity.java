@@ -1,6 +1,9 @@
 package cn.joker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.Objects;
 
@@ -11,7 +14,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "reportmessage", schema = "imgannotator", catalog = "")
-public class ReportmessageEntity {
+public class ReportmessageEntity implements Serializable {
     private Integer id;
     private UserEntity respondent;
     private UserEntity reporter;
@@ -33,8 +36,9 @@ public class ReportmessageEntity {
     }
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "respondent_id")
+    @JsonIgnore
     public UserEntity getRespondent() {
         return respondent;
     }
@@ -43,8 +47,9 @@ public class ReportmessageEntity {
         this.respondent = respondent;
     }
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "reporter_id")
+    @JsonIgnore
     public UserEntity getReporter() {
         return reporter;
     }
@@ -53,8 +58,9 @@ public class ReportmessageEntity {
         this.reporter = reporter;
     }
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "task_id")
+    @JsonIgnore
     public TaskEntity getTask() {
         return task;
     }
@@ -105,8 +111,10 @@ public class ReportmessageEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         ReportmessageEntity that = (ReportmessageEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(respondent, that.respondent) &&

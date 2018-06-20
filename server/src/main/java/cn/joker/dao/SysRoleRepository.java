@@ -13,6 +13,5 @@ import javax.persistence.Table;
  */
 @Repository
 @Table(name = "sys_role")
-public interface SysRoleRepository extends JpaRepository<SysRoleEntity,Integer>{
-    SysRoleEntity findById(Integer id);
+public interface SysRoleRepository extends JpaRepository<SysRoleEntity, Integer> {
 }
